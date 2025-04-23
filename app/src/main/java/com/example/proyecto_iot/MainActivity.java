@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        /*  NO SE QUE HACE ESTO PERO NO PARECE NECESARIO
+        /*  NO SE QUE HACE ESTO PERO NO PARECE NECESARIO UWU
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
