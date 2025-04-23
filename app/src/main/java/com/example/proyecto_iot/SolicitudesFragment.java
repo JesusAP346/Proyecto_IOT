@@ -92,6 +92,21 @@ public class SolicitudesFragment extends Fragment {
         // Establecer los datos en el carrusel
         carousel.setData(list);
 
+
+        View card = view.findViewById(R.id.card1); // o el ID que uses realmente
+        card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Llamada a metodo definido en MainActivity
+                ((MainActivity) requireActivity()).navegarA(new SolicitudesHotelFragment());
+            }
+        });
+
+
+
+
+
+
         // Devolver la vista inflada
         return view;
     }

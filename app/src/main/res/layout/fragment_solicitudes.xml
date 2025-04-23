@@ -36,6 +36,7 @@
 
             <!-- TARJETA 1 -->
             <LinearLayout
+                android:id="@+id/card1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"

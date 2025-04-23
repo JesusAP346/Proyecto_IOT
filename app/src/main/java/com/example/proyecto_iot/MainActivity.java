@@ -60,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void navegarA(Fragment fragment) {
+        replaceFragment(fragment);
+    }
+
+
+
 
 
 }
