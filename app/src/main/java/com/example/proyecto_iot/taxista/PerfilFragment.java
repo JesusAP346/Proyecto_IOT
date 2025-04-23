@@ -88,6 +88,17 @@ public class PerfilFragment extends Fragment {
             }
         });
 
+
+        // Accedemos al botón o card que abre la actividad
+        View btnVerPerfilTaxista = view.findViewById(R.id.cardPerfil);// usa el ID correcto
+        btnVerPerfilTaxista.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireContext(), PerfilTaxistaActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
