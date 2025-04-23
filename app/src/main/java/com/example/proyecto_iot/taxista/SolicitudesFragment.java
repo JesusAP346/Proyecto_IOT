@@ -93,8 +93,8 @@ public class SolicitudesFragment extends Fragment {
         carousel.setData(list);
 
 
-        View card = view.findViewById(R.id.card1); // o el ID que uses realmente
-        card.setOnClickListener(new View.OnClickListener() {
+        View card1 = view.findViewById(R.id.card1); // o el ID que uses realmente
+        card1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getParentFragmentManager()

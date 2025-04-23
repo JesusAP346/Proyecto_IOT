@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.taxista;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -89,9 +90,29 @@ public class SolicitudesHotelFragment extends Fragment {
         SolicitudAdapter adapter = new SolicitudAdapter(solicitudes);
         recyclerView.setAdapter(adapter);
 
+
+        /*
+        Button btnAceptar = view.findViewById(R.id.btnAceptar);
+        btnAceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirMapa();
+            }
+        });
+        */
+
+
         // Retornar la vista que ya inflaste y configuraste
         return view;
     }
+
+    public void abrirMapa() {
+        Intent intent = new Intent(requireContext(), MapsActivity.class);
+        startActivity(intent);
+    }
+
+
+
 
     @Override
     public void onResume() {

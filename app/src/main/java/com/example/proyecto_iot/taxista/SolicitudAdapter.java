@@ -1,5 +1,7 @@
 package com.example.proyecto_iot.taxista;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +46,15 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         holder.imagen.setImageResource(solicitud.imagenPerfil);
 
         // Lógica de los botones
-        holder.btnAceptar.setOnClickListener(v -> {
-            // lógica aceptar
+        holder.btnAceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Abrir MapsActivity desde aquí
+
+                Context context = v.getContext(); // ← obtenemos el contexto real
+                Intent intent = new Intent(context, MapsActivity.class);
+                context.startActivity(intent);
+            }
         });
 
         holder.btnRechazar.setOnClickListener(v -> {
