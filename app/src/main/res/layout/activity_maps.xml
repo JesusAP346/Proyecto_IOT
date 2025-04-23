@@ -38,6 +38,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:src="@drawable/maps"
+            android:layout_marginTop="40dp"
             android:contentDescription="mapa" />
 
         <LinearLayout
