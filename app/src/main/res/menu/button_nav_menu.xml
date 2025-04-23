@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="QR"
+        android:icon="@drawable/qrcode_solid"
+        android:id="@+id/qr"/>
+    <item android:title="Solicitudes"
+        android:icon="@drawable/taxi_solid"
+        android:id="@+id/solicitudes"/>
+    <item android:title="Perfil"
+        android:icon="@drawable/baseline_account_circle_24"
+        android:id="@+id/perfil"/>
+
+
+</menu>
