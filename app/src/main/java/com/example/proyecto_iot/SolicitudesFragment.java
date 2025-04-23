@@ -97,8 +97,11 @@ public class SolicitudesFragment extends Fragment {
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Llamada a metodo definido en MainActivity
-                ((MainActivity) requireActivity()).navegarA(new SolicitudesHotelFragment());
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, new SolicitudesHotelFragment())
+                        .addToBackStack(null) //  permite volver con el botón atrás
+                        .commit();
             }
         });
 

@@ -2,6 +2,7 @@ package com.example.proyecto_iot;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,6 +74,11 @@ public class SolicitudesHotelFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerSolicitudes);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+
+
+
+
+
         List<Solicitud> solicitudes = new ArrayList<>();
         solicitudes.add(new Solicitud("Roberto Tafur", "945 854 123", 5, "4 min.\n1.7 km",
                 "Hotel Paraíso", "San Juan de Lurigancho", "Aeropuerto Internacional Jorge Chávez", R.drawable.roberto));
@@ -86,6 +92,17 @@ public class SolicitudesHotelFragment extends Fragment {
 
         // Retornar la vista que ya inflaste y configuraste
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
     }
 
 }
