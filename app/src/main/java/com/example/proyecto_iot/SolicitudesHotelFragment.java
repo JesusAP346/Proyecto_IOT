@@ -3,11 +3,19 @@ package com.example.proyecto_iot;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.proyecto_iot.models.Solicitud;
+
+import com.example.proyecto_iot.adapters.SolicitudAdapter;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SolicitudesHotelFragment#newInstance} factory method to
@@ -58,7 +66,26 @@ public class SolicitudesHotelFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_solicitudes_hotel, container, false);
+        // Inflar primero la vista
+        View view = inflater.inflate(R.layout.fragment_solicitudes_hotel, container, false);
+
+        // Configurar RecyclerView
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerSolicitudes);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        List<Solicitud> solicitudes = new ArrayList<>();
+        solicitudes.add(new Solicitud("Roberto Tafur", "945 854 123", 5, "4 min.\n1.7 km",
+                "Hotel Paraíso", "San Juan de Lurigancho", "Aeropuerto Internacional Jorge Chávez", R.drawable.roberto));
+        solicitudes.add(new Solicitud("Ricardo Calderón", "945 854 123", 3, "4 min.\n1.7 km",
+                "Hotel Paraíso", "San Juan de Lurigancho", "Aeropuerto Internacional Jorge Chávez", R.drawable.roberto));
+        solicitudes.add(new Solicitud("Jostin Pino", "945 854 123", 2, "4 min.\n1.7 km",
+                "Hotel Paraíso", "San Juan de Lurigancho", "Aeropuerto Internacional Jorge Chávez", R.drawable.roberto));
+
+        SolicitudAdapter adapter = new com.example.proyecto_iot.adapters.SolicitudAdapter(solicitudes);
+        recyclerView.setAdapter(adapter);
+
+        // Retornar la vista que ya inflaste y configuraste
+        return view;
     }
+
 }
