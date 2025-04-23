@@ -33,6 +33,7 @@
 
     <!-- Card del perfil -->
     <LinearLayout
+        android:id="@+id/cardPerfil"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -92,6 +93,7 @@
 
     <!-- Item: Información personal -->
     <LinearLayout
+        android:id="@+id/informacionPersonal"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"

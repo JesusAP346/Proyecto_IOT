@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.proyecto_iot.MapsActivity;
 import com.example.proyecto_iot.R;
 
 import java.util.List;
