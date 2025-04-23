@@ -77,6 +77,17 @@ public class PerfilFragment extends Fragment {
             }
         });
 
+
+        // Accedemos al botón o card que abre la actividad
+        View btnVerSeguridad = view.findViewById(R.id.seguridadPersonal); // usa el ID correcto
+        btnVerSeguridad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireContext(), SeguridadActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 

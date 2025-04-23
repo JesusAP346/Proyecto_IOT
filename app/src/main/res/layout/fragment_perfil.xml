@@ -127,6 +127,7 @@
 
     <!-- Item: Seguridad -->
     <LinearLayout
+        android:id="@+id/seguridadPersonal"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
