@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         //EdgeToEdge.enable(this);
         setContentView(binding.getRoot());
-        replaceFragment(new PerfilFragment());
+        replaceFragment(new SolicitudesFragment());
 
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
