@@ -1,4 +1,4 @@
-package com.example.proyecto_iot;
+package com.example.proyecto_iot.taxista;
 
 import android.os.Bundle;
 
@@ -14,9 +14,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.proyecto_iot.models.Solicitud;
+import com.example.proyecto_iot.R;
 
-import com.example.proyecto_iot.adapters.SolicitudAdapter;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SolicitudesHotelFragment#newInstance} factory method to
@@ -87,7 +86,7 @@ public class SolicitudesHotelFragment extends Fragment {
         solicitudes.add(new Solicitud("Jostin Pino", "945 854 123", 2, "4 min.\n1.7 km",
                 "Hotel Paraíso", "San Juan de Lurigancho", "Aeropuerto Internacional Jorge Chávez", R.drawable.roberto));
 
-        SolicitudAdapter adapter = new com.example.proyecto_iot.adapters.SolicitudAdapter(solicitudes);
+        SolicitudAdapter adapter = new SolicitudAdapter(solicitudes);
         recyclerView.setAdapter(adapter);
 
         // Retornar la vista que ya inflaste y configuraste

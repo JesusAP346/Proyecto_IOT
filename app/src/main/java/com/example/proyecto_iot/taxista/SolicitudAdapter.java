@@ -1,4 +1,4 @@
-package com.example.proyecto_iot.adapters;
+package com.example.proyecto_iot.taxista;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.models.Solicitud;
 
 import java.util.List;
 

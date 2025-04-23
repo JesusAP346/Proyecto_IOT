@@ -1,4 +1,4 @@
-package com.example.proyecto_iot.models;
+package com.example.proyecto_iot.taxista;
 
 public class Solicitud {
     public String nombre;
