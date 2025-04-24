@@ -4,112 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="60dp">
+        android:layout_height="100dp"
+        android:layout_margin="16dp"
+        android:layout_gravity="top"
+        app:cardBackgroundColor="#242323"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="5dp">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_hotel_solid" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Contenedor de Tabs -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@android:color/white"
+            app:tabIndicatorColor="@android:color/holo_orange_light"
+            app:tabIndicatorFullWidth="true"
+            app:tabTextColor="@android:color/darker_gray"
+            app:tabSelectedTextColor="@android:color/black"/>
 
-            <!-- Encabezado -->
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#000000"
-                android:padding="16dp">
+        <!-- Contenedor de las vistas de búsqueda y favoritos -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-                <TextView
-                    android:text="HOTEL"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-
-                    <Button
-                        android:text="Buscar"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"/>
-
-                    <Button
-                        android:text="Favoritos"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Bienvenida -->
-            <TextView
-                android:text="Hola, Roberto!\nEncuentra el hotel ideal para ti"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-            <!-- Formulario búsqueda -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView android:text="Destino"/>
-                    <EditText android:id="@+id/etDestino" android:hint="San Miguel, Lima"/>
-
-                    <TextView android:text="Fecha de entrada/salida"/>
-                    <EditText android:id="@+id/etFechas" android:hint="18 abr. - 19 abr"/>
-
-                    <TextView android:text="Huéspedes y habitaciones"/>
-                    <EditText android:id="@+id/etHuespedes" android:hint="2 Huésp., 1 hab."/>
-
-                    <Button
-                        android:id="@+id/btnBuscar"
-                        android:text="Buscar"
-                        android:layout_marginTop="12dp"
-                        android:backgroundTint="#FFA500"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Lista de búsquedas recientes -->
-            <TextView
-                android:text="Búsquedas recientes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:textStyle="bold"
-                android:textSize="16sp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerRecentSearches"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:paddingStart="16dp"
-                android:orientation="horizontal"
-                android:scrollbars="horizontal"/>
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- Menú inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
