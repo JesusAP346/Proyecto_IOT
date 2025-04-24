@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="brown">#8D5A2E</color>
+    <color name="white_light">#F0F0F0</color>
+    <color name="text_zinc_100">#F4F4F5</color>
+    <color name="text_zinc_300">#D4D4D8</color>
+
 </resources>

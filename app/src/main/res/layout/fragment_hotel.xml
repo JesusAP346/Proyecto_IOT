@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="Información"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#f58549"
+                android:backgroundTint="#f2a65a"
                 android:layout_marginEnd="8dp" />
 
             <Button
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:text="Habitaciones"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#f58549"
+                android:backgroundTint="#f2a65a"
                 android:layout_marginEnd="8dp" />
 
             <Button
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:text="Servicios"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#f58549"
+                android:backgroundTint="#f2a65a"
                 android:layout_marginEnd="8dp" />
 
             <Button
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:text="Información sin datos"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#f58549"
+                android:backgroundTint="#f2a65a"
                 android:layout_marginEnd="8dp" />
 
             <Button
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:text="Habitaciones sin datos"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#f58549"
+                android:backgroundTint="#f2a65a"
                 android:layout_marginEnd="8dp" />
 
             <Button
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:text="Servicios sin datos"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#f58549"
+                android:backgroundTint="#f2a65a"
                 android:layout_marginEnd="8dp" />
         </LinearLayout>
     </HorizontalScrollView>

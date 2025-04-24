@@ -1,10 +1,7 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,15 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.administradorHotel.RegistroHabitacionHotel;
-import com.example.proyecto_iot.databinding.FragmentHotelHabitacionesBinding;
+import com.example.proyecto_iot.databinding.FragmentRegistroPaso2Binding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HotelHabitacionesFragment#newInstance} factory method to
+ * Use the {@link RegistroPaso2Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HotelHabitacionesFragment extends Fragment {
+public class RegistroPaso2Fragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,7 +27,7 @@ public class HotelHabitacionesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public HotelHabitacionesFragment() {
+    public RegistroPaso2Fragment() {
         // Required empty public constructor
     }
 
@@ -41,18 +37,18 @@ public class HotelHabitacionesFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HotelHabitacionesFragment.
+     * @return A new instance of fragment RegistroPaso2Fragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HotelHabitacionesFragment newInstance(String param1, String param2) {
-        HotelHabitacionesFragment fragment = new HotelHabitacionesFragment();
+    public static RegistroPaso2Fragment newInstance(String param1, String param2) {
+        RegistroPaso2Fragment fragment = new RegistroPaso2Fragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
-
+    FragmentRegistroPaso2Binding binding;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,24 +57,22 @@ public class HotelHabitacionesFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-    FragmentHotelHabitacionesBinding binding;
+
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentHotelHabitacionesBinding.inflate(inflater, container, false);
-        return binding.getRoot();
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentRegistroPaso2Binding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // Acción del botón para registrar una habitación
-        binding.btnRegistrarInformacion.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), RegistroHabitacionHotel.class);
-            startActivity(intent);
+        binding.btnSiguientePaso2.setOnClickListener(v -> {
+            // Ir al paso 3 con FragmentManager (sin Navigation Component)
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerHabitacion, new RegistroPaso3Fragment())
+                    .addToBackStack(null)
+                    .commit();
         });
+
+        return view;
     }
 
     @Override

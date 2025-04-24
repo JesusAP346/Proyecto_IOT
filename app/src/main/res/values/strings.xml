@@ -2,4 +2,44 @@
     <string name="app_name">PROYECTO_IOT</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="adultos_array">
+        <item>1 adulto</item>
+        <item>2 adultos</item>
+        <item>3 adultos</item>
+    </string-array>
+
+    <string-array name="ninos_array">
+        <item>0 niños</item>
+        <item>1 niño</item>
+        <item>2 niños</item>
+    </string-array>
+
+
+    <string-array name="equipamiento_array">
+        <item>TV</item>
+        <item>Aire acondicionado</item>
+        <item>Toallas</item>
+        <item>Caja fuerte</item>
+        <item>Wifi</item>
+        <item>2 Camas</item>
+        <item>Baño privado</item>
+        <item>Escritorio</item>
+    </string-array>
+
+
+    <string-array name="servicios_array">
+        <item>Desayuno incluido</item>
+        <item>Recepción 24h</item>
+        <item>Limpieza diaria</item>
+        <item>Servicio a la habitación</item>
+        <item>Lavandería</item>
+        <item>Gimnasio</item>
+        <item>Transporte al aeropuerto</item>
+        <item>Pet Friendly</item>
+        <item>Estacionamiento gratuito</item>
+        <item>Acceso a piscina</item>
+    </string-array>
+
+
 </resources>

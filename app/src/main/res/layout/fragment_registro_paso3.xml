@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Stepper visual -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#D9D5D5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:gravity="center_horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <!-- Paso 1 - Completado -->
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:padding="6dp"
+                        android:background="@drawable/step_active_circle"
+                        android:src="@drawable/ic_check"
+                        android:tint="#FFFFFF"
+                        android:contentDescription="Paso 1 completado" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="4dp"
+                        android:background="#4CAF50" />
+
+                    <!-- Paso 2 - Completado -->
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:padding="6dp"
+                        android:background="@drawable/step_active_circle"
+                        android:src="@drawable/ic_check"
+                        android:tint="#FFFFFF"
+                        android:contentDescription="Paso 2 completado" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="4dp"
+                        android:background="#4CAF50" />
+
+                    <!-- Paso 3 - Activo -->
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:background="@drawable/step_active_circle"
+                        android:text="3"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="4dp"
+                        android:background="#FFFFFF" />
+
+                    <!-- Paso 4 - Inactivo -->
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:background="@drawable/step_inactive_circle"
+                        android:text="4"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Servicios adicionales"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp"
+                    android:textColor="#000000" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Sección de Servicios -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Servicios"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRegistrarServicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+ Registrar Servicio"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:iconTint="@android:color/black"
+                app:cornerRadius="10dp"
+                app:backgroundTint="#FFB74D" />
+        </LinearLayout>
+
+        <!-- Spinner de selección de servicio -->
+        <Spinner
+            android:id="@+id/spinnerServicios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/customedittext"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp"
+            android:spinnerMode="dropdown"
+            android:entries="@array/servicios_array"/>
+
+        <!-- Servicios agregados -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Servicios agregados"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp">
+
+            <!-- Imagen 1 -->
+            <LinearLayout
+                android:layout_width="194dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/customedittext"
+                android:padding="8dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Lavandería"
+                    android:textSize="16sp"
+                    android:textColor="#000000" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end|center_vertical">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_open"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="Ver" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/ic_delete"
+                        android:contentDescription="Eliminar"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Imagen 2 -->
+            <LinearLayout
+                android:layout_width="194dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/customedittext"
+                android:padding="8dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Gimnasio"
+                    android:textSize="16sp"
+                    android:textColor="#000000" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end|center_vertical">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_open"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="Ver" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/ic_delete"
+                        android:contentDescription="Eliminar"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <!-- Botón siguiente -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="32dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSiguientePaso3"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="SIGUIENTE"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                app:cornerRadius="10dp"
+                app:backgroundTint="#772f1a" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

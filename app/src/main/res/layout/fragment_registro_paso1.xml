@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Stepper visual -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#D9D5D5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:gravity="center_horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:background="@drawable/step_active_circle"
+                        android:text="1"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="4dp"
+                        android:background="#FFFFFF" />
+
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:background="@drawable/step_inactive_circle"
+                        android:text="2"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="4dp"
+                        android:background="#FFFFFF" />
+
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:background="@drawable/step_inactive_circle"
+                        android:text="3"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="4dp"
+                        android:background="#FFFFFF" />
+
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:gravity="center"
+                        android:background="@drawable/step_inactive_circle"
+                        android:text="4"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Características generales"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp"
+                    android:textColor="#000000" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Formulario -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo de habitación"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/setTipoHabitacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/customedittext"
+            android:hint="Ej. estándar, económica, lux..."
+            android:padding="8dp"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Capacidad"
+            android:textSize="16sp"
+            android:layout_marginTop="12dp" />
+
+        <Spinner
+            android:id="@+id/spinnerAdultos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/customedittext"
+            android:padding="8dp"
+            android:layout_marginTop="4dp"
+            android:spinnerMode="dropdown"
+            android:entries="@array/adultos_array" />
+
+        <Spinner
+            android:id="@+id/spinnerNinos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/customedittext"
+            android:padding="8dp"
+            android:layout_marginTop="8dp"
+            android:spinnerMode="dropdown"
+            android:entries="@array/ninos_array" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tamaño de la habitación en m²"
+            android:textSize="16sp"
+            android:layout_marginTop="12dp" />
+
+        <EditText
+            android:id="@+id/setTamanoHabitacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/customedittext"
+            android:hint="Ej. 30, 40, 78"
+            android:inputType="number"
+            android:padding="8dp"
+            android:textSize="18sp" />
+
+        <!-- Botón siguiente -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="32dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSiguientePaso"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="SIGUIENTE"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                app:cornerRadius="10dp"
+                app:backgroundTint="#772f1a" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

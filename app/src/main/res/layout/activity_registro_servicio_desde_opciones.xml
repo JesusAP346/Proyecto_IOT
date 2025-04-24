@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="16dp">
+
+            <!-- Encabezado -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/backRegistroServicio"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="Atrás" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="300sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="50dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Información del servicio"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- CardView para formulario -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/customedittext"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Nombre -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nombre"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/etNombres"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/customedittext"
+                        android:hint="Ingrese el nombre del servicio"
+                        android:padding="8dp"
+                        android:textSize="18sp" />
+
+                    <!-- Dirección -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Descripcion"
+                        android:textSize="16sp"
+                        android:layout_marginTop="12dp" />
+
+                    <EditText
+                        android:id="@+id/etDireccionHotel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/customedittext"
+                        android:hint="Ingrese una descripción del servicio"
+                        android:padding="8dp"
+                        android:textSize="18sp" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Precio en soles"
+                        android:textSize="16sp"
+                        android:layout_marginTop="12dp" />
+
+                    <EditText
+                        android:id="@+id/etCoordenadasHotel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/customedittext"
+                        android:hint="Ingrese el precio"
+                        android:padding="8dp"
+                        android:textSize="18sp" />
+
+                    <!-- Fotos -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fotos del servicio"
+                        android:textSize="16sp"
+                        android:layout_marginTop="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:background="@drawable/customedittext"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_camera"
+                            android:tint="#9E9EA6"
+                            android:contentDescription="Agregar foto" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ingrese mínimo 4 fotos"
+                            android:textSize="14sp"
+                            android:textColor="#888888"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+
+                    <!-- Imagenes -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp">
+
+                        <!-- Imagen 1 -->
+                        <LinearLayout
+                            android:layout_width="194dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/customedittext"
+                            android:padding="8dp"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="image1.png"
+                                android:textSize="16sp"
+                                android:textColor="#000000" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="end|center_vertical">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_visibility"
+                                    android:layout_marginStart="8dp"
+                                    android:contentDescription="Ver" />
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginStart="8dp"
+                                    android:src="@drawable/ic_delete"
+                                    android:contentDescription="Eliminar"
+                                    />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Imagen 2 -->
+                        <LinearLayout
+                            android:layout_width="194dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/customedittext"
+                            android:padding="8dp"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="image2.png"
+                                android:textSize="16sp"
+                                android:textColor="#000000" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="end|center_vertical">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_visibility"
+                                    android:layout_marginStart="8dp"
+                                    android:contentDescription="Ver" />
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginStart="8dp"
+                                    android:src="@drawable/ic_delete"
+                                    android:contentDescription="Eliminar"
+                                    />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Botón Final -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRegistrarHotel"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:text="Registrar servicio"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"
+                        app:cornerRadius="10dp"
+                        app:backgroundTint="#772f1a"
+                        android:layout_marginTop="24dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

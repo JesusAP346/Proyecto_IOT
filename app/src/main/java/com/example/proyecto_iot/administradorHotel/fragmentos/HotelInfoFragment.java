@@ -2,6 +2,8 @@ package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -9,7 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.databinding.FragmentHotelInfoBinding;
 
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HotelInfoFragment#newInstance} factory method to
@@ -48,6 +54,7 @@ public class HotelInfoFragment extends Fragment {
         return fragment;
     }
 
+    FragmentHotelInfoBinding binding;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,9 +65,30 @@ public class HotelInfoFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_hotel_info, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // IMPORTANTE: INFLAR BIEN CON ViewBinding
+        binding = FragmentHotelInfoBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // AHORA binding YA NO ES NULL AQUÍ
+        binding.carousel.registerLifecycle(getLifecycle());
+
+        List<CarouselItem> list = new ArrayList<>();
+        list.add(new CarouselItem(R.drawable.hotel1));
+        list.add(new CarouselItem(R.drawable.hotel2));
+        list.add(new CarouselItem(R.drawable.hotel3));
+
+        binding.carousel.setData(list);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

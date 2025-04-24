@@ -1,14 +1,18 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.administradorHotel.RegistroHabitacionHotel;
+import com.example.proyecto_iot.databinding.FragmentHotelHabitacionesNadaBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +52,8 @@ public class HotelHabitacionesNadaFragment extends Fragment {
         return fragment;
     }
 
+    FragmentHotelHabitacionesNadaBinding binding;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +66,27 @@ public class HotelHabitacionesNadaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_hotel_habitaciones_nada, container, false);
+        // ✅ Inflar correctamente con ViewBinding
+        binding = FragmentHotelHabitacionesNadaBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Acción al presionar "+ Registrar información"
+        binding.btnRegistrarHabitacion.setOnClickListener(v -> {
+            // Lanzar nueva Activity independiente
+            Intent intent = new Intent(requireContext(), RegistroHabitacionHotel.class);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
 }

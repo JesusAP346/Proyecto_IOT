@@ -1,7 +1,10 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -9,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.administradorHotel.RegistroServicioDesdeOpciones;
+import com.example.proyecto_iot.databinding.FragmentHotelServicioNadaBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,11 +61,27 @@ public class HotelServicioNadaFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    FragmentHotelServicioNadaBinding binding;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_hotel_servicio_nada, container, false);
+        binding = FragmentHotelServicioNadaBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.btnRegistrarServicio.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), RegistroServicioDesdeOpciones.class);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
