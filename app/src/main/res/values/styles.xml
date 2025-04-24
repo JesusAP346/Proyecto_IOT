@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomDatePickerDialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorAccent">#DB7E63</item> <!-- Color de botones OK / CANCEL -->
+        <item name="android:datePickerDialogTheme">@style/CustomDatePickerTheme</item>
+    </style>
+
+    <style name="CustomDatePickerTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:colorAccent">#D5785E</item> <!-- Botones OK/CANCEL -->
+        <item name="android:textColorPrimary">#000000</item> <!-- Texto de los días -->
+        <item name="android:background">#ffffff</item> <!-- Fondo del calendario -->
+    </style>
+
+</resources>

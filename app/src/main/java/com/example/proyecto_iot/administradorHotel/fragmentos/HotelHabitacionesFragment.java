@@ -79,6 +79,16 @@ public class HotelHabitacionesFragment extends Fragment {
             Intent intent = new Intent(requireContext(), RegistroHabitacionHotel.class);
             startActivity(intent);
         });
+
+        binding.btnVerDetalles.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, new DetalleHabitacionFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+
     }
 
     @Override

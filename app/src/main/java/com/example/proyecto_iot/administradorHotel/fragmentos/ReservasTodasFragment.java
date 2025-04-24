@@ -5,23 +5,21 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.databinding.FragmentHotelInfoBinding;
+import com.example.proyecto_iot.databinding.FragmentReservasTodasBinding;
 
-import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
-import java.util.ArrayList;
-import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HotelInfoFragment#newInstance} factory method to
+ * Use the {@link ReservasTodasFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HotelInfoFragment extends Fragment {
+public class ReservasTodasFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,7 +30,7 @@ public class HotelInfoFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public HotelInfoFragment() {
+    public ReservasTodasFragment() {
         // Required empty public constructor
     }
 
@@ -42,11 +40,11 @@ public class HotelInfoFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HotelDataFragment.
+     * @return A new instance of fragment ReservasTodasFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HotelInfoFragment newInstance(String param1, String param2) {
-        HotelInfoFragment fragment = new HotelInfoFragment();
+    public static ReservasTodasFragment newInstance(String param1, String param2) {
+        ReservasTodasFragment fragment = new ReservasTodasFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -54,7 +52,6 @@ public class HotelInfoFragment extends Fragment {
         return fragment;
     }
 
-    FragmentHotelInfoBinding binding;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,11 +60,11 @@ public class HotelInfoFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    FragmentReservasTodasBinding binding;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // IMPORTANTE: INFLAR BIEN CON ViewBinding
-        binding = FragmentHotelInfoBinding.inflate(inflater, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentReservasTodasBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -75,22 +72,12 @@ public class HotelInfoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // AHORA binding YA NO ES NULL AQUÍ
-        binding.carousel.registerLifecycle(getLifecycle());
-
-        List<CarouselItem> list = new ArrayList<>();
-        list.add(new CarouselItem(R.drawable.hotel1));
-        list.add(new CarouselItem(R.drawable.hotel2));
-        list.add(new CarouselItem(R.drawable.hotel3));
-
-        binding.carousel.setData(list);
-
-        binding.btnActualizar.setOnClickListener(v -> {
-            requireActivity()
-                    .getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_layout, new HotelActualizarFragment())
-                    .addToBackStack(null) // Permite volver con el botón de atrás
+        binding.btnVerDetalles.setOnClickListener(v -> {
+            // ✅ Reemplazar el fragmento padre en MainActivity
+            Fragment detalleFragment = new DetalleHuespedFragment();
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frame_layout, detalleFragment)
+                    .addToBackStack(null)
                     .commit();
         });
     }

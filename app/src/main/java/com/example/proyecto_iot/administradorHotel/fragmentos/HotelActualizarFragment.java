@@ -2,8 +2,6 @@ package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -11,17 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.databinding.FragmentHotelInfoBinding;
+import com.example.proyecto_iot.databinding.FragmentHotelActualizarBinding;
 
-import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
-import java.util.ArrayList;
-import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HotelInfoFragment#newInstance} factory method to
+ * Use the {@link HotelActualizarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HotelInfoFragment extends Fragment {
+public class HotelActualizarFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,7 +27,7 @@ public class HotelInfoFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public HotelInfoFragment() {
+    public HotelActualizarFragment() {
         // Required empty public constructor
     }
 
@@ -42,11 +37,11 @@ public class HotelInfoFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HotelDataFragment.
+     * @return A new instance of fragment HotelActualizarFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HotelInfoFragment newInstance(String param1, String param2) {
-        HotelInfoFragment fragment = new HotelInfoFragment();
+    public static HotelActualizarFragment newInstance(String param1, String param2) {
+        HotelActualizarFragment fragment = new HotelActualizarFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -54,7 +49,6 @@ public class HotelInfoFragment extends Fragment {
         return fragment;
     }
 
-    FragmentHotelInfoBinding binding;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,35 +58,12 @@ public class HotelInfoFragment extends Fragment {
         }
     }
 
+    FragmentHotelActualizarBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // IMPORTANTE: INFLAR BIEN CON ViewBinding
-        binding = FragmentHotelInfoBinding.inflate(inflater, container, false);
+        binding = FragmentHotelActualizarBinding.inflate(inflater, container, false);
         return binding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // AHORA binding YA NO ES NULL AQUÍ
-        binding.carousel.registerLifecycle(getLifecycle());
-
-        List<CarouselItem> list = new ArrayList<>();
-        list.add(new CarouselItem(R.drawable.hotel1));
-        list.add(new CarouselItem(R.drawable.hotel2));
-        list.add(new CarouselItem(R.drawable.hotel3));
-
-        binding.carousel.setData(list);
-
-        binding.btnActualizar.setOnClickListener(v -> {
-            requireActivity()
-                    .getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_layout, new HotelActualizarFragment())
-                    .addToBackStack(null) // Permite volver con el botón de atrás
-                    .commit();
-        });
     }
 
     @Override
@@ -100,4 +71,7 @@ public class HotelInfoFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
+
 }

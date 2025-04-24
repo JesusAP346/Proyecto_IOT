@@ -79,6 +79,15 @@ public class HotelServicioFragment extends Fragment {
             Intent intent = new Intent(requireContext(), RegistroServicioDesdeOpciones.class);
             startActivity(intent);
         });
+
+        binding.btnVerDetalles.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, new DetalleServicioFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
     }
 
     @Override

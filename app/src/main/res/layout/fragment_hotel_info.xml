@@ -168,13 +168,12 @@
 
 
         <!-- Botón Actualizar estilo igual a Agregar -->
-        <!-- Botón Actualizar estilo igual a Agregar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnActualizar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="Actualizar información"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textColor="@android:color/white"
             android:layout_marginTop="24dp"
             app:cornerRadius="10dp"

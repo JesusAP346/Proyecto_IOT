@@ -27,7 +27,7 @@
             android:name=".administradorHotel.RegistroInfoHotel"
             android:exported="false" />
         <activity
-            android:name=".administradorHotel.PagPrincipalAdmin"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".taxista.PerfilTaxistaActivity"
@@ -42,7 +42,7 @@
             android:name=".taxista.MapsActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".cliente.MisReservasActivity"
             android:exported="true">
             <!--
             <intent-filter>
@@ -52,7 +52,7 @@
             </intent-filter> -->
         </activity>
 
-        <activity android:name=".cliente.MisReservasActivity"
+        <activity android:name=".administradorHotel.PagPrincipalAdmin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
