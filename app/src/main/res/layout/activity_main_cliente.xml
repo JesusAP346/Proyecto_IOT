@@ -40,7 +40,6 @@
             app:tabTextColor="@android:color/darker_gray"
             app:tabSelectedTextColor="@android:color/black"/>
 
-        <!-- Contenedor de las vistas de búsqueda y favoritos -->
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
