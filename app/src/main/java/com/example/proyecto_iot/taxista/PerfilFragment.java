@@ -99,6 +99,11 @@ public class PerfilFragment extends Fragment {
             }
         });
 
+        Button btnModoCliente = view.findViewById(R.id.btnModoCliente);
+        btnModoCliente.setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), com.example.proyecto_iot.cliente.MainActivityCliente.class)));
+
+
         return view;
     }
 
