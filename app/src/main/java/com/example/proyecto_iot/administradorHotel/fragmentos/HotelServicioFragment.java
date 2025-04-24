@@ -9,14 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.databinding.FragmentHomeBinding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
+ * Use the {@link HotelServicioFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HotelServicioFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,7 +26,7 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public HomeFragment() {
+    public HotelServicioFragment() {
         // Required empty public constructor
     }
 
@@ -37,11 +36,11 @@ public class HomeFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
+     * @return A new instance of fragment HotelServicioFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
+    public static HotelServicioFragment newInstance(String param1, String param2) {
+        HotelServicioFragment fragment = new HotelServicioFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -58,16 +57,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
-    FragmentHomeBinding binding;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate con ViewBinding
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
-
-        return view;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_hotel_servicio, container, false);
     }
-
 }

@@ -1,15 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".administradorHotel.fragmentos.HomeFragment">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Home Fragment"
-        android:layout_gravity="center"/>
-</FrameLayout>
+    <!-- Incluye el toolbar arriba -->
+    <include layout="@layout/fragment_toolbar_sin_retro_icono_a_la_derecha" />
+
+    <!-- El resto de tu UI -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <!-- Saludo -->
+
+            <!-- Descripción -->
+
+            <TextView
+                android:id="@+id/tv_saludo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Hola Admin, Bienvenido"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_descripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bienvenido, como administrador tendrás las capacidades de gestionar tanto las habitaciones, los servicios extras, las reservas, el check out, etc."
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:layout_marginBottom="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+
+            <!-- Botones -->
+            <include layout="@layout/item_admin_button" android:id="@+id/btn_habitaciones" />
+            <include layout="@layout/item_admin_button" android:id="@+id/btn_servicios" />
+            <include layout="@layout/item_admin_button" android:id="@+id/btn_reportes" />
+            <include layout="@layout/item_admin_button" android:id="@+id/btn_notificaciones" />
+            <include layout="@layout/item_admin_button" android:id="@+id/btn_reservas" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
