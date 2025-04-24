@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_buscar" android:icon="@drawable/ic_busqueda" android:title="Buscar"/>
+    <item android:id="@+id/nav_taxi" android:icon="@drawable/taxi_solid" android:title="Taxi"/>
+    <item android:id="@+id/nav_notificaciones" android:icon="@drawable/notificaciones_campana" android:title="Notificaciones"/>
+    <item android:id="@+id/nav_reservas" android:icon="@drawable/ic_hotel_solid" android:title="Mis reservas"/>
+    <item android:id="@+id/nav_perfil" android:icon="@drawable/ic_perfil_circulo" android:title="Perfil"/>
+</menu>
