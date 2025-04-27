@@ -41,5 +41,17 @@
         <item>Acceso a piscina</item>
     </string-array>
 
+    <!--LOGIN-->
+    <string name="titulo_login">Ingrese Sesion</string>
+    <string name="lbl_usuario">Usuario</string>
+    <string name="txt_usuario">Ingrese su usuario</string>
+    <string name="lbl_password">Contraseña</string>
+    <string name="txt_passwrod">Ingrese su contraseña</string>
+    <string name="btn_ingresar">Ingresar</string>
+    <string name="lbl_crear_cuenta">¿No tienes cuenta?, Regístrate</string>
+    <string name="lbl_olvido_credenciales">¿Olvidaste tu contraseña?</string>
+
+    <!--REGISTRO-->
+
 
 </resources>
