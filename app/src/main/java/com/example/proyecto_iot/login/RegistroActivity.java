@@ -25,6 +25,10 @@ public class RegistroActivity extends AppCompatActivity {
             return insets;
         });
 
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new RegisterFragment())
+                .commit();
+
         TextView textYaTengoCuenta = findViewById(R.id.ya_tengo_cuenta_txt);
 
         textYaTengoCuenta.setOnClickListener(v ->{
