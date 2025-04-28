@@ -52,6 +52,16 @@
     <string name="lbl_olvido_credenciales">¿Olvidaste tu contraseña?</string>
 
     <!--REGISTRO-->
-
+    <string name="lbl_como_te_llamas">¿Cómo te llamas?</string>
+    <string name="lbl_ingrese_nombres">Ingresa tus nombres y apellidos</string>
+    <string name="txt_registro_nombres">Nombres</string>
+    <string name="txt_registro_apellidos">Apellidos</string>
+    <string name="btn_siguiente">Siguiente</string>
+    <string name="lbl_valida_identidad">Valida tu identidad</string>
+    <string name="lbl_tipo_doc_ident">Elije un tipo de documento de identidad</string>
+    <string name="txt_tipo_doc_ident">Tipo de documento de identidad</string>
+    <string name="lbl_ingresa_doc_ident">Ingresa tu DNI</string>
+    <string name="txt_ingresa_doc_ident">DNI</string>
+    <string name="lbl_ya_tengo_cuenta">Ya tengo una cuenta</string>
 
 </resources>

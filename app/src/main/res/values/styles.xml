@@ -11,4 +11,11 @@
         <item name="android:background">#ffffff</item> <!-- Fondo del calendario -->
     </style>
 
+    <style name="CustomTextInputRegister" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+
+    </style>
+
+
 </resources>

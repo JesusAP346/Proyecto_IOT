@@ -6,11 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/lobby_hotel"
-    tools:context=".LoginActivity">
+    tools:context=".login.LoginActivity">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="1250dp"
+        android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_marginTop="60dp"
         android:src="@drawable/hotel_solid"
@@ -85,7 +85,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/darker_gray"
+                android:background="#CCCBCB"
+                android:inputType="text"
                 android:hint="@string/txt_usuario" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,6 +95,7 @@
             android:layout_width="275dp"
             android:layout_height="50dp"
             android:layout_marginTop="16dp"
+            app:passwordToggleEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +104,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/darker_gray"
+                android:inputType="textPassword"
+                android:background="#CCCBCB"
                 android:hint="@string/txt_passwrod" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -115,8 +118,8 @@
             android:backgroundTint="#A41414"
             android:text="@string/btn_ingresar"
             android:drawableEnd="@drawable/icono_candado"
-            app:layout_constraintEnd_toEndOf="parent"
             app:cornerRadius="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
@@ -134,7 +137,7 @@
             app:layout_constraintTop_toBottomOf="@+id/button" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/registro_nuevo_usuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
