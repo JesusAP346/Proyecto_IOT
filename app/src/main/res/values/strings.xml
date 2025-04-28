@@ -57,6 +57,7 @@
     <string name="txt_registro_nombres">Nombres</string>
     <string name="txt_registro_apellidos">Apellidos</string>
     <string name="btn_siguiente">Siguiente</string>
+    <string name="btn_regresar">Regresar</string>
     <string name="lbl_valida_identidad">Valida tu identidad</string>
     <string name="lbl_tipo_doc_ident">Elije un tipo de documento de identidad</string>
     <string name="txt_tipo_doc_ident">Tipo de documento de identidad</string>

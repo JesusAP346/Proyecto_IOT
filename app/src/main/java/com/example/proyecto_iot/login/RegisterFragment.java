@@ -76,6 +76,9 @@ public class RegisterFragment extends Fragment {
                 transaction.commit();
             }
         });
+
+
+
         return view;
     }
 }
