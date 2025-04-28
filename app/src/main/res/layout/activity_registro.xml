@@ -42,29 +42,17 @@
         app:layout_constraintStart_toStartOf="@id/guideline4"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="322dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#5C5524"
-        android:text="@string/btn_siguiente"
-        app:cornerRadius="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline5"
-        app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_container" />
 
     <TextView
         android:id="@+id/ya_tengo_cuenta_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="224dp"
+        android:layout_marginTop="32dp"
         android:text="@string/lbl_ya_tengo_cuenta"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/fragment_container" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
