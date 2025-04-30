@@ -17,18 +17,27 @@
 
         <!-- TÍTULO Favoritos -->
 
+
+        <FrameLayout
+            android:id="@+id/contenedor_fragment_hijo"
+            android:layout_width="match_parent"
+            android:layout_height="391dp" />
+
+
+
+
+
         <TextView
             android:layout_width="205dp"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
-            android:text="Favoritos"
+            android:text="Hoteles"
             android:textSize="24sp"
             android:textStyle="bold" />
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="380dp"
+            android:layout_height="265dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/carouselRecyclerView"
@@ -54,20 +63,6 @@
             </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:layout_width="205dp"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:text="Otros hoteles"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-
-
-
-
-
 
 
     </LinearLayout>

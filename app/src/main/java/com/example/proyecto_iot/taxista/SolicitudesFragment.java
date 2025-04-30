@@ -63,7 +63,16 @@ public class SolicitudesFragment extends Fragment {
                     .commit();
         });
 
+
+        getChildFragmentManager()
+                .beginTransaction()
+                .replace(R.id.contenedor_fragment_hijo, new SolicitudesHotelFragment())
+                .commit();
+
         return view;
+
+
+
     }
 
     @Override
