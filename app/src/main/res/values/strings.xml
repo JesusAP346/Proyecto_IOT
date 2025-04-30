@@ -63,6 +63,32 @@
     <string name="txt_tipo_doc_ident">Tipo de documento de identidad</string>
     <string name="lbl_ingresa_doc_ident">Ingresa tu DNI</string>
     <string name="txt_ingresa_doc_ident">DNI</string>
+    <string name="lbl_ingrese_doc">Ingrese el número del documento</string>
+    <string name="hint_doc_ident">Documento de identidad</string>
+    <string name="hint_select_doc_ident">Seleccione un tipo de documento</string>
     <string name="lbl_ya_tengo_cuenta">Ya tengo una cuenta</string>
+    <string-array name="tipo_documento_array">
+        <item>Carnet de extranjería</item>
+        <item>DNI</item>
+        <item>Licencia de Conducir</item>
+    </string-array>
+    <string name="lbl_cuando_naciste">¿Cuándo naciste?</string>
+    <string name="lbl_elije_fecha_nac">Elije tu fecha de nacimiento</string>
+    <string name="hint_fec_nac">Fecha de nacimiento</string>
+    <string name="lbl_atrib_usuario">Atributos de usuario</string>
+    <string name="lbl_num_cel">Ingresa tu número de celular</string>
+    <string name="lbl_email">Ingresa tu correo electrónico</string>
+    <string name="hint_num_cel">Número de celular</string>
+    <string name="hint_email">Correo electrónico</string>
+    <string name="lbl_donde_vives">¿Dónde vives?</string>
+    <string name="lbl_selecciona_dep">Selecciona un departamento</string>
+    <string name="hint_depart">Departamento</string>
+    <string name="lbl_selecciona_prov">Selecciona una provincia</string>
+    <string name="hint_selecciona_prov">Provincia</string>
+    <string name="lbl_selecciona_dist">Selecciona un distrito</string>
+    <string name="hint_selecciona_dist">Distrito</string>
+    <string name="hint_direccion">Dirección</string>
+    <string name="lbl_direccion">Ingresa tu dirección</string>
+
 
 </resources>

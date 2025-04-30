@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.login;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,18 +9,20 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
 import com.example.proyecto_iot.R;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RegistroDniFragment#newInstance} factory method to
+ * Use the {@link RegisterBirthdateFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegistroDniFragment extends Fragment {
+public class RegisterBirthdateFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,7 +33,7 @@ public class RegistroDniFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public RegistroDniFragment() {
+    public RegisterBirthdateFragment() {
         // Required empty public constructor
     }
 
@@ -40,11 +43,11 @@ public class RegistroDniFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RegistroDniFragment.
+     * @return A new instance of fragment RegisterBirthdateFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegistroDniFragment newInstance(String param1, String param2) {
-        RegistroDniFragment fragment = new RegistroDniFragment();
+    public static RegisterBirthdateFragment newInstance(String param1, String param2) {
+        RegisterBirthdateFragment fragment = new RegisterBirthdateFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,8 +68,7 @@ public class RegistroDniFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_registro_dni, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_register_birthdate, container, false);
         Button botonRegresar = view.findViewById(R.id.botonRegresar);
         botonRegresar.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -78,23 +80,36 @@ public class RegistroDniFragment extends Fragment {
         botonSiguiente.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                RegisterBirthdateFragment registerBirthdateFragment = new RegisterBirthdateFragment();
-
+                RegisterContactFragment registerContactFragment = new RegisterContactFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, registerBirthdateFragment);
+                transaction.replace(R.id.fragment_container, registerContactFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
 
-        AutoCompleteTextView autoCompleteTextView = view.findViewById(R.id.autoCompleteTextView2);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                requireContext(),
-                R.array.tipo_documento_array,
-                android.R.layout.simple_dropdown_item_1line
-        );
-        autoCompleteTextView.setAdapter(adapter);
+        TextInputLayout inputLayout = view.findViewById(R.id.fechaNac);
+        TextInputEditText editTextFecha = (TextInputEditText) inputLayout.getEditText();
 
+        if (editTextFecha != null) {
+            editTextFecha.setOnClickListener(v -> {
+                final Calendar calendario = Calendar.getInstance();
+                int año = calendario.get(Calendar.YEAR);
+                int mes = calendario.get(Calendar.MONTH);
+                int dia = calendario.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog selectorFecha = new DatePickerDialog(
+                        requireContext(),
+                        (view1, year, month, dayOfMonth) -> {
+                            // Formato: DD/MM/AAAA
+                            String fechaSeleccionada = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year);
+                            editTextFecha.setText(fechaSeleccionada);
+                        },
+                        año, mes, dia
+                );
+                selectorFecha.show();
+            });
+        }
 
         return view;
     }

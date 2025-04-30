@@ -2,116 +2,115 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
         android:layout_marginStart="12dp"
-        android:text="@string/lbl_valida_identidad"
+        android:layout_marginTop="0dp"
+        android:text="@string/lbl_atrib_usuario"
         android:textColor="@color/white"
         android:textSize="28sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
-        android:layout_marginStart="12dp"
-        android:text="@string/lbl_tipo_doc_ident"
+        android:text="@string/lbl_num_cel"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView"/>
+        app:layout_constraintTop_toBottomOf="@id/textView" />
+
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputTipoDoc"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="322dp"
-        android:layout_height="60dp"
-        android:textColorHint="@color/white"
-        android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView9">
-
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView2"
-            android:layout_width="322dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:background="@drawable/text_input_rounded_register"
-            android:textStyle="bold"
-            android:hint="@string/hint_select_doc_ident"
-            android:inputType="none" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="12dp"
-        android:text="@string/lbl_ingrese_doc"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputTipoDoc" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout3"
-        android:layout_width="322dp"
-        android:layout_marginTop="12dp"
+        android:id="@+id/fechaNac"
         style="@style/CustomTextInputRegister"
+        android:layout_width="322dp"
         android:layout_height="60dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6">
+        app:layout_constraintTop_toBottomOf="@+id/textView9">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:textColor="@color/white"
             android:background="@drawable/text_input_rounded_register"
-            android:textStyle="bold"
-            android:hint="@string/hint_doc_ident" />
+            android:clickable="true"
+            android:focusable="false"
+            android:hint="@string/hint_num_cel"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/uwu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_email"
+        android:textColor="@color/white"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.075"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fechaNac" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/email"
+        style="@style/CustomTextInputRegister"
+        android:layout_width="322dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uwu">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_input_rounded_register"
+            android:clickable="true"
+            android:focusable="false"
+            android:hint="@string/hint_email"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/botonSiguiente"
         android:layout_width="148dp"
         android:layout_height="60dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="#5C5524"
         android:text="@string/btn_siguiente"
         app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.144"
+        app:layout_constraintHorizontal_bias="0.142"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <Button
         android:id="@+id/botonRegresar"
         android:layout_width="148dp"
         android:layout_height="60dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="#312F19"
         android:text="@string/btn_regresar"
         app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.371"
+        app:layout_constraintHorizontal_bias="0.43"
         app:layout_constraintStart_toEndOf="@+id/botonSiguiente"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/email" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
