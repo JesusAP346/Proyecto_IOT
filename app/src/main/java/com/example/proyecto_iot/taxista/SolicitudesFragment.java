@@ -45,7 +45,15 @@ public class SolicitudesFragment extends Fragment {
         );
 
 
-        CarouselAdapter adapter = new CarouselAdapter(itemList);
+        CarouselAdapter adapter = new CarouselAdapter(itemList, item -> {
+            SolicitudesHotelFragment fragment = new SolicitudesHotelFragment();
+            fragment.setNombreHotel(item.title);  // Usamos el setter
+
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedor_fragment_hijo, fragment)
+                    .commit();
+        });
         binding.carouselRecyclerView.setAdapter(adapter);
 
         binding.carouselRecyclerView.setLayoutManager(
@@ -54,26 +62,19 @@ public class SolicitudesFragment extends Fragment {
 
 
 
-        // Listener para la tarjeta
-        binding.card2.setOnClickListener(v -> {
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_layout, new SolicitudesHotelFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-
         getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.contenedor_fragment_hijo, new SolicitudesHotelFragment())
                 .commit();
 
+
+
         return view;
-
-
-
     }
+
+
+
+
 
     @Override
     public void onDestroyView() {

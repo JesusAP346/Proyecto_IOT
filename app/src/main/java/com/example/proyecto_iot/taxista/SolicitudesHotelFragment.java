@@ -16,95 +16,74 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.databinding.FragmentSolicitudesHotelBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SolicitudesHotelFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class SolicitudesHotelFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private FragmentSolicitudesHotelBinding binding;
+    private String nombreHotel = "Hotel Paraíso";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public SolicitudesHotelFragment() {
-        // Required empty public constructor
+        // Constructor vacío requerido
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SolicitudesHotelFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SolicitudesHotelFragment newInstance(String param1, String param2) {
-        SolicitudesHotelFragment fragment = new SolicitudesHotelFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public void setNombreHotel(String nombreHotel) {
+        this.nombreHotel = nombreHotel;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflar primero la vista
-        View view = inflater.inflate(R.layout.fragment_solicitudes_hotel, container, false);
+        binding = FragmentSolicitudesHotelBinding.inflate(inflater, container, false);
+
+        // Mostrar el nombre del hotel en el TextView
+        binding.nombreHotel.setText("Hotel: " + nombreHotel);
 
         // Configurar RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerSolicitudes);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recyclerSolicitudes.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-
-
-
-
+        // Lista que se llenará según el hotel seleccionado
         List<Solicitud> solicitudes = new ArrayList<>();
-        solicitudes.add(new Solicitud("Roberto Tafur", "945 854 123", 5, "4 min.\n1.7 km",
-                "Hotel Paraíso", "San Juan de Lurigancho", "Aeropuerto Internacional Jorge Chávez", R.drawable.roberto));
-        solicitudes.add(new Solicitud("Ricardo Calderón", "945 854 123", 3, "4 min.\n1.7 km",
-                "Hotel Paraíso", "San Juan de Lurigancho", "Aeropuerto Internacional Jorge Chávez", R.drawable.roberto));
-        solicitudes.add(new Solicitud("Jostin Pino", "945 854 123", 2, "4 min.\n1.7 km",
-                "Hotel Paraíso", "San Juan de Lurigancho", "Aeropuerto Internacional Jorge Chávez", R.drawable.roberto));
 
+        // Lógica condicional para llenar solo los datos del hotel seleccionado
+        switch (nombreHotel) {
+            case "Hotel Paraíso":
+                solicitudes.add(new Solicitud("Roberto Tafur", "945 854 123", 5, "4 min.\n1.7 km",
+                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.roberto));
+                solicitudes.add(new Solicitud("Ricardo Calderón", "945 854 123", 3, "4 min.\n1.7 km",
+                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.roberto));
+                break;
+
+            case "Hotel Amanecer":
+                solicitudes.add(new Solicitud("Alejandra Ríos", "912 345 678", 2, "6 min.\n2.5 km",
+                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.roberto));
+                break;
+
+            case "Hotel Playa":
+                solicitudes.add(new Solicitud("Marco Gómez", "987 654 321", 4, "3 min.\n1.0 km",
+                        "Hotel Playa", "Barranco", "Aeropuerto", R.drawable.roberto));
+                break;
+
+            default:
+                // Si no coincide con ninguno, puedes dejarlo vacío o mostrar un mensaje
+                break;
+        }
+
+        // Asignar al RecyclerView
         SolicitudAdapter adapter = new SolicitudAdapter(solicitudes);
-        recyclerView.setAdapter(adapter);
+        binding.recyclerSolicitudes.setAdapter(adapter);
 
-
-        /*
-        Button btnAceptar = view.findViewById(R.id.btnAceptar);
-        btnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                abrirMapa();
-            }
-        });
-        */
-
-
-        // Retornar la vista que ya inflaste y configuraste
-        return view;
+        return binding.getRoot();
     }
+
 
     public void abrirMapa() {
         Intent intent = new Intent(requireContext(), MapsActivity.class);

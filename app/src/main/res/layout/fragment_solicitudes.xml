@@ -18,14 +18,6 @@
         <!-- TÍTULO Favoritos -->
 
 
-        <FrameLayout
-            android:id="@+id/contenedor_fragment_hijo"
-            android:layout_width="match_parent"
-            android:layout_height="391dp" />
-
-
-
-
 
         <TextView
             android:layout_width="205dp"
@@ -37,7 +29,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="380dp"
-            android:layout_height="265dp">
+            android:layout_height="193dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/carouselRecyclerView"
@@ -51,10 +43,10 @@
 
             <!-- Puedes dejar el CardView si ya lo estás usando -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card2"
+                android:id="@+id/card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="300dp"
+                android:layout_marginTop="8dp"
                 app:cardCornerRadius="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +55,11 @@
             </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <FrameLayout
+            android:id="@+id/contenedor_fragment_hijo"
+            android:layout_width="match_parent"
+            android:layout_height="464dp" />
 
 
     </LinearLayout>

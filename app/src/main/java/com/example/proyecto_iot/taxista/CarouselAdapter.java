@@ -15,11 +15,23 @@ import java.util.List;
 
 public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHolder> {
 
-    private final List<CarouselItemModel> items;
+    public interface OnItemClickListener {
+        void onItemClick(CarouselItemModel item);
+    }
+
+    private List<CarouselItemModel> items;
+    private OnItemClickListener listener;
+
+    // ESTE constructor es el que necesitas
+    public CarouselAdapter(List<CarouselItemModel> items, OnItemClickListener listener) {
+        this.items = items;
+        this.listener = listener;
+    }
 
     public CarouselAdapter(List<CarouselItemModel> items) {
         this.items = items;
     }
+
 
     @NonNull
     @Override
@@ -35,7 +47,14 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
         holder.imageView.setImageResource(item.imageResId);
         holder.titleText.setText(item.title);
         holder.subText.setText(item.subtitle);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(item);
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {

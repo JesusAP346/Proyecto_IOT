@@ -23,7 +23,7 @@
             android:paddingBottom="4dp" />
 
         <TextView
-            android:id="@+id/subtitulo"
+            android:id="@+id/nombreHotel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hotel Paraíso"
