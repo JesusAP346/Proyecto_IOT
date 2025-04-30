@@ -58,7 +58,7 @@
             android:name=".taxista.InformacionPersonalActivity"
             android:exported="false" />
         <activity
-            android:name=".taxista.MapsActivity"
+            android:name=".taxista.solicitudes.MapsActivity"
             android:exported="false" />
         <activity
             android:name=".cliente.MisReservasActivity"

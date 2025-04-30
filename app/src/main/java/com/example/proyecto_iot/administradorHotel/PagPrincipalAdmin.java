@@ -2,11 +2,7 @@ package com.example.proyecto_iot.administradorHotel;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,11 +12,7 @@ import com.example.proyecto_iot.administradorHotel.fragmentos.HomeFragment;
 import com.example.proyecto_iot.administradorHotel.fragmentos.HotelFragment;
 import com.example.proyecto_iot.administradorHotel.fragmentos.PerfilAdminFragment;
 import com.example.proyecto_iot.administradorHotel.fragmentos.ReservasFragment;
-import com.example.proyecto_iot.databinding.ActivityMainBinding;
 import com.example.proyecto_iot.databinding.ActivityPagPrincipalAdminBinding;
-import com.example.proyecto_iot.taxista.PerfilFragment;
-import com.example.proyecto_iot.taxista.QrFragment;
-import com.example.proyecto_iot.taxista.SolicitudesFragment;
 
 public class PagPrincipalAdmin extends AppCompatActivity {
 

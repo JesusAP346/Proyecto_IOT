@@ -1,4 +1,4 @@
-package com.example.proyecto_iot.taxista;
+package com.example.proyecto_iot.taxista.solicitudes;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.taxista.Solicitud;
 
 import java.util.List;
 

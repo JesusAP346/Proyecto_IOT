@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.proyecto_iot.databinding.ActivityMainBinding;
 import com.example.proyecto_iot.taxista.PerfilFragment;
 import com.example.proyecto_iot.taxista.QrFragment;
-import com.example.proyecto_iot.taxista.SolicitudesFragment;
+import com.example.proyecto_iot.taxista.solicitudes.SolicitudesFragment;
 
 
 public class MainActivity extends AppCompatActivity {

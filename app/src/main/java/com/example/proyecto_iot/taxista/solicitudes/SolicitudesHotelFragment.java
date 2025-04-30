@@ -1,4 +1,4 @@
-package com.example.proyecto_iot.taxista;
+package com.example.proyecto_iot.taxista.solicitudes;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import java.util.List;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.FragmentSolicitudesHotelBinding;
+import com.example.proyecto_iot.taxista.Solicitud;
 
 
 public class SolicitudesHotelFragment extends Fragment {
