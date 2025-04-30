@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,136 +26,48 @@
             android:textStyle="bold" />
 
 
-        <!-- Cuadrícula de 2x2 tarjetas -->
-        <GridLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:columnCount="2"
-            android:rowCount="2">
+            android:layout_height="match_parent">
 
-            <!-- TARJETA 1 -->
-            <LinearLayout
-                android:id="@+id/card1"
-                android:layout_width="0dp"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/carouselRecyclerView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="6dp"
-                android:orientation="vertical">
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hotel1" />
 
-                <!-- Contenedor naranja con texto e ícono -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_orange_box"
-                    android:orientation="vertical"
-
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="Hotel Paraíso"
-                        android:textColor="@color/black" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginEnd="4dp"
-                            android:src="@drawable/baseline_accessibility_new_24" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3 solicitudes"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- TARJETA 2 -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- Puedes dejar el CardView si ya lo estás usando -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="6dp"
-                android:orientation="vertical">
+                android:layout_marginTop="300dp"
+                app:cardCornerRadius="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/carouselRecyclerView">
+                <!-- contenido de la tarjeta -->
+            </com.google.android.material.card.MaterialCardView>
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hotel2" />
-
-                <!-- Contenedor naranja con texto e ícono -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_orange_box"
-                    android:orientation="vertical"
-
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="Hotel favorito 2"
-                        android:textColor="@color/black" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginEnd="4dp"
-                            android:src="@drawable/baseline_accessibility_new_24" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="15 solicitudes"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-
-        </GridLayout>
-
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="205dp"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
             android:text="Otros hoteles"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginTop="110dp"/>
+            android:textStyle="bold" />
 
 
-        <org.imaginativeworld.whynotimagecarousel.ImageCarousel
-            android:id="@+id/carousel"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" />
+
+
+
+
 
 
     </LinearLayout>

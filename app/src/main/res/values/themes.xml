@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <!--<style name="Base.Theme.PROYECTO_IOT" parent="Theme.Material3.DayNight.NoActionBar"> -->
-    <style name="Base.Theme.PROYECTO_IOT" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <!-- Usa Material3 para habilitar el carrusel correctamente -->
+    <style name="Base.Theme.PROYECTO_IOT" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Activa el carrusel de Material3 -->
 
-    <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Puedes agregar más personalización aquí -->
     </style>
 
     <style name="Theme.PROYECTO_IOT" parent="Base.Theme.PROYECTO_IOT" />
