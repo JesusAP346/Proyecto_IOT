@@ -39,10 +39,29 @@ public class SolicitudesFragment extends Fragment {
         );
 
         List<CarouselItemModel> itemList = Arrays.asList(
-                new CarouselItemModel(R.drawable.hotel1, "Hotel Paraíso", "3 solicitudes"),
-                new CarouselItemModel(R.drawable.hotel2, "Hotel Amanecer", "15 solicitudes"),
-                new CarouselItemModel(R.drawable.hotel3, "Hotel Playa", "1 solicitud")
+                new CarouselItemModel(
+                        R.drawable.hotel1,
+                        "Hotel Paraíso",
+                        "3 solicitudes",
+                        "San Juan de Lurigancho",
+                        "★★★★☆"
+                ),
+                new CarouselItemModel(
+                        R.drawable.hotel2,
+                        "Hotel Amanecer",
+                        "15 solicitudes",
+                        "Miraflores",
+                        "★★★★★"
+                ),
+                new CarouselItemModel(
+                        R.drawable.hotel3,
+                        "Hotel Playa",
+                        "1 solicitud",
+                        "Barranco",
+                        "★★★☆☆"
+                )
         );
+
 
 
         CarouselAdapter adapter = new CarouselAdapter(itemList, item -> {

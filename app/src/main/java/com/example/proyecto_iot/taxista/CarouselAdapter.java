@@ -47,6 +47,13 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
         holder.imageView.setImageResource(item.imageResId);
         holder.titleText.setText(item.title);
         holder.subText.setText(item.subtitle);
+        holder.titleText.setText(item.title);
+        holder.subText.setText(item.subtitle);
+        holder.locationText.setText(item.location);
+        holder.starsText.setText(item.stars);
+
+
+
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -65,12 +72,17 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
         ImageView imageView;
         TextView titleText;
         TextView subText;
+        TextView locationText;
+        TextView starsText;
 
         ViewHolder(View view) {
             super(view);
             imageView = view.findViewById(R.id.imageView);
             titleText = view.findViewById(R.id.titleText);
             subText = view.findViewById(R.id.subText);
+            locationText = view.findViewById(R.id.locationText);
+            starsText = view.findViewById(R.id.starsText);
         }
     }
+
 }

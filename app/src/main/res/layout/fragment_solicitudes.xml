@@ -29,7 +29,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="380dp"
-            android:layout_height="193dp">
+            android:layout_height="281dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/carouselRecyclerView"
@@ -37,8 +37,8 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:overScrollMode="never"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp" />
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp" />
 
 
             <!-- Puedes dejar el CardView si ya lo estás usando -->
@@ -59,7 +59,7 @@
         <FrameLayout
             android:id="@+id/contenedor_fragment_hijo"
             android:layout_width="match_parent"
-            android:layout_height="464dp" />
+            android:layout_height="337dp" />
 
 
     </LinearLayout>
