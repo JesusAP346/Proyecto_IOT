@@ -32,25 +32,28 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/fechaNac"
-        style="@style/CustomTextInputRegister"
+        android:id="@+id/idDepartamento"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="322dp"
+        android:textColorHint="@color/white"
         android:layout_height="60dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <AutoCompleteTextView
+            android:id="@+id/dropdownDepartamento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColorHint="@color/white"
+            android:textStyle="bold"
             android:background="@drawable/text_input_rounded_register"
-            android:clickable="true"
-            android:focusable="false"
             android:hint="@string/hint_depart"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
+
 
 
     <TextView
@@ -64,27 +67,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.075"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fechaNac" />
+        app:layout_constraintTop_toBottomOf="@+id/idDepartamento" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email"
-        style="@style/CustomTextInputRegister"
+        android:id="@+id/idProvincia"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="322dp"
+        android:textColorHint="@color/white"
         android:layout_height="60dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uwu">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <AutoCompleteTextView
+            android:id="@+id/dropdownProvincia"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColorHint="@color/white"
+            android:textStyle="bold"
             android:background="@drawable/text_input_rounded_register"
-            android:clickable="true"
-            android:focusable="false"
             android:hint="@string/hint_selecciona_prov"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -99,27 +104,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.01"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        app:layout_constraintTop_toBottomOf="@+id/idProvincia" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/distrito"
-        style="@style/CustomTextInputRegister"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="322dp"
-        android:layout_marginTop="12dp"
         android:layout_height="60dp"
+        android:textColorHint="@color/white"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uwuw2">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <AutoCompleteTextView
+            android:id="@+id/dropdownDistrito"
             android:layout_width="match_parent"
+            android:textColorHint="@color/white"
+            android:textStyle="bold"
             android:layout_height="wrap_content"
             android:background="@drawable/text_input_rounded_register"
-            android:clickable="true"
-            android:focusable="false"
             android:hint="@string/hint_selecciona_dist"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
