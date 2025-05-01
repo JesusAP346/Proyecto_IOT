@@ -97,5 +97,15 @@
     <string name="lbl_olvido_password">¿Olvidó su contraseña?</string>
     <string name="btn_enviar">Enviar</string>
 
+    <!--CLIENTE-BÚSQUEDA-->
+    <string name="lbl_buscar">Buscar</string>
+    <string name="lbl_favoritos">Favoritos</string>
+    <string name="txt_saludo">Hola, Roberto!</string>
+    <string name="txt_encuentra_el_hotel">Encuenta el hotel ideal para ti</string>
+    <string name="lbl_fecha_in_out">Fecha de entrada/salida</string>
+    <string name="lbl_huespedes_hab">Huéspedes y habitaciones</string>
+    <string name="btn_buscar">Buscar</string>
+    <string name="lbl_busquedas_recientes">Búesquedas recientes</string>
+
 
 </resources>
