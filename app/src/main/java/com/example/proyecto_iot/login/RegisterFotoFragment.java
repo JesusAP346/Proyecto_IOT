@@ -14,10 +14,10 @@ import com.example.proyecto_iot.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RegisterDireccionFragment#newInstance} factory method to
+ * Use the {@link RegisterFotoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegisterDireccionFragment extends Fragment {
+public class RegisterFotoFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,7 +28,7 @@ public class RegisterDireccionFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public RegisterDireccionFragment() {
+    public RegisterFotoFragment() {
         // Required empty public constructor
     }
 
@@ -38,11 +38,11 @@ public class RegisterDireccionFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RegisterDireccionFragment.
+     * @return A new instance of fragment RegisterFotoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegisterDireccionFragment newInstance(String param1, String param2) {
-        RegisterDireccionFragment fragment = new RegisterDireccionFragment();
+    public static RegisterFotoFragment newInstance(String param1, String param2) {
+        RegisterFotoFragment fragment = new RegisterFotoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -63,7 +63,7 @@ public class RegisterDireccionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_register_direccion, container, false);
+        View view = inflater.inflate(R.layout.fragment_register_foto, container, false);
         Button botonRegresar = view.findViewById(R.id.botonRegresar);
         botonRegresar.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -71,17 +71,7 @@ public class RegisterDireccionFragment extends Fragment {
                 getParentFragmentManager().popBackStack();
             }
         });
-        Button botonSiguiente = view.findViewById(R.id.botonSiguiente);
-        botonSiguiente.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                RegisterFotoFragment registerFotoFragment = new RegisterFotoFragment();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, registerFotoFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
+
         return view;
     }
 }

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/lbl_sube_foto"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <FrameLayout
+        android:id="@+id/fotoContainer"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView">
+
+        <ImageView
+            android:id="@+id/fotoPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_background"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_person_placeholder2" />
+
+        <ImageButton
+            android:id="@+id/botonSubirFoto"
+            android:layout_width="80dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@drawable/rounded_camera_button"
+            android:contentDescription="@string/txt_subir_foto"
+            android:src="@drawable/ic_camera"
+            app:tint="@android:color/white" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/camara"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="6dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_camera"
+        app:layout_constraintBottom_toBottomOf="@+id/fotoContainer"
+        app:layout_constraintEnd_toEndOf="@+id/fotoContainer"
+        app:layout_constraintStart_toStartOf="@+id/fotoContainer" />
+
+    <Button
+        android:id="@+id/botonSiguiente"
+        android:layout_width="148dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#5C5524"
+        android:text="@string/btn_siguiente"
+        app:cornerRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fotoContainer" />
+
+    <Button
+        android:id="@+id/botonRegresar"
+        android:layout_width="148dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#312F19"
+        android:text="@string/btn_regresar"
+        app:cornerRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toEndOf="@+id/botonSiguiente"
+        app:layout_constraintTop_toBottomOf="@+id/fotoContainer" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

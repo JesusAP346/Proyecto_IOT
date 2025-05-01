@@ -89,6 +89,10 @@
     <string name="hint_selecciona_dist">Distrito</string>
     <string name="hint_direccion">Dirección</string>
     <string name="lbl_direccion">Ingresa tu dirección</string>
+    <string name="lbl_sube_foto">Sube una foto tuya</string>
+    <string name="txt_subir_foto">Subir foto</string>
+
+
 
 
 </resources>
