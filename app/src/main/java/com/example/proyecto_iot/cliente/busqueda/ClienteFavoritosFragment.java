@@ -3,12 +3,17 @@ package com.example.proyecto_iot.cliente.busqueda;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,10 +62,24 @@ public class ClienteFavoritosFragment extends Fragment {
         }
     }
 
+    private RecyclerView recyclerView;
+    private HotelAdapter hotelAdapter;
+    private List<Hotel> hotelList;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cliente_favoritos, container, false);
+        View view = inflater.inflate(R.layout.fragment_cliente_favoritos, container, false);
+        recyclerView = view.findViewById(R.id.recyclerHoteles);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        hotelList = new ArrayList<>();
+        hotelList.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5));
+        hotelList.add(new Hotel("Hotel Las Rosas", "San Miguel", 355, R.drawable.hotel2, 4));
+
+        hotelAdapter = new HotelAdapter(getContext(), hotelList);
+        recyclerView.setAdapter(hotelAdapter);
+        return  view;
     }
 }

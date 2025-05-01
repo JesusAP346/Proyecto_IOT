@@ -106,6 +106,8 @@
     <string name="lbl_huespedes_hab">Huéspedes y habitaciones</string>
     <string name="btn_buscar">Buscar</string>
     <string name="lbl_busquedas_recientes">Búsquedas recientes</string>
+    <string name="location">Ubicación</string>
+    <string name="favorite">Favortios</string>
 
 
 </resources>

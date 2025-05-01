@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Imagen del hotel -->
+        <ImageView
+            android:id="@+id/imageHotel"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/hotel1" />
+
+        <!-- Ícono corazón (favorito) -->
+        <ImageView
+            android:id="@+id/iconFavorite"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="end"
+            android:layout_margin="-40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/ic_favorite_border"
+            android:contentDescription="@string/favorite" />
+
+        <!-- Info del hotel -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/textNombreHotel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hotel Caribe"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_location"
+                    android:contentDescription="@string/location" />
+
+                <TextView
+                    android:id="@+id/textUbicacion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="San Miguel"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Estrellas -->
+                <ImageView android:layout_width="16dp" android:id="@+id/star1" android:layout_height="16dp" android:src="@drawable/ic_star" />
+                <ImageView android:layout_width="16dp" android:id="@+id/star2" android:layout_height="16dp" android:src="@drawable/ic_star" />
+                <ImageView android:layout_width="16dp" android:id="@+id/star3" android:layout_height="16dp" android:src="@drawable/ic_star" />
+                <ImageView android:layout_width="16dp" android:id="@+id/star4" android:layout_height="16dp" android:src="@drawable/ic_star" />
+                <ImageView android:layout_width="16dp" android:id="@+id/star5" android:layout_height="16dp" android:src="@drawable/ic_star_border" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textPrecio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="A partir de S/. 2550"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <!-- Botón Ver hotel -->
+            <Button
+                android:id="@+id/btnVerHotel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Ver hotel"
+                android:backgroundTint="#FFC107"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

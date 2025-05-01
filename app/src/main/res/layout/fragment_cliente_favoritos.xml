@@ -78,4 +78,16 @@
         app:layout_constraintStart_toEndOf="@+id/txtBuscar"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerHoteles"
+        android:layout_width="395dp"
+        android:layout_height="506dp"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtBuscar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
