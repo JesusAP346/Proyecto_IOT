@@ -105,7 +105,7 @@
     <string name="lbl_fecha_in_out">Fecha de entrada/salida</string>
     <string name="lbl_huespedes_hab">Huéspedes y habitaciones</string>
     <string name="btn_buscar">Buscar</string>
-    <string name="lbl_busquedas_recientes">Búesquedas recientes</string>
+    <string name="lbl_busquedas_recientes">Búsquedas recientes</string>
 
 
 </resources>

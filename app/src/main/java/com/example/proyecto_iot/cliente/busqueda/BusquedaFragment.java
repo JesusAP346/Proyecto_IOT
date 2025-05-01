@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,9 @@ import com.example.proyecto_iot.R;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -104,6 +108,16 @@ public class BusquedaFragment extends Fragment{
             });
             dialog.show(getParentFragmentManager(), "HuespedesBottomSheet");
         });
+
+        RecyclerView recycler = view.findViewById(R.id.recyclerRecientes);
+        recycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        List<RecienteItem> recientes = new ArrayList<>();
+        recientes.add(new RecienteItem("Hotel a seleccionar 1", "Bellavista", "18 abr. - 19 abr.", R.drawable.hotel1));
+        recientes.add(new RecienteItem("Hotel a seleccionar 2", "San Miguel", "18 abr. - 19 abr.", R.drawable.hotel2));
+
+        RecientesAdapter adapter = new RecientesAdapter(recientes);
+        recycler.setAdapter(adapter);
 
 
 
