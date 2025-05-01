@@ -119,6 +119,15 @@ public class BusquedaFragment extends Fragment{
         RecientesAdapter adapter = new RecientesAdapter(recientes);
         recycler.setAdapter(adapter);
 
+        TextView txtFavoritos = view.findViewById(R.id.txtFavoritos);
+        txtFavoritos.setOnClickListener(v -> {
+            ClienteFavoritosFragment favoritosFragment = new ClienteFavoritosFragment();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_busqueda, favoritosFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
 
 
         return view;

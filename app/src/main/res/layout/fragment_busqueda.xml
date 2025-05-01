@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/idBuscar" />
+        app:layout_constraintTop_toBottomOf="@+id/txtBuscar" />
 
     <View
         android:layout_width="match_parent"
@@ -48,10 +48,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/idBuscar" />
+        app:layout_constraintTop_toBottomOf="@+id/txtBuscar" />
 
     <TextView
-        android:id="@+id/idBuscar"
+        android:id="@+id/txtBuscar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -65,7 +65,7 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
     <TextView
-        android:id="@+id/idFavoritos"
+        android:id="@+id/txtFavoritos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -75,7 +75,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/idBuscar"
+        app:layout_constraintStart_toEndOf="@+id/txtBuscar"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
     <TextView
@@ -91,7 +91,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/idBuscar" />
+        app:layout_constraintTop_toBottomOf="@+id/txtBuscar" />
 
     <TextView
         android:id="@+id/textView10"
