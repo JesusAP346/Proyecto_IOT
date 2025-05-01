@@ -1,6 +1,7 @@
 package com.example.proyecto_iot.cliente;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,20 @@ public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ReservaV
         holder.tvUbicacion.setText("📍 " + reserva.getUbicacion());
         holder.tvEstado.setText("Estado: " + reserva.getEstado());
         holder.imgHotel.setImageResource(reserva.getImagen());
+
+        holder.btnVerInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), DetalleReservaActivity.class);
+            intent.putExtra("nombre", reserva.getNombreHotel());
+            intent.putExtra("estado", reserva.getEstado());
+            intent.putExtra("entrada", reserva.getFechaEntrada());
+            intent.putExtra("salida", reserva.getFechaSalida());
+            intent.putExtra("monto", reserva.getMonto());
+            intent.putExtra("imagen", reserva.getImagen());
+            holder.itemView.getContext().startActivity(intent);
+        });
+
+
+
     }
 
     @Override

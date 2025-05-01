@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/text_zinc_100">
+
+    <!-- Título superior -->
+
+    <!-- Botón regresar -->
+
+    <!-- Imagen del hotel -->
+
+    <!-- Indicador carrusel simulado -->
+    <TextView
+        android:id="@+id/tvTituloDetalle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="35dp"
+        android:text="Mis Reservas"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/btnRegresar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTituloDetalle"
+        android:layout_marginTop="15dp"
+        android:text="← Regresar"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/imgHotel"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/btnRegresar"
+        android:layout_marginTop="21dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/hotel1" />
+
+    <TextView
+        android:id="@+id/indicadorImagen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3/5"
+        android:textColor="@android:color/white"
+        android:background="#66000000"
+        android:padding="4dp"
+        android:layout_alignBottom="@id/imgHotel"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="8dp"/>
+
+    <!-- Datos de reserva -->
+
+    <!-- Botón flotante de ayuda tipo chat -->
+
+    <LinearLayout
+        android:id="@+id/contenidoDetalle"
+        android:layout_width="394dp"
+        android:layout_height="206dp"
+        android:layout_below="@id/imgHotel"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="23dp"
+        android:layout_marginBottom="166dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvNombreHotel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Hotel RascaCielos"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Estado: Activo" />
+
+        <TextView
+            android:id="@+id/tvFechaEntrada"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fecha de entrada: 12-05-2025" />
+
+        <TextView
+            android:id="@+id/tvFechaSalida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fecha de salida: 16-05-2025" />
+
+        <TextView
+            android:id="@+id/tvMonto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:text="Monto total: S/.500" />
+
+        <Button
+            android:id="@+id/btnCheckout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:backgroundTint="#BAF57C00"
+            android:text="CHECKOUT"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnAyuda"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="327dp"
+        android:layout_marginBottom="107dp"
+        android:background="@drawable/chat"
+        android:contentDescription="Ayuda"
+        android:elevation="4dp"
+        android:padding="0dp"
+        android:scaleType="centerCrop" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="395dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-1dp"
+        android:background="@android:color/white"
+        app:itemIconTint="@color/nav_icon_color"
+        app:itemTextColor="@color/nav_text_color"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu_cliente" />
+
+
+</RelativeLayout>
