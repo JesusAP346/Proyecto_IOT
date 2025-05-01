@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.cliente;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.proyecto_iot.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.proyecto_iot.cliente.FormularioCheckoutActivity;
 
 public class DetalleReservaActivity extends AppCompatActivity {
 
@@ -65,10 +67,22 @@ public class DetalleReservaActivity extends AppCompatActivity {
         }
 
 
-
-
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setSelectedItemId(R.id.nav_reservas);
+        btnCheckout.setOnClickListener(v -> {
+            new AlertDialog.Builder(DetalleReservaActivity.this)
+                    .setTitle("¿Desea realizar checkout?")
+                    .setCancelable(false)
+                    .setPositiveButton("SÍ", (dialog, which) -> {
+                        // Ir al formulario de preguntas
+                        Intent intent2 = new Intent(DetalleReservaActivity.this, FormularioCheckoutActivity.class);
+                        startActivity(intent2);
+                    })
+                    .setNegativeButton("NO", (dialog, which) -> {
+                        dialog.dismiss(); // simplemente cierra el diálogo
+                    })
+                    .show();
+        });
 
     }
 }
