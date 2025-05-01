@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Huéspedes y habitaciones"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
+
+    <include layout="@layout/item_counter"
+        android:id="@+id/itemHabitaciones"
+        android:tag="Habitaciones" />
+
+    <include layout="@layout/item_counter"
+        android:id="@+id/itemAdultos"
+        android:tag="Adultos" />
+
+    <include layout="@layout/item_counter"
+        android:id="@+id/itemNinos"
+        android:tag="Niños" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Restablecer"
+            android:backgroundTint="#E0E0E0"
+            android:textColor="#757575" />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnConfirmar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirmar"
+            android:backgroundTint="#FFA500"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</LinearLayout>

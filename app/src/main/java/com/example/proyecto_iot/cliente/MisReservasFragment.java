@@ -28,11 +28,25 @@ public class MisReservasFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerReservas);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Lista de ejemplo (fotos deben estar en drawable)
+        /*Lista de ejemplo (fotos deben estar en drawable)
         List<Reserva> listaReservas = new ArrayList<>();
         listaReservas.add(new Reserva("Hotel RascaCielos", "San Miguel", "Activo", R.drawable.hotel1));
         listaReservas.add(new Reserva("Hotel Telodije", "Miraflores", "Finalizado", R.drawable.hotel2));
-        listaReservas.add(new Reserva("Hotel Ventura", "La Molina", "Activo", R.drawable.hotel1));
+        listaReservas.add(new Reserva("Hotel Ventura", "La Molina", "Activo", R.drawable.hotel1)); */
+
+        List<Reserva> listaReservas = new ArrayList<>();
+        listaReservas.add(new Reserva(
+                "Hotel RascaCielos", "San Miguel", "Activo", R.drawable.hotel1,
+                "12-05-2025", "16-05-2025", "S/.500"));
+
+        listaReservas.add(new Reserva(
+                "Hotel Telodije", "Miraflores", "Finalizado", R.drawable.hotel2,
+                "12-05-2025", "16-05-2025", "S/.500"));
+
+        listaReservas.add(new Reserva(
+                "Hotel Ventura", "La Molina", "Activo", R.drawable.hotel1,
+                "15-05-2025", "18-05-2025", "S/.600"));
+
 
         ReservaAdapter adapter = new ReservaAdapter(getContext(), listaReservas);
         recyclerView.setAdapter(adapter);
