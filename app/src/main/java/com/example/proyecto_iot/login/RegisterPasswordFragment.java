@@ -3,7 +3,6 @@ package com.example.proyecto_iot.login;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +13,10 @@ import com.example.proyecto_iot.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RegisterFotoFragment#newInstance} factory method to
+ * Use the {@link RegisterPasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegisterFotoFragment extends Fragment {
+public class RegisterPasswordFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,7 +27,7 @@ public class RegisterFotoFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public RegisterFotoFragment() {
+    public RegisterPasswordFragment() {
         // Required empty public constructor
     }
 
@@ -38,11 +37,11 @@ public class RegisterFotoFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RegisterFotoFragment.
+     * @return A new instance of fragment RegisterPasswordFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegisterFotoFragment newInstance(String param1, String param2) {
-        RegisterFotoFragment fragment = new RegisterFotoFragment();
+    public static RegisterPasswordFragment newInstance(String param1, String param2) {
+        RegisterPasswordFragment fragment = new RegisterPasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -63,23 +62,12 @@ public class RegisterFotoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_register_foto, container, false);
+        View view = inflater.inflate(R.layout.fragment_register_password, container, false);
         Button botonRegresar = view.findViewById(R.id.botonRegresar);
         botonRegresar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 getParentFragmentManager().popBackStack();
-            }
-        });
-        Button botonSiguiente = view.findViewById(R.id.botonSiguiente);
-        botonSiguiente.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                RegisterPasswordFragment registerPasswordFragment = new RegisterPasswordFragment();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, registerPasswordFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
             }
         });
         return view;

@@ -91,7 +91,11 @@
     <string name="lbl_direccion">Ingresa tu dirección</string>
     <string name="lbl_sube_foto">Sube una foto tuya</string>
     <string name="txt_subir_foto">Subir foto</string>
-
+    <string name="lbl_contra">Crea una contraseña</string>
+    <string name="lbl_ingrese_contra">Ingresa una contraseña</string>
+    <string name="lbl_ingrese_contra_again">Repite la contraseña</string>
+    <string name="lbl_olvido_password">¿Olvidó su contraseña?</string>
+    <string name="btn_enviar">Enviar</string>
 
 
 
