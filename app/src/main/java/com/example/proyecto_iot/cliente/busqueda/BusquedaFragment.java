@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.proyecto_iot.R;
 
@@ -61,6 +62,22 @@ public class BusquedaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_busqueda, container, false);
+        View view = inflater.inflate(R.layout.fragment_busqueda, container, false);
+        // Referencias a los TextViews
+        TextView txtFechas = view.findViewById(R.id.txtFechas);       // Asegúrate de que este ID exista
+        TextView txtHuespedes = view.findViewById(R.id.txtHuespedes); // Asegúrate de que este ID exista
+
+        // Abrir el diálogo de fechas
+        txtFechas.setOnClickListener(v -> {
+            FechaDialogFragment fechaDialog = new FechaDialogFragment();
+            fechaDialog.show(getChildFragmentManager(), "fechaDialog");
+        });
+
+        // Abrir el diálogo de huéspedes
+        txtHuespedes.setOnClickListener(v -> {
+            HuespedDialogFragment huespedDialog = new HuespedDialogFragment();
+            huespedDialog.show(getChildFragmentManager(), "huespedDialog");
+        });
+        return view;
     }
 }
