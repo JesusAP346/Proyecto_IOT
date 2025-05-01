@@ -59,7 +59,7 @@
             android:layout_gravity="end"
             android:layout_marginTop="12dp"
             android:text="Ver información"
-            android:backgroundTint="#FFC107"
+            android:backgroundTint="#F57C00"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

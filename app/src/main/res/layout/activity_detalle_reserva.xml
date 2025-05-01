@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -6,13 +5,6 @@
     android:padding="16dp"
     android:background="@color/text_zinc_100">
 
-    <!-- Título superior -->
-
-    <!-- Botón regresar -->
-
-    <!-- Imagen del hotel -->
-
-    <!-- Indicador carrusel simulado -->
     <TextView
         android:id="@+id/tvTituloDetalle"
         android:layout_width="wrap_content"
@@ -53,18 +45,14 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="8dp"/>
 
-    <!-- Datos de reserva -->
-
-    <!-- Botón flotante de ayuda tipo chat -->
-
     <LinearLayout
         android:id="@+id/contenidoDetalle"
-        android:layout_width="394dp"
-        android:layout_height="206dp"
+        android:layout_width="387dp"
+        android:layout_height="199dp"
+        android:layout_above="@id/bottom_navigation"
         android:layout_below="@id/imgHotel"
-        android:layout_alignParentBottom="true"
         android:layout_marginTop="23dp"
-        android:layout_marginBottom="166dp"
+        android:layout_marginBottom="77dp"
         android:orientation="vertical">
 
         <TextView
@@ -105,14 +93,14 @@
 
         <Button
             android:id="@+id/btnCheckout"
-            android:layout_width="match_parent"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="1dp"
-            android:backgroundTint="#BAF57C00"
+            android:backgroundTint="#F57C00"
             android:text="CHECKOUT"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
-
 
     </LinearLayout>
 
@@ -120,10 +108,10 @@
         android:id="@+id/btnAyuda"
         android:layout_width="58dp"
         android:layout_height="58dp"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="327dp"
-        android:layout_marginBottom="107dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="108dp"
         android:background="@drawable/chat"
         android:contentDescription="Ayuda"
         android:elevation="4dp"
@@ -132,15 +120,13 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
-        android:layout_width="395dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-1dp"
-        android:background="@android:color/white"
-        app:itemIconTint="@color/nav_icon_color"
-        app:itemTextColor="@color/nav_text_color"
+        android:background="#FFFFFF"
+        app:menu="@menu/bottom_nav_menu_cliente"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu_cliente" />
-
+        app:itemIconTint="@color/nav_icon_color"
+        app:itemTextColor="@color/nav_text_color" />
 
 </RelativeLayout>

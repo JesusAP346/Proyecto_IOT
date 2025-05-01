@@ -61,8 +61,12 @@ public class DetalleReservaActivity extends AppCompatActivity {
             btnCheckout.setBackgroundTintList(getResources().getColorStateList(android.R.color.darker_gray));
         } else {
             btnCheckout.setEnabled(true);
-            btnCheckout.setBackgroundTintList(getResources().getColorStateList(R.color.brown));
+            btnCheckout.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_orange_dark));
         }
+
+
+
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setSelectedItemId(R.id.nav_reservas);
 
