@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:title="Home"
+        android:icon="@drawable/ic_house_solid" />
+
+    <item
+        android:id="@+id/nav_admins"
+        android:title="Administradores"
+        android:icon="@drawable/ic_generic_user" />
+
+    <item
+        android:id="@+id/nav_taxis"
+        android:title="Taxistas"
+        android:icon="@drawable/ic_taxi" />
+
+    <item
+        android:id="@+id/nav_users"
+        android:title="Usuarios"
+        android:icon="@drawable/ic_generic_user" />
+
+    <item
+        android:id="@+id/nav_reservas"
+        android:title="Reservas"
+        android:icon="@drawable/ic_calendar_days_solid" />
+</menu>

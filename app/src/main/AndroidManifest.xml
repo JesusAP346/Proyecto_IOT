@@ -23,11 +23,7 @@
         <activity
             android:name=".login.LoginActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".administradorHotel.RegistroServicioDesdeOpciones"
@@ -81,6 +77,18 @@
         <activity
             android:name=".administradorHotel.PagPrincipalAdmin"
             android:exported="false" />
+
+        <activity
+            android:name=".SuperAdmin.PagPrincipalSuperAdmin"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
     </application>
 
 </manifest>
