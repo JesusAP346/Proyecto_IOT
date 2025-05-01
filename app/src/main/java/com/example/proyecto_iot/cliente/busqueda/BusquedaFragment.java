@@ -22,8 +22,7 @@ import java.util.Locale;
  * Use the {@link BusquedaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BusquedaFragment extends Fragment implements
-        HuespedDialogFragment.OnHuespedesSeleccionadosListener{
+public class BusquedaFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,18 +96,18 @@ public class BusquedaFragment extends Fragment implements
             picker.show(getParentFragmentManager(), picker.toString());
         });
 
-
         txtHuespedes.setOnClickListener(v -> {
-            HuespedDialogFragment huespedDialog = new HuespedDialogFragment();
-            huespedDialog.show(getChildFragmentManager(), "huespedDialog");
+            HuespedesBottomSheetDialogFragment dialog = new HuespedesBottomSheetDialogFragment();
+            dialog.setOnHuespedesSelectedListener((adultos, ninos, habitaciones) -> {
+                int totalHuespedes = adultos + ninos;
+                txtHuespedes.setText(totalHuespedes + " Huésp, " + habitaciones + " hab.");
+            });
+            dialog.show(getParentFragmentManager(), "HuespedesBottomSheet");
         });
+
+
+
         return view;
     }
 
-
-    @Override
-    public void onHuespedesSeleccionados(int adultos, int ninos, int habitaciones) {
-        int totalHuespedes = adultos + ninos;
-        txtHuespedes.setText(totalHuespedes + " Huésp, " + habitaciones + " hab.");
-    }
 }
