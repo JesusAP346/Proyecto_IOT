@@ -19,13 +19,13 @@
             android:exported="false" />
         <activity
             android:name=".cliente.busqueda.ClienteBusquedaActivity"
-            android:exported="true">
-
+            android:exported="false">
+<!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter> -->
         </activity>
         <activity
             android:name=".login.ForgotPasswordActivity"
@@ -84,14 +84,14 @@
             android:exported="false" />
         <activity
             android:name=".cliente.MisReservasActivity"
-            android:exported="false">
+            android:exported="true">
 
 
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>-
 
         </activity>
         <activity
