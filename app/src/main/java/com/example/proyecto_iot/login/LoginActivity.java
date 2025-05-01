@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
         TextView txtForgotPassword = findViewById(R.id.forgotPassID);
         txtForgotPassword.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, RegistroActivity.class);
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
             startActivity(intent);
         });
     }
