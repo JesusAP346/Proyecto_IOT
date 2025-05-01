@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.cliente.busqueda;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -9,6 +10,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.proyecto_iot.R;
+
+import java.util.Locale;
 
 public class ClienteBusquedaActivity extends AppCompatActivity {
 
@@ -27,5 +30,13 @@ public class ClienteBusquedaActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container_busqueda, new BusquedaFragment())
                     .commit();
         }
+        Locale locale = new Locale("es");
+        Locale.setDefault(locale);
+
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
     }
 }

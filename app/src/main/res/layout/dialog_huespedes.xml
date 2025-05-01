@@ -3,46 +3,55 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="24dp"
+    android:background="@android:color/white">
 
-    <!-- Adultos -->
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Adultos"
+        android:text="Huéspedes y habitaciones"
         android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp" />
+        android:textSize="18sp"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
+
+    <include layout="@layout/item_counter"
+        android:id="@+id/itemHabitaciones"
+        android:tag="Habitaciones" />
+
+    <include layout="@layout/item_counter"
+        android:id="@+id/itemAdultos"
+        android:tag="Adultos" />
+
+    <include layout="@layout/item_counter"
+        android:id="@+id/itemNinos"
+        android:tag="Niños" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
+        android:layout_marginTop="24dp"
+        android:gravity="end">
 
         <Button
-            android:id="@+id/btnMenosAdultos"
+            android:id="@+id/btnReset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="-" />
+            android:text="Restablecer"
+            android:backgroundTint="#E0E0E0"
+            android:textColor="#757575" />
 
-        <TextView
-            android:id="@+id/txtAdultos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:text="2"
-            android:textSize="18sp" />
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/btnMasAdultos"
+            android:id="@+id/btnConfirmar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+" />
+            android:text="Confirmar"
+            android:backgroundTint="#FFA500"
+            android:textColor="@android:color/white" />
     </LinearLayout>
-
-    <!-- Puedes repetir esta misma estructura para niños y habitaciones -->
-
 </LinearLayout>
-
