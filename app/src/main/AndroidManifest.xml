@@ -15,8 +15,17 @@
         android:theme="@style/Theme.PROYECTO_IOT"
         tools:targetApi="31">
         <activity
-            android:name=".cliente.DetalleReservaActivity"
+            android:name=".cliente.FormularioCheckoutActivity"
             android:exported="false" />
+        <activity
+            android:name=".cliente.DetalleReservaActivity"
+            android:exported="true">
+
+        </activity>
+
+
+
+
         <activity
             android:name=".cliente.busqueda.ClienteBusquedaActivity"
             android:exported="true">
@@ -32,16 +41,15 @@
         <activity
             android:name=".login.RegistroActivity"
             android:exported="false" />
-
         <activity
             android:name=".login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".administradorHotel.RegistroServicioDesdeOpciones"
             android:exported="false" />
@@ -81,23 +89,17 @@
             android:exported="false" />
         <activity
             android:name=".cliente.MisReservasActivity"
-            android:exported="true">
-
-
-
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".administradorHotel.PagPrincipalAdmin"
             android:exported="false" />
-
         <activity
             android:name=".SuperAdmin.PagPrincipalSuperAdmin"
             android:exported="true"
             android:windowSoftInputMode="stateHidden|adjustPan">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -105,8 +107,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-
     </application>
 
 </manifest>
