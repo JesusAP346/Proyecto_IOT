@@ -125,7 +125,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/forgotPassID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -146,7 +146,7 @@
             android:text="@string/lbl_crear_cuenta"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            app:layout_constraintTop_toBottomOf="@+id/forgotPassID" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

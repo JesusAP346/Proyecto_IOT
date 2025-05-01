@@ -1,8 +1,7 @@
 package com.example.proyecto_iot.login;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,28 +11,20 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.proyecto_iot.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class ForgotPasswordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_forgot_password);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        TextView textCrearCuenta = findViewById(R.id.registro_nuevo_usuario);
-        textCrearCuenta.setOnClickListener(v ->{
-            Intent intent = new Intent(LoginActivity.this, RegistroActivity.class);
-            startActivity(intent);
-        });
+        Button botonRegresar = findViewById(R.id.botonRegresar);
+        botonRegresar.setOnClickListener(v -> finish());
 
-        TextView txtForgotPassword = findViewById(R.id.forgotPassID);
-        txtForgotPassword.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, RegistroActivity.class);
-            startActivity(intent);
-        });
     }
 }
