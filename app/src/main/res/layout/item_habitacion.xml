@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textPrecio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="S/. 355 por noche"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/textEtiqueta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="El precio más bajo que tenemos"
+            android:textColor="#F4BB06"
+            android:padding="4dp"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/textDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• 1 habitación\n• 2 camas individuales\n• Jacuzzi\n• Aparcamiento cerrado\n• Wi-Fi"
+            android:textColor="#444444"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <Button
+                android:id="@+id/btnReservar"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#F4BB06"
+                android:text="Reservar"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/btnVerDetalle"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="#853315"
+                android:text="Ver detalle"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

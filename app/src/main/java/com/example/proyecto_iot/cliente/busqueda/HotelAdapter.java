@@ -21,9 +21,17 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
     private List<Hotel> listaHoteles;
     private Context context;
 
-    public HotelAdapter(Context context, List<Hotel> listaHoteles) {
+    private OnHotelClickListener listener;
+
+    public interface OnHotelClickListener {
+        void onHotelClick(Hotel hotel);
+    }
+
+
+    public HotelAdapter(Context context, List<Hotel> listaHoteles, OnHotelClickListener listener) {
         this.context = context;
         this.listaHoteles = listaHoteles;
+        this.listener = listener;
     }
 
     @NonNull
@@ -41,15 +49,17 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.precio.setText("A partir de S/. " + hotel.getPrecio());
         holder.imagen.setImageResource(hotel.getImagenResId());
 
-        // Estrellas (puedes hacerlo más dinámico si deseas)
         for (int i = 0; i < 5; i++) {
             holder.estrellas[i].setImageResource(i < hotel.getEstrellas() ? R.drawable.ic_star : R.drawable.ic_star_border);
         }
 
         holder.btnVerHotel.setOnClickListener(v -> {
             Toast.makeText(context, "Hotel: " + hotel.getNombre(), Toast.LENGTH_SHORT).show();
-            // Aquí podrías abrir un nuevo Activity con los detalles
         });
+        holder.btnVerHotel.setOnClickListener(v -> {
+            listener.onHotelClick(hotel);
+        });
+
     }
 
     @Override

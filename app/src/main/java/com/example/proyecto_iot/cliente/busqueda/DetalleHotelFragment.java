@@ -12,15 +12,16 @@ import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ResultadosDeBusquedaFragment#newInstance} factory method to
+ * Use the {@link DetalleHotelFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ResultadosDeBusquedaFragment extends Fragment {
+public class DetalleHotelFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,7 +32,9 @@ public class ResultadosDeBusquedaFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public ResultadosDeBusquedaFragment() {
+    private String hotel;
+
+    public DetalleHotelFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +44,11 @@ public class ResultadosDeBusquedaFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ResultadosDeBusquedaFragment.
+     * @return A new instance of fragment DetalleHotelFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ResultadosDeBusquedaFragment newInstance(String param1, String param2) {
-        ResultadosDeBusquedaFragment fragment = new ResultadosDeBusquedaFragment();
+    public static DetalleHotelFragment newInstance(String param1, String param2) {
+        DetalleHotelFragment fragment = new DetalleHotelFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,38 +62,40 @@ public class ResultadosDeBusquedaFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            hotel = (String) getArguments().getSerializable("hotel");
         }
     }
 
-    private RecyclerView recyclerView;
-    private HotelAdapter hotelAdapter;
-    private List<Hotel> hotelList;
-
+    private RecyclerView recyclerHabitaciones;
+    private HabitacionAdapter habitacionAdapter;
+    private List<Habitacion> listaHabitaciones;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_resultados_de_busqueda, container, false);
+        View view = inflater.inflate(R.layout.fragment_detalle_hotel, container, false);
+        recyclerHabitaciones = view.findViewById(R.id.recyclerHabitaciones);
+        recyclerHabitaciones.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        recyclerView = view.findViewById(R.id.recyclerHoteles);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        listaHabitaciones = new ArrayList<>();
+        listaHabitaciones.add(new Habitacion("S/. 355 por noche", "El precio más bajo que tenemos",
+                "• 1 habitación\n• 2 camas individuales\n• Jacuzzi\n• Aparcamiento cerrado\n• Wi-Fi"));
+        listaHabitaciones.add(new Habitacion("S/. 485 por noche", "",
+                "• 1 habitación\n• 2 camas matrimoniales\n• Jacuzzi\n• Aparcamiento cerrado\n• Wi-Fi"));
 
-        hotelList = new ArrayList<>();
-        hotelList.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5));
-        hotelList.add(new Hotel("Hotel Las Rosas", "San Miguel", 355, R.drawable.hotel2, 4));
-
-        hotelAdapter = new HotelAdapter(getContext(), hotelList, hotel -> {
-            DetalleHotelFragment fragment = DetalleHotelFragment.newInstance(hotel);
-
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container_busqueda, fragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
-        recyclerView.setAdapter(hotelAdapter);
+        habitacionAdapter = new HabitacionAdapter(getContext(), listaHabitaciones);
+        recyclerHabitaciones.setAdapter(habitacionAdapter);
 
 
         return view;
     }
+
+    public static DetalleHotelFragment newInstance(Hotel hotel) {
+        DetalleHotelFragment fragment = new DetalleHotelFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("hotel", (Serializable) hotel);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 }

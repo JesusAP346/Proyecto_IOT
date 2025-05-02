@@ -79,7 +79,16 @@ public class ClienteFavoritosFragment extends Fragment {
         hotelList.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5));
         hotelList.add(new Hotel("Hotel Las Rosas", "San Miguel", 355, R.drawable.hotel2, 4));
 
-        hotelAdapter = new HotelAdapter(getContext(), hotelList);
+        hotelAdapter = new HotelAdapter(getContext(), hotelList, hotel -> {
+            DetalleHotelFragment fragment = DetalleHotelFragment.newInstance(hotel);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_busqueda, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         recyclerView.setAdapter(hotelAdapter);
 
         TextView txtBuscar = view.findViewById(R.id.txtBuscar);
