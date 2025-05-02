@@ -16,17 +16,22 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_formulario_checkout);
+
         TextView tvNombreHotel = findViewById(R.id.tvNombreHotel);
         String nombreHotel = getIntent().getStringExtra("nombreHotel");
 
-        if (nombreHotel != null && tvNombreHotel != null) {
+        if (nombreHotel != null) {
             tvNombreHotel.setText(nombreHotel);
         }
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_formulario_checkout);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
