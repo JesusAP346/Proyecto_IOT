@@ -66,25 +66,11 @@ public class DetalleHotelFragment extends Fragment {
         }
     }
 
-    private RecyclerView recyclerHabitaciones;
-    private HabitacionAdapter habitacionAdapter;
-    private List<Habitacion> listaHabitaciones;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detalle_hotel, container, false);
-        recyclerHabitaciones = view.findViewById(R.id.recyclerHabitaciones);
-        recyclerHabitaciones.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        listaHabitaciones = new ArrayList<>();
-        listaHabitaciones.add(new Habitacion("S/. 355 por noche", "El precio más bajo que tenemos",
-                "• 1 habitación\n• 2 camas individuales\n• Jacuzzi\n• Aparcamiento cerrado\n• Wi-Fi"));
-        listaHabitaciones.add(new Habitacion("S/. 485 por noche", "",
-                "• 1 habitación\n• 2 camas matrimoniales\n• Jacuzzi\n• Aparcamiento cerrado\n• Wi-Fi"));
-
-        habitacionAdapter = new HabitacionAdapter(getContext(), listaHabitaciones);
-        recyclerHabitaciones.setAdapter(habitacionAdapter);
 
 
         return view;
