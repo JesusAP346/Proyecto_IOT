@@ -1,3 +1,5 @@
+// 1. Primero, modificamos el HotelAdapter para incluir una interfaz de listener
+
 package com.example.proyecto_iot.cliente.busqueda;
 
 import android.content.Context;
@@ -7,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,10 +21,17 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
 
     private List<Hotel> listaHoteles;
     private Context context;
+    private OnHotelClickListener listener;
 
-    public HotelAdapter(Context context, List<Hotel> listaHoteles) {
+    // Interfaz para el listener
+    public interface OnHotelClickListener {
+        void onHotelClick(Hotel hotel, int position);
+    }
+
+    public HotelAdapter(Context context, List<Hotel> listaHoteles, OnHotelClickListener listener) {
         this.context = context;
         this.listaHoteles = listaHoteles;
+        this.listener = listener;
     }
 
     @NonNull
@@ -41,14 +49,16 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.precio.setText("A partir de S/. " + hotel.getPrecio());
         holder.imagen.setImageResource(hotel.getImagenResId());
 
-        // Estrellas (puedes hacerlo más dinámico si deseas)
+        // Estrellas
         for (int i = 0; i < 5; i++) {
             holder.estrellas[i].setImageResource(i < hotel.getEstrellas() ? R.drawable.ic_star : R.drawable.ic_star_border);
         }
 
+        // Configurar el botón "Ver hotel"
         holder.btnVerHotel.setOnClickListener(v -> {
-            Toast.makeText(context, "Hotel: " + hotel.getNombre(), Toast.LENGTH_SHORT).show();
-            // Aquí podrías abrir un nuevo Activity con los detalles
+            if (listener != null) {
+                listener.onHotelClick(hotel, position);
+            }
         });
     }
 
@@ -79,4 +89,3 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         }
     }
 }
-

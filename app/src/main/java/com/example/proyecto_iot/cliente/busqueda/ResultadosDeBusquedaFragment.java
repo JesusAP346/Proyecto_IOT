@@ -20,7 +20,7 @@ import java.util.List;
  * Use the {@link ResultadosDeBusquedaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ResultadosDeBusquedaFragment extends Fragment {
+public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapter.OnHotelClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,9 +79,20 @@ public class ResultadosDeBusquedaFragment extends Fragment {
         hotelList.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5));
         hotelList.add(new Hotel("Hotel Las Rosas", "San Miguel", 355, R.drawable.hotel2, 4));
 
-        hotelAdapter = new HotelAdapter(getContext(), hotelList);
+        hotelAdapter = new HotelAdapter(getContext(), hotelList, this);
         recyclerView.setAdapter(hotelAdapter);
 
         return view;
+    }
+    @Override
+    public void onHotelClick(Hotel hotel, int position) {
+
+        DetalleHotelFragment detalleFragment = DetalleHotelFragment.newInstance(hotel);
+
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_busqueda, detalleFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

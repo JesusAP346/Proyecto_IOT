@@ -21,7 +21,7 @@ import java.util.List;
  * Use the {@link ClienteFavoritosFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ClienteFavoritosFragment extends Fragment {
+public class ClienteFavoritosFragment extends Fragment implements HotelAdapter.OnHotelClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,7 +79,7 @@ public class ClienteFavoritosFragment extends Fragment {
         hotelList.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5));
         hotelList.add(new Hotel("Hotel Las Rosas", "San Miguel", 355, R.drawable.hotel2, 4));
 
-        hotelAdapter = new HotelAdapter(getContext(), hotelList);
+        hotelAdapter = new HotelAdapter(getContext(), hotelList, (this));
         recyclerView.setAdapter(hotelAdapter);
 
         TextView txtBuscar = view.findViewById(R.id.txtBuscar);
@@ -93,5 +93,16 @@ public class ClienteFavoritosFragment extends Fragment {
         });
 
         return  view;
+    }
+    @Override
+    public void onHotelClick(Hotel hotel, int position) {
+        // Crear una instancia del DetalleHotelFragment con los datos del hotel
+        DetalleHotelFragment detalleFragment = DetalleHotelFragment.newInstance(hotel);
+
+        // Realizar la transacción del fragmento
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_busqueda, detalleFragment) // Reemplaza "fragmentContainer" con el ID de tu contenedor
+                .addToBackStack(null) // Permite volver atrás con el botón Back
+                .commit();
     }
 }
