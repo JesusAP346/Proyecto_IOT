@@ -1,6 +1,10 @@
 package com.example.proyecto_iot.cliente;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -26,10 +30,28 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
             tvNombreHotel.setText(nombreHotel);
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+        // validación aquí
+        EditText pregunta1 = findViewById(R.id.pregunta1);
+        EditText pregunta2 = findViewById(R.id.pregunta2);
+        EditText observaciones = findViewById(R.id.observaciones);
+        Button btnEnviar = findViewById(R.id.btnEnviar);
+
+        btnEnviar.setOnClickListener(v -> {
+            String p1 = pregunta1.getText().toString().trim();
+            String p2 = pregunta2.getText().toString().trim();
+            String obs = observaciones.getText().toString().trim();
+
+            if (p1.isEmpty() || p2.isEmpty() || obs.isEmpty()) {
+                new AlertDialog.Builder(FormularioCheckoutActivity.this)
+                        .setTitle("Por favor, llene todos los campos")
+                        .setPositiveButton("OK", null)
+                        .show();
+            } else {
+                // Si todos los campos están llenos, continúa al siguiente paso
+                Intent intent = new Intent(FormularioCheckoutActivity.this, SolicitudTaxiActivity.class);
+                intent.putExtra("nombreHotel", nombreHotel);
+                startActivity(intent);
+            }
         });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

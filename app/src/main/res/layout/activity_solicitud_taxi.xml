@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/text_zinc_100"
+    android:padding="16dp">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTituloTaxi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="33dp"
+        android:text="Mis Reservas"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Nombre del hotel -->
+    <TextView
+        android:id="@+id/tvHotelTaxi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTituloTaxi"
+        android:layout_marginTop="27dp"
+        android:text="Hotel RascaCielos"
+        android:textStyle="italic" />
+
+    <!-- Pregunta -->
+    <TextView
+        android:id="@+id/tvPregunta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvHotelTaxi"
+        android:layout_marginTop="28dp"
+        android:text="¿Desea solicitar el servicio gratuito de taxi?" />
+
+    <!-- Grupo de radio buttons -->
+    <!-- RadioGroup SOLO con los botones -->
+    <RadioGroup
+        android:id="@+id/rgTaxi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvPregunta"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rbSi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sí" />
+
+        <EditText
+            android:id="@+id/etAeropuerto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Seleccione el aeropuerto de destino"
+            android:background="#E0E0E0"
+            android:padding="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <RadioButton
+            android:id="@+id/rbNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No" />
+    </RadioGroup>
+
+
+    <!-- Botón enviar -->
+    <Button
+        android:id="@+id/btnEnviarTaxi"
+        android:layout_width="wrap_content"
+        android:layout_height="59dp"
+        android:layout_below="@id/rgTaxi"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="104dp"
+        android:backgroundTint="#F57C00"
+        android:text="ENVIAR"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+</RelativeLayout>
