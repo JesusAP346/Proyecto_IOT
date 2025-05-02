@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.proyecto_iot.R;
@@ -125,6 +126,17 @@ public class BusquedaFragment extends Fragment{
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container_busqueda, favoritosFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        Button btnBuscar = view.findViewById(R.id.btnBuscar);
+
+        btnBuscar.setOnClickListener(v -> {
+            ResultadosDeBusquedaFragment resultadosDeBusquedaFragment = new ResultadosDeBusquedaFragment();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_busqueda, resultadosDeBusquedaFragment)
                     .addToBackStack(null)
                     .commit();
         });

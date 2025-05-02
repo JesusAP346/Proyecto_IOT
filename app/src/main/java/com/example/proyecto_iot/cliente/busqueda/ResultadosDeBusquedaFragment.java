@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.proyecto_iot.R;
 
@@ -18,10 +17,10 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ClienteFavoritosFragment#newInstance} factory method to
+ * Use the {@link ResultadosDeBusquedaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ClienteFavoritosFragment extends Fragment {
+public class ResultadosDeBusquedaFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,7 +31,7 @@ public class ClienteFavoritosFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public ClienteFavoritosFragment() {
+    public ResultadosDeBusquedaFragment() {
         // Required empty public constructor
     }
 
@@ -42,11 +41,11 @@ public class ClienteFavoritosFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ClienteFavoritosFragment.
+     * @return A new instance of fragment ResultadosDeBusquedaFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ClienteFavoritosFragment newInstance(String param1, String param2) {
-        ClienteFavoritosFragment fragment = new ClienteFavoritosFragment();
+    public static ResultadosDeBusquedaFragment newInstance(String param1, String param2) {
+        ResultadosDeBusquedaFragment fragment = new ResultadosDeBusquedaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -71,7 +70,8 @@ public class ClienteFavoritosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_cliente_favoritos, container, false);
+        View view = inflater.inflate(R.layout.fragment_resultados_de_busqueda, container, false);
+
         recyclerView = view.findViewById(R.id.recyclerHoteles);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -82,16 +82,6 @@ public class ClienteFavoritosFragment extends Fragment {
         hotelAdapter = new HotelAdapter(getContext(), hotelList);
         recyclerView.setAdapter(hotelAdapter);
 
-        TextView txtBuscar = view.findViewById(R.id.txtBuscar);
-        txtBuscar.setOnClickListener(v -> {
-            BusquedaFragment busquedaFragment = new BusquedaFragment();
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container_busqueda, busquedaFragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        return  view;
+        return view;
     }
 }
