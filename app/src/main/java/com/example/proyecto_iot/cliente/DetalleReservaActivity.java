@@ -76,6 +76,8 @@ public class DetalleReservaActivity extends AppCompatActivity {
                     .setPositiveButton("SÍ", (dialog, which) -> {
                         // Ir al formulario de preguntas
                         Intent intent2 = new Intent(DetalleReservaActivity.this, FormularioCheckoutActivity.class);
+                        intent2.putExtra("nombreHotel", nombre); // Reemplaza por el valor real
+                        //startActivity(intent);
                         startActivity(intent2);
                     })
                     .setNegativeButton("NO", (dialog, which) -> {

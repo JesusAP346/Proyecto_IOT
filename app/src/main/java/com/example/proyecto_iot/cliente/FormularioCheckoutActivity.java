@@ -1,6 +1,7 @@
 package com.example.proyecto_iot.cliente;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,15 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_formulario_checkout);
+        TextView tvNombreHotel = findViewById(R.id.tvNombreHotel);
+        String nombreHotel = getIntent().getStringExtra("nombreHotel");
+
+        if (nombreHotel != null && tvNombreHotel != null) {
+            tvNombreHotel.setText(nombreHotel);
+        }
+
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_formulario_checkout);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

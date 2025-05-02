@@ -6,58 +6,110 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@color/text_zinc_100"
     tools:context=".cliente.FormularioCheckoutActivity">
+
+    <!-- Título principal -->
+
+
+    <TextView
+        android:id="@+id/tvTituloDetalle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Mis Reservas"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNombreHotel"
+        android:layout_width="302dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="72dp"
+        android:text="Hotel Sol y Mar"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.207"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvTitulo"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Por favor, responda:"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
+        android:text="Por favor, responda las siguientes preguntas:"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@id/tvTituloDetalle2" />
 
     <EditText
         android:id="@+id/pregunta1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="384dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="460dp"
         android:hint="1. ¿Qué le pareció el servicio?"
-        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreHotel"
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/pregunta2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="2. ¿Volvería a hospedarse aquí?"
-        app:layout_constraintTop_toBottomOf="@id/pregunta1"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="381dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="372dp"
+        android:hint="2. ¿Volvería a hospedarse aquí? ¿Por qué?"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp"/>
+        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pregunta1"
+        app:layout_constraintVertical_bias="0.928" />
 
     <EditText
         android:id="@+id/observaciones"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="383dp"
+        android:layout_height="55dp"
         android:hint="Observaciones adicionales"
-        app:layout_constraintTop_toBottomOf="@id/pregunta2"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.557" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="160dp"
+        android:text="*Todos los campos son obligatorios"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnEnviar"
-        android:layout_width="0dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:text="ENVIAR"
-        android:backgroundTint="@color/brown"
+        android:layout_marginBottom="192dp"
+        android:backgroundTint="#F57C00"
+        android:text="SIGUIENTE"
         android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/observaciones"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
