@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +11,10 @@ import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.FragmentDetalleHuespedBinding;
+import com.google.android.material.button.MaterialButton;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,12 +60,32 @@ public class DetalleHuespedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentDetalleHuespedBinding.inflate(inflater, container, false);
+
+        // Retroceso
+        binding.backdetallehuesped.setOnClickListener(v ->
+                requireActivity().getSupportFragmentManager().popBackStack()
+        );
+
+        // 👉 Acción del botón "Realizar Check-out"
+        binding.btnCheckout.setOnClickListener(v -> {
+            // Cargar el fragmento CheckoutFragment
+            Fragment checkoutFragment = new CheckoutFragment();
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frame_layout, checkoutFragment) // Usa el mismo contenedor del BottomNav
+                    .addToBackStack(null) // Permite volver con el botón atrás
+                    .commit();
+        });
+
         return binding.getRoot();
     }
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
+
+
 }

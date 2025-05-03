@@ -22,7 +22,7 @@
             android:exported="false" />
         <activity
             android:name=".cliente.DetalleReservaActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".cliente.MisReservasActivity"
             android:exported="false">
@@ -32,6 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
         </activity>
+        <!--
         <activity
             android:name=".cliente.busqueda.ClienteBusquedaActivity"
             android:exported="true">
@@ -41,21 +42,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        -->
+
         <activity
             android:name=".login.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".login.RegistroActivity"
             android:exported="false" />
+        <!--
         <activity
             android:name=".login.LoginActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        -->
         <activity
             android:name=".administradorHotel.RegistroServicioDesdeOpciones"
             android:exported="false" />
@@ -93,13 +99,10 @@
         <activity
             android:name=".taxista.solicitudes.MapsActivity"
             android:exported="false" />
+
         <activity
             android:name=".administradorHotel.PagPrincipalAdmin"
-            android:exported="false" />
-        <activity
-            android:name=".SuperAdmin.PagPrincipalSuperAdmin"
-            android:exported="true"
-            android:windowSoftInputMode="stateHidden|adjustPan">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -107,9 +110,23 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
-    </application>
+        <activity
+            android:name=".SuperAdmin.PagPrincipalSuperAdmin"
+            android:exported="false">
+
+        <!--
+        android:windowSoftInputMode="stateHidden|adjustPan">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        -->
+    </activity>
+
+    <meta-data
+        android:name="preloaded_fonts"
+        android:resource="@array/preloaded_fonts" />
+</application>
 
 </manifest>
