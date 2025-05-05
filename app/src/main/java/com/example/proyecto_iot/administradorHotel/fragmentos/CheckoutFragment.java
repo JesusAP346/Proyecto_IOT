@@ -1,66 +1,153 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.databinding.FragmentCheckoutBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CheckoutFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.Arrays;
+import java.util.List;
+
 public class CheckoutFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FragmentCheckoutBinding binding;
 
     public CheckoutFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CheckoutFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static CheckoutFragment newInstance(String param1, String param2) {
         CheckoutFragment fragment = new CheckoutFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("param1", param1);
+        args.putString("param2", param2);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentCheckoutBinding.inflate(inflater, container, false);
+
+        binding.backdetallecheckout.setOnClickListener(v ->
+                requireActivity().getSupportFragmentManager().popBackStack()
+        );
+
+        binding.btnIrServicioTaxi.setOnClickListener(v -> {
+
+            Fragment servicioTaxiFragment = new ServicioTaxiFragment();
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frame_layout, servicioTaxiFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+        return binding.getRoot();
+
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_checkout, container, false);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.btnAgregarConsumo.setOnClickListener(v -> showAgregarConsumoDialog());
+        binding.btnAgregarCargos.setOnClickListener(v -> showAgregarCargoDialog());
+        binding.btnProcesarPago.setOnClickListener(v -> mostrarDialogoConfirmacionPago());
+        setupSpinnerServicios();
+    }
+
+    private void showAgregarConsumoDialog() {
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_agregar_consumo, null);
+
+        EditText editItem = dialogView.findViewById(R.id.edit_item);
+        EditText editCosto = dialogView.findViewById(R.id.edit_costo);
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Agregar Consumo")
+                .setView(dialogView)
+                .setPositiveButton("Agregar", (dialog, which) -> {
+                    // Aquí iría la lógica más adelante
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+    private void showAgregarCargoDialog() {
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_agregar_cargo, null);
+
+        EditText editCargo = dialogView.findViewById(R.id.edit_item);
+        EditText editCosto = dialogView.findViewById(R.id.edit_costo);
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Agregar Cargo")
+                .setView(dialogView)
+                .setPositiveButton("Agregar", (dialog, which) -> {
+                    // Aquí iría la lógica más adelante
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void setupSpinnerServicios() {
+        List<String> listaServicios = Arrays.asList("Seleccionar servicio", "WiFi", "Desayuno", "Spa", "Lavandería");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                R.layout.spinner_item_small,   // <-- Este es el cambio importante
+                listaServicios
+        );
+
+        adapter.setDropDownViewResource(R.layout.spinner_item_small);  // <-- Opcional: también para el dropdown
+        binding.spinnerServicios.setAdapter(adapter);
+    }
+    private void mostrarDialogoConfirmacionPago() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Confirmación de Pago")
+                .setMessage("¿Deseas confirmar el pago?")
+                .setPositiveButton("Confirmar", (dialog, which) -> {
+                    simularProcesamientoDePago();
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void simularProcesamientoDePago() {
+        AlertDialog loadingDialog = new AlertDialog.Builder(getContext())
+                .setTitle("Procesando")
+                .setMessage("Espere un momento...")
+                .setCancelable(false)
+                .create();
+
+        loadingDialog.show();
+
+        new Handler().postDelayed(() -> {
+            loadingDialog.dismiss();
+
+            boolean pagoExitoso = Math.random() < 0.7; // 70% de éxito
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle(pagoExitoso ? "✅ Pago Exitoso" : "❌ Error en el Pago")
+                    .setMessage(pagoExitoso ? "El pago se procesó correctamente." : "Hubo un error al procesar el pago.")
+                    .setPositiveButton("OK", null)
+                    .show();
+
+        }, 2000); // Simula espera de 2 segundos
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
