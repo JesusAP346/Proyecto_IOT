@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.FragmentSolicitudesBinding;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,29 +36,12 @@ public class SolicitudesFragment extends Fragment {
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
         );
 
-        List<CarouselItemModel> itemList = Arrays.asList(
-                new CarouselItemModel(
-                        R.drawable.hotel1,
-                        "Hotel Paraíso",
-                        "3 solicitudes",
-                        "San Juan de Lurigancho",
-                        "★★★★☆"
-                ),
-                new CarouselItemModel(
-                        R.drawable.hotel2,
-                        "Hotel Amanecer",
-                        "15 solicitudes",
-                        "Miraflores",
-                        "★★★★★"
-                ),
-                new CarouselItemModel(
-                        R.drawable.hotel3,
-                        "Hotel Playa",
-                        "1 solicitud",
-                        "Barranco",
-                        "★★★☆☆"
-                )
-        );
+        List<CarouselItemModel> itemList = new ArrayList<>();
+        itemList.add(new CarouselItemModel(R.drawable.hotel1, "Hotel Paraíso", "3 solicitudes", "SJL", "★★★★☆"));
+        itemList.add(new CarouselItemModel(R.drawable.hotel2, "Hotel Amanecer", "15 solicitudes", "Miraflores", "★★★★★"));
+        itemList.add(new CarouselItemModel(R.drawable.hotel3, "Hotel Playa", "1 solicitud", "Barranco", "★★★☆☆"));
+
+
 
 
 

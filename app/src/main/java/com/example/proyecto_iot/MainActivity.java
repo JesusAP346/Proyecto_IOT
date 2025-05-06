@@ -8,14 +8,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.proyecto_iot.databinding.ActivityMainBinding;
-import com.example.proyecto_iot.taxista.PerfilFragment;
-import com.example.proyecto_iot.taxista.QrFragment;
+import com.example.proyecto_iot.taxista.perfil.PerfilFragment;
+import com.example.proyecto_iot.taxista.qr.QrFragment;
 import com.example.proyecto_iot.taxista.solicitudes.SolicitudesFragment;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding;
+    public ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +41,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        /*  NO SE QUE HACE ESTO PERO NO PARECE NECESARIO UWU
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        */
+
+
+
     }
 
     private void replaceFragment(Fragment fragment){

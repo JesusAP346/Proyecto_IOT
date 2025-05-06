@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.taxista.Solicitud;
 
 import java.util.List;
 

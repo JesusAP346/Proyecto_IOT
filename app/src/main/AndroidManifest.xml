@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,9 @@
         android:theme="@style/Theme.PROYECTO_IOT"
         tools:targetApi="31">
         <activity
+            android:name=".taxista.qr.CustomCaptureActivity"
+            android:exported="false" />
+        <activity
             android:name=".cliente.SolicitudTaxiActivity"
             android:exported="false" />
         <activity
@@ -22,15 +26,18 @@
             android:exported="false" />
         <activity
             android:name=".cliente.DetalleReservaActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".cliente.MisReservasActivity"
             android:exported="false">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <!--
         <activity
@@ -43,7 +50,6 @@
             </intent-filter>
         </activity>
         -->
-
         <activity
             android:name=".login.ForgotPasswordActivity"
             android:exported="false" />
@@ -76,24 +82,6 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false">
-
-        </activity>
-        <activity
-            android:name=".taxista.PerfilTaxistaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".taxista.SeguridadActivity"
-            android:exported="false" />
-        <activity
-            android:name=".taxista.InformacionPersonalActivity"
-            android:exported="false" />
-        <activity
-            android:name=".taxista.solicitudes.MapsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".administradorHotel.PagPrincipalAdmin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -101,7 +89,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--
+        <activity
+            android:name=".taxista.perfil.PerfilTaxistaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".taxista.perfil.SeguridadActivity"
+            android:exported="false" />
+        <activity
+            android:name=".taxista.perfil.InformacionPersonalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".taxista.solicitudes.MapsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".administradorHotel.PagPrincipalAdmin"
+            android:exported="false"></activity>
+        <!--
         <activity
             android:name=".SuperAdmin.PagPrincipalSuperAdmin"
             android:exported="true"
@@ -112,11 +115,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
--->
-
+        -->
         <meta-data
-        android:name="preloaded_fonts"
-        android:resource="@array/preloaded_fonts" />
-</application>
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+    </application>
 
 </manifest>

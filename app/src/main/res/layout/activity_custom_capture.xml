@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/capture_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/zxing_barcode_scanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <Button
+        android:id="@+id/btnFlash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Encender Linterna "
+        android:textColor="@android:color/white"
+        android:backgroundTint="#F4C16D"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="36dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:elevation="6dp"
+         />
+</FrameLayout>
