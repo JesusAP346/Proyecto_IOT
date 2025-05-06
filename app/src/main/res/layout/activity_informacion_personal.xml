@@ -8,6 +8,7 @@
     tools:context=".taxista.perfil.InformacionPersonalActivity">
 
     <LinearLayout
+        android:id="@+id/contenedorCampos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -34,26 +35,31 @@
         <!-- Campo reusable -->
         <include layout="@layout/item_dato_editable"
             android:id="@+id/campoNombre"
-            android:tag="Nombre legal|Roberto Tafur" />
+            />
 
         <include layout="@layout/item_dato_editable"
-            android:tag="Documento de Identidad|DNI: 71986247" />
+            android:id="@+id/campoDNI"
+            />
 
         <include layout="@layout/item_dato_editable"
-            android:tag="Número telefónico|945 854 123" />
+            android:id="@+id/campoTelefono"
+           />
 
         <include layout="@layout/item_dato_editable"
-            android:tag="Correo electrónico|o20210535@pucp.edu.pe" />
+            android:id="@+id/campoCorreo"
+          />
+
 
         <include layout="@layout/item_dato_editable"
-            android:tag="Número telefónico|945 854 123" />
+            android:id="@+id/campoNacimiento"
+          />
 
         <include layout="@layout/item_dato_editable"
-            android:tag="Fecha de nacimiento|31/05/04" />
-
-        <include layout="@layout/item_dato_editable"
-            android:tag="Domicilio|Las Cucardas 232" />
+            android:id="@+id/campoDomicilio"
+       />
 
     </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
