@@ -31,7 +31,7 @@
                     android:layout_weight="1"
                     android:text="Nombre"
                     android:textStyle="bold"
-                    android:textSize="16sp" />
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
@@ -41,7 +41,7 @@
                 android:text="Televagos"
                 android:textSize="14sp"
                 android:layout_marginTop="2dp"
-                android:layout_marginBottom="6dp" />
+                android:layout_marginBottom="2dp" />
 
             <View
                 android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:text="Dirección"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                 android:text="Miraflores"
                 android:textSize="14sp"
                 android:layout_marginTop="2dp"
-                android:layout_marginBottom="6dp" />
+                android:layout_marginBottom="2dp" />
 
             <View
                 android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:text="Coordenadas GPS"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                 android:text="-12.097667, -77.038793"
                 android:textSize="14sp"
                 android:layout_marginTop="2dp"
-                android:layout_marginBottom="6dp" />
+                android:layout_marginBottom="2dp" />
 
             <View
                 android:layout_width="match_parent"
@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:text="Lugares históricos o referencias"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="12sp"
                 android:layout_marginBottom="4dp" />
 
             <!-- Referencia 1 -->
@@ -145,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#CCCCCC"
-                android:layout_marginBottom="6dp"
+                android:layout_marginBottom="2dp"
                 android:layout_marginTop="2dp" />
 
         </LinearLayout>
@@ -157,7 +157,7 @@
             android:layout_height="wrap_content"
             android:text="Fotos del hotel e instalaciones"
             android:textStyle="bold"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp" />
 
@@ -170,13 +170,19 @@
         <!-- Botón Actualizar estilo igual a Agregar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnActualizar"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="54dp"
+            android:minHeight="60dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="8dp"
+            android:layout_gravity="center_horizontal"
             android:text="Actualizar información"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
             android:layout_marginTop="24dp"
-            app:cornerRadius="10dp"
-            app:backgroundTint="#772f1a" />
+            app:cornerRadius="12dp"
+            app:strokeColor="#772f1a"
+            app:strokeWidth="1dp"
+            app:backgroundTint="#FACEC6" />
     </LinearLayout>
 </ScrollView>

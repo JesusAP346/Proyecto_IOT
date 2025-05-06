@@ -60,16 +60,6 @@ public class HotelActualizarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // REGISTRAR LIFECYCLE EN EL CARRUSEL
-        binding.carousel.registerLifecycle(getLifecycle());
-
-        // Agregar imágenes como en HotelInfoFragment
-        List<CarouselItem> list = new ArrayList<>();
-        list.add(new CarouselItem(R.drawable.hotel1));
-        list.add(new CarouselItem(R.drawable.hotel2));
-        list.add(new CarouselItem(R.drawable.hotel3));
-
-        binding.carousel.setData(list);
         // ← Retroceder con el botón back
         binding.backActualizar.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().popBackStack();

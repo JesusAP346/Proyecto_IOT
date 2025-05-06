@@ -18,7 +18,7 @@
             android:layout_marginBottom="24dp"
             app:cardCornerRadius="10dp"
             app:cardElevation="4dp"
-            app:cardBackgroundColor="#D9D5D5">
+            app:cardBackgroundColor="#F0EFEA">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,7 +108,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tipo de habitación"
-            android:textSize="16sp" />
+            android:textSize="13sp"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/setTipoHabitacion"
@@ -123,7 +124,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Capacidad"
-            android:textSize="16sp"
+            android:textSize="13sp"
+            android:textStyle="bold"
             android:layout_marginTop="12dp" />
 
         <Spinner
@@ -150,8 +152,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tamaño de la habitación en m²"
-            android:textSize="16sp"
-            android:layout_marginTop="12dp" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginTop="13dp" />
 
         <EditText
             android:id="@+id/setTamanoHabitacion"
@@ -174,12 +177,19 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSiguientePaso"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="46dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:minHeight="60dp"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="8dp"
                 android:text="SIGUIENTE"
-                android:textSize="20sp"
-                android:textColor="@android:color/white"
-                app:cornerRadius="10dp"
-                app:backgroundTint="#772f1a" />
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:backgroundTint="#FACEC6"
+                app:cornerRadius="12dp"
+                app:strokeColor="#772f1a"
+                app:strokeWidth="1dp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

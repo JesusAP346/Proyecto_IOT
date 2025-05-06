@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,17 +10,20 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.DatePicker;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.databinding.FragmentHotelBinding;
+import com.example.proyecto_iot.databinding.FragmentAdminReportesBinding;
+import com.example.proyecto_iot.databinding.FragmentReservasHistorialBinding;
+
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HotelFragment#newInstance} factory method to
+ * Use the {@link AdminReportesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HotelFragment extends Fragment {
+public class AdminReportesFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,7 +34,7 @@ public class HotelFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public HotelFragment() {
+    public AdminReportesFragment() {
         // Required empty public constructor
     }
 
@@ -40,11 +44,11 @@ public class HotelFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HotelFragment.
+     * @return A new instance of fragment AdminReportesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HotelFragment newInstance(String param1, String param2) {
-        HotelFragment fragment = new HotelFragment();
+    public static AdminReportesFragment newInstance(String param1, String param2) {
+        AdminReportesFragment fragment = new AdminReportesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,14 +65,14 @@ public class HotelFragment extends Fragment {
         }
     }
 
+    private FragmentAdminReportesBinding binding;
 
-    FragmentHotelBinding binding;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentHotelBinding.inflate(inflater, container, false);
+        binding = FragmentAdminReportesBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -76,25 +80,24 @@ public class HotelFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Fragmento por defecto
-        loadChildFragment(new HotelInfoFragment());
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Usando ViewBinding en lugar de findViewById
-        binding.btnInfo.setOnClickListener(v -> loadChildFragment(new HotelInfoFragment()));
-        binding.btnHabitaciones.setOnClickListener(v -> loadChildFragment(new HotelHabitacionesFragment()));
-        binding.btnServicios.setOnClickListener(v -> loadChildFragment(new HotelServicioFragment()));
-        binding.btnInfoNada.setOnClickListener(v -> loadChildFragment(new HotelInfoNadaFragment()));
-        binding.btnHabitacionesNada.setOnClickListener(v -> loadChildFragment(new HotelHabitacionesNadaFragment()));
-        binding.btnServiciosNada.setOnClickListener(v -> loadChildFragment(new HotelServicioNadaFragment()));
-        binding.btnReportes.setOnClickListener(v -> loadChildFragment(new AdminReportesFragment()));
+        // Listener para mostrar el calendario cuando se toca el EditText
+        View.OnClickListener datePickerListener = v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
+                    (DatePicker view1, int selectedYear, int selectedMonth, int selectedDay) -> {
+                        selectedMonth += 1;
+                        String selectedDate = selectedDay + "/" + selectedMonth + "/" + selectedYear;
+                        binding.etSelectDate.setText(selectedDate);
+                    },
+                    year, month, day);
+            datePickerDialog.show();
+        };
 
-    }
-
-    private void loadChildFragment(Fragment fragment) {
-        getChildFragmentManager()
-                .beginTransaction()
-                .replace(R.id.hotel_dynamic_container, fragment)
-                .commit();
+        binding.etSelectDate.setOnClickListener(datePickerListener);
     }
 
     @Override
@@ -102,6 +105,4 @@ public class HotelFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
 }

@@ -62,7 +62,7 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="0dp"
-                        android:layout_marginEnd="14dp"
+                        android:layout_marginEnd="12dp"
                         android:background="#CCCCCC" />
 
                     <!-- Fechas -->
@@ -99,7 +99,7 @@
                                 android:layout_height="1dp"
                                 android:layout_marginStart="0dp"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginEnd="10dp"
+                                android:layout_marginEnd="20dp"
                                 android:background="#CCCCCC" />
                         </LinearLayout>
 
@@ -139,15 +139,18 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnVerDetalles"
                     android:layout_width="110dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
+                    android:minHeight="34dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="2dp"
                     android:layout_gravity="center_vertical"
-                    android:paddingHorizontal="0dp"
-                    android:paddingVertical="10dp"
                     android:text="Ver detalles"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    app:backgroundTint="#D36A6A"
-                    app:cornerRadius="16dp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    app:cornerRadius="10dp"
+                    app:backgroundTint="#FACEC6"
+                    app:strokeColor="#772f1a"
+                    app:strokeWidth="1dp" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -202,7 +205,7 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="0dp"
-                        android:layout_marginEnd="14dp"
+                        android:layout_marginEnd="12dp"
                         android:background="#CCCCCC" />
 
                     <!-- Fechas -->
@@ -239,7 +242,7 @@
                                 android:layout_height="1dp"
                                 android:layout_marginStart="0dp"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginEnd="10dp"
+                                android:layout_marginEnd="20dp"
                                 android:background="#CCCCCC" />
                         </LinearLayout>
 
@@ -277,16 +280,20 @@
 
                 <!-- Botón -->
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnVerDetalles1"
                     android:layout_width="110dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
+                    android:minHeight="34dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="2dp"
                     android:layout_gravity="center_vertical"
-                    android:paddingHorizontal="0dp"
-                    android:paddingVertical="10dp"
                     android:text="Ver detalles"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    app:backgroundTint="#D36A6A"
-                    app:cornerRadius="16dp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    app:cornerRadius="10dp"
+                    app:backgroundTint="#FACEC6"
+                    app:strokeColor="#772f1a"
+                    app:strokeWidth="1dp" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -341,7 +348,7 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="0dp"
-                        android:layout_marginEnd="14dp"
+                        android:layout_marginEnd="12dp"
                         android:background="#CCCCCC" />
 
                     <!-- Fechas -->
@@ -378,7 +385,7 @@
                                 android:layout_height="1dp"
                                 android:layout_marginStart="0dp"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginEnd="10dp"
+                                android:layout_marginEnd="20dp"
                                 android:background="#CCCCCC" />
                         </LinearLayout>
 
@@ -416,16 +423,20 @@
 
                 <!-- Botón -->
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnVerDetalles2"
                     android:layout_width="110dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
+                    android:minHeight="34dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="2dp"
                     android:layout_gravity="center_vertical"
-                    android:paddingHorizontal="0dp"
-                    android:paddingVertical="10dp"
                     android:text="Ver detalles"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    app:backgroundTint="#D36A6A"
-                    app:cornerRadius="16dp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    app:cornerRadius="10dp"
+                    app:backgroundTint="#FACEC6"
+                    app:strokeColor="#772f1a"
+                    app:strokeWidth="1dp" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

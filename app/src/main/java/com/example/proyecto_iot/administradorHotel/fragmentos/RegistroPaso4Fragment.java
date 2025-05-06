@@ -12,6 +12,11 @@ import android.view.ViewGroup;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.FragmentRegistroPaso4Binding;
 
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link RegistroPaso4Fragment#newInstance} factory method to
@@ -69,6 +74,15 @@ public class RegistroPaso4Fragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        binding.carousel.registerLifecycle(getLifecycle());
+
+        List<CarouselItem> list = new ArrayList<>();
+        list.add(new CarouselItem(R.drawable.hotel1));
+        list.add(new CarouselItem(R.drawable.hotel2));
+        list.add(new CarouselItem(R.drawable.hotel3));
+
+        binding.carousel.setData(list);
 
 
     }

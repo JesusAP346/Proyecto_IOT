@@ -68,7 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Nombre"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <EditText
                         android:id="@+id/etNombres"
@@ -84,7 +84,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Dirección"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginTop="12dp" />
 
                     <EditText
@@ -101,7 +101,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Coordenadas GPS"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginTop="12dp" />
 
                     <EditText
@@ -118,34 +118,42 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Lugares históricos o referencias"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginTop="12dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
                         <EditText
                             android:id="@+id/etReferencia"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:background="@drawable/customedittext"
                             android:hint="Ingrese referencias"
-                            android:padding="8dp"
-                            android:textSize="18sp" />
+                            android:padding="12dp"
+                            android:textSize="16sp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnAgregarReferencia"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="48dp"
+                            android:minHeight="0dp"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="0dp"
                             android:text="+ Agregar"
-                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"
+                            android:layout_marginStart="8dp"
                             app:cornerRadius="10dp"
-                            app:backgroundTint="#772f1a"
-                            android:layout_marginStart="8dp" />
+                            app:strokeColor="#772f1a"
+                            app:strokeWidth="1dp"
+                            app:backgroundTint="#FACEC6" />
                     </LinearLayout>
+
 
                     <!-- Etiqueta ejemplo: Parque Kennedy -->
                     <LinearLayout
@@ -183,7 +191,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Fotos del hotel e instalaciones"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginTop="16dp" />
 
                     <LinearLayout
@@ -302,17 +310,23 @@
                     </LinearLayout>
 
                     <!-- Botón Final -->
+
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnRegistrarHotel"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:text="Agregar información"
-                        android:textSize="20sp"
-                        android:textColor="@android:color/white"
-                        app:cornerRadius="10dp"
-                        app:backgroundTint="#772f1a"
-                        android:layout_marginTop="24dp" />
-
+                        android:layout_width="wrap_content"
+                        android:layout_height="54dp"
+                        android:minHeight="60dp"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="8dp"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Registrar información"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/black"
+                        android:layout_marginTop="24dp"
+                        app:cornerRadius="12dp"
+                        app:strokeColor="#772f1a"
+                        app:strokeWidth="1dp"
+                        app:backgroundTint="#FACEC6" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>

@@ -37,59 +37,126 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minHeight="40dp"
                 android:text="Información"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#f2a65a"
+                android:textColor="#000000"
+                app:strokeColor="#E9D79E"
+                app:strokeWidth="1dp"
+                app:cornerRadius="14dp"
+                app:backgroundTint="#FDF9ED"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
                 android:layout_marginEnd="8dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_habitaciones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minHeight="40dp"
                 android:text="Habitaciones"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#f2a65a"
+                android:textColor="#000000"
+                app:strokeColor="#E9D79E"
+                app:strokeWidth="1dp"
+                app:cornerRadius="14dp"
+                app:backgroundTint="#FDF9ED"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
                 android:layout_marginEnd="8dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_servicios"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Servicios"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#f2a65a"
+                android:minHeight="40dp"
+                android:text="Servicios adicionales"
+                android:textColor="#000000"
+                app:strokeColor="#E9D79E"
+                app:strokeWidth="1dp"
+                app:cornerRadius="14dp"
+                app:backgroundTint="#FDF9ED"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
                 android:layout_marginEnd="8dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_reportes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
+                android:text="Reportes"
+                android:textColor="#000000"
+                app:strokeColor="#E9D79E"
+                app:strokeWidth="1dp"
+                app:cornerRadius="14dp"
+                app:backgroundTint="#FDF9ED"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_info_nada"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Información sin datos"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#f2a65a"
+                android:minHeight="40dp"
+                android:text="Información vacia"
+                android:textColor="#000000"
+                app:strokeColor="#E9D79E"
+                app:strokeWidth="1dp"
+                app:cornerRadius="14dp"
+                app:backgroundTint="#FDF9ED"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
                 android:layout_marginEnd="8dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_habitaciones_nada"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Habitaciones sin datos"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#f2a65a"
+                android:minHeight="40dp"
+                android:text="habitaciones vacia"
+                android:textColor="#000000"
+                app:strokeColor="#E9D79E"
+                app:strokeWidth="1dp"
+                app:cornerRadius="14dp"
+                app:backgroundTint="#FDF9ED"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
                 android:layout_marginEnd="8dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_servicios_nada"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Servicios sin datos"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#f2a65a"
+                android:minHeight="40dp"
+                android:text="Servicios vacio"
+                android:textColor="#000000"
+                app:strokeColor="#E9D79E"
+                app:strokeWidth="1dp"
+                app:cornerRadius="14dp"
+                app:backgroundTint="#FDF9ED"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
                 android:layout_marginEnd="8dp" />
+
+
         </LinearLayout>
     </HorizontalScrollView>
 

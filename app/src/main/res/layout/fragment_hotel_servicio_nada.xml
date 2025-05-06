@@ -23,32 +23,38 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lo sentimos, aún no ha registrado información\nde servicios adicionales"
+            android:text="Lo sentimos, aún no ha registrado informaciónde los servicios \nadicionales que se ofrecen en el hotel"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="18sp"
             android:gravity="center"
             android:lineSpacingExtra="4dp"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="0dp" />
 
         <!-- IMAGEN DEL HOTEL -->
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:src="@drawable/servicios_sad"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:src="@drawable/servicio_sad"
             android:scaleType="centerInside"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="-60dp" />
 
         <!-- BOTÓN PARA REGISTRAR -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_registrar_servicio"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+ Registrar Servicios"
-            android:backgroundTint="#772f1a"
-            android:textColor="#FFFFFF"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp" />
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:minHeight="60dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="8dp"
+            android:text="+ Registrar Servicio"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            app:backgroundTint="#FACEC6"
+            app:cornerRadius="12dp"
+            app:strokeColor="#772f1a"
+            app:strokeWidth="1dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

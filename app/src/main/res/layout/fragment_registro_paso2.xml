@@ -18,7 +18,7 @@
             android:layout_marginBottom="24dp"
             app:cardCornerRadius="10dp"
             app:cardElevation="4dp"
-            app:cardBackgroundColor="#D9D5D5">
+            app:cardBackgroundColor="#F0EFEA">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,7 +108,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Equipamiento"
-            android:textSize="16sp"
+            android:textSize="13sp"
+            android:textStyle="bold"
             android:layout_marginBottom="4dp" />
 
         <Spinner
@@ -251,8 +252,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Imágenes"
-            android:textSize="16sp"
+            android:text="Fotos"
+            android:textSize="13sp"
+            android:textStyle="bold"
             android:layout_marginTop="16dp" />
 
         <LinearLayout
@@ -279,6 +281,80 @@
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fotos agregadas"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Imagen 1 con botón eliminar -->
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/hotel1"
+                    android:background="@drawable/img_rounded_corners"
+                    android:clipToOutline="true" />
+
+                <ImageButton
+                    android:id="@+id/btnEliminarImg1"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/btn_circle_background"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_delete"
+                    app:tint="@android:color/white"
+                    android:contentDescription="Eliminar imagen"
+                    android:scaleType="centerInside" />
+            </FrameLayout>
+
+            <!-- Imagen 2 con botón eliminar -->
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp">
+
+                <ImageView
+                    android:id="@+id/img2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/hotel2"
+                    android:background="@drawable/img_rounded_corners"
+                    android:clipToOutline="true" />
+
+                <ImageButton
+                    android:id="@+id/btnEliminarImg2"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/btn_circle_background"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_delete"
+                    app:tint="@android:color/white"
+                    android:contentDescription="Eliminar imagen"
+                    android:scaleType="centerInside" />
+            </FrameLayout>
+        </LinearLayout>
+
         <!-- Botón siguiente -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -290,12 +366,19 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSiguientePaso2"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="46dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:minHeight="60dp"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="8dp"
                 android:text="SIGUIENTE"
-                android:textSize="20sp"
-                android:textColor="@android:color/white"
-                app:cornerRadius="10dp"
-                app:backgroundTint="#772f1a" />
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:backgroundTint="#FACEC6"
+                app:cornerRadius="12dp"
+                app:strokeColor="#772f1a"
+                app:strokeWidth="1dp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

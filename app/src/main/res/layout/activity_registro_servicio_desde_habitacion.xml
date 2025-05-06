@@ -68,7 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Nombre"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <EditText
                         android:id="@+id/etNombres"
@@ -84,7 +84,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Descripcion"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginTop="12dp" />
 
                     <EditText
@@ -101,7 +101,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Precio en soles"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginTop="12dp" />
 
                     <EditText
@@ -118,7 +118,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Fotos del servicio"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginTop="16dp" />
 
                     <LinearLayout
@@ -144,13 +144,86 @@
                             android:textColor="#888888"
                             android:layout_marginTop="4dp" />
                     </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fotos agregadas"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp" />
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- Imagen 1 con botón eliminar -->
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:id="@+id/img1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/gimnasio"
+                                android:background="@drawable/img_rounded_corners"
+                                android:clipToOutline="true" />
+
+                            <ImageButton
+                                android:id="@+id/btnEliminarImg1"
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_gravity="bottom|end"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/btn_circle_background"
+                                android:padding="6dp"
+                                android:src="@drawable/ic_delete"
+                                app:tint="@android:color/white"
+                                android:contentDescription="Eliminar imagen"
+                                android:scaleType="centerInside" />
+                        </FrameLayout>
+
+                        <!-- Imagen 2 con botón eliminar -->
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp">
+
+                            <ImageView
+                                android:id="@+id/img2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/desayuno"
+                                android:background="@drawable/img_rounded_corners"
+                                android:clipToOutline="true" />
+
+                            <ImageButton
+                                android:id="@+id/btnEliminarImg2"
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_gravity="bottom|end"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/btn_circle_background"
+                                android:padding="6dp"
+                                android:src="@drawable/ic_delete"
+                                app:tint="@android:color/white"
+                                android:contentDescription="Eliminar imagen"
+                                android:scaleType="centerInside" />
+                        </FrameLayout>
+                    </LinearLayout>
                     <!-- Imagenes -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="12dp">
 
                         <!-- Imagen 1 -->
                         <LinearLayout
@@ -237,16 +310,23 @@
                     </LinearLayout>
 
                     <!-- Botón Final -->
+
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnRegistrarHotel"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:id="@+id/btnRegistrarServicio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="0dp"
+                        android:minHeight="60dp"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="8dp"
                         android:text="Registrar servicio"
-                        android:textSize="20sp"
-                        android:textColor="@android:color/white"
-                        app:cornerRadius="10dp"
-                        app:backgroundTint="#772f1a"
-                        android:layout_marginTop="24dp" />
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        app:backgroundTint="#FACEC6"
+                        app:cornerRadius="12dp"
+                        app:strokeColor="#772f1a"
+                        app:strokeWidth="1dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

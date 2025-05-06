@@ -44,23 +44,40 @@
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_historial"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minHeight="40dp"
                     android:text="Historial"
-                    android:textColor="#FFFFFF"
-                    android:backgroundTint="#f2a65a"
+                    android:textColor="#000000"
+                    app:strokeColor="#E9D79E"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="14dp"
+                    app:backgroundTint="#FDF9ED"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
                     android:layout_marginEnd="8dp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_todas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hoy"
-                    android:textColor="#FFFFFF"
-                    android:backgroundTint="#f2a65a"
+                    android:minHeight="40dp"
+                    android:text="Todas"
+                    android:textColor="#000000"
+                    app:strokeColor="#E9D79E"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="14dp"
+                    app:backgroundTint="#FDF9ED"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
                     android:layout_marginEnd="8dp" />
+
             </LinearLayout>
         </FrameLayout>
     </HorizontalScrollView>

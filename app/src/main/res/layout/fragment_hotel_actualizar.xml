@@ -47,8 +47,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nombre"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="-10dp"/>
         <EditText
             android:id="@+id/etNombre"
             android:layout_width="match_parent"
@@ -56,15 +57,16 @@
             android:hint="Nombre del hotel"
             android:text="Televagos"
             android:textSize="14sp"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="6dp" />
 
         <!-- Dirección -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Dirección"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="-10dp"/>
         <EditText
             android:id="@+id/etDireccion"
             android:layout_width="match_parent"
@@ -72,15 +74,16 @@
             android:hint="Dirección"
             android:text="Miraflores"
             android:textSize="14sp"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="6dp" />
 
         <!-- Coordenadas -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Coordenadas GPS"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="-10dp"/>
         <EditText
             android:id="@+id/etCoordenadas"
             android:layout_width="match_parent"
@@ -88,44 +91,50 @@
             android:hint="Latitud, Longitud"
             android:text="-12.097667, -77.038793"
             android:textSize="14sp"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="6dp" />
 
         <!-- Referencias dinámicas -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Lugares históricos o referencias"
-            android:textSize="16sp"
-            android:layout_marginTop="12dp"
+            android:textSize="12sp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
             android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="12dp">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
             <EditText
                 android:id="@+id/etReferencia"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="42dp"
                 android:layout_weight="1"
+                android:background="@drawable/customedittext"
                 android:hint="Ingrese referencias"
-                android:padding="8dp"
-                android:textSize="16sp"
-                android:background="@drawable/customedittext1"/>
-
+                android:padding="12dp"
+                android:textSize="16sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAgregarReferencia"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:minHeight="0dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="0dp"
                 android:text="+ Agregar"
-                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:layout_marginStart="8dp"
                 app:cornerRadius="10dp"
-                app:backgroundTint="#772f1a"
-                android:layout_marginStart="8dp" />
+                app:strokeColor="#772f1a"
+                app:strokeWidth="1dp"
+                app:backgroundTint="#FACEC6" />
         </LinearLayout>
 
         <LinearLayout
@@ -204,29 +213,130 @@
                 android:background="#CCCCCC" />
         </LinearLayout>
         <!-- Título imágenes -->
+
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fotos del hotel e instalaciones"
+            android:text="Agregar nuevas fotos"
+            android:textSize="13sp"
             android:textStyle="bold"
-            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/customedittext"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_camera"
+                android:tint="#9E9EA6"
+                android:contentDescription="Agregar foto" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subir fotos"
+                android:textSize="14sp"
+                android:textColor="#888888"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fotos agregadas"
+            android:textStyle="bold"
+            android:textSize="12sp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp" />
 
-        <org.imaginativeworld.whynotimagecarousel.ImageCarousel
-            android:id="@+id/carousel"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
+            <!-- Imagen 1 con botón eliminar -->
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/hotel1"
+                    android:background="@drawable/img_rounded_corners"
+                    android:clipToOutline="true" />
+
+                <ImageButton
+                    android:id="@+id/btnEliminarImg1"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/btn_circle_background"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_delete"
+                    app:tint="@android:color/white"
+                    android:contentDescription="Eliminar imagen"
+                    android:scaleType="centerInside" />
+            </FrameLayout>
+
+            <!-- Imagen 2 con botón eliminar -->
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp">
+
+                <ImageView
+                    android:id="@+id/img2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/hotel2"
+                    android:background="@drawable/img_rounded_corners"
+                    android:clipToOutline="true" />
+
+                <ImageButton
+                    android:id="@+id/btnEliminarImg2"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/btn_circle_background"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_delete"
+                    app:tint="@android:color/white"
+                    android:contentDescription="Eliminar imagen"
+                    android:scaleType="centerInside" />
+            </FrameLayout>
+        </LinearLayout>
         <!-- Botón Actualizar -->
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnActualizar"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="54dp"
+            android:minHeight="60dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="8dp"
+            android:layout_gravity="center_horizontal"
             android:text="Actualizar información"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
-            app:cornerRadius="10dp"
-            app:backgroundTint="#772f1a" />
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="24dp"
+            app:cornerRadius="12dp"
+            app:strokeColor="#772f1a"
+            app:strokeWidth="1dp"
+            app:backgroundTint="#FACEC6" />
     </LinearLayout>
 </ScrollView>

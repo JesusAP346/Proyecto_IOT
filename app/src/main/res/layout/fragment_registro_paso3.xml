@@ -18,7 +18,7 @@
             android:layout_marginBottom="24dp"
             app:cardCornerRadius="10dp"
             app:cardElevation="4dp"
-            app:cardBackgroundColor="#D9D5D5">
+            app:cardBackgroundColor="#F0EFEA">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -121,18 +121,24 @@
                 android:layout_weight="1"
                 android:text="Servicios"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRegistrarServicio"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="46dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:minHeight="60dp"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="8dp"
                 android:text="+ Registrar Servicio"
-                android:textSize="14sp"
                 android:textColor="@android:color/black"
-                android:iconTint="@android:color/black"
-                app:cornerRadius="10dp"
-                app:backgroundTint="#FFB74D" />
+                android:textSize="18sp"
+                app:backgroundTint="#FDF9ED"
+                app:cornerRadius="12dp"
+                app:strokeColor="#E9D79E"
+                app:strokeWidth="1dp" />
         </LinearLayout>
 
         <!-- Spinner de selección de servicio -->
@@ -151,8 +157,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Servicios agregados"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:textSize="16sp"
             android:layout_marginBottom="8dp" />
 
 
@@ -258,12 +264,19 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSiguientePaso3"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="46dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:minHeight="60dp"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="8dp"
                 android:text="SIGUIENTE"
-                android:textSize="20sp"
-                android:textColor="@android:color/white"
-                app:cornerRadius="10dp"
-                app:backgroundTint="#772f1a" />
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:backgroundTint="#FACEC6"
+                app:cornerRadius="12dp"
+                app:strokeColor="#772f1a"
+                app:strokeWidth="1dp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
