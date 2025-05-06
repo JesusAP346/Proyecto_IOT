@@ -102,29 +102,23 @@
 
         <activity
             android:name=".administradorHotel.PagPrincipalAdmin"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
             android:name=".SuperAdmin.PagPrincipalSuperAdmin"
-            android:exported="false">
+            android:exported="true"
+            android:windowSoftInputMode="stateHidden|adjustPan">
 
-        <!--
-        android:windowSoftInputMode="stateHidden|adjustPan">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-        -->
-    </activity>
 
-    <meta-data
+        <meta-data
         android:name="preloaded_fonts"
         android:resource="@array/preloaded_fonts" />
 </application>
