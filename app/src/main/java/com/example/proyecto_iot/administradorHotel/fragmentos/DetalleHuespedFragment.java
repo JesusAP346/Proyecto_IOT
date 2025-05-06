@@ -76,6 +76,10 @@ public class DetalleHuespedFragment extends Fragment {
                     .commit();
         });
 
+
+
+
+
         return binding.getRoot();
     }
 

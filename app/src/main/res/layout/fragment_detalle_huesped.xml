@@ -46,6 +46,7 @@
                 android:layout_gravity="end"
                 android:layout_marginStart="8dp"
                 android:contentDescription="Chat"
+                android:tint="#207EFA"
                 android:src="@drawable/ic_chat" />
         </LinearLayout>
 

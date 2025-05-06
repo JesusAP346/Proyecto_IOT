@@ -1,4 +1,4 @@
-package com.example.proyecto_iot.administradorHotel.fragmentos;
+package com.example.proyecto_iot.administradorHotel;
 
 import android.os.Bundle;
 
@@ -11,17 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.administradorHotel.InfoPerfilAdminFragment;
-import com.example.proyecto_iot.administradorHotel.InicioDeSesionAdminFragment;
+import com.example.proyecto_iot.administradorHotel.fragmentos.AdminNotificacionesFragment;
 import com.example.proyecto_iot.databinding.FragmentHomeBinding;
-import com.example.proyecto_iot.databinding.FragmentPerfilAdminBinding;
+import com.example.proyecto_iot.databinding.FragmentInfoPerfilAdminBinding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PerfilAdminFragment#newInstance} factory method to
+ * Use the {@link InfoPerfilAdminFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PerfilAdminFragment extends Fragment {
+public class InfoPerfilAdminFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,7 +31,7 @@ public class PerfilAdminFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public PerfilAdminFragment() {
+    public InfoPerfilAdminFragment() {
         // Required empty public constructor
     }
 
@@ -42,11 +41,11 @@ public class PerfilAdminFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PerfilAdminFragment.
+     * @return A new instance of fragment InfoPerfilAdminFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PerfilAdminFragment newInstance(String param1, String param2) {
-        PerfilAdminFragment fragment = new PerfilAdminFragment();
+    public static InfoPerfilAdminFragment newInstance(String param1, String param2) {
+        InfoPerfilAdminFragment fragment = new InfoPerfilAdminFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -63,47 +62,21 @@ public class PerfilAdminFragment extends Fragment {
         }
     }
 
-    FragmentPerfilAdminBinding binding;
+    FragmentInfoPerfilAdminBinding binding;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate con ViewBinding
-        binding = FragmentPerfilAdminBinding.inflate(inflater, container, false);
+        binding = FragmentInfoPerfilAdminBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        binding.backinfoperfil.setOnClickListener(v ->
+                requireActivity().getSupportFragmentManager().popBackStack()
+        );
         return view;
 
     }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        binding.informacionPersonal.setOnClickListener(v -> {
-            Fragment infoPerfilAdminFragment = new InfoPerfilAdminFragment();
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame_layout, infoPerfilAdminFragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        binding.seguridadPersonal.setOnClickListener(v -> {
-            Fragment inicioDeSesionAdminFragment = new InicioDeSesionAdminFragment();
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame_layout, inicioDeSesionAdminFragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
 
 }
