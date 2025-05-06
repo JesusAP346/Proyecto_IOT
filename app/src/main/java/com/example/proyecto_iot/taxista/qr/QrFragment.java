@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.proyecto_iot.MainActivity;
 import com.example.proyecto_iot.R;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
@@ -41,17 +42,27 @@ public class QrFragment extends Fragment {
             if (result.getContents() != null) {
                 String contenido = result.getContents();
 
-                // Verifica si es una URL
                 if (contenido.startsWith("http://") || contenido.startsWith("https://")) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contenido));
                     startActivity(intent);
                 } else {
                     Toast.makeText(getContext(), "Contenido: " + contenido, Toast.LENGTH_LONG).show();
                 }
+
             } else {
+                // Escaneo cancelado → volver a SolicitudesFragment
                 Toast.makeText(getContext(), "Escaneo cancelado", Toast.LENGTH_SHORT).show();
+                requireActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, new com.example.proyecto_iot.taxista.solicitudes.SolicitudesFragment())
+                        .commit();
+
+                // También actualizar el ítem seleccionado en el BottomNavigationView
+                ((MainActivity) requireActivity()).binding.bottomNavigationView.setSelectedItemId(R.id.solicitudes);
             }
         });
+
 
 
         // Lanza automáticamente el escáner al entrar al fragmento

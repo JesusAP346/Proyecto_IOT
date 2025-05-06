@@ -90,13 +90,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".taxista.PerfilTaxistaActivity"
+            android:name=".taxista.perfil.PerfilTaxistaActivity"
             android:exported="false" />
         <activity
-            android:name=".taxista.SeguridadActivity"
+            android:name=".taxista.perfil.SeguridadActivity"
             android:exported="false" />
         <activity
-            android:name=".taxista.InformacionPersonalActivity"
+            android:name=".taxista.perfil.InformacionPersonalActivity"
             android:exported="false" />
         <activity
             android:name=".taxista.solicitudes.MapsActivity"

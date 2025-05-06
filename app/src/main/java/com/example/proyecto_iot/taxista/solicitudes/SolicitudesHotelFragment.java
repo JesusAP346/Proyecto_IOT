@@ -16,7 +16,6 @@ import java.util.List;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.FragmentSolicitudesHotelBinding;
-import com.example.proyecto_iot.taxista.Solicitud;
 
 
 public class SolicitudesHotelFragment extends Fragment {
