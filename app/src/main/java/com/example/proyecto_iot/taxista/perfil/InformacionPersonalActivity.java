@@ -2,8 +2,10 @@ package com.example.proyecto_iot.taxista.perfil;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,16 +34,20 @@ public class InformacionPersonalActivity extends AppCompatActivity {
     }
 
     private void configurarCampos() {
-        int[] campos = {
+        int[] ids = {
                 R.id.campoNombre,
-                // agrega aquí los demás si les das IDs únicos
+                R.id.campoDNI,
+                R.id.campoTelefono,
+                R.id.campoCorreo,
+                R.id.campoNacimiento,
+                R.id.campoDomicilio
         };
 
-        for (int id : campos) {
-            View campo = findViewById(id);  // <- no se necesita pasar view
+        for (int id : ids) {
+            View campo = findViewById(id);
             if (campo == null || campo.getTag() == null) continue;
 
-            String tag = (String) campo.getTag(); // Ej: "Nombre legal|Roberto Tafur"
+            String tag = campo.getTag().toString();
             String[] partes = tag.split("\\|");
 
             TextView titulo = campo.findViewById(R.id.tvTitulo);
@@ -52,7 +58,41 @@ public class InformacionPersonalActivity extends AppCompatActivity {
                 contenido.setText(partes[1]);
             }
         }
+
+        cargarDatos();
     }
+
+
+    private void cargarDatos() {
+        setCampo(R.id.campoNombre, "Nombre legal", "Roberto Tafur");
+        setCampo(R.id.campoDNI, "Documento de Identidad", "71986247");
+        setCampo(R.id.campoTelefono, "Número telefónico", "945 854 123");
+        setCampo(R.id.campoCorreo, "Correo electrónico", "a20210535@pucp.edu.pe");
+        setCampo(R.id.campoNacimiento, "Fecha de nacimiento", "31/05/04");
+        setCampo(R.id.campoDomicilio, "Domicilio", "Las Cucardas 232");
+    }
+
+    private void setCampo(int viewId, String tituloText, String contenidoText) {
+        View campo = findViewById(viewId);
+        if (campo == null) return;
+
+        TextView titulo = campo.findViewById(R.id.tvTitulo);
+        TextView contenido = campo.findViewById(R.id.tvContenido);
+
+        titulo.setText(tituloText);
+        contenido.setText(contenidoText);
+
+        TextView btnEditar = campo.findViewById(R.id.btnEditar);
+        btnEditar.setOnClickListener(v -> {
+            new EditarCampoDialogFragment(
+                    tituloText,
+                    contenido.getText().toString(),
+                    nuevoTexto -> contenido.setText(nuevoTexto)
+            ).show(getSupportFragmentManager(), "EditarCampo");
+        });
+    }
+
+
 
 
 }
