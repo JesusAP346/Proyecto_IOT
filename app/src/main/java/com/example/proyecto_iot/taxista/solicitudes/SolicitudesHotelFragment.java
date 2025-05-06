@@ -59,16 +59,26 @@ public class SolicitudesHotelFragment extends Fragment {
                 solicitudes.add(new Solicitud("Roberto Tafur", "945 854 123", 5, "4 min.\n1.7 km",
                         "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.roberto));
                 solicitudes.add(new Solicitud("Ricardo Calderón", "945 854 123", 3, "4 min.\n1.7 km",
-                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.roberto));
+                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.usuario_10));
+                solicitudes.add(new Solicitud("Juan Perez", "945 854 123", 3, "4 min.\n1.7 km",
+                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.usuario_11));
+                solicitudes.add(new Solicitud("Alejandra Ríos", "945 854 123", 3, "4 min.\n1.7 km",
+                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.usuario_12));
                 break;
 
             case "Hotel Amanecer":
-                solicitudes.add(new Solicitud("Alejandra Ríos", "912 345 678", 2, "6 min.\n2.5 km",
-                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.roberto));
+                solicitudes.add(new Solicitud("Raul Castillo", "912 345 678", 2, "6 min.\n2.5 km",
+                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.usuario_10));
+                solicitudes.add(new Solicitud("Diego Galindo", "912 345 678", 2, "6 min.\n2.5 km",
+                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.usuario_11));
+                solicitudes.add(new Solicitud("Carolina Sanchez", "912 345 678", 2, "6 min.\n2.5 km",
+                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.usuario_12));
                 break;
 
             case "Hotel Playa":
                 solicitudes.add(new Solicitud("Marco Gómez", "987 654 321", 4, "3 min.\n1.0 km",
+                        "Hotel Playa", "Barranco", "Aeropuerto", R.drawable.roberto));
+                solicitudes.add(new Solicitud("Leonardo Torres", "987 654 321", 4, "3 min.\n1.0 km",
                         "Hotel Playa", "Barranco", "Aeropuerto", R.drawable.roberto));
                 break;
 
