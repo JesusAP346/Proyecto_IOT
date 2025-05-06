@@ -56,10 +56,10 @@ public class QrFragment extends Fragment {
 
         // Lanza automáticamente el escáner al entrar al fragmento
         ScanOptions options = new ScanOptions();
-        options.setPrompt("Escanea un código QR");
+        options.setPrompt("Escanea un código QR para finalizar el viaje");
         options.setBeepEnabled(true);
-        options.setOrientationLocked(false);
-        options.setCaptureActivity(com.journeyapps.barcodescanner.CaptureActivity.class); // opcional
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(CustomCaptureActivity.class); // tu clase personalizada con linterna
         qrLauncher.launch(options);
     }
 }
