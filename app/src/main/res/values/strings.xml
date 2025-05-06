@@ -43,6 +43,7 @@
 
     <!--LOGIN-->
     <string name="titulo_login">Ingrese Sesion</string>
+    <string name="lista_administradores">Lista de administradores</string>
     <string name="lbl_usuario">Usuario</string>
     <string name="txt_usuario">Ingrese su usuario</string>
     <string name="lbl_password">Contraseña</string>
