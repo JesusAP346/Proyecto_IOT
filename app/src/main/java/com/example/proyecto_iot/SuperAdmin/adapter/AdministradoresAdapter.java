@@ -52,7 +52,7 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
 
         //Ver perfil
         holder.itemView.setOnClickListener(view -> {
-            FragmentGestionAdministradorSuperadmin fragment = FragmentGestionAdministradorSuperadmin.newInstance(admin);
+            FragmentGestionAdministradorSuperadmin fragment = FragmentGestionAdministradorSuperadmin.newInstance(admin, false, position);
             ((AppCompatActivity) view.getContext()).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_layout, fragment)
@@ -80,8 +80,13 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
 
             btnEditar.setOnClickListener(view -> {
                 dialog.dismiss();
-                Toast.makeText(v.getContext(), "Editar: " + admin.getNombreAdmin(), Toast.LENGTH_SHORT).show();
-                // TODO: lógica real
+                FragmentGestionAdministradorSuperadmin fragment = FragmentGestionAdministradorSuperadmin.newInstance(admin, true, position);
+                ((AppCompatActivity) v.getContext()).getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, fragment)
+                        .addToBackStack(null)
+                        .commit();
+
             });
 
             btnEliminar.setOnClickListener(view -> {

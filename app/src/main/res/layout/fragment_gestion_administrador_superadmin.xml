@@ -142,8 +142,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Editar"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:layout_marginTop="24dp"
-            android:elevation="2dp" />
+            android:elevation="2dp"
+            android:backgroundTint="#EB9A0A"/>
     </LinearLayout>
 </ScrollView>
