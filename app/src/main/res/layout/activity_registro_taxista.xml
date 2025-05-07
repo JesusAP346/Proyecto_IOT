@@ -19,6 +19,31 @@
         android:layout_height="wrap_content"
         android:gravity="center">
 
+        <TextView
+            android:id="@+id/txtPaso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 de 3"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/progressBar" />
+
+        <!-- Barra de progreso -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="100dp"
+            android:layout_height="6dp"
+            android:progress="1"
+            android:max="3"
+            android:progressDrawable="@drawable/custom_progress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtPaso"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnAtras"

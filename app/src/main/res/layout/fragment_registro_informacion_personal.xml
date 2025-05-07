@@ -1,33 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".cliente.modoTaxistaFormulario.RegistroInformacionPersonalFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="24dp"
-        android:background="#A28858">
+        android:background="#A28858"
+        android:orientation="vertical"
+        android:padding="24dp">
 
+
+        <TextView
+            android:id="@+id/titulo"
+            android:layout_width="311dp"
+            android:layout_height="68dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/nunito_black"
+            android:text="Informacion personal"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="242dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/nunito_black"
+            android:text="Foto de perfil"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.247"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/roberto" />
+            android:id="@+id/imageView4"
+            android:layout_width="131dp"
+            android:layout_height="123dp"
+            android:layout_marginTop="44dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/roberto"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.129"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titulo" />
 
-        <EditText android:hint="Nombre" android:text="Javier"
-            android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Nombre"
+            app:layout_constraintTop_toBottomOf="@+id/textView18"
+            tools:layout_editor_absoluteX="24dp">
 
-        <EditText android:hint="Apellido" android:text="Santaolalla"
-            android:layout_width="match_parent" android:layout_height="wrap_content" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <EditText android:hint="Fecha de nacimiento" android:text="24/10/2004"
-            android:layout_width="match_parent" android:layout_height="wrap_content" />
-    </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/apellido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Apellido"
+            app:layout_constraintTop_toBottomOf="@+id/nombre"
+            tools:layout_editor_absoluteX="24dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutFechaNacimiento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Fecha de nacimiento"
+            app:layout_constraintTop_toBottomOf="@+id/apellido"
+            tools:layout_editor_absoluteX="24dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etFechaNacimiento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:clickable="true"
+                android:inputType="none"
+                 />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </FrameLayout>
