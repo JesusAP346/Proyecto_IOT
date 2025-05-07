@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".cliente.modoTaxistaFormulario.RegistroInformacionPlacaFragment">
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp"
+        android:background="#A28858">
+
+
+        <ImageView
+            android:layout_width="187dp"
+            android:layout_height="104dp"
+            android:src="@drawable/auto_roberto" />
+
+        <EditText android:hint="Número" android:text="F5U-597"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <EditText android:hint="Color" android:text="Blanco"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+</FrameLayout>

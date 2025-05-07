@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".cliente.modoTaxistaFormulario.RegistroInformacionPersonalFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp"
+        android:background="#A28858">
+
+
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/roberto" />
+
+        <EditText android:hint="Nombre" android:text="Javier"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <EditText android:hint="Apellido" android:text="Santaolalla"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+        <EditText android:hint="Fecha de nacimiento" android:text="24/10/2004"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+</FrameLayout>
