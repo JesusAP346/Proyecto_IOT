@@ -9,10 +9,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.SuperAdmin.domain.AdministradoresDomain;
+import com.example.proyecto_iot.SuperAdmin.fragmentos.FragmentGestionAdministradorSuperadmin;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.squareup.picasso.Picasso;
 
@@ -37,12 +39,30 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+
+
+
         holder.nombreAdmin.setText(items.get(position).getNombreAdmin());
         holder.numeroAdmin.setText(items.get(position).getNumeroAdmin());
         Picasso.get().load(items.get(position).getImagenAdmin()).into(holder.imagenAdmin);
 
         AdministradoresDomain admin = items.get(position);
 
+
+        //Ver perfil
+        holder.itemView.setOnClickListener(view -> {
+            FragmentGestionAdministradorSuperadmin fragment = FragmentGestionAdministradorSuperadmin.newInstance(admin);
+            ((AppCompatActivity) view.getContext()).getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+
+
+        //Ver el BottonSheet
         holder.btnOpciones.setOnClickListener(v -> {
             BottomSheetDialog dialog = new BottomSheetDialog(v.getContext());
             View sheetView = LayoutInflater.from(v.getContext())
@@ -66,8 +86,16 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
 
             btnEliminar.setOnClickListener(view -> {
                 dialog.dismiss();
-                Toast.makeText(v.getContext(), "Eliminar: " + admin.getNombreAdmin(), Toast.LENGTH_SHORT).show();
-                // TODO: lógica real
+
+                int positionToRemove = holder.getAdapterPosition();
+                if (positionToRemove != RecyclerView.NO_POSITION) {
+                    items.remove(positionToRemove);
+                    notifyItemRemoved(positionToRemove);
+                    notifyItemRangeChanged(positionToRemove, items.size()); // opcional, para animaciones suaves
+                }
+
+                Toast.makeText(v.getContext(), "Administrador eliminado", Toast.LENGTH_SHORT).show();
+
             });
 
             dialog.setContentView(sheetView);

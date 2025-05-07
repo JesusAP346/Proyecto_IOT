@@ -69,16 +69,16 @@ public class fragment_administradores_superadmin extends Fragment {
     }
 
     private void initData() {
-        adminsList.add(new AdministradoresDomain("Andrea Torres", "https://randomuser.me/api/portraits/women/68.jpg", "987654321"));
-        adminsList.add(new AdministradoresDomain("Luis Mendoza", "https://randomuser.me/api/portraits/men/45.jpg", "912345678"));
-        adminsList.add(new AdministradoresDomain("María Pérez", "https://randomuser.me/api/portraits/women/12.jpg", "956789123"));
-        adminsList.add(new AdministradoresDomain("Carlos Ruiz", "https://randomuser.me/api/portraits/men/34.jpg", "998877665"));
-        adminsList.add(new AdministradoresDomain("Fernanda Silva", "https://randomuser.me/api/portraits/women/24.jpg", "934567890"));
-        adminsList.add(new AdministradoresDomain("Diego Ramírez", "https://randomuser.me/api/portraits/men/53.jpg", "976543210"));
-        adminsList.add(new AdministradoresDomain("Lucía Romero", "https://randomuser.me/api/portraits/women/30.jpg", "923456781"));
-        adminsList.add(new AdministradoresDomain("Jorge Valdez", "https://randomuser.me/api/portraits/men/22.jpg", "987123654"));
-        adminsList.add(new AdministradoresDomain("Camila Torres", "https://randomuser.me/api/portraits/women/15.jpg", "965432178"));
-        adminsList.add(new AdministradoresDomain("Alonso Rivas", "https://randomuser.me/api/portraits/men/28.jpg", "976812345"));
+        adminsList.add(new AdministradoresDomain("Andrea Torres", "987654321", "https://randomuser.me/api/portraits/women/68.jpg", "andrea.torres@email.com", "Av. Los Álamos 123", "1990-03-15", "Admin Hotel"));
+        adminsList.add(new AdministradoresDomain("Luis Mendoza", "912345678", "https://randomuser.me/api/portraits/men/45.jpg", "luis.mendoza@email.com", "Jr. Lima 456", "1988-11-20", "Admin Hotel"));
+        adminsList.add(new AdministradoresDomain("María Pérez", "956789123", "https://randomuser.me/api/portraits/women/12.jpg", "maria.perez@email.com", "Calle San Juan 789", "1992-07-08", "Admin Hotel"));
+        adminsList.add(new AdministradoresDomain("Carlos Ruiz", "998877665", "https://randomuser.me/api/portraits/men/34.jpg", "carlos.ruiz@email.com", "Av. Miraflores 321", "1985-06-23", "Admin Hotel"));
+        adminsList.add(new AdministradoresDomain("Fernanda Silva", "934567890", "https://randomuser.me/api/portraits/women/24.jpg", "fernanda.silva@email.com", "Jr. Arequipa 654", "1991-12-01", "Admin Hotel"));
+        adminsList.add(new AdministradoresDomain("Diego Ramírez", "976543210", "https://randomuser.me/api/portraits/men/53.jpg", "diego.ramirez@email.com", "Calle Los Olivos 987", "1987-05-12", "Admin Hotel"));
+        adminsList.add(new AdministradoresDomain("Lucía Romero", "923456781", "https://randomuser.me/api/portraits/women/30.jpg", "lucia.romero@email.com", "Av. Primavera 111", "1993-09-30", "Admin Hotel"));
+        adminsList.add(new AdministradoresDomain("Jorge Valdez", "987123654", "https://randomuser.me/api/portraits/men/22.jpg", "jorge.valdez@email.com", "Jr. Cusco 222", "1986-04-17", "Admin Hotel"));
+        adminsList.add(new AdministradoresDomain("Camila Torres", "965432178", "https://randomuser.me/api/portraits/women/15.jpg", "camila.torres@email.com", "Calle Amazonas 333", "1994-10-05", "Admin Hotel"));
+        adminsList.add(new AdministradoresDomain("Alonso Rivas", "976812345", "https://randomuser.me/api/portraits/men/28.jpg", "alonso.rivas@email.com", "Av. Grau 444", "1989-08-22", "Admin Hotel"));
 
     }
 }

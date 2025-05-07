@@ -1,0 +1,149 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <!-- Foto de perfil -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivFotoAdmin"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Foto del administrador"
+            app:shapeAppearanceOverlay="@style/CircleImageView"
+            app:strokeWidth="2dp"
+            android:elevation="6dp" />
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:fontFamily="@font/nunito_black"
+            android:text="Datos del Administrador"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <!-- Campos de texto -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Nombre completo"
+            app:boxBackgroundMode="outline"
+            app:hintTextAppearance="@style/HintSuperadmin">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:fontFamily="@font/nunito_black"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Número de teléfono"
+            app:boxBackgroundMode="outline"
+            app:hintTextAppearance="@style/HintSuperadmin">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNumero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:fontFamily="@font/nunito_black"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Correo electrónico"
+            app:boxBackgroundMode="outline"
+            app:hintTextAppearance="@style/HintSuperadmin">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCorreo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:fontFamily="@font/nunito_black"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Dirección"
+            app:boxBackgroundMode="outline"
+            app:hintTextAppearance="@style/HintSuperadmin">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:fontFamily="@font/nunito_black"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Fecha de nacimiento"
+            app:boxBackgroundMode="outline"
+            app:hintTextAppearance="@style/HintSuperadmin">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etFechaNacimiento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:fontFamily="@font/nunito_black"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Rol"
+            app:boxBackgroundMode="outline"
+            app:hintTextAppearance="@style/HintSuperadmin">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRol"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:fontFamily="@font/nunito_black"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botón -->
+        <Button
+            android:id="@+id/btnEditarGuardar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Editar"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="24dp"
+            android:elevation="2dp" />
+    </LinearLayout>
+</ScrollView>
