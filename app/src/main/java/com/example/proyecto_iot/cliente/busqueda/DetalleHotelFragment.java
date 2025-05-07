@@ -1,10 +1,14 @@
 package com.example.proyecto_iot.cliente.busqueda;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -78,6 +82,48 @@ public class DetalleHotelFragment extends Fragment {
 
         HabitacionAdapter adapter = new HabitacionAdapter(lista);
         recyclerHabitaciones.setAdapter(adapter);
+
+        TextView tabPrecios = view.findViewById(R.id.tabPrecios);
+        TextView tabInformacion = view.findViewById(R.id.tabInformacion);
+        RecyclerView recyclerHabitaciones = view.findViewById(R.id.recyclerHabitaciones);
+        ScrollView layoutInformacion = view.findViewById(R.id.layoutInformacion);
+
+        tabPrecios.setOnClickListener(v -> {
+            tabPrecios.setTextColor(Color.BLACK);
+            tabPrecios.setTypeface(null, Typeface.BOLD);
+            tabInformacion.setTextColor(Color.GRAY);
+            tabInformacion.setTypeface(null, Typeface.NORMAL);
+
+            recyclerHabitaciones.setVisibility(View.VISIBLE);
+            layoutInformacion.setVisibility(View.GONE);
+        });
+
+        tabInformacion.setOnClickListener(v -> {
+            tabInformacion.setTextColor(Color.BLACK);
+            tabInformacion.setTypeface(null, Typeface.BOLD);
+            tabPrecios.setTextColor(Color.GRAY);
+            tabPrecios.setTypeface(null, Typeface.NORMAL);
+
+            recyclerHabitaciones.setVisibility(View.GONE);
+            layoutInformacion.setVisibility(View.VISIBLE);
+        });
+
+        Hotel hotel = getArguments() != null ? (Hotel) getArguments().getSerializable("hotel") : null;
+        if (hotel != null) {
+            LinearLayout layoutServicios = view.findViewById(R.id.layoutServicios);
+            layoutServicios.removeAllViews();
+
+            for (String servicio : hotel.getServicios()) {
+                TextView servicioView = new TextView(getContext());
+                servicioView.setText("- " + servicio);
+                servicioView.setTextSize(14);
+                servicioView.setTextColor(Color.DKGRAY);
+                layoutServicios.addView(servicioView);
+            }
+        }
+
+
+
 
         return view;
     }
