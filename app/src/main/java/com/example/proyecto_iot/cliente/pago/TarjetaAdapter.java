@@ -1,6 +1,7 @@
 package com.example.proyecto_iot.cliente.pago;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,9 +71,12 @@ public class TarjetaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else if (holder instanceof AgregarViewHolder) {
             AgregarViewHolder vh = (AgregarViewHolder) holder;
             vh.itemView.setOnClickListener(v -> {
-
+                Context context = v.getContext();
+                Intent intent = new Intent(context, AgregarTarjetaActivity.class);
+                context.startActivity(intent);
             });
         }
+
     }
 
     static class TarjetaViewHolder extends RecyclerView.ViewHolder {
