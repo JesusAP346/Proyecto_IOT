@@ -28,8 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="6dp">
+            android:layout_alignParentRight="true">
 
             <ImageView
                 android:id="@+id/iconoCampana"
@@ -42,15 +41,15 @@
                 android:id="@+id/notificacionBadge"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:background="@drawable/btn_circle_background"
-                android:text="3"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:gravity="center"
                 android:layout_gravity="top|end"
                 android:layout_marginTop="0dp"
-                android:layout_marginEnd="0dp" />
+                android:layout_marginEnd="0dp"
+                android:background="@drawable/btn_circle_background"
+                android:gravity="center"
+                android:text="50"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:textStyle="bold" />
         </FrameLayout>
     </RelativeLayout>
 

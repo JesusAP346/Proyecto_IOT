@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.fragmentos.AdminNotificacionesFragment;
 import com.example.proyecto_iot.cliente.MainActivityCliente;
+import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 import com.example.proyecto_iot.databinding.FragmentPerfilBinding;
 
 public class PerfilFragment extends Fragment {
@@ -55,7 +56,7 @@ public class PerfilFragment extends Fragment {
 
         // Acción: Cambiar a modo cliente
         binding.btnModoCliente.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), MainActivityCliente.class));
+            startActivity(new Intent(requireContext(), ClienteBusquedaActivity.class));
         });
 
         binding.iconoCampana.setOnClickListener(v -> {
