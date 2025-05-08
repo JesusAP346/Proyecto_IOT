@@ -10,26 +10,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="67dp"
         android:text="Mis Reservas"
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/btnRegresar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvTituloDetalle"
-        android:layout_marginTop="15dp"
-        android:text="← Regresar"
-        android:textSize="16sp" />
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_circle_white"
+        android:contentDescription="Volver"
+        android:elevation="4dp"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_arrow_back"
+        app:tint="@color/black" />
 
     <ImageView
         android:id="@+id/imgHotel"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_below="@id/btnRegresar"
-        android:layout_marginTop="21dp"
+        android:layout_below="@id/btnBack"
+        android:layout_marginTop="63dp"
         android:scaleType="centerCrop"
         android:src="@drawable/hotel1" />
 
@@ -49,9 +53,9 @@
         android:id="@+id/contenidoDetalle"
         android:layout_width="387dp"
         android:layout_height="199dp"
-        android:layout_above="@id/bottom_navigation"
+
         android:layout_below="@id/imgHotel"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="77dp"
         android:orientation="vertical">
 
@@ -110,23 +114,13 @@
         android:layout_height="58dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="13dp"
-        android:layout_marginBottom="108dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="87dp"
         android:background="@drawable/chat"
         android:contentDescription="Ayuda"
         android:elevation="4dp"
         android:padding="0dp"
         android:scaleType="centerCrop" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#FFFFFF"
-        app:menu="@menu/bottom_nav_menu_cliente"
-        app:labelVisibilityMode="labeled"
-        app:itemIconTint="@color/nav_icon_color"
-        app:itemTextColor="@color/nav_text_color" />
 
 </RelativeLayout>

@@ -11,7 +11,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.administradorHotel.fragmentos.ReservasFragment;
+//import com.example.proyecto_iot.administradorHotel.fragmentos.ReservasFragment;
+import com.example.proyecto_iot.cliente.MisReservasFragment;
+
 import com.example.proyecto_iot.cliente.NotificacionesFragment;
 import com.example.proyecto_iot.cliente.TaxiFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -53,7 +55,7 @@ public class ClienteBusquedaActivity extends AppCompatActivity {
             } else if (id == R.id.nav_notificaciones) {
                 fragment = new NotificacionesFragment();
             } else if (id == R.id.nav_reservas) {
-                fragment = new ReservasFragment();
+                fragment = new MisReservasFragment();
             } else if (id == R.id.nav_taxi) {
                 fragment = new TaxiFragment();  // ✅ Aquí agregamos el fragmento de taxi
             }
