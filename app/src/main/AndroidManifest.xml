@@ -30,6 +30,11 @@
             android:exported="false" />
         <activity
             android:name=".cliente.modoTaxistaFormulario.RegistroTaxistaActivity"
+            android:exported="false">
+
+        </activity>
+        <activity
+            android:name=".cliente.busqueda.ClienteBusquedaActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,9 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".cliente.busqueda.ClienteBusquedaActivity"
-            android:exported="false"></activity>
         <activity
             android:name=".login.ForgotPasswordActivity"
             android:exported="false" />

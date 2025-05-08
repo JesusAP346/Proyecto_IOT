@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.example.proyecto_iot.R;
 
@@ -100,6 +101,12 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
 
         hotelAdapter = new HotelAdapter(getContext(), hotelList, this);
         recyclerView.setAdapter(hotelAdapter);
+
+        ImageButton btnBack = view.findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
+
 
         return view;
     }
