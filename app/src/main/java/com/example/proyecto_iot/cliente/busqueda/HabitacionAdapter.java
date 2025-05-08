@@ -20,8 +20,13 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
 
     private List<Habitacion> listaHabitaciones;
 
-    public HabitacionAdapter(List<Habitacion> listaHabitaciones) {
+    private Context context;
+    private HotelAdapter.OnHotelClickListener listener;
+
+    public HabitacionAdapter(List<Habitacion> listaHabitaciones, Context context, HotelAdapter.OnHotelClickListener listener) {
         this.listaHabitaciones = listaHabitaciones;
+        this.context = context;
+        this.listener = listener;
     }
 
     @NonNull

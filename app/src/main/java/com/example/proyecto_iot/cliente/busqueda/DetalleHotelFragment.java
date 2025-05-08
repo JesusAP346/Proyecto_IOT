@@ -80,8 +80,9 @@ public class DetalleHotelFragment extends Fragment {
         lista.add(new Habitacion("S/. 420 por noche", "Excelente para familias", "• 1 habitación\n• 2 camas matrimoniales\n• Balcón con vista\n• Wi-Fi"));
         lista.add(new Habitacion("S/. 470 por noche", "Excelente para familias", "• 1 habitación\n• 3 camas matrimoniales\n• Balcón con vista\n• Wi-Fi"));
         lista.add(new Habitacion("S/. 890 por noche", "Excelente para familias", "• 1 habitación\n• 2 camas matrimoniales\n• Balcón con vista\n• Wi-Fi\n• Jacuzzi UwU"));
+        lista.add(new Habitacion("S/. 5000 por noche", "Excelente para familias", "• 1 habitación\n• 2 camas matrimoniales\n• Balcón con vista\n• Wi-Fi\n• Jacuzzi UwU"));
 
-        HabitacionAdapter adapter = new HabitacionAdapter(lista);
+        HabitacionAdapter adapter = new HabitacionAdapter(lista, getContext(), (HotelAdapter.OnHotelClickListener) this);
         recyclerHabitaciones.setAdapter(adapter);
 
         TextView tabPrecios = view.findViewById(R.id.tabPrecios);
