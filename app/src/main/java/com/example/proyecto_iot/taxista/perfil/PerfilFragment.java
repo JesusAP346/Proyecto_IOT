@@ -8,111 +8,75 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.administradorHotel.fragmentos.AdminNotificacionesFragment;
+import com.example.proyecto_iot.cliente.MainActivityCliente;
+import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
+import com.example.proyecto_iot.databinding.FragmentPerfilBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PerfilFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PerfilFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FragmentPerfilBinding binding;
 
     public PerfilFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PerfilFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static PerfilFragment newInstance(String param1, String param2) {
         PerfilFragment fragment = new PerfilFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("param1", param1);
+        args.putString("param2", param2);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflar usando binding
+        binding = FragmentPerfilBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
-        // Inflamos SOLO el layout del fragment
-        View view = inflater.inflate(R.layout.fragment_perfil, container, false);
-
-        // Accedemos al botón o card que abre la actividad
-        View btnVerInformacion = view.findViewById(R.id.informacionPersonal); // usa el ID correcto
-        btnVerInformacion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(requireContext(), InformacionPersonalActivity.class);
-                startActivity(intent);
-            }
+        // Acción: Información Personal
+        binding.informacionPersonal.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), InformacionPersonalActivity.class));
         });
 
-
-        // Accedemos al botón o card que abre la actividad
-        View btnVerSeguridad = view.findViewById(R.id.seguridadPersonal); // usa el ID correcto
-        btnVerSeguridad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(requireContext(), SeguridadActivity.class);
-                startActivity(intent);
-            }
+        // Acción: Seguridad
+        binding.seguridadPersonal.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), SeguridadActivity.class));
         });
 
-
-        // Accedemos al botón o card que abre la actividad
-        View btnVerPerfilTaxista = view.findViewById(R.id.cardPerfil);// usa el ID correcto
-        btnVerPerfilTaxista.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(requireContext(), PerfilTaxistaActivity.class);
-                startActivity(intent);
-            }
+        // Acción: Perfil del Taxista
+        binding.cardPerfil.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), PerfilTaxistaActivity.class));
         });
 
-        Button btnModoCliente = view.findViewById(R.id.btnModoCliente);
-        btnModoCliente.setOnClickListener(v ->
-                startActivity(new Intent(requireContext(), com.example.proyecto_iot.cliente.MainActivityCliente.class)));
+        // Acción: Cambiar a modo cliente
+        binding.btnModoCliente.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), ClienteBusquedaActivity.class));
+        });
 
+        binding.iconoCampana.setOnClickListener(v -> {
+            Fragment notificacionesTaxistaFragment = new NotificacionesTaxistaFragment();
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frame_layout, notificacionesTaxistaFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         return view;
     }
 
-
     public void abrirEditarPerfil() {
-        Intent intent = new Intent(requireContext(), InformacionPersonalActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(requireContext(), InformacionPersonalActivity.class));
     }
 
-
-
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null; // evitar memory leaks
+    }
 }

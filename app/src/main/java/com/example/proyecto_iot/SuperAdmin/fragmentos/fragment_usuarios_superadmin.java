@@ -1,44 +1,43 @@
 package com.example.proyecto_iot.SuperAdmin.fragmentos;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.proyecto_iot.R;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link fragment_usuarios_superadmin#newInstance} factory method to
- * create an instance of this fragment.
- */
+//Para el buscador
+import android.widget.SearchView;
+import java.util.ArrayList;
+
+
+import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.SuperAdmin.UsuariosDataStore;
+import com.example.proyecto_iot.SuperAdmin.adapter.UsuariosAdapter;
+import com.example.proyecto_iot.SuperAdmin.domain.AdministradoresDomain;
+import com.example.proyecto_iot.SuperAdmin.domain.UsuariosDomain;
+
+import java.util.List;
+
 public class fragment_usuarios_superadmin extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private RecyclerView recyclerView;
+    private UsuariosAdapter usuariosAdapter;
+    private List<UsuariosDomain> usuariosList = UsuariosDataStore.usuariosList;
 
     public fragment_usuarios_superadmin() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment fragment_usuarios_superadmin.
-     */
-    // TODO: Rename and change types and number of parameters
     public static fragment_usuarios_superadmin newInstance(String param1, String param2) {
         fragment_usuarios_superadmin fragment = new fragment_usuarios_superadmin();
         Bundle args = new Bundle();
@@ -49,6 +48,7 @@ public class fragment_usuarios_superadmin extends Fragment {
     }
 
     @Override
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -56,11 +56,57 @@ public class fragment_usuarios_superadmin extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_usuarios_superadmin, container, false);
+        View view = inflater.inflate(R.layout.fragment_usuarios_superadmin, container, false);
+
+        // Referencias
+        recyclerView = view.findViewById(R.id.rv_music);
+        SearchView searchView = view.findViewById(R.id.searchViewUsuarios);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Inicializar adapter con copia mutable
+        usuariosAdapter = new UsuariosAdapter(new ArrayList<>(usuariosList));
+        recyclerView.setAdapter(usuariosAdapter);
+
+        // Buscar
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<UsuariosDomain> filtrados = new ArrayList<>();
+                for (UsuariosDomain usuario : usuariosList) {
+                    if (usuario.getNombre().toLowerCase().contains(newText.toLowerCase())) {
+                        filtrados.add(usuario);
+                    }
+                }
+                //Este es un metodo para UsuariosAdapter
+                usuariosAdapter.updateList(filtrados);
+                return true;
+            }
+        });
+
+        return view;
     }
+
+//    Oncreate sin buscador
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//            View view = inflater.inflate(R.layout.fragment_usuarios_superadmin, container, false);
+//
+//            recyclerView = view.findViewById(R.id.rv_music);
+//            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//
+//            usuariosAdapter = new UsuariosAdapter(usuariosList);
+//            recyclerView.setAdapter(usuariosAdapter);
+//
+//            return view;
+//    }
 }

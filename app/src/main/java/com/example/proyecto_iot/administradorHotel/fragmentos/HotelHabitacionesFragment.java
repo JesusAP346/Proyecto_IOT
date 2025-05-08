@@ -1,11 +1,11 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
-
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,19 @@ import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.RegistroHabitacionHotel;
+import com.example.proyecto_iot.administradorHotel.adapter.HabitacionAdapter;
+import com.example.proyecto_iot.administradorHotel.dto.HabitacionDto;
+import com.example.proyecto_iot.administradorHotel.entity.Equipamiento;
+import com.example.proyecto_iot.administradorHotel.entity.Habitacion;
+import com.example.proyecto_iot.administradorHotel.entity.Servicio;
+import com.example.proyecto_iot.administradorHotel.fragmentos.DetalleHabitacionFragment;
 import com.example.proyecto_iot.databinding.FragmentHotelHabitacionesBinding;
+
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,32 +76,110 @@ public class HotelHabitacionesFragment extends Fragment {
     FragmentHotelHabitacionesBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHotelHabitacionesBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Acción del botón para registrar una habitación
         binding.btnRegistrarInformacion.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), RegistroHabitacionHotel.class);
-            startActivity(intent);
+            startActivity(new Intent(requireContext(), RegistroHabitacionHotel.class));
         });
 
-        binding.btnVerDetalles.setOnClickListener(v -> {
+        List<Habitacion> mockHabitaciones = getHabitacionesSimuladas();
+
+        List<HabitacionDto> dtoList = new ArrayList<>();
+        for (Habitacion h : mockHabitaciones) dtoList.add(new HabitacionDto(h));
+
+        HabitacionAdapter adapter = new HabitacionAdapter(dtoList, mockHabitaciones, requireContext(), habitacion -> {
+            DetalleHabitacionFragment fragment = new DetalleHabitacionFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("habitacion", habitacion);
+            fragment.setArguments(bundle);
+
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.frame_layout, new DetalleHabitacionFragment())
+                    .replace(R.id.frame_layout, fragment)
                     .addToBackStack(null)
                     .commit();
         });
 
 
+        binding.recyclerHabitaciones.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerHabitaciones.setAdapter(adapter);
     }
+
+
+    private List<Habitacion> getHabitacionesSimuladas() {
+        List<Equipamiento> equips1 = Arrays.asList(
+                new Equipamiento("TV"),
+                new Equipamiento("Ducha"),
+                new Equipamiento("Escritorio")
+        );
+
+        List<Servicio> servicios1 = Arrays.asList(
+                new Servicio("Gimnasio", "Acceso libre", 0),
+                new Servicio("Desayuno", "Buffet diario", 0)
+        );
+
+        List<Equipamiento> equips2 = Arrays.asList(
+                new Equipamiento("Caja fuerte"),
+                new Equipamiento("Wifi"),
+                new Equipamiento("Mini bar")
+        );
+
+        List<Servicio> servicios2 = Arrays.asList(
+                new Servicio("Spa", "Masajes y jacuzzi", 30),
+                new Servicio("Restaurante", "Comida internacional", 20)
+        );
+
+        List<Equipamiento> equips3 = Arrays.asList(
+                new Equipamiento("Cocina"),
+                new Equipamiento("Secador"),
+                new Equipamiento("TV")
+        );
+
+        List<Servicio> servicios3 = Arrays.asList(
+                new Servicio("Piscina", "Piscina climatizada", 0),
+                new Servicio("Transporte", "Shuttle al aeropuerto", 10)
+        );
+
+        return Arrays.asList(
+                new Habitacion(
+                        1,
+                        "Deluxe King",
+                        "2 adultos",
+                        30,
+                        2,
+                        equips1,
+                        Arrays.asList(R.drawable.hotel1, R.drawable.hotel2),
+                        servicios1
+                ),
+                new Habitacion(
+                        2,
+                        "Suite Ejecutiva",
+                        "3 adultos",
+                        50,
+                        1,
+                        equips2,
+                        Arrays.asList(R.drawable.hotel3, R.drawable.hotel4),
+                        servicios2
+                ),
+                new Habitacion(
+                        3,
+                        "Habitación Familiar",
+                        "4 personas",
+                        60,
+                        3,
+                        equips3,
+                        Arrays.asList(R.drawable.hotel5, R.drawable.hotel6),
+                        servicios3
+                )
+        );
+    }
+
 
     @Override
     public void onDestroyView() {

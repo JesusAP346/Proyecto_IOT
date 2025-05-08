@@ -22,13 +22,35 @@
             android:textStyle="bold"
             android:paddingBottom="4dp" />
 
-        <ImageView
-            android:layout_width="38dp"
-            android:layout_height="31dp"
+        <!-- Campana con notificación -->
+        <FrameLayout
+            android:id="@+id/notificacion_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:contentDescription="Notificación"
-            android:src="@drawable/notificaciones_campana" />
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:id="@+id/iconoCampana"
+                android:layout_width="38dp"
+                android:layout_height="31dp"
+                android:contentDescription="Notificación"
+                android:src="@drawable/icono_campana" />
+
+            <TextView
+                android:id="@+id/notificacionBadge"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:background="@drawable/btn_circle_background"
+                android:gravity="center"
+                android:text="50"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </FrameLayout>
     </RelativeLayout>
 
     <!-- Card del perfil -->

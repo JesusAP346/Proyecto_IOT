@@ -1,7 +1,6 @@
 package com.example.proyecto_iot.administradorHotel;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -16,23 +15,24 @@ import com.example.proyecto_iot.databinding.ActivityPagPrincipalAdminBinding;
 
 public class PagPrincipalAdmin extends AppCompatActivity {
 
-
     ActivityPagPrincipalAdminBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityPagPrincipalAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         replaceFragment(new HomeFragment());
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-
             int itemId = item.getItemId();
 
             if (itemId == R.id.inicio) {
                 replaceFragment(new HomeFragment());
             } else if (itemId == R.id.hotel) {
-                replaceFragment(new HotelFragment());
+                // ✅ Abre HotelFragment con sección "info" por defecto
+                replaceFragment(HotelFragment.newInstance("info"));
             } else if (itemId == R.id.reservas) {
                 replaceFragment(new ReservasFragment());
             } else if (itemId == R.id.perfil) {
@@ -41,14 +41,15 @@ public class PagPrincipalAdmin extends AppCompatActivity {
 
             return true;
         });
-
     }
 
-
-    private void replaceFragment(Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout,fragment);
-        fragmentTransaction.commit();
+    private void replaceFragment(Fragment fragment) {
+        Fragment current = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+        if (current != null && current.getClass().equals(fragment.getClass())) {
+            return;
+        }
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, fragment);
+        transaction.commit();
     }
 }

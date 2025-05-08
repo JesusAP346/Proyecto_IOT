@@ -1,7 +1,6 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -9,65 +8,25 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.FragmentHotelBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HotelFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HotelFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private FragmentHotelBinding binding;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public HotelFragment() {}
 
-    public HotelFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HotelFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HotelFragment newInstance(String param1, String param2) {
+    public static HotelFragment newInstance(String seccion) {
         HotelFragment fragment = new HotelFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("seccion", seccion);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-
-    FragmentHotelBinding binding;
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHotelBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -76,10 +35,25 @@ public class HotelFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Fragmento por defecto
-        loadChildFragment(new HotelInfoFragment());
+        String seccion = getArguments() != null ? getArguments().getString("seccion", "info") : "info";
 
-        // Usando ViewBinding en lugar de findViewById
+        if (getChildFragmentManager().getFragments().isEmpty()) {
+            switch (seccion) {
+                case "habitaciones":
+                    loadChildFragment(new HotelHabitacionesFragment());
+                    break;
+                case "servicios":
+                    loadChildFragment(new HotelServicioFragment());
+                    break;
+                case "reportes":
+                    loadChildFragment(new AdminReportesFragment());
+                    break;
+                default:
+                    loadChildFragment(new HotelInfoFragment());
+                    break;
+            }
+        }
+
         binding.btnInfo.setOnClickListener(v -> loadChildFragment(new HotelInfoFragment()));
         binding.btnHabitaciones.setOnClickListener(v -> loadChildFragment(new HotelHabitacionesFragment()));
         binding.btnServicios.setOnClickListener(v -> loadChildFragment(new HotelServicioFragment()));
@@ -87,13 +61,12 @@ public class HotelFragment extends Fragment {
         binding.btnHabitacionesNada.setOnClickListener(v -> loadChildFragment(new HotelHabitacionesNadaFragment()));
         binding.btnServiciosNada.setOnClickListener(v -> loadChildFragment(new HotelServicioNadaFragment()));
         binding.btnReportes.setOnClickListener(v -> loadChildFragment(new AdminReportesFragment()));
-
     }
 
     private void loadChildFragment(Fragment fragment) {
         getChildFragmentManager()
                 .beginTransaction()
-                .replace(R.id.hotel_dynamic_container, fragment)
+                .replace(binding.hotelDynamicContainer.getId(), fragment)
                 .commit();
     }
 
@@ -102,6 +75,4 @@ public class HotelFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
 }
