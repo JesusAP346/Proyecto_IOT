@@ -120,8 +120,8 @@ public class HotelHabitacionesFragment extends Fragment {
         );
 
         List<Servicio> servicios1 = Arrays.asList(
-                new Servicio("Gimnasio", "Acceso libre", 0),
-                new Servicio("Desayuno", "Buffet diario", 0)
+                new Servicio("Gimnasio", "Acceso libre", 0,Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
+                new Servicio("Desayuno", "Buffet diario", 0,Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
         );
 
         List<Equipamiento> equips2 = Arrays.asList(
@@ -131,10 +131,9 @@ public class HotelHabitacionesFragment extends Fragment {
         );
 
         List<Servicio> servicios2 = Arrays.asList(
-                new Servicio("Spa", "Masajes y jacuzzi", 30),
-                new Servicio("Restaurante", "Comida internacional", 20)
+                new Servicio("Spa", "Masajes y jacuzzi", 30, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
+                new Servicio("Restaurante", "Comida internacional", 20, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
         );
-
         List<Equipamiento> equips3 = Arrays.asList(
                 new Equipamiento("Cocina"),
                 new Equipamiento("Secador"),
@@ -142,8 +141,8 @@ public class HotelHabitacionesFragment extends Fragment {
         );
 
         List<Servicio> servicios3 = Arrays.asList(
-                new Servicio("Piscina", "Piscina climatizada", 0),
-                new Servicio("Transporte", "Shuttle al aeropuerto", 10)
+                new Servicio("Piscina", "Piscina climatizada", 0,Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
+                new Servicio("Transporte", "Shuttle al aeropuerto", 10,Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
         );
 
         return Arrays.asList(
