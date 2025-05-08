@@ -8,7 +8,7 @@
     <item
         android:title="Hotel"
         android:icon="@drawable/icono_hotel3"
-        android:id="@+id/ivFotoAuto"/>
+        android:id="@+id/hotel"/>
 
     <item android:title="Reservas"
         android:icon="@drawable/icono_calendario2"

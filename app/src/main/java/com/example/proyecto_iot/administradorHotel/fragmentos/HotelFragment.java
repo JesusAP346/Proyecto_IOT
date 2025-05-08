@@ -1,7 +1,6 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,9 +15,7 @@ public class HotelFragment extends Fragment {
 
     private FragmentHotelBinding binding;
 
-    public HotelFragment() {
-        // Constructor vacío requerido
-    }
+    public HotelFragment() {}
 
     public static HotelFragment newInstance(String seccion) {
         HotelFragment fragment = new HotelFragment();
@@ -29,8 +26,7 @@ public class HotelFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHotelBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -39,11 +35,9 @@ public class HotelFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Obtenemos la sección deseada, por defecto "info"
         String seccion = getArguments() != null ? getArguments().getString("seccion", "info") : "info";
 
-        // Solo si es la primera vez (no volver a sobrecargar al hacer popBackStack)
-        if (savedInstanceState == null) {
+        if (getChildFragmentManager().getFragments().isEmpty()) {
             switch (seccion) {
                 case "habitaciones":
                     loadChildFragment(new HotelHabitacionesFragment());
@@ -60,7 +54,6 @@ public class HotelFragment extends Fragment {
             }
         }
 
-        // Botones de navegación entre fragmentos hijos
         binding.btnInfo.setOnClickListener(v -> loadChildFragment(new HotelInfoFragment()));
         binding.btnHabitaciones.setOnClickListener(v -> loadChildFragment(new HotelHabitacionesFragment()));
         binding.btnServicios.setOnClickListener(v -> loadChildFragment(new HotelServicioFragment()));
@@ -74,7 +67,6 @@ public class HotelFragment extends Fragment {
         getChildFragmentManager()
                 .beginTransaction()
                 .replace(binding.hotelDynamicContainer.getId(), fragment)
-                .addToBackStack(null)
                 .commit();
     }
 

@@ -102,7 +102,7 @@ public class HotelHabitacionesFragment extends Fragment {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_layout, fragment)
-                    .addToBackStack(null)  // Solo aquí se añade al backstack
+                    .addToBackStack(null)
                     .commit();
         });
 

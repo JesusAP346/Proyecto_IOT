@@ -44,7 +44,7 @@ public class DetalleHabitacionFragment extends Fragment {
         }
 
         binding.backdetallehabitacion.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStackImmediate();
+            requireActivity().getSupportFragmentManager().popBackStack();
         });
 
     }
