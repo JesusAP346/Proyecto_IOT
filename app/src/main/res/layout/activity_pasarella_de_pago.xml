@@ -2,9 +2,49 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/pasarelaRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".cliente.busqueda.PasarellaDePago">
+    android:background="@android:color/white">
+
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_circle_white"
+        android:contentDescription="Volver"
+        android:elevation="4dp"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerTarjetas"
+        android:layout_width="398dp"
+        android:layout_height="689dp"
+        android:padding="16dp"
+        app:layout_constraintBottom_toTopOf="@id/btnPagar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBack" />
+
+    <Button
+        android:id="@+id/btnPagar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Pagar"
+        android:textStyle="bold"
+        android:backgroundTint="#6A170F"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

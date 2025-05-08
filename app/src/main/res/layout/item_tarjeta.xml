@@ -1,6 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_tarjeta_azul"
+    android:padding="16dp"
+    android:layout_marginBottom="12dp">
+
+    <!-- Nombre del banco -->
+    <TextView
+        android:id="@+id/tvBanco"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="INTERBANK"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imgLogo"
+        app:layout_constraintHorizontal_bias="0" />
+
+    <!-- Número de tarjeta -->
+    <TextView
+        android:id="@+id/tvNumero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="**** 1826"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tvBanco"
+        app:layout_constraintStart_toStartOf="@id/tvBanco" />
+
+    <!-- Titular -->
+    <TextView
+        android:id="@+id/tvTitular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="KELY TAFUR"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tvNumero"
+        app:layout_constraintStart_toStartOf="@id/tvBanco" />
+
+    <TextView
+        android:id="@+id/tvTipo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Crédito"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitular"
+        app:layout_constraintStart_toStartOf="@id/tvBanco" />
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="84dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="24dp"
+        android:contentDescription="Logo tarjeta"
+        android:src="@drawable/ic_visa"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
