@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/text_zinc_100">
+    android:padding="16dp">
 
+    <!-- Título de la sección -->
     <TextView
-        android:id="@+id/tvTitulo"
+        android:id="@+id/tituloNotificaciones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Notificaciones"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:fontFamily="sans-serif-medium"
+        android:shadowColor="#888888"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1"
+        android:layout_marginBottom="12dp"/>
 
-    <!-- Aquí se agregarán notificaciones de ejemplo -->
-    <TextView
+    <!-- Lista de notificaciones -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerNotificaciones"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/white"
-        android:padding="8dp"
-        android:text="📩 Tu reserva ha sido confirmada." />
-
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 </LinearLayout>

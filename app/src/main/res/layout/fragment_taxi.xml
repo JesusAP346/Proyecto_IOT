@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTituloTaxi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Taxi"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginBottom="8dp"
+        android:shadowColor="#888888"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1" />
+
+    <!-- Nota -->
+    <TextView
+        android:id="@+id/tvNota"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nota: El QR se deberá mostrar al conductor al finalizar el viaje"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Lista de tarjetas -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSolicitudesTaxi"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>
