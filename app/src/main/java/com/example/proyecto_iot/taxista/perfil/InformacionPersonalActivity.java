@@ -1,98 +1,70 @@
 package com.example.proyecto_iot.taxista.perfil;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.databinding.ActivityInformacionPersonalBinding;
+import com.example.proyecto_iot.databinding.ItemDatoEditable2Binding;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 public class InformacionPersonalActivity extends AppCompatActivity {
+
+    private ActivityInformacionPersonalBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_informacion_personal);
+        binding = ActivityInformacionPersonalBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
+        binding.btnBack.setOnClickListener(v -> finish());
+        binding.btnguardar.setOnClickListener(v -> finish());
 
-        ImageView btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish(); //  Esto cierra la actividad y regresa a la anterior
-            }
-        });
+        cargarDatos(); // mostrar texto por defecto
+        configurarCampoFechaNacimiento(); //
 
-
-
-
-        configurarCampos(); // para cargar datos desde los tags
     }
-
-    private void configurarCampos() {
-        int[] ids = {
-                R.id.campoNombre,
-                R.id.campoDNI,
-                R.id.campoTelefono,
-                R.id.campoCorreo,
-                R.id.campoNacimiento,
-                R.id.campoDomicilio
-        };
-
-        for (int id : ids) {
-            View campo = findViewById(id);
-            if (campo == null || campo.getTag() == null) continue;
-
-            String tag = campo.getTag().toString();
-            String[] partes = tag.split("\\|");
-
-            TextView titulo = campo.findViewById(R.id.tvTitulo);
-            TextView contenido = campo.findViewById(R.id.tvContenido);
-
-            if (partes.length >= 2) {
-                titulo.setText(partes[0]);
-                contenido.setText(partes[1]);
-            }
-        }
-
-        cargarDatos();
-    }
-
 
     private void cargarDatos() {
-        setCampo(R.id.campoNombre, "Nombre legal", "Roberto Tafur");
-        setCampo(R.id.campoDNI, "Documento de Identidad", "71986247");
-        setCampo(R.id.campoTelefono, "Número telefónico", "945 854 123");
-        setCampo(R.id.campoCorreo, "Correo electrónico", "a20210535@pucp.edu.pe");
-        setCampo(R.id.campoNacimiento, "Fecha de nacimiento", "31/05/04");
-        setCampo(R.id.campoDomicilio, "Domicilio", "Las Cucardas 232");
+        setCampo(binding.layoutNombre, "Nombre legal", "Roberto Tafur");
+        setCampo(binding.campoDNI, "Documento de Identidad", "71986247");
+        setCampo(binding.campoTelefono, "Número telefónico", "945 854 123");
+        setCampo(binding.campoCorreo, "Correo electrónico", "a20210535@pucp.edu.pe");
+        //setCampo(binding.campoNacimiento, "Fecha de nacimiento", "31/05/04");
+        setCampo(binding.campoDomicilio, "Domicilio", "Pueblo Libre 232");
     }
 
-    private void setCampo(int viewId, String tituloText, String contenidoText) {
-        View campo = findViewById(viewId);
-        if (campo == null) return;
+    private void setCampo(ItemDatoEditable2Binding campoBinding, String tituloText, String contenidoText) {
+        campoBinding.layoutCampo.setHint(tituloText);
+        campoBinding.etContenido.setText(contenidoText);
 
-        TextView titulo = campo.findViewById(R.id.tvTitulo);
-        TextView contenido = campo.findViewById(R.id.tvContenido);
 
-        titulo.setText(tituloText);
-        contenido.setText(contenidoText);
+    }
+    private void configurarCampoFechaNacimiento() {
+        binding.etFechaNacimiento.setOnClickListener(v -> {
+            final Calendar calendario = Calendar.getInstance();
+            int anio = calendario.get(Calendar.YEAR);
+            int mes = calendario.get(Calendar.MONTH);
+            int dia = calendario.get(Calendar.DAY_OF_MONTH);
 
-        TextView btnEditar = campo.findViewById(R.id.btnEditar);
-        btnEditar.setOnClickListener(v -> {
-            new EditarCampoDialogFragment(
-                    tituloText,
-                    contenido.getText().toString(),
-                    nuevoTexto -> contenido.setText(nuevoTexto)
-            ).show(getSupportFragmentManager(), "EditarCampo");
+            DatePickerDialog datePicker = new DatePickerDialog(
+                    this,
+                    (view, year, month, dayOfMonth) -> {
+                        String fecha = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year);
+                        binding.etFechaNacimiento.setText(fecha);
+                    },
+                    anio, mes, dia
+            );
+            datePicker.show();
         });
+
+        // Valor inicial
+        binding.etFechaNacimiento.setText("31/05/04");
     }
-
-
-
 
 }

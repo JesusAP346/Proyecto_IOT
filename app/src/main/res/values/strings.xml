@@ -2,6 +2,7 @@
     <string name="app_name">hotelVGO</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="campo_generico">Campo</string>
 
     <string-array name="adultos_array">
         <item>1 adulto</item>

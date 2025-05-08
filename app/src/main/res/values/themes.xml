@@ -3,6 +3,7 @@
     <!-- Usa Material3 para habilitar el carrusel correctamente -->
     <style name="Base.Theme.PROYECTO_IOT" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Activa el carrusel de Material3 -->
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.FilledBox</item>
 
         <!-- Puedes agregar más personalización aquí -->
     </style>
