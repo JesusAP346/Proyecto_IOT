@@ -1,26 +1,26 @@
-package com.example.proyecto_iot.SuperAdmin.fragmentos;
+package com.example.proyecto_iot.cliente.busqueda;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.SuperAdmin.TaxistasDataStore;
-import com.example.proyecto_iot.SuperAdmin.adapter.TaxistasAdapter;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link fragment_taxistas_superadmin#newInstance} factory method to
+ * Use the {@link DetalleHabitacionClienteFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class fragment_taxistas_superadmin extends Fragment {
+public class DetalleHabitacionClienteFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,7 +31,7 @@ public class fragment_taxistas_superadmin extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public fragment_taxistas_superadmin() {
+    public DetalleHabitacionClienteFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +41,11 @@ public class fragment_taxistas_superadmin extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment fragment_taxistas_superadmin.
+     * @return A new instance of fragment DetalleHabitacionClienteFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static fragment_taxistas_superadmin newInstance(String param1, String param2) {
-        fragment_taxistas_superadmin fragment = new fragment_taxistas_superadmin();
+    public static DetalleHabitacionClienteFragment newInstance(String param1, String param2) {
+        DetalleHabitacionClienteFragment fragment = new DetalleHabitacionClienteFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,28 +65,26 @@ public class fragment_taxistas_superadmin extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_taxistas_superadmin, container, false);
-
-        RecyclerView recyclerView = view.findViewById(R.id.rv_music);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        TaxistasAdapter adapter = new TaxistasAdapter(TaxistasDataStore.taxistasList);
-        recyclerView.setAdapter(adapter);
-
-        Button btnSolicitudes = view.findViewById(R.id.solicitudes);
-
-        btnSolicitudes.setOnClickListener(v -> {
-            fragment_solicitudestaxista_superadmin nuevoFragment = new fragment_solicitudestaxista_superadmin();
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_layout, nuevoFragment) // <- ahora sí es el ID correcto
-                    .addToBackStack(null)
-                    .commit();
+        // Inflate the layout for this fragment
+        View view= inflater.inflate(R.layout.fragment_detalle_habitacion_cliente, container, false);
+        ImageButton btnBack = view.findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
         });
+        ViewPager2 viewPager = view.findViewById(R.id.viewPagerHabitacion);
 
+        List<Integer> imageResIds = Arrays.asList(
+                R.drawable.foto_habitacion1,
+                R.drawable.foto_habitacion2,
+                R.drawable.foto_habitacion3,
+                R.drawable.foto_habitacion4,
+                R.drawable.foto_habitacion5
+        );
 
+        ImageSliderAdapter adapter = new ImageSliderAdapter(requireContext(), imageResIds);
+        viewPager.setAdapter(adapter);
 
 
         return view;
     }
-
 }

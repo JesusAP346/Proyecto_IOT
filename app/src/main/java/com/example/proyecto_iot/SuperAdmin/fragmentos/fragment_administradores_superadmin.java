@@ -10,6 +10,7 @@ import com.example.proyecto_iot.SuperAdmin.AdminDataStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.SuperAdmin.adapter.AdministradoresAdapter;
@@ -68,8 +69,35 @@ public class fragment_administradores_superadmin extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(administradoresAdapter);
 
+
+        Button btnAgregar = view.findViewById(R.id.button2); // ID del botón "Agregar Administrador"
+        btnAgregar.setOnClickListener(v -> {
+            FragmentGestionAdministradorSuperadmin fragment = FragmentGestionAdministradorSuperadmin.newInstance(
+                    new AdministradoresDomain("", "", "", "", "", "", "Administrador"), // datos vacíos
+                    true,  // modo edición activado desde el inicio
+                    -1     // índice -1 indica "nuevo"
+            );
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (administradoresAdapter != null) {
+            administradoresAdapter.notifyDataSetChanged();
+        }
+    }
+
+
 
     private void initData() {
 

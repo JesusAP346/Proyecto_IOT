@@ -23,7 +23,6 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
     private Context context;
     private OnHotelClickListener listener;
 
-    // Interfaz para el listener
     public interface OnHotelClickListener {
         void onHotelClick(Hotel hotel, int position);
     }
@@ -49,12 +48,11 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.precio.setText("A partir de S/. " + hotel.getPrecio());
         holder.imagen.setImageResource(hotel.getImagenResId());
 
-        // Estrellas
+
         for (int i = 0; i < 5; i++) {
             holder.estrellas[i].setImageResource(i < hotel.getEstrellas() ? R.drawable.ic_star : R.drawable.ic_star_border);
         }
 
-        // Configurar el botón "Ver hotel"
         holder.btnVerHotel.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onHotelClick(hotel, position);

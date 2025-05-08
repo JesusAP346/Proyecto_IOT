@@ -15,7 +15,7 @@ public class UsuariosDataStore {
                 "7561701", 20, "activo", "98 de 100", "4.96"));
 
         usuariosList.add(new UsuariosDomain("Valeria Soto", "987123456", "https://randomuser.me/api/portraits/women/11.jpg",
-                "valeria.soto@email.com", "Av. Las Flores 120", "1998-01-10", "Usuario",
+                "valeria.soto@email.com", "Av. Las Flores 120", "1998-01-10", "Pediente",
                 "7896543", 15, "activo", "88 de 100", "4.85"));
 
         usuariosList.add(new UsuariosDomain("Ricardo Quispe", "954321789", "https://randomuser.me/api/portraits/men/25.jpg",
@@ -31,11 +31,11 @@ public class UsuariosDataStore {
                 "7698123", 8, "activo", "69 de 100", "4.55"));
 
         usuariosList.add(new UsuariosDomain("Camila Rojas", "934567892", "https://randomuser.me/api/portraits/women/44.jpg",
-                "camila.rojas@email.com", "Calle Misti 101", "1996-09-09", "Usuario",
+                "camila.rojas@email.com", "Calle Misti 101", "1996-09-09", "Pendiente",
                 "7551234", 5, "activo", "55 de 100", "4.40"));
 
         usuariosList.add(new UsuariosDomain("José Gutiérrez", "988765432", "https://randomuser.me/api/portraits/men/12.jpg",
-                "jose.gutierrez@email.com", "Jr. Tacna 505", "1989-02-01", "Usuario",
+                "jose.gutierrez@email.com", "Jr. Tacna 505", "1989-02-01", "Pediente",
                 "7421987", 7, "suspendido", "70 de 100", "4.65"));
 
         usuariosList.add(new UsuariosDomain("Andrea Ramírez", "923456789", "https://randomuser.me/api/portraits/women/19.jpg",
@@ -49,6 +49,26 @@ public class UsuariosDataStore {
         usuariosList.add(new UsuariosDomain("Lucía Navarro", "912345987", "https://randomuser.me/api/portraits/women/31.jpg",
                 "lucia.navarro@email.com", "Jr. Callao 333", "1997-08-17", "Usuario",
                 "7643210", 6, "activo", "87 de 100", "4.81"));
+        usuariosList.add(new UsuariosDomain("Diego Huamán", "911223344", "https://randomuser.me/api/portraits/men/88.jpg",
+                "diego.huaman@email.com", "Av. Universitaria 1001", "1993-02-18", "Pendiente",
+                "7654322", 5, "activo", "20 de 100", "4.10"));
+
+        usuariosList.add(new UsuariosDomain("Fiorella Campos", "922334455", "https://randomuser.me/api/portraits/women/65.jpg",
+                "fiorella.campos@email.com", "Jr. Ancash 999", "1998-07-04", "Pendiente",
+                "7642123", 4, "activo", "35 de 100", "4.45"));
+
+        usuariosList.add(new UsuariosDomain("Alonso Torres", "933445566", "https://randomuser.me/api/portraits/men/37.jpg",
+                "alonso.torres@email.com", "Calle Los Olivos 321", "1990-11-21", "Pendiente",
+                "7634567", 3, "activo", "40 de 100", "4.50"));
+
+        usuariosList.add(new UsuariosDomain("Isabel Luján", "944556677", "https://randomuser.me/api/portraits/women/52.jpg",
+                "isabel.lujan@email.com", "Av. Arequipa 1223", "1995-05-10", "Pendiente",
+                "7612345", 2, "activo", "28 de 100", "4.35"));
+
+        usuariosList.add(new UsuariosDomain("Kevin Mendoza", "955667788", "https://randomuser.me/api/portraits/men/21.jpg",
+                "kevin.mendoza@email.com", "Jr. Moquegua 321", "1996-09-15", "Pendiente",
+                "7598765", 7, "activo", "50 de 100", "4.60"));
+
     }
 
 

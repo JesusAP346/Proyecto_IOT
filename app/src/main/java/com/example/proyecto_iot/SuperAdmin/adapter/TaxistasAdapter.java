@@ -66,7 +66,13 @@ public class TaxistasAdapter extends RecyclerView.Adapter<TaxistasAdapter.ViewHo
 
             btnEditar.setOnClickListener(view -> {
                 dialog.dismiss();
-                Toast.makeText(v.getContext(), "Funcionalidad aún no implementada", Toast.LENGTH_SHORT).show();
+                FragmentPerfilTaxistasSuperadmin fragment = FragmentPerfilTaxistasSuperadmin.newInstance(taxista);
+
+                ((AppCompatActivity) view.getContext()).getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, fragment)
+                        .addToBackStack(null)
+                        .commit();
             });
 
             btnEliminar.setOnClickListener(view -> {
