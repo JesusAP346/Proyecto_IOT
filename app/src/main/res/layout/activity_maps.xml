@@ -12,12 +12,12 @@
     <!-- Botón atrás -->
     <ImageView
         android:id="@+id/btnBack"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/ic_retroceder"
+        android:layout_width="56dp"
+        android:layout_height="45dp"
         android:contentDescription="Atrás"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:src="@drawable/ic_retroceder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Título -->
     <TextView
