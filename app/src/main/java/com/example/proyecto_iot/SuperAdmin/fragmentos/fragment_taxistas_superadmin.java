@@ -3,12 +3,16 @@ package com.example.proyecto_iot.SuperAdmin.fragmentos;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.SuperAdmin.TaxistasDataStore;
+import com.example.proyecto_iot.SuperAdmin.adapter.TaxistasAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +64,14 @@ public class fragment_taxistas_superadmin extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_taxistas_superadmin, container, false);
+        View view = inflater.inflate(R.layout.fragment_taxistas_superadmin, container, false);
+
+        RecyclerView recyclerView = view.findViewById(R.id.rv_music);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        TaxistasAdapter adapter = new TaxistasAdapter(TaxistasDataStore.taxistasList);
+        recyclerView.setAdapter(adapter);
+
+        return view;
     }
+
 }

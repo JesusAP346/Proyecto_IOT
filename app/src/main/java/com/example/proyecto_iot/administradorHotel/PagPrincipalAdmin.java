@@ -31,7 +31,7 @@ public class PagPrincipalAdmin extends AppCompatActivity {
 
             if (itemId == R.id.inicio) {
                 replaceFragment(new HomeFragment());
-            } else if (itemId == R.id.hotel) {
+            } else if (itemId == R.id.ivFotoAuto) {
                 replaceFragment(new HotelFragment());
             } else if (itemId == R.id.reservas) {
                 replaceFragment(new ReservasFragment());
