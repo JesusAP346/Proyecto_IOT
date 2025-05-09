@@ -80,7 +80,8 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="true" />
+
         <activity
             android:name=".taxista.perfil.PerfilTaxistaActivity"
             android:exported="false" />

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <!-- Imagen redonda del usuario -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imagen_list_usuarios"
+        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/CircleImageView" />
+
+    <!-- Contenedor de información -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="10dp">
+
+        <!-- Encabezado con nombre y opciones -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/nameTaxista"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="5dp"
+                android:fontFamily="@font/nunito_black"
+                android:text="Nombre del Usuario"
+                android:textSize="17sp" />
+
+        </RelativeLayout>
+
+        <!-- Datos adicionales -->
+        <TextView
+            android:id="@+id/numberTaxista"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/nunito_semibold"
+            android:text="Número Administrador" />
+
+        <TextView
+            android:id="@+id/modeloCarro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/nunito_semibold"
+            android:text="Modelo del carro" />
+
+        <TextView
+            android:id="@+id/placaCarro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/nunito_semibold"
+            android:text="Placa del carro" />
+
+        <TextView
+            android:id="@+id/rolUsuario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/nunito_semibold"
+            android:text="Rol Usuario" />
+
+        <!-- Botones Aceptar / Rechazar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginEnd="5dp">
+
+            <Button
+                android:id="@+id/btnAceptar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#F0C47C"
+                android:text="Aceptar"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btnRechazar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#5D0E14"
+                android:text="Rechazar"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

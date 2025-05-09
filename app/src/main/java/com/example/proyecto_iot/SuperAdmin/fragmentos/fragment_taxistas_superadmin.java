@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.SuperAdmin.TaxistasDataStore;
@@ -70,6 +71,20 @@ public class fragment_taxistas_superadmin extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         TaxistasAdapter adapter = new TaxistasAdapter(TaxistasDataStore.taxistasList);
         recyclerView.setAdapter(adapter);
+
+        Button btnSolicitudes = view.findViewById(R.id.solicitudes);
+
+        btnSolicitudes.setOnClickListener(v -> {
+            fragment_solicitudestaxista_superadmin nuevoFragment = new fragment_solicitudestaxista_superadmin();
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, nuevoFragment) // <- ahora sí es el ID correcto
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+
+
 
         return view;
     }

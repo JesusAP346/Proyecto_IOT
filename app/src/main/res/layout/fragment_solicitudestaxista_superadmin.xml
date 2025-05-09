@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:fontFamily="@font/nunito_black"
-        android:text="Taxistas"
+        android:text="Solicitudes a taxistas"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.087"
@@ -38,7 +38,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
         android:layout_width="350dp"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:layout_marginTop="16dp"
         app:cardBackgroundColor="#F1F3F8"
         app:cardCornerRadius="10dp"
@@ -73,27 +73,10 @@
                 android:fontFamily="@font/nunito_black"
                 android:text="Tiene 20 solicitudes"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/solicitudes"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
-            <Button
-                android:id="@+id/solicitudes"
-                android:layout_width="260dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="4dp"
-                android:backgroundTint="#EB9A0A"
-                android:fontFamily="sans-serif-black"
-                android:text="Ver solicitudes"
-                android:textColor="#000000"
-                android:textSize="19sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.444"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textView16"
-                app:layout_constraintVertical_bias="0.535" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -107,6 +90,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3"
-        app:layout_constraintVertical_bias="0.483" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>
