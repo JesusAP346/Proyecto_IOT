@@ -1,27 +1,33 @@
 package com.example.proyecto_iot.SuperAdmin.fragmentos;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
-import com.example.proyecto_iot.SuperAdmin.AdminDataStore;
-
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.SuperAdmin.AdminDataStore;
 import com.example.proyecto_iot.SuperAdmin.domain.AdministradoresDomain;
 import com.google.android.material.textfield.TextInputEditText;
 import com.squareup.picasso.Picasso;
 
 public class FragmentGestionAdministradorSuperadmin extends Fragment {
 
-    public FragmentGestionAdministradorSuperadmin() {
-        // Constructor vacío obligatorio
-    }
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private String imagenSeleccionada = "";
 
-    // Método factory: crea una instancia del fragment y le pasa los datos
+    private ImageView ivFoto;
+
+    public FragmentGestionAdministradorSuperadmin() {}
+
     public static FragmentGestionAdministradorSuperadmin newInstance(AdministradoresDomain admin, boolean editar, int index) {
         FragmentGestionAdministradorSuperadmin fragment = new FragmentGestionAdministradorSuperadmin();
         Bundle args = new Bundle();
@@ -33,29 +39,42 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
         args.putString("rol", admin.getRol());
         args.putString("imagen", admin.getImagenAdmin());
         args.putBoolean("modoEdicion", editar);
-        args.putInt("index", index); // 🔥 nuevo
+        args.putInt("index", index);
         fragment.setArguments(args);
         return fragment;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Registrar el imagePickerLauncher
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        imagenSeleccionada = imageUri.toString();
+                        Picasso.get().load(imagenSeleccionada).into(ivFoto);
+                    }
+                }
+        );
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflar el layout
         View view = inflater.inflate(R.layout.fragment_gestion_administrador_superadmin, container, false);
 
-        // Vincular vistas
         TextInputEditText etNombre = view.findViewById(R.id.etNombre);
         TextInputEditText etNumero = view.findViewById(R.id.etNumero);
         TextInputEditText etCorreo = view.findViewById(R.id.etCorreo);
         TextInputEditText etDireccion = view.findViewById(R.id.etDireccion);
         TextInputEditText etFechaNacimiento = view.findViewById(R.id.etFechaNacimiento);
         TextInputEditText etRol = view.findViewById(R.id.etRol);
-        ImageView ivFoto = view.findViewById(R.id.ivFotoAdmin);
+        ivFoto = view.findViewById(R.id.ivFotoAdmin);
         android.widget.Button btnEditarGuardar = view.findViewById(R.id.btnEditarGuardar);
 
         if (getArguments() != null) {
-            // Obtener datos
             String nombre = getArguments().getString("nombre");
             String numero = getArguments().getString("numero");
             String correo = getArguments().getString("correo");
@@ -66,16 +85,18 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
             int index = getArguments().getInt("index", -1);
             boolean modoEdicion = getArguments().getBoolean("modoEdicion", false);
 
-            // Setear valores
+            imagenSeleccionada = imagenUrl != null ? imagenUrl : "";
+
             etNombre.setText(nombre);
             etNumero.setText(numero);
             etCorreo.setText(correo);
             etDireccion.setText(direccion);
             etFechaNacimiento.setText(fechaNacimiento);
             etRol.setText(rol);
-            Picasso.get().load(imagenUrl).into(ivFoto);
+            if (!imagenSeleccionada.isEmpty()) {
+                Picasso.get().load(imagenSeleccionada).into(ivFoto);
+            }
 
-            // Habilitar/deshabilitar según modo
             etNombre.setEnabled(modoEdicion);
             etNumero.setEnabled(modoEdicion);
             etCorreo.setEnabled(modoEdicion);
@@ -84,12 +105,18 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
             etRol.setEnabled(modoEdicion);
             btnEditarGuardar.setText(modoEdicion ? "Guardar" : "Editar");
 
-            // Estado actual editable
             final boolean[] enModoEdicion = {modoEdicion};
+
+            ivFoto.setOnClickListener(v -> {
+                if (enModoEdicion[0]) {
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setType("image/*");
+                    imagePickerLauncher.launch(intent);
+                }
+            });
 
             btnEditarGuardar.setOnClickListener(v -> {
                 if (!enModoEdicion[0]) {
-                    // Activar modo edición
                     enModoEdicion[0] = true;
                     btnEditarGuardar.setText("Guardar");
                     etNombre.setEnabled(true);
@@ -99,18 +126,15 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                     etFechaNacimiento.setEnabled(true);
                     etRol.setEnabled(true);
                 } else {
-                    // Validaciones
                     if (etNombre.getText().toString().trim().isEmpty()) {
                         etNombre.setError("Este campo es obligatorio");
                         return;
                     }
-
                     if (etCorreo.getText().toString().trim().isEmpty()) {
                         etCorreo.setError("Este campo es obligatorio");
                         return;
                     }
 
-                    // Obtener datos actualizados
                     String nuevoNombre = etNombre.getText().toString().trim();
                     String nuevoNumero = etNumero.getText().toString().trim();
                     String nuevoCorreo = etCorreo.getText().toString().trim();
@@ -118,21 +142,31 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                     String nuevaFecha = etFechaNacimiento.getText().toString().trim();
                     String nuevoRol = etRol.getText().toString().trim();
 
-                    // Actualizar lista global
                     if (index != -1) {
+                        // Edición
                         AdministradoresDomain actualizado = new AdministradoresDomain(
-                                nuevoNombre,
-                                nuevoNumero,
-                                imagenUrl,
-                                nuevoCorreo,
-                                nuevaDireccion,
-                                nuevaFecha,
-                                nuevoRol
+                                nuevoNombre, nuevoNumero, imagenSeleccionada,
+                                nuevoCorreo, nuevaDireccion, nuevaFecha, nuevoRol
                         );
                         AdminDataStore.actualizarAdmin(index, actualizado);
+                        Toast.makeText(getContext(), "Administrador actualizado", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Creación
+                        for (AdministradoresDomain admin : AdminDataStore.adminsList) {
+                            if (admin.getCorreo().equalsIgnoreCase(nuevoCorreo) || admin.getNumeroAdmin().equals(nuevoNumero)) {
+                                Toast.makeText(getContext(), "Ya existe un administrador con ese correo o número", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
+                        AdministradoresDomain nuevoAdmin = new AdministradoresDomain(
+                                nuevoNombre, nuevoNumero, imagenSeleccionada,
+                                nuevoCorreo, nuevaDireccion, nuevaFecha, nuevoRol
+                        );
+                        AdminDataStore.adminsList.add(nuevoAdmin);
+                        Toast.makeText(getContext(), "Administrador agregado exitosamente", Toast.LENGTH_SHORT).show();
+                        requireActivity().getSupportFragmentManager().popBackStack();
                     }
 
-                    // Desactivar modo edición
                     enModoEdicion[0] = false;
                     btnEditarGuardar.setText("Editar");
                     etNombre.setEnabled(false);
@@ -141,13 +175,10 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                     etDireccion.setEnabled(false);
                     etFechaNacimiento.setEnabled(false);
                     etRol.setEnabled(false);
-
-                    android.widget.Toast.makeText(getContext(), "Cambios guardados correctamente", android.widget.Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
         return view;
     }
-
 }
