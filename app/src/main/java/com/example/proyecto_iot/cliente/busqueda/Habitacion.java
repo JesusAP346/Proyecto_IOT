@@ -6,7 +6,7 @@ public class Habitacion implements Serializable {
     private String precio;
     private String etiqueta;
     private String descripcion;
-    private int id;
+    private int id; // Identificador único para la habitación
 
     public Habitacion(String precio, String etiqueta, String descripcion) {
         this.precio = precio;
