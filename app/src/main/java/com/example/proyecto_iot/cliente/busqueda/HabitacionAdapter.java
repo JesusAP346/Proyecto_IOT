@@ -20,8 +20,18 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
 
     private List<Habitacion> listaHabitaciones;
 
-    public HabitacionAdapter(List<Habitacion> listaHabitaciones) {
+    private Context context;
+
+    private OnHabitacionClickListener listener;
+
+    public interface OnHabitacionClickListener{
+        void onHabitacionClick(Habitacion habitacion, int position);
+    }
+
+    public HabitacionAdapter(Context context, List<Habitacion> listaHabitaciones, OnHabitacionClickListener listener) {
         this.listaHabitaciones = listaHabitaciones;
+        this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -47,6 +57,8 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
         });
 
         holder.btnVerDetalle.setOnClickListener(v -> {
+            if(listener != null){
+                listener.onHabitacionClick(h, position);            }
         });
     }
 

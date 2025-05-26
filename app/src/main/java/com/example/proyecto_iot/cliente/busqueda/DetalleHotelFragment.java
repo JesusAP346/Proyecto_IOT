@@ -21,7 +21,7 @@ import com.example.proyecto_iot.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetalleHotelFragment extends Fragment {
+public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.OnHabitacionClickListener{
 
     private static final String ARG_NOMBRE = "nombre";
     private static final String ARG_UBICACION = "ubicacion";
@@ -81,7 +81,7 @@ public class DetalleHotelFragment extends Fragment {
         lista.add(new Habitacion("S/. 470 por noche", "Excelente para familias", "• 1 habitación\n• 3 camas matrimoniales\n• Balcón con vista\n• Wi-Fi"));
         lista.add(new Habitacion("S/. 890 por noche", "Excelente para familias", "• 1 habitación\n• 2 camas matrimoniales\n• Balcón con vista\n• Wi-Fi\n• Jacuzzi UwU"));
 
-        HabitacionAdapter adapter = new HabitacionAdapter(lista);
+        HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, (this));
         recyclerHabitaciones.setAdapter(adapter);
 
         TextView tabPrecios = view.findViewById(R.id.tabPrecios);
@@ -132,5 +132,13 @@ public class DetalleHotelFragment extends Fragment {
 
 
         return view;
+    }
+    public void onHabitacionClick(Habitacion habitacion, int position){
+        DetalleHabitacionClienteFragment detalleHabitacionClienteFragment = DetalleHabitacionClienteFragment.newInstance(habitacion);
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_busqueda, detalleHabitacionClienteFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

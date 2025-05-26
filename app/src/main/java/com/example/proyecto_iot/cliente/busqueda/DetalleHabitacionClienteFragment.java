@@ -35,20 +35,10 @@ public class DetalleHabitacionClienteFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetalleHabitacionClienteFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DetalleHabitacionClienteFragment newInstance(String param1, String param2) {
+
+    public static DetalleHabitacionClienteFragment newInstance(Habitacion habitacion) {
         DetalleHabitacionClienteFragment fragment = new DetalleHabitacionClienteFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,7 +61,8 @@ public class DetalleHabitacionClienteFragment extends Fragment {
         btnBack.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().popBackStack();
         });
-        ViewPager2 viewPager = view.findViewById(R.id.viewPagerHabitacion);
+
+        //ViewPager2 viewPager = view.findViewById(R.id.viewPagerHabitacion);
 
         List<Integer> imageResIds = Arrays.asList(
                 R.drawable.foto_habitacion1,
@@ -81,8 +72,8 @@ public class DetalleHabitacionClienteFragment extends Fragment {
                 R.drawable.foto_habitacion5
         );
 
-        ImageSliderAdapter adapter = new ImageSliderAdapter(requireContext(), imageResIds);
-        viewPager.setAdapter(adapter);
+        //ImageSliderAdapter adapter = new ImageSliderAdapter(requireContext(), imageResIds);
+        //viewPager.setAdapter(adapter);
 
 
         return view;

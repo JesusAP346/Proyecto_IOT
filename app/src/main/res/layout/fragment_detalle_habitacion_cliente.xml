@@ -12,16 +12,16 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="16dp">
 
-            <androidx.viewpager2.widget.ViewPager2
+            <!--<androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPagerHabitacion"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:clipToPadding="false"
                 android:clipChildren="false"
-                android:layout_marginTop="12dp" />
+                android:layout_marginTop="12dp" />-->
 
             <LinearLayout
                 android:id="@+id/indicatorContainer"
