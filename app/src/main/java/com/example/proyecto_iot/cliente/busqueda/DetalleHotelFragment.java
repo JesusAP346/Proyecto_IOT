@@ -18,22 +18,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.OnHabitacionClickListener{
 
-    private static final String ARG_NOMBRE = "nombre";
-    private static final String ARG_UBICACION = "ubicacion";
-    private static final String ARG_PRECIO = "precio";
-    private static final String ARG_IMAGEN_RES_ID = "imagenResId";
-    private static final String ARG_ESTRELLAS = "estrellas";
+    private static final String ARG_HOTEL = "hotel";
 
-    private String nombre;
-    private String ubicacion;
-    private int precio;
-    private int imagenResId;
-    private int estrellas;
+    private Hotel hotel;
 
     private RecyclerView recyclerHabitaciones;
 
@@ -44,11 +37,7 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
     public static DetalleHotelFragment newInstance(Hotel hotel) {
         DetalleHotelFragment fragment = new DetalleHotelFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_NOMBRE, hotel.getNombre());
-        args.putString(ARG_UBICACION, hotel.getUbicacion());
-        args.putInt(ARG_PRECIO, hotel.getPrecio());
-        args.putInt(ARG_IMAGEN_RES_ID, hotel.getImagenResId());
-        args.putInt(ARG_ESTRELLAS, hotel.getEstrellas());
+        args.putSerializable(ARG_HOTEL, (Serializable) hotel);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,11 +46,7 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            nombre = getArguments().getString(ARG_NOMBRE);
-            ubicacion = getArguments().getString(ARG_UBICACION);
-            precio = getArguments().getInt(ARG_PRECIO);
-            imagenResId = getArguments().getInt(ARG_IMAGEN_RES_ID);
-            estrellas = getArguments().getInt(ARG_ESTRELLAS);
+            hotel = (Hotel) getArguments().getSerializable(ARG_HOTEL);
         }
     }
 
@@ -109,10 +94,15 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
             layoutInformacion.setVisibility(View.VISIBLE);
         });
 
+
+
         Hotel hotel = getArguments() != null ? (Hotel) getArguments().getSerializable("hotel") : null;
         if (hotel != null) {
             LinearLayout layoutServicios = view.findViewById(R.id.layoutServicios);
             layoutServicios.removeAllViews();
+
+            TextView textTituloHotel = view.findViewById(R.id.textTituloHotel);
+            textTituloHotel.setText(hotel.getNombre() + ", " + hotel.getUbicacion());
 
             for (String servicio : hotel.getServicios()) {
                 TextView servicioView = new TextView(getContext());

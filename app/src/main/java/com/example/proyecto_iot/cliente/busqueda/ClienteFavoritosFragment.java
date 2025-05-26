@@ -96,8 +96,8 @@ public class ClienteFavoritosFragment extends Fragment implements HotelAdapter.O
 
         hotelList = new ArrayList<>();
 
-        hotelList.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5, servicios1));
-        hotelList.add(new Hotel("Hotel Las Rosas", "San Miguel", 355, R.drawable.hotel2, 4, servicios2));
+        hotelList.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5, servicios1, 1));
+        hotelList.add(new Hotel("Hotel Las Rosas", "San Miguel", 355, R.drawable.hotel2, 4, servicios2, 1));
 
         hotelAdapter = new HotelAdapter(getContext(), hotelList, (this));
         recyclerView.setAdapter(hotelAdapter);

@@ -1,8 +1,11 @@
 package com.example.proyecto_iot.cliente.busqueda;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Hotel {
+public class Hotel implements Serializable {
+
+    private int id;
     private String nombre;
     private String ubicacion;
     private int precio;
@@ -10,13 +13,14 @@ public class Hotel {
     private int estrellas;
     private List<String> servicios;
 
-    public Hotel(String nombre, String ubicacion, int precio, int imagenResId, int estrellas, List<String> servicios) {
+    public Hotel(String nombre, String ubicacion, int precio, int imagenResId, int estrellas, List<String> servicios, int id) {
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.precio = precio;
         this.imagenResId = imagenResId;
         this.estrellas = estrellas;
         this.servicios = servicios;
+        this.id = id;
     }
 
     public String getNombre() { return nombre; }
