@@ -17,8 +17,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.administradorHotel.dto.HabitacionDto;
-import com.example.proyecto_iot.administradorHotel.entity.Capacidad;
 import com.example.proyecto_iot.administradorHotel.entity.Equipamiento;
 import com.example.proyecto_iot.administradorHotel.entity.Habitacion;
 import com.example.proyecto_iot.administradorHotel.entity.Servicio;

@@ -66,6 +66,7 @@
                     android:layout_height="wrap_content"
                     android:text="Habitación"
                     android:textStyle="bold"
+                    android:layout_marginBottom="6dp"
                     android:textSize="15sp" />
 
                 <LinearLayout
@@ -74,6 +75,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/textNombreHabitacion"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -81,6 +83,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/textPrecioHabitacion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="S/. 500.00"
@@ -93,14 +96,13 @@
                     android:layout_marginBottom="8dp" />
 
                 <!-- Noches extras -->
-
-                <!-- Noches extras -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingBottom="4dp"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/textNochesExtras"
@@ -108,20 +110,35 @@
                         android:layout_height="wrap_content"
                         android:text="Noches extras"
                         android:textStyle="bold"
+
                         android:textSize="15sp" />
 
-                    <Space
-                        android:layout_width="8dp"
-                        android:layout_height="wrap_content" />
+                    <!-- Este View empuja las fechas hacia la derecha -->
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/textCheckin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="26/10/2024 -"
+                        android:textColor="#6A6A6A"
+                        android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/textCheckout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="  (⚠ Check out: 26/10/2024)"
+                        android:text=" 28/10/2024"
                         android:textColor="#6A6A6A"
                         android:textSize="13sp" />
                 </LinearLayout>
+
+
+
+
 
                 <!-- Noche extra editable -->
                 <LinearLayout
@@ -136,7 +153,8 @@
                         android:layout_weight="1"
                         android:inputType="number"
                         android:text="0"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:background="@android:color/transparent" />
 
                     <TextView
                         android:id="@+id/textPrecioNocheExtra"
@@ -144,9 +162,16 @@
                         android:layout_height="wrap_content"
                         android:text="S/. 0.00"
                         android:textSize="14sp" />
-
-
                 </LinearLayout>
+
+                <!-- LÍNEA debajo del campo -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+
+                    android:layout_marginBottom="8dp"
+                    android:background="#CCCCCC" />
+
 
 
                 <!-- Consumo -->
@@ -185,14 +210,28 @@
                 </LinearLayout>
 
 
+                <!-- Fuera del layout_costos_dinamicos -->
+                <TextView
+                    android:id="@+id/textSinConsumo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sin consumo agregado"
+                    android:textColor="#777777"
+                    android:textStyle="italic"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone" />
 
-
+                <!-- Este es el layout dinámico -->
                 <LinearLayout
                     android:id="@+id/layout_costos_dinamicos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp" />
+                    android:padding="0dp" />
+
 
                 <!-- Servicios adicionales -->
 
@@ -224,48 +263,28 @@
                 </LinearLayout>
 
 
-                <!-- Ítems adicionales -->
-                <LinearLayout android:layout_width="match_parent"
+                <!-- Texto vacío de servicios extra -->
+                <TextView
+                    android:id="@+id/textSinServicios"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:text="Sin servicios extra agregados"
+                    android:textColor="#777777"
+                    android:textStyle="italic"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone" />
 
-                    <TextView android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Sauna privado"
-                        android:textSize="14sp" />
-
-                    <TextView android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 30.00"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <View android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#CCCCCC"
-                    android:layout_marginBottom="4dp" />
-
-                <LinearLayout android:layout_width="match_parent"
+                <!-- Layout dinámico de servicios extra -->
+                <LinearLayout
+                    android:id="@+id/layout_servicios_dinamicos"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:padding="0dp" />
 
-                    <TextView android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Acceso a gimnasio"
-                        android:textSize="14sp" />
-
-                    <TextView android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 30.00"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <View android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#CCCCCC"
-                    android:layout_marginBottom="8dp" />
 
                 <!-- Cargos agregados -->
                 <LinearLayout
@@ -302,48 +321,26 @@
                         android:insetRight="0dp" />
                 </LinearLayout>
 
-                <!-- Cargos -->
-                <LinearLayout android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/textSinCargos"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:text="Sin cargos extra agregados"
+                    android:textColor="#777777"
+                    android:textStyle="italic"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone" />
 
-                    <TextView android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Toalla perdida"
-                        android:textSize="14sp" />
-
-                    <TextView android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 10.00"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <View android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#CCCCCC"
-                    android:layout_marginBottom="4dp" />
-
-                <LinearLayout android:layout_width="match_parent"
+                <!-- Este es el layout dinámico -->
+                <LinearLayout
+                    android:id="@+id/layout_cargos_dinamicos"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Control perdido"
-                        android:textSize="14sp" />
-
-                    <TextView android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 15.00"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <View android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#CCCCCC"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="vertical"
+                    android:padding="0dp" />
 
                 <!-- TOTAL -->
                 <TextView
@@ -356,70 +353,87 @@
                     android:layout_marginBottom="6dp"/>
 
                 <!-- Cobros -->
-                <LinearLayout android:layout_width="match_parent"
+                <!-- Cobros -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="Cobro sin IGV"
                         android:textSize="14sp" />
 
-                    <TextView android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/text_cobro_sin_igv"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="S/. 595.00"
+                        android:text="S/. 0.00"
                         android:textSize="14sp" />
                 </LinearLayout>
 
-                <View android:layout_width="match_parent"
+                <View
+                    android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#CCCCCC"
                     android:layout_marginBottom="4dp" />
 
-                <LinearLayout android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="IGV (18%)"
                         android:textSize="14sp" />
 
-                    <TextView android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/text_igv"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="S/. 105.00"
+                        android:text="S/. 0.00"
                         android:textSize="14sp" />
                 </LinearLayout>
 
-                <View android:layout_width="match_parent"
+                <View
+                    android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#CCCCCC"
                     android:layout_marginBottom="4dp" />
 
-                <LinearLayout android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:text="Pago total"
-                        android:textStyle="bold"
-                        android:textSize="14sp" />
-
-                    <TextView android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="S/. 700.00"
-                        android:textStyle="bold"
-                        android:textSize="14sp" />
+                        android:text="Pago total"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_pago_total"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="S/. 0.00"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
-                <View android:layout_width="match_parent"
+                <View
+                    android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#CCCCCC"
                     android:layout_marginBottom="8dp" />
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

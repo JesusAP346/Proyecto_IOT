@@ -16,6 +16,8 @@ public class Reserva implements Serializable {
     public String checkOut;
     public List<String> serviciosAdicionales;
 
+    public Double costoReserva;
+
 
     public String getNombreCompleto() {
         return nombreCompleto;
@@ -61,10 +63,14 @@ public class Reserva implements Serializable {
         return serviciosAdicionales;
     }
 
+    public Double getCostoReserva() {
+        return costoReserva;
+    }
+
     public Reserva(String nombreCompleto, String dni, String correo, String telefono,
                    String tipoHabitacion, String capacidad, int tamanioM2,
                    List<String> equipamientos, String checkIn, String checkOut,
-                   List<String> serviciosAdicionales) {
+                   List<String> serviciosAdicionales, Double costoReserva) {
         this.nombreCompleto = nombreCompleto;
         this.dni = dni;
         this.correo = correo;
@@ -76,5 +82,6 @@ public class Reserva implements Serializable {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.serviciosAdicionales = serviciosAdicionales;
+        this.costoReserva = costoReserva;
     }
 }

@@ -50,28 +50,28 @@ public class ReservasTodasFragment extends Fragment {
                         "Deluxe", "2 adultos", 30,
                         Arrays.asList("TV", "Toallas", "Wifi", "2 camas", "Escritorio"),
                         "24/04/2025", "26/04/2025",
-                        Arrays.asList("Gimnasio", "Desayuno")
+                        Arrays.asList("Gimnasio", "Desayuno"),240.00
                 ),
                 new Reserva(
                         "María López", "8745521", "maria.lopez@mail.com", "936582741",
                         "Suite Ejecutiva", "1 adulto", 45,
                         Arrays.asList("Mini bar", "Caja fuerte", "Aire acondicionado", "Frigobar"),
                         "01/05/2025", "05/05/2025",
-                        Arrays.asList("Spa", "Room Service")
+                        Arrays.asList("Spa", "Room Service"),360.00
                 ),
                 new Reserva(
                         "Carlos Fernández", "6523412", "carlosf@gmail.com", "921547836",
                         "Familiar", "2 adultos, 2 niños", 60,
                         Arrays.asList("Cocina", "TV", "Balcón", "Wi-Fi"),
                         "10/06/2025", "15/06/2025",
-                        Arrays.asList("Piscina", "Parqueo")
+                        Arrays.asList("Piscina", "Parqueo"),480.00
                 ),
                 new Reserva(
                         "Lucía Gómez", "7921345", "lucia.gomez@hotmail.com", "978452130",
                         "Suite Presidencial", "2 adultos", 80,
                         Arrays.asList("Jacuzzi", "Escritorio", "Sofá cama", "Frigobar"),
                         "20/07/2025", "25/07/2025",
-                        Arrays.asList("Desayuno", "Servicio de taxi")
+                        Arrays.asList("Desayuno", "Servicio de taxi"),600.00
                 )
         );
     }
