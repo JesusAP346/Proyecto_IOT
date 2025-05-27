@@ -1,19 +1,28 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
+import android.content.Context;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
+import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.FragmentHotelBinding;
+import com.google.android.material.button.MaterialButton;
+import com.example.proyecto_iot.administradorHotel.EstadoHotelUI;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class HotelFragment extends Fragment {
 
     private FragmentHotelBinding binding;
+    private List<MaterialButton> allButtons;
 
     public HotelFragment() {}
 
@@ -26,7 +35,7 @@ public class HotelFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHotelBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -35,32 +44,112 @@ public class HotelFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String seccion = getArguments() != null ? getArguments().getString("seccion", "info") : "info";
+        allButtons = Arrays.asList(
+                binding.btnInfo,
+                binding.btnHabitaciones,
+                binding.btnServicios,
+                binding.btnReportes,
+                binding.btnInfoNada,
+                binding.btnHabitacionesNada,
+                binding.btnServiciosNada
+        );
 
-        if (getChildFragmentManager().getFragments().isEmpty()) {
-            switch (seccion) {
-                case "habitaciones":
-                    loadChildFragment(new HotelHabitacionesFragment());
-                    break;
-                case "servicios":
-                    loadChildFragment(new HotelServicioFragment());
-                    break;
-                case "reportes":
-                    loadChildFragment(new AdminReportesFragment());
-                    break;
-                default:
-                    loadChildFragment(new HotelInfoFragment());
-                    break;
-            }
+        String seccion = EstadoHotelUI.seccionSeleccionada;
+        if (seccion == null) {
+            seccion = getArguments() != null ? getArguments().getString("seccion", "info") : "info";
         }
 
-        binding.btnInfo.setOnClickListener(v -> loadChildFragment(new HotelInfoFragment()));
-        binding.btnHabitaciones.setOnClickListener(v -> loadChildFragment(new HotelHabitacionesFragment()));
-        binding.btnServicios.setOnClickListener(v -> loadChildFragment(new HotelServicioFragment()));
-        binding.btnInfoNada.setOnClickListener(v -> loadChildFragment(new HotelInfoNadaFragment()));
-        binding.btnHabitacionesNada.setOnClickListener(v -> loadChildFragment(new HotelHabitacionesNadaFragment()));
-        binding.btnServiciosNada.setOnClickListener(v -> loadChildFragment(new HotelServicioNadaFragment()));
-        binding.btnReportes.setOnClickListener(v -> loadChildFragment(new AdminReportesFragment()));
+        switch (seccion) {
+            case "habitaciones":
+                loadChildFragment(new HotelHabitacionesFragment());
+                updateSelectedButton(binding.btnHabitaciones);
+                break;
+            case "servicios":
+                loadChildFragment(new HotelServicioFragment());
+                updateSelectedButton(binding.btnServicios);
+                break;
+            case "reportes":
+                loadChildFragment(new AdminReportesFragment());
+                updateSelectedButton(binding.btnReportes);
+                break;
+            case "info_nada":
+                loadChildFragment(new HotelInfoNadaFragment());
+                updateSelectedButton(binding.btnInfoNada);
+                break;
+            case "habitaciones_nada":
+                loadChildFragment(new HotelHabitacionesNadaFragment());
+                updateSelectedButton(binding.btnHabitacionesNada);
+                break;
+            case "servicios_nada":
+                loadChildFragment(new HotelServicioNadaFragment());
+                updateSelectedButton(binding.btnServiciosNada);
+                break;
+            default:
+                loadChildFragment(new HotelInfoFragment());
+                updateSelectedButton(binding.btnInfo);
+                break;
+        }
+
+        binding.btnInfo.setOnClickListener(v -> {
+            loadChildFragment(new HotelInfoFragment());
+            updateSelectedButton(binding.btnInfo);
+            EstadoHotelUI.seccionSeleccionada = "info";
+        });
+
+        binding.btnHabitaciones.setOnClickListener(v -> {
+            loadChildFragment(new HotelHabitacionesFragment());
+            updateSelectedButton(binding.btnHabitaciones);
+            EstadoHotelUI.seccionSeleccionada = "habitaciones";
+        });
+
+        binding.btnServicios.setOnClickListener(v -> {
+            loadChildFragment(new HotelServicioFragment());
+            updateSelectedButton(binding.btnServicios);
+            EstadoHotelUI.seccionSeleccionada = "servicios";
+        });
+
+        binding.btnReportes.setOnClickListener(v -> {
+            loadChildFragment(new AdminReportesFragment());
+            updateSelectedButton(binding.btnReportes);
+            EstadoHotelUI.seccionSeleccionada = "reportes";
+        });
+
+        binding.btnInfoNada.setOnClickListener(v -> {
+            loadChildFragment(new HotelInfoNadaFragment());
+            updateSelectedButton(binding.btnInfoNada);
+            EstadoHotelUI.seccionSeleccionada = "info_nada";
+        });
+
+        binding.btnHabitacionesNada.setOnClickListener(v -> {
+            loadChildFragment(new HotelHabitacionesNadaFragment());
+            updateSelectedButton(binding.btnHabitacionesNada);
+            EstadoHotelUI.seccionSeleccionada = "habitaciones_nada";
+        });
+
+        binding.btnServiciosNada.setOnClickListener(v -> {
+            loadChildFragment(new HotelServicioNadaFragment());
+            updateSelectedButton(binding.btnServiciosNada);
+            EstadoHotelUI.seccionSeleccionada = "servicios_nada";
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (EstadoHotelUI.ultimoBotonSeleccionado != null) {
+            updateSelectedButton(EstadoHotelUI.ultimoBotonSeleccionado);
+        }
+    }
+
+    private void updateSelectedButton(MaterialButton selectedButton) {
+        Context context = requireContext();
+
+        for (MaterialButton btn : allButtons) {
+            btn.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.boton_normal));
+        }
+
+        selectedButton.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.boton_seleccionado));
+        EstadoHotelUI.ultimoBotonSeleccionado = selectedButton;
     }
 
     private void loadChildFragment(Fragment fragment) {

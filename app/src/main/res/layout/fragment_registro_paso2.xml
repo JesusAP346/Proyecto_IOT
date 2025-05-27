@@ -104,6 +104,7 @@
         </androidx.cardview.widget.CardView>
 
         <!-- Equipamiento -->
+        <!-- Equipamiento -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -115,136 +116,36 @@
         <Spinner
             android:id="@+id/spinnerEquipamiento"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:background="@drawable/customedittext"
             android:padding="8dp"
-            android:spinnerMode="dropdown"
-            android:entries="@array/equipamiento_array" />
-
-
-        <LinearLayout
+            android:spinnerMode="dropdown" />
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:gravity="center">
-
-            <!-- CHIP 1 -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/customedittext"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Toallas"
-                    android:textColor="#000000"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_delete"
-                    android:contentDescription="Eliminar" />
-            </LinearLayout>
-
-            <!-- CHIP 2 -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:background="@drawable/customedittext"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="TV"
-                    android:textColor="#000000"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_delete"
-                    android:contentDescription="Eliminar" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
+            android:text="Equipamiento agregado"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+        <!-- Texto vacío -->
+        <TextView
+            android:id="@+id/textEquipamientoVacio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:gravity="center">
+            android:text=" ¡Sin equipamiento agregado! "
+            android:textColor="#7C2D2D"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:layout_marginTop="6dp" />
 
-            <!-- CHIP 1 -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/customedittext"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Wifi"
-                    android:textColor="#000000"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_delete"
-                    android:contentDescription="Eliminar" />
-            </LinearLayout>
-
-            <!-- CHIP 2 -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:background="@drawable/customedittext"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Escritorio"
-                    android:textColor="#000000"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_delete"
-                    android:contentDescription="Eliminar" />
-            </LinearLayout>
-        </LinearLayout>
+        <!-- Chips dinámicos -->
+        <LinearLayout
+            android:id="@+id/layoutEquipamientoDinamico"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp" />
 
 
 
@@ -255,7 +156,7 @@
             android:text="Fotos"
             android:textSize="13sp"
             android:textStyle="bold"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="4dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -263,7 +164,7 @@
             android:background="@drawable/customedittext"
             android:gravity="center"
             android:orientation="vertical"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="4dp">
 
             <ImageView
                 android:layout_width="32dp"

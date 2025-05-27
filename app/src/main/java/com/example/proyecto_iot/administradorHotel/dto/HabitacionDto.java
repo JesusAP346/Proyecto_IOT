@@ -9,19 +9,19 @@ public class HabitacionDto {
 
     private int id;
     private String tipo;
-    private int cantidad;
+    private int cantidadHabitaciones;
     private int fotoResId;
 
     public HabitacionDto(Habitacion habitacion) {
         this.id = habitacion.getId();
         this.tipo = habitacion.getTipo();
-        this.cantidad = habitacion.getCantidad();
+        this.cantidadHabitaciones = habitacion.getCantidadHabitaciones();
         List<Integer> fotos = habitacion.getFotosResIds();
         this.fotoResId = (fotos != null && !fotos.isEmpty()) ? fotos.get(0) : 0;
     }
 
     public int getId() { return id; }
     public String getTipo() { return tipo; }
-    public int getCantidad() { return cantidad; }
+    public int getCantidadHabitaciones() { return cantidadHabitaciones; }
     public int getFotoResId() { return fotoResId; }
 }

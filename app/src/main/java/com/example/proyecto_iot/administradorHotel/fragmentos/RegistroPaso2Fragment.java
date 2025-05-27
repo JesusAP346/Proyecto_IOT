@@ -1,78 +1,140 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.FragmentRegistroPaso2Binding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RegistroPaso2Fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class RegistroPaso2Fragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public RegistroPaso2Fragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RegistroPaso2Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RegistroPaso2Fragment newInstance(String param1, String param2) {
-        RegistroPaso2Fragment fragment = new RegistroPaso2Fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-    FragmentRegistroPaso2Binding binding;
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    private FragmentRegistroPaso2Binding binding;
+    private final List<String> equipamientosSeleccionados = new ArrayList<>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentRegistroPaso2Binding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        setupEquipamientoSpinner();
 
         binding.btnSiguientePaso2.setOnClickListener(v -> {
-            // Ir al paso 3 con FragmentManager (sin Navigation Component)
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragmentContainerHabitacion, new RegistroPaso3Fragment())
                     .addToBackStack(null)
                     .commit();
         });
+    }
 
-        return view;
+    private void setupEquipamientoSpinner() {
+        List<String> opciones = Arrays.asList("Seleccionar", "TV", "Toallas", "Wifi", "Escritorio", "Caja fuerte", "Aire acondicionado");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, opciones);
+        binding.spinnerEquipamiento.setAdapter(adapter);
+
+        binding.spinnerEquipamiento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String seleccionado = opciones.get(position);
+                if (!seleccionado.equals("Seleccionar") && !equipamientosSeleccionados.contains(seleccionado)) {
+                    equipamientosSeleccionados.add(seleccionado);
+                    renderizarChips();
+                }
+                binding.spinnerEquipamiento.setSelection(0);
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        verificarEquipamientosVisibles();
+    }
+
+    private void renderizarChips() {
+        binding.layoutEquipamientoDinamico.removeAllViews();
+        verificarEquipamientosVisibles();
+
+        for (int i = 0; i < equipamientosSeleccionados.size(); i += 2) {
+            LinearLayout fila = new LinearLayout(requireContext());
+            fila.setOrientation(LinearLayout.HORIZONTAL);
+            fila.setWeightSum(2);
+            fila.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            fila.setPadding(0, 4, 0, 4);
+
+            fila.addView(crearChip(equipamientosSeleccionados.get(i)));
+
+            if (i + 1 < equipamientosSeleccionados.size()) {
+                fila.addView(crearChip(equipamientosSeleccionados.get(i + 1)));
+            } else {
+                View espacio = new View(requireContext());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 0, 1);
+                espacio.setLayoutParams(params);
+                fila.addView(espacio);
+            }
+
+            binding.layoutEquipamientoDinamico.addView(fila);
+        }
+    }
+
+    private View crearChip(String texto) {
+        LinearLayout chip = new LinearLayout(requireContext());
+        chip.setOrientation(LinearLayout.HORIZONTAL);
+        chip.setBackgroundResource(R.drawable.customedittext);
+        chip.setPadding(16, 12, 16, 12);
+        chip.setGravity(Gravity.CENTER_VERTICAL);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        params.setMargins(0, 0, 8, 0);
+        chip.setLayoutParams(params);
+
+        TextView textView = new TextView(requireContext());
+        textView.setText(texto);
+        textView.setTextSize(14);
+        textView.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        textView.setTextColor(getResources().getColor(android.R.color.black));
+
+        ImageView icono = new ImageView(requireContext());
+        icono.setImageResource(R.drawable.ic_delete);
+        icono.setColorFilter(getResources().getColor(android.R.color.holo_red_dark));
+        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(36, 36);
+        iconParams.setMargins(16, 0, 0, 0);
+        icono.setLayoutParams(iconParams);
+
+        icono.setOnClickListener(v -> {
+            equipamientosSeleccionados.remove(texto);
+            renderizarChips();
+        });
+
+        chip.addView(textView);
+        chip.addView(icono);
+        return chip;
+    }
+
+    private void verificarEquipamientosVisibles() {
+        if (equipamientosSeleccionados.isEmpty()) {
+            binding.textEquipamientoVacio.setVisibility(View.VISIBLE);
+        } else {
+            binding.textEquipamientoVacio.setVisibility(View.GONE);
+        }
     }
 
     @Override

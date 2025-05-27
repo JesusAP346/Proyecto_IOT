@@ -117,6 +117,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/customedittext"
             android:hint="Ej. estándar, económica, lux..."
+            android:layout_marginTop="4dp"
             android:padding="8dp"
             android:textSize="18sp" />
 
@@ -128,25 +129,97 @@
             android:textStyle="bold"
             android:layout_marginTop="12dp" />
 
-        <Spinner
-            android:id="@+id/spinnerAdultos"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/customedittext"
-            android:padding="8dp"
-            android:layout_marginTop="4dp"
-            android:spinnerMode="dropdown"
-            android:entries="@array/adultos_array" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp">
 
-        <Spinner
-            android:id="@+id/spinnerNinos"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Adultos"
+
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/btnMenosAdultos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:src="@drawable/ic_minus6"
+                android:background="@drawable/bg_circle_outline"
+                android:tint="@color/rojizoProyect"
+                android:layout_marginRight="10dp"
+                android:contentDescription="Más adultos" />
+
+            <TextView
+                android:id="@+id/textCantidadAdultos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="16sp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_square_outline" />
+
+            <ImageButton
+                android:id="@+id/btnMasAdultos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:src="@drawable/ic_add"
+                android:background="@drawable/bg_circle_outline"
+                android:tint="@color/rojizoProyect"
+                android:contentDescription="Más adultos" />
+        </LinearLayout>
+
+        <!-- Niños -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/customedittext"
-            android:padding="8dp"
-            android:layout_marginTop="8dp"
-            android:spinnerMode="dropdown"
-            android:entries="@array/ninos_array" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="0dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Niños"
+
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/btnMenosNinos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:src="@drawable/ic_minus6"
+                android:background="@drawable/bg_circle_outline"
+                android:tint="@color/rojizoProyect"
+                android:layout_marginRight="10dp"
+                android:contentDescription="Más adultos" />
+
+            <TextView
+                android:id="@+id/textCantidadNinos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="16sp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_square_outline" />
+
+            <ImageButton
+                android:id="@+id/btnMasNinos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:src="@drawable/ic_add"
+                android:background="@drawable/bg_circle_outline"
+                android:tint="@color/rojizoProyect"
+                android:contentDescription="Más niños" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -164,6 +237,45 @@
             android:hint="Ej. 30, 40, 78"
             android:inputType="number"
             android:padding="8dp"
+            android:layout_marginTop="4dp"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Precio por noche (soles S/.)"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginTop="13dp" />
+
+        <EditText
+            android:id="@+id/setPrecioPorNoche"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/customedittext"
+            android:hint="Ej. 120.00 "
+            android:inputType="number"
+            android:padding="8dp"
+            android:layout_marginTop="4dp"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cantidad de habitaciones"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginTop="13dp" />
+
+        <EditText
+            android:id="@+id/setCantidadHabitaciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/customedittext"
+            android:hint="Ej. 1, 2, 3"
+            android:inputType="number"
+            android:padding="8dp"
+            android:layout_marginTop="4dp"
             android:textSize="18sp" />
 
         <!-- Botón siguiente -->

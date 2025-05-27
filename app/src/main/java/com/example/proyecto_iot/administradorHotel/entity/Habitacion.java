@@ -7,42 +7,54 @@ public class Habitacion implements Serializable {
 
     private int id;
     private String tipo;
-    private String capacidad;
+    private int capacidadAdultos;
+    private int capacidadNinos;
     private int tamanho;
-    private int cantidad;
+    private int cantidadHabitaciones;
+    private double precioPorNoche;
     private List<Equipamiento> equipamiento;
     private List<Servicio> servicio;
     private List<Integer> fotosResIds;
 
-    public Habitacion(int id, String tipo, String capacidad, int tamanho, int cantidad, List<Equipamiento> equipamiento, List<Integer> fotosResIds, List<Servicio> servicio) {
+    public Habitacion(int id, String tipo, int capacidadAdultos, int capacidadNinos, int tamanho, int cantidadHabitaciones, double precioPorNoche, List<Equipamiento> equipamiento, List<Servicio> servicio, List<Integer> fotosResIds) {
         this.id = id;
         this.tipo = tipo;
-        this.capacidad = capacidad;
+        this.capacidadAdultos = capacidadAdultos;
+        this.capacidadNinos = capacidadNinos;
         this.tamanho = tamanho;
-        this.cantidad = cantidad;
+        this.cantidadHabitaciones = cantidadHabitaciones;
+        this.precioPorNoche = precioPorNoche;
         this.equipamiento = equipamiento;
-        this.fotosResIds = fotosResIds;
         this.servicio = servicio;
+        this.fotosResIds = fotosResIds;
     }
 
     public int getId() {
         return id;
     }
 
+    public int getCapacidadAdultos() {
+        return capacidadAdultos;
+    }
+
     public String getTipo() {
         return tipo;
+    }
+
+    public int getCapacidadNinos() {
+        return capacidadNinos;
     }
 
     public int getTamanho() {
         return tamanho;
     }
 
-    public String getCapacidad() {
-        return capacidad;
+    public int getCantidadHabitaciones() {
+        return cantidadHabitaciones;
     }
 
-    public int getCantidad() {
-        return cantidad;
+    public double getPrecioPorNoche() {
+        return precioPorNoche;
     }
 
     public List<Equipamiento> getEquipamiento() {

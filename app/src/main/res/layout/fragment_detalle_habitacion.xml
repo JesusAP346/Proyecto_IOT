@@ -29,7 +29,6 @@
                 android:contentDescription="Atrás" />
 
             <TextView
-                android:id="@+id/textView5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -38,458 +37,298 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="12dp"
+                android:visibility="invisible" />
         </LinearLayout>
 
-        <!-- Tipo -->
-        <TextView android:text="Tipo de habitación"
-            android:textStyle="bold"
-            android:textSize="12sp"
+        <!-- Tipo de habitación -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-10dp"/>
+            android:text="Tipo de habitación"
+            android:textStyle="bold"
+            android:textSize="12sp" />
         <EditText
             android:id="@+id/txtTipo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Stándar"
+            android:hint="Ej: Suite Ejecutiva"
+            android:background="@drawable/bg_edittext_simulado"
+            android:padding="8dp"
             android:textSize="14sp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp" />
 
         <!-- Capacidad -->
-        <TextView android:text="Capacidad"
+        <!-- Capacidad -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Capacidad"
             android:textStyle="bold"
-            android:textSize="12sp"
-            android:layout_marginTop="0dp"
+            android:textSize="12sp" />
+
+        <!-- Adultos -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-10dp"/>
-        <EditText
-            android:id="@+id/txtCapacidad"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Adultos"
+
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/btnMenosAdultos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:src="@drawable/ic_minus6"
+                android:background="@drawable/bg_circle_outline"
+                android:tint="@color/rojizoProyect"
+                android:layout_marginRight="10dp"
+                android:contentDescription="Más adultos" />
+
+            <TextView
+                android:id="@+id/textCantidadAdultos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="16sp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_square_outline" />
+
+            <ImageButton
+                android:id="@+id/btnMasAdultos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:src="@drawable/ic_add"
+                android:background="@drawable/bg_circle_outline"
+                android:tint="@color/rojizoProyect"
+                android:contentDescription="Más adultos" />
+        </LinearLayout>
+
+        <!-- Niños -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="2 adultos"
-            android:textSize="14sp"
-            android:layout_marginBottom="6dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Niños"
+
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/btnMenosNinos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:src="@drawable/ic_minus6"
+                android:background="@drawable/bg_circle_outline"
+                android:tint="@color/rojizoProyect"
+                android:layout_marginRight="10dp"
+                android:contentDescription="Más adultos" />
+
+            <TextView
+                android:id="@+id/textCantidadNinos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="16sp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_square_outline" />
+
+            <ImageButton
+                android:id="@+id/btnMasNinos"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:src="@drawable/ic_add"
+                android:background="@drawable/bg_circle_outline"
+                android:tint="@color/rojizoProyect"
+                android:contentDescription="Más niños" />
+        </LinearLayout>
+
+
 
         <!-- Tamaño -->
-        <TextView android:text="Tamaño en m²"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:layout_marginTop="0dp"
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-10dp"/>
+            android:text="Tamaño en m²"
+            android:textStyle="bold"
+            android:textSize="12sp" />
         <EditText
             android:id="@+id/txtTamanho"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="30"
+            android:hint="Ej: 30"
+            android:background="@drawable/bg_edittext_simulado"
+            android:padding="8dp"
             android:textSize="14sp"
-            android:layout_marginBottom="0dp" />
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp" />
 
-        <!-- EQUIPAMIENTO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Precio por Noche (soles S/. )"
+            android:textStyle="bold"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/txtPrecioPorNoche"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="2"
+            android:background="@drawable/bg_edittext_simulado"
+            android:padding="8dp"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Habitaciones registradas"
+            android:textStyle="bold"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/txtHabitacionesRegistradas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="2"
+            android:background="@drawable/bg_edittext_simulado"
+            android:padding="8dp"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp" />
+
+
+        <!-- Spinner Equipamiento -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agregar Equipamiento"
+            android:textStyle="bold"
+            android:textSize="12sp" />
+        <Spinner
+            android:id="@+id/spinnerEquipamiento"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_edittext_simulado"
+            android:padding="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="0dp"
+            android:entries="@array/equipamiento_array" />
+
+
+        <!-- Chips de Equipamiento -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Equipamiento"
             android:textStyle="bold"
             android:textSize="12sp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"/>
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="8dp" />
 
+        <TextView
+            android:id="@+id/textEquipamientoVacio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" ! Sin equipamiento agregado, seleccione uno"
+            android:textColor="#B00020"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:id="@+id/layoutEquipamientoDinamico"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp" />
+
+
+
+        <!-- Spinner Servicios -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agregar Servicio"
+            android:textStyle="bold"
+            android:textSize="12sp" />
         <Spinner
-            android:id="@+id/spinnerEquipamiento"
+            android:id="@+id/spinnerServicios"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/customedittext"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_edittext_simulado"
             android:padding="8dp"
-            android:spinnerMode="dropdown"
-            android:entries="@array/equipamiento_array" />
+            android:layout_marginTop="4dp"
+            android:entries="@array/servicios_array"
+            android:layout_marginBottom="0dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="12dp">
-
-            <!-- FILA 1 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <!-- Ítem 1 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingEnd="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="TV"
-                            android:textColor="#000000"
-                            android:textSize="14sp" />
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="4dp"
-                            android:src="@drawable/ic_delete"
-                            android:contentDescription="Eliminar" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="4dp"
-                        android:background="#CCCCCC" />
-                </LinearLayout>
-
-                <!-- Ítem 2 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingStart="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Aire acondicionado"
-                            android:textColor="#000000"
-                            android:textSize="14sp" />
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="4dp"
-                            android:src="@drawable/ic_delete"
-                            android:contentDescription="Eliminar" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="4dp"
-                        android:background="#CCCCCC" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Repite mismo bloque para otras filas como Toallas - Caja fuerte, Wifi - Baño privado, etc. -->
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="12dp">
-
-            <!-- FILA 1 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <!-- Ítem 1 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingEnd="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Ducha"
-                            android:textColor="#000000"
-                            android:textSize="14sp" />
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="4dp"
-                            android:src="@drawable/ic_delete"
-                            android:contentDescription="Eliminar" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="4dp"
-                        android:background="#CCCCCC" />
-                </LinearLayout>
-
-                <!-- Ítem 2 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingStart="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Escritorio"
-                            android:textColor="#000000"
-                            android:textSize="14sp" />
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="4dp"
-                            android:src="@drawable/ic_delete"
-                            android:contentDescription="Eliminar" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="4dp"
-                        android:background="#CCCCCC" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Repite mismo bloque para otras filas como Toallas - Caja fuerte, Wifi - Baño privado, etc. -->
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="12dp">
-
-            <!-- FILA 1 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <!-- Ítem 1 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingEnd="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Secador"
-                            android:textColor="#000000"
-                            android:textSize="14sp" />
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="4dp"
-                            android:src="@drawable/ic_delete"
-                            android:contentDescription="Eliminar" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="4dp"
-                        android:background="#CCCCCC" />
-                </LinearLayout>
-
-                <!-- Ítem 2 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingStart="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Cocina"
-                            android:textColor="#000000"
-                            android:textSize="14sp" />
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="4dp"
-                            android:src="@drawable/ic_delete"
-                            android:contentDescription="Eliminar" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="4dp"
-                        android:background="#CCCCCC" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Repite mismo bloque para otras filas como Toallas - Caja fuerte, Wifi - Baño privado, etc. -->
-        </LinearLayout>
-
-
-
-
-        <!-- SERVICIOS -->
+        <!-- Chips de Servicios -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Servicios"
+            android:textStyle="bold"
             android:textSize="12sp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="6dp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="8dp" />
 
-        <Spinner
-            android:id="@+id/spinnerServicios"
+        <TextView
+            android:id="@+id/textServicioVacio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/customedittext"
-            android:padding="8dp"
-            android:spinnerMode="dropdown"
-            android:entries="@array/equipamiento_array"
-            android:layout_marginBottom="16dp"/>
-
+            android:text="❗ Sin servicios agregados, seleccione uno"
+            android:textColor="#B00020"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp"/>
         <LinearLayout
-            android:layout_width="194dp"
+            android:id="@+id/layoutServicioDinamico"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-4dp"
             android:orientation="vertical"
-            android:paddingHorizontal="8dp">
+            android:layout_marginBottom="16dp" />
 
-            <!-- Fila: texto + icono -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Gimnasio"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_delete"
-                    android:contentDescription="Eliminar" />
-            </LinearLayout>
-
-            <!-- Línea inferior -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="6dp"
-                android:background="#CCCCCC" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="194dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="vertical"
-            android:paddingHorizontal="8dp">
-
-            <!-- Fila: texto + icono -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Desayuno"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_delete"
-                    android:contentDescription="Eliminar" />
-            </LinearLayout>
-
-            <!-- Línea inferior -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="6dp"
-                android:background="#CCCCCC" />
-        </LinearLayout>
-
+        <!-- FOTOS -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Agregar nuevas fotos"
             android:textSize="13sp"
             android:textStyle="bold"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="0dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@drawable/customedittext"
+            android:background="@drawable/bg_edittext_simulado"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_marginTop="8dp">
@@ -524,7 +363,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Imagen 1 con botón eliminar -->
+            <!-- Imagen 1 -->
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -553,7 +392,7 @@
                     android:scaleType="centerInside" />
             </FrameLayout>
 
-            <!-- Imagen 2 con botón eliminar -->
+            <!-- Imagen 2 -->
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -584,7 +423,7 @@
             </FrameLayout>
         </LinearLayout>
 
-        <!-- Botones final -->
+        <!-- Botones: Actualizar y Eliminar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -593,6 +432,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="12dp">
 
+            <!-- Botón Actualizar -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnActualizar"
                 android:layout_width="0dp"
@@ -606,10 +446,11 @@
                 android:textColor="@android:color/black"
                 android:layout_marginEnd="8dp"
                 app:cornerRadius="12dp"
-                app:strokeColor="#4CAF50"
+                app:strokeColor="#772f1a"
                 app:strokeWidth="1dp"
-                app:backgroundTint="#D3E7D3" />
+                app:backgroundTint="#FACEC6" />
 
+            <!-- Botón Eliminar -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEliminar"
                 android:layout_width="0dp"
@@ -622,11 +463,10 @@
                 android:textSize="15sp"
                 android:textColor="@android:color/black"
                 app:cornerRadius="12dp"
-                app:strokeColor="#F44336"
+                app:strokeColor="#772f1a"
                 app:strokeWidth="1dp"
-                app:backgroundTint="#FADBDE" />
+                app:backgroundTint="#FFE0C4" />
         </LinearLayout>
-
 
     </LinearLayout>
 </ScrollView>

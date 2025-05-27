@@ -39,6 +39,7 @@
         <activity
             android:name=".cliente.modoTaxistaFormulario.RegistroTaxistaActivity"
             android:exported="false"></activity>
+        <!--
         <activity
             android:name=".cliente.busqueda.ClienteBusquedaActivity"
             android:exported="true">
@@ -48,6 +49,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        -->
         <activity
             android:name=".login.ForgotPasswordActivity"
             android:exported="false" />
@@ -80,7 +82,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity
             android:name=".taxista.perfil.PerfilTaxistaActivity"
@@ -94,14 +96,16 @@
         <activity
             android:name=".taxista.solicitudes.MapsActivity"
             android:exported="false" />
+
         <activity
             android:name=".administradorHotel.PagPrincipalAdmin"
             android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity

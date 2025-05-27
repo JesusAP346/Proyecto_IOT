@@ -113,71 +113,106 @@ public class HotelHabitacionesFragment extends Fragment {
 
 
     private List<Habitacion> getHabitacionesSimuladas() {
-        List<Equipamiento> equips1 = Arrays.asList(
-                new Equipamiento("TV"),
-                new Equipamiento("Ducha"),
-                new Equipamiento("Escritorio")
-        );
-
-        List<Servicio> servicios1 = Arrays.asList(
-                new Servicio("Gimnasio", "Acceso libre", 0,Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
-                new Servicio("Desayuno", "Buffet diario", 0,Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
-        );
-
-        List<Equipamiento> equips2 = Arrays.asList(
-                new Equipamiento("Caja fuerte"),
-                new Equipamiento("Wifi"),
-                new Equipamiento("Mini bar")
-        );
-
-        List<Servicio> servicios2 = Arrays.asList(
-                new Servicio("Spa", "Masajes y jacuzzi", 30, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
-                new Servicio("Restaurante", "Comida internacional", 20, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
-        );
-        List<Equipamiento> equips3 = Arrays.asList(
-                new Equipamiento("Cocina"),
-                new Equipamiento("Secador"),
-                new Equipamiento("TV")
-        );
-
-        List<Servicio> servicios3 = Arrays.asList(
-                new Servicio("Piscina", "Piscina climatizada", 0,Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
-                new Servicio("Transporte", "Shuttle al aeropuerto", 10,Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
-        );
-
         return Arrays.asList(
                 new Habitacion(
                         1,
                         "Deluxe King",
-                        "2 adultos",
+                        2,
+                        1,
                         30,
                         2,
-                        equips1,
-                        Arrays.asList(R.drawable.hotel1, R.drawable.hotel2),
-                        servicios1
+                        100,
+                        Arrays.asList(
+                                new Equipamiento("TV"),
+                                new Equipamiento("Ducha"),
+                                new Equipamiento("Escritorio")
+                        ),
+                        Arrays.asList(
+                                new Servicio("Gimnasio", "Acceso libre", 0, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
+                                new Servicio("Desayuno", "Buffet diario", 0, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
+                        ),
+                        Arrays.asList(R.drawable.hotel1, R.drawable.hotel2)
                 ),
                 new Habitacion(
                         2,
                         "Suite Ejecutiva",
-                        "3 adultos",
+                        3,
+                        1,
                         50,
                         1,
-                        equips2,
-                        Arrays.asList(R.drawable.hotel3, R.drawable.hotel4),
-                        servicios2
+                        200,
+                        Arrays.asList(
+                                new Equipamiento("Caja fuerte"),
+                                new Equipamiento("Wifi"),
+                                new Equipamiento("Mini bar")
+                        ),
+                        Arrays.asList(
+                                new Servicio("Spa", "Masajes y jacuzzi", 30, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
+                                new Servicio("Restaurante", "Comida internacional", 20, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
+                        ),
+                        Arrays.asList(R.drawable.hotel3, R.drawable.hotel4)
                 ),
                 new Habitacion(
                         3,
                         "Habitación Familiar",
-                        "4 personas",
+                        4,
+                        1,
                         60,
                         3,
-                        equips3,
-                        Arrays.asList(R.drawable.hotel5, R.drawable.hotel6),
-                        servicios3
+                        300,
+                        Arrays.asList(
+                                new Equipamiento("Cocina"),
+                                new Equipamiento("Secador"),
+                                new Equipamiento("TV")
+                        ),
+                        Arrays.asList(
+                                new Servicio("Piscina", "Piscina climatizada", 0, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
+                                new Servicio("Transporte", "Shuttle al aeropuerto", 10, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
+                        ),
+                        Arrays.asList(R.drawable.hotel5, R.drawable.hotel6)
+                ),
+                new Habitacion(
+                        4,
+                        "Premium Vista Mar",
+                        2,
+                        1,
+                        45,
+                        1,
+                        400,
+                        Arrays.asList(
+                                new Equipamiento("Aire acondicionado"),
+                                new Equipamiento("Sofá cama"),
+                                new Equipamiento("Cafetera")
+                        ),
+                        Arrays.asList(
+                                new Servicio("Room Service", "Disponible 24h", 15, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
+                                new Servicio("Bar", "Cócteles exclusivos", 12, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
+                        ),
+                        Arrays.asList(R.drawable.hotel1, R.drawable.hotel2)
+                ),
+                new Habitacion(
+                        5,
+                        "Suite Presidencial",
+                        5,
+                        1,
+                        80,
+                        2,
+                        500,
+                        Arrays.asList(
+                                new Equipamiento("Balcón"),
+                                new Equipamiento("Microondas"),
+                                new Equipamiento("Frigobar")
+                        ),
+                        Arrays.asList(
+                                new Servicio("Lavandería", "Servicio exprés", 5, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
+                                new Servicio("Parqueo", "Estacionamiento privado", 8, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
+                        ),
+                        Arrays.asList(R.drawable.hotel3, R.drawable.hotel4)
                 )
         );
     }
+
+
 
 
     @Override

@@ -93,36 +93,61 @@
                     android:layout_marginBottom="8dp" />
 
                 <!-- Noches extras -->
-                <TextView
+
+                <!-- Noches extras -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Noches extras"
-                    android:textStyle="bold"
-                    android:textSize="15sp" />
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
 
+                    <TextView
+                        android:id="@+id/textNochesExtras"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Noches extras"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                    <Space
+                        android:layout_width="8dp"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/textCheckout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="  (⚠ Check out: 26/10/2024)"
+                        android:textColor="#6A6A6A"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <!-- Noche extra editable -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <EditText
+                        android:id="@+id/editNochesExtras"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:inputType="number"
                         android:text="0"
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/textPrecioNocheExtra"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="S/. 100.00"
+                        android:text="S/. 0.00"
                         android:textSize="14sp" />
+
+
                 </LinearLayout>
 
-                <View android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#CCCCCC"
-                    android:layout_marginBottom="8dp" />
 
                 <!-- Consumo -->
                 <LinearLayout
@@ -162,48 +187,12 @@
 
 
 
-                <!-- Items consumo -->
-                <LinearLayout android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/layout_costos_dinamicos"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Snacks"
-                        android:textSize="14sp" />
-
-                    <TextView android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 10.00"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <View android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#CCCCCC"
-                    android:layout_marginBottom="4dp" />
-
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Agua"
-                        android:textSize="14sp" />
-
-                    <TextView android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 5.00"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <View android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#CCCCCC"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="vertical"
+                    android:padding="16dp" />
 
                 <!-- Servicios adicionales -->
 

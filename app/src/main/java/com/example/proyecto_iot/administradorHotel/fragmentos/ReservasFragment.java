@@ -1,72 +1,42 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
+import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.databinding.FragmentHotelBinding;
-import com.example.proyecto_iot.databinding.FragmentReservasBinding;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ReservasFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.administradorHotel.EstadoReservaUI;
+import com.example.proyecto_iot.databinding.FragmentReservasBinding;
+import com.google.android.material.button.MaterialButton;
+
+import java.util.Arrays;
+import java.util.List;
+
 public class ReservasFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private FragmentReservasBinding binding;
+    private List<MaterialButton> allButtons;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public ReservasFragment() {}
 
-    public ReservasFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ReservasFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ReservasFragment newInstance(String param1, String param2) {
         ReservasFragment fragment = new ReservasFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("param1", param1);
+        args.putString("param2", param2);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    FragmentReservasBinding binding;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentReservasBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -75,12 +45,86 @@ public class ReservasFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Fragmento por defecto
-        loadChildFragment(new ReservasTodasFragment());
+        allButtons = Arrays.asList(binding.btnHistorial, binding.btnTodas, binding.btnReservas);
 
-        // Usando ViewBinding en lugar de findViewById
-        binding.btnHistorial.setOnClickListener(v -> loadChildFragment(new ReservasHistorialFragment()));
-        binding.btnTodas.setOnClickListener(v -> loadChildFragment(new ReservasTodasFragment()));
+        String seccion = EstadoReservaUI.seccionSeleccionada != null
+                ? EstadoReservaUI.seccionSeleccionada
+                : "todas";
+
+        if (getChildFragmentManager().getFragments().isEmpty()) {
+            switch (seccion) {
+                case "historial":
+                    loadChildFragment(new ReservasHistorialFragment());
+                    updateSelectedButton(binding.btnHistorial);
+                    break;
+                case "pendientes":
+                    loadChildFragment(new ReservasPendientesFragment());
+                    updateSelectedButton(binding.btnReservas);
+                    break;
+                default:
+                    loadChildFragment(new ReservasTodasFragment());
+                    updateSelectedButton(binding.btnTodas);
+                    break;
+            }
+        }
+
+        binding.btnHistorial.setOnClickListener(v -> {
+            loadChildFragment(new ReservasHistorialFragment());
+            updateSelectedButton(binding.btnHistorial);
+            EstadoReservaUI.seccionSeleccionada = "historial";
+        });
+
+        binding.btnTodas.setOnClickListener(v -> {
+            loadChildFragment(new ReservasTodasFragment());
+            updateSelectedButton(binding.btnTodas);
+            EstadoReservaUI.seccionSeleccionada = "todas";
+        });
+
+        binding.btnReservas.setOnClickListener(v -> {
+            loadChildFragment(new ReservasPendientesFragment());
+            updateSelectedButton(binding.btnReservas);
+            EstadoReservaUI.seccionSeleccionada = "pendientes";
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (binding == null) return;
+
+        String seccion = EstadoReservaUI.seccionSeleccionada != null
+                ? EstadoReservaUI.seccionSeleccionada
+                : "todas";
+
+        switch (seccion) {
+            case "historial":
+                updateSelectedButton(binding.btnHistorial);
+                loadChildFragment(new ReservasHistorialFragment());
+                break;
+            case "pendientes":
+                updateSelectedButton(binding.btnReservas);
+                loadChildFragment(new ReservasPendientesFragment());
+                break;
+            case "todas":
+            default:
+                updateSelectedButton(binding.btnTodas);
+                loadChildFragment(new ReservasTodasFragment());
+                break;
+        }
+    }
+
+
+
+    private void updateSelectedButton(MaterialButton selectedButton) {
+        Context context = requireContext();
+
+        for (MaterialButton btn : allButtons) {
+            btn.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.boton_normal));
+        }
+
+        selectedButton.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.boton_seleccionado));
+        EstadoReservaUI.ultimoBotonSeleccionado = selectedButton;
     }
 
     private void loadChildFragment(Fragment fragment) {
@@ -95,22 +139,4 @@ public class ReservasFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

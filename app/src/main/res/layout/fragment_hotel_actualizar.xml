@@ -16,10 +16,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
             android:layout_marginBottom="20dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/backActualizar"
@@ -30,34 +29,39 @@
                 android:contentDescription="Atrás" />
 
             <TextView
-                android:id="@+id/textView5"
-                android:layout_width="300sp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="50dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Actualizar información del hotel"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="12dp"
+                android:visibility="invisible" />
         </LinearLayout>
-
-
         <!-- Nombre -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nombre"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="-10dp"/>
+            android:textStyle="bold" />
         <EditText
             android:id="@+id/etNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nombre del hotel"
             android:text="Televagos"
+            android:background="@drawable/bg_edittext_simulado"
+            android:padding="8dp"
             android:textSize="14sp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp" />
 
         <!-- Dirección -->
         <TextView
@@ -65,33 +69,37 @@
             android:layout_height="wrap_content"
             android:text="Dirección"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="-10dp"/>
+            android:textStyle="bold" />
         <EditText
             android:id="@+id/etDireccion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Dirección"
             android:text="Miraflores"
+            android:background="@drawable/bg_edittext_simulado"
+            android:padding="8dp"
             android:textSize="14sp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp" />
 
         <!-- Coordenadas -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Coordenadas GPS"
+            android:text="Ubicación"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="-10dp"/>
+            android:textStyle="bold" />
         <EditText
             android:id="@+id/etCoordenadas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Latitud, Longitud"
-            android:text="-12.097667, -77.038793"
+            android:text="Se selecciona mediante maps"
+            android:background="@drawable/bg_edittext_simulado"
+            android:padding="8dp"
             android:textSize="14sp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp" />
 
         <!-- Referencias dinámicas -->
         <TextView
@@ -99,122 +107,63 @@
             android:layout_height="wrap_content"
             android:text="Lugares históricos o referencias"
             android:textSize="12sp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="0dp">
 
             <EditText
                 android:id="@+id/etReferencia"
                 android:layout_width="0dp"
-                android:layout_height="42dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
-                android:background="@drawable/customedittext"
+                android:background="@drawable/bg_edittext_simulado"
                 android:hint="Ingrese referencias"
-                android:padding="12dp"
+                android:padding="5dp"
                 android:textSize="16sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAgregarReferencia"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="40dp"
                 android:minHeight="0dp"
                 android:paddingHorizontal="16dp"
-                android:paddingVertical="0dp"
                 android:text="+ Agregar"
                 android:textSize="14sp"
                 android:textColor="@android:color/black"
                 android:layout_marginStart="8dp"
-                app:cornerRadius="10dp"
+                app:cornerRadius="7dp"
                 app:strokeColor="#772f1a"
                 app:strokeWidth="1dp"
                 app:backgroundTint="#FACEC6" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="194dp"
+        <!-- Texto vacío -->
+        <TextView
+            android:id="@+id/textReferenciaVacia"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-10dp"
-            android:orientation="vertical"
-            android:paddingHorizontal="8dp">
-
-            <!-- Fila: texto + icono -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Parque Kennedy"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_delete"
-                    android:contentDescription="Eliminar" />
-            </LinearLayout>
-
-            <!-- Línea inferior -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="6dp"
-                android:background="#CCCCCC" />
-        </LinearLayout>
-
+            android:text=" ¡Sin referencias agregadas! "
+            android:textColor="#7C2D2D"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:layout_marginTop="6dp" />
+        <!-- Contenedor horizontal para 2 chips -->
         <LinearLayout
-            android:layout_width="194dp"
+            android:id="@+id/layoutReferenciasActualizadas"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:orientation="vertical"
-            android:paddingHorizontal="8dp">
-
-            <!-- Fila: texto + icono -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Plasa Sésamo"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_delete"
-                    android:contentDescription="Eliminar" />
-            </LinearLayout>
-
-            <!-- Línea inferior -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="6dp"
-                android:background="#CCCCCC" />
-        </LinearLayout>
-        <!-- Título imágenes -->
+            android:layout_marginTop="8dp"/>
 
 
+
+        <!-- Agregar nuevas fotos -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -226,7 +175,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@drawable/customedittext"
+            android:background="@drawable/bg_edittext_simulado"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_marginTop="8dp">
@@ -247,6 +196,7 @@
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
+        <!-- Fotos agregadas -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -261,7 +211,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Imagen 1 con botón eliminar -->
+            <!-- Imagen 1 -->
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -290,7 +240,7 @@
                     android:scaleType="centerInside" />
             </FrameLayout>
 
-            <!-- Imagen 2 con botón eliminar -->
+            <!-- Imagen 2 -->
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -320,15 +270,14 @@
                     android:scaleType="centerInside" />
             </FrameLayout>
         </LinearLayout>
-        <!-- Botón Actualizar -->
 
+        <!-- Botón actualizar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnActualizar"
             android:layout_width="wrap_content"
             android:layout_height="54dp"
             android:minHeight="60dp"
             android:paddingHorizontal="24dp"
-            android:paddingVertical="8dp"
             android:layout_gravity="center_horizontal"
             android:text="Actualizar información"
             android:textSize="15sp"

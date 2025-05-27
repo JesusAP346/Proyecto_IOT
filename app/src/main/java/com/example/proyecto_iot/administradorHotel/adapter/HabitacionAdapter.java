@@ -48,7 +48,7 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Ha
         Habitacion habitacion = listaHabitacionCompleta.get(position);
 
         holder.binding.textoTitulo.setText(dto.getTipo());
-        holder.binding.textoCantidad.setText("Habitaciones registradas: " + dto.getCantidad());
+        holder.binding.textoCantidad.setText("Habitaciones registradas: " + dto.getCantidadHabitaciones());
         holder.binding.imagenHabitacion.setImageResource(dto.getFotoResId());
 
         holder.binding.btnVerDetalles.setOnClickListener(v -> {

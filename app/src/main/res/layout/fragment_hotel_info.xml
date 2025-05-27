@@ -12,41 +12,33 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Nombre -->
+        <!-- Tipo de habitación -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingVertical="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Nombre"
-                    android:textStyle="bold"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Televagos"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp" />
+                android:text="Tipo de habitación"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="#FF000000" />
 
-            <View
+            <TextView
+                android:id="@+id/tvTipoHabitacion"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
+                android:layout_height="wrap_content"
+                android:text="Estandar"
+                android:background="@drawable/bg_edittext_simulado"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:textColor="#858585"
+                android:layout_marginTop="4dp"
+                android:focusable="false"
+                android:clickable="false" />
         </LinearLayout>
 
         <!-- Dirección -->
@@ -64,17 +56,17 @@
                 android:textSize="12sp" />
 
             <TextView
+                android:id="@+id/tvDireccion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Miraflores"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
+                android:textSize="16sp"
+                android:textColor="#858585"
+                android:background="@drawable/bg_edittext_simulado"
+                android:padding="8dp"
+                android:layout_marginTop="4dp"
+                android:focusable="false"
+                android:clickable="false" />
         </LinearLayout>
 
         <!-- Coordenadas GPS -->
@@ -87,22 +79,22 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Coordenadas GPS"
+                android:text="Ubicación"
                 android:textStyle="bold"
                 android:textSize="12sp" />
 
             <TextView
+                android:id="@+id/tvCoordenadas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="-12.097667, -77.038793"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC" />
+                android:text="Acá se seleccionará la ubicación por medio maps"
+                android:textSize="16sp"
+                android:textColor="#858585"
+                android:background="@drawable/bg_edittext_simulado"
+                android:padding="8dp"
+                android:layout_marginTop="4dp"
+                android:focusable="false"
+                android:clickable="false" />
         </LinearLayout>
 
         <!-- Referencias -->
@@ -120,36 +112,32 @@
                 android:textSize="12sp"
                 android:layout_marginBottom="4dp" />
 
-            <!-- Referencia 1 -->
             <TextView
+                android:id="@+id/tvReferencia1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Parque Kennedy"
-                android:textSize="14sp" />
+                android:textSize="16sp"
+                android:textColor="#858585"
+                android:background="@drawable/bg_edittext_simulado"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"
+                android:focusable="false"
+                android:clickable="false" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC"
-                android:layout_marginBottom="6dp"
-                android:layout_marginTop="2dp" />
-
-            <!-- Referencia 2 -->
             <TextView
+                android:id="@+id/tvReferencia2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Plasa Sésamo"
-                android:textSize="14sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#CCCCCC"
+                android:textSize="16sp"
+                android:textColor="#858585"
+                android:background="@drawable/bg_edittext_simulado"
+                android:padding="8dp"
                 android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp" />
-
+                android:focusable="false"
+                android:clickable="false" />
         </LinearLayout>
-
 
         <!-- Título de Fotos -->
         <TextView
@@ -166,8 +154,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp" />
 
-
-        <!-- Botón Actualizar estilo igual a Agregar -->
+        <!-- Botón Actualizar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnActualizar"
             android:layout_width="wrap_content"

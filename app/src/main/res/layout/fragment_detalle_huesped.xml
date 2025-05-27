@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Detalles del huésped"
+                android:text="Detalles de la reserva"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -118,6 +118,7 @@
                             android:textColor="#888888" />
 
                         <TextView
+                            android:id="@+id/textNombre"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
@@ -140,6 +141,7 @@
                             android:textColor="#888888" />
 
                         <TextView
+                            android:id="@+id/textDni"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
@@ -160,6 +162,7 @@
                             android:textColor="#888888" />
 
                         <TextView
+                            android:id="@+id/textCorreo"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
@@ -182,6 +185,7 @@
                             android:textColor="#888888" />
 
                         <TextView
+                            android:id="@+id/textTelefono"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
@@ -271,6 +275,7 @@
                                 android:textColor="#888888" />
 
                             <TextView
+                                android:id="@+id/textTipoHabitacion"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_columnWeight="1"
@@ -288,6 +293,7 @@
                                 android:textColor="#888888" />
 
                             <TextView
+                                android:id="@+id/textCapacidad"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_columnWeight="1"
@@ -305,6 +311,7 @@
                                 android:textColor="#888888" />
 
                             <TextView
+                                android:id="@+id/textTamano"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_columnWeight="1"
@@ -338,6 +345,7 @@
                         android:layout_marginStart="8dp">
 
                         <TextView
+                            android:id="@+id/text_equipamiento"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Equipamiento"
@@ -346,79 +354,21 @@
                             android:textColor="#000000"
                             android:layout_marginBottom="2dp" />
 
-                        <!-- Distribución en 2 columnas -->
+
+                        <!-- Distribución en 2 columnas dinámica -->
                         <GridLayout
+                            android:id="@+id/grid_equipamiento"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:columnCount="2"
                             android:alignmentMode="alignMargins"
-                            android:columnOrderPreserved="false">
-
-                            <!-- Columna 1 -->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="TV"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
-
-                            <!-- Columna 2 -->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
-                                android:text="Mesa"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Toallas"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
-                                android:text="Caja fuerte"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Wifi"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
-                                android:text="Baño privado"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="2 camas"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
-                                android:text="Escritorio"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
-                        </GridLayout>
+                            android:columnOrderPreserved="false"
+                            android:rowOrderPreserved="false" />
 
                     </LinearLayout>
                 </LinearLayout>
+
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -428,7 +378,7 @@
 
 
 
-        <!-- CARD: Servicios adicionales -->
+
         <!-- CARD: Servicios adicionales -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -458,6 +408,7 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginEnd="0dp" />
 
+
                 <!-- Contenido textual alineado -->
                 <LinearLayout
                     android:layout_width="0dp"
@@ -467,44 +418,64 @@
                     android:layout_marginStart="8dp">
 
                     <TextView
+                        android:id="@+id/textServiciosAdicionales"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Servicios adicionales"
                         android:textStyle="bold"
                         android:textSize="16sp"
                         android:textColor="#000000"
-                        android:layout_marginBottom="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Gimnasio"
-                        android:textSize="15sp"
-                        android:textColor="#000000"
                         android:layout_marginBottom="2dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- Aquí van los ítems dinámicos -->
+                    <LinearLayout
+                        android:id="@+id/layout_servicios_dinamicos"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Desayuno"
-                        android:textSize="15sp"
-                        android:textColor="#000000" />
+                        android:orientation="vertical"
+                        android:layout_marginTop="4dp" />
                 </LinearLayout>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
 
-        <!-- Check-out fecha -->
-        <TextView
-            android:id="@+id/checkout_text"
+        <!-- Check-in y Check-out en una sola fila -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Check-out\n26/4/2025"
-            android:textAlignment="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:layout_marginBottom="0dp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center">
+
+            <!-- Check-in -->
+            <TextView
+                android:id="@+id/checkin_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Check-in\n24/4/2025"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginEnd="4dp" />
+
+            <!-- Check-out -->
+            <TextView
+                android:id="@+id/checkout_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Check-out\n26/4/2025"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginStart="4dp" />
+        </LinearLayout>
+
 
         <!-- Botón de check-out (mitad del ancho y centrado) -->
 

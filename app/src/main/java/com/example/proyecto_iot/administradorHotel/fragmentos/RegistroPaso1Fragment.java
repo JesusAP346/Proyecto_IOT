@@ -65,6 +65,34 @@ public class RegistroPaso1Fragment extends Fragment {
         binding = FragmentRegistroPaso1Binding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        binding.btnMasAdultos.setOnClickListener(v -> {
+            int count = Integer.parseInt(binding.textCantidadAdultos.getText().toString());
+            binding.textCantidadAdultos.setText(String.valueOf(count + 1));
+        });
+
+        binding.btnMenosAdultos.setOnClickListener(v -> {
+            int count = Integer.parseInt(binding.textCantidadAdultos.getText().toString());
+            if (count > 0) {
+                binding.textCantidadAdultos.setText(String.valueOf(count - 1));
+            }
+        });
+
+        binding.btnMasNinos.setOnClickListener(v -> {
+            int count = Integer.parseInt(binding.textCantidadNinos.getText().toString());
+            binding.textCantidadNinos.setText(String.valueOf(count + 1));
+        });
+
+        binding.btnMenosNinos.setOnClickListener(v -> {
+            int count = Integer.parseInt(binding.textCantidadNinos.getText().toString());
+            if (count > 0) {
+                binding.textCantidadNinos.setText(String.valueOf(count - 1));
+            }
+        });
+
+
+
+
+
         binding.btnSiguientePaso.setOnClickListener(v -> {
             // Ir al paso 2
             requireActivity().getSupportFragmentManager().beginTransaction()

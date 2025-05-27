@@ -86,11 +86,12 @@ public class HotelInfoFragment extends Fragment {
         binding.carousel.setData(list);
 
         binding.btnActualizar.setOnClickListener(v -> {
+            com.example.proyecto_iot.administradorHotel.EstadoHotelUI.seccionSeleccionada = "info";
             requireActivity()
                     .getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_layout, new HotelActualizarFragment())
-                    .addToBackStack(null) // Permite volver con el botón de atrás
+                    .addToBackStack(null)
                     .commit();
         });
     }

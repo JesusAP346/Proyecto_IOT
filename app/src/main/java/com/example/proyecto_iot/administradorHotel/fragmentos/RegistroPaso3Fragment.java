@@ -2,94 +2,129 @@ package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.RegistroServicioDesdeHabitacion;
 import com.example.proyecto_iot.databinding.FragmentRegistroPaso3Binding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RegistroPaso3Fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class RegistroPaso3Fragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private FragmentRegistroPaso3Binding binding;
+    private final List<String> serviciosSeleccionados = new ArrayList<>();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public RegistroPaso3Fragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RegistroPaso3Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RegistroPaso3Fragment newInstance(String param1, String param2) {
-        RegistroPaso3Fragment fragment = new RegistroPaso3Fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentRegistroPaso3Binding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-    FragmentRegistroPaso3Binding binding;
+        setupSpinnerServicios();
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentRegistroPaso3Binding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        binding.btnRegistrarServicio.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), RegistroServicioDesdeHabitacion.class);
+            startActivity(intent);
+        });
 
-        // Ir a RegistroPaso4Fragment al hacer clic en "Siguiente"
         binding.btnSiguientePaso3.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragmentContainerHabitacion, new RegistroPaso4Fragment())
                     .addToBackStack(null)
                     .commit();
         });
-
-        return view;
     }
 
-    @Override
-    public void onViewCreated( View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    private void setupSpinnerServicios() {
+        List<String> opciones = Arrays.asList("Seleccionar", "Gimnasio", "Spa", "Room Service", "Lavandería", "Desayuno incluido", "Pet Friendly");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, opciones);
+        binding.spinnerServicios.setAdapter(adapter);
 
-        // Acción al hacer clic en "Registrar Servicio"
-        binding.btnRegistrarServicio.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), RegistroServicioDesdeHabitacion.class);
-            startActivity(intent);
+        binding.spinnerServicios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String seleccionado = opciones.get(position);
+                if (!seleccionado.equals("Seleccionar") && !serviciosSeleccionados.contains(seleccionado)) {
+                    serviciosSeleccionados.add(seleccionado);
+                    renderizarServicios();
+                }
+                binding.spinnerServicios.setSelection(0);
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        verificarServiciosVisibles();
     }
 
+    private void renderizarServicios() {
+        binding.layoutServicioDinamico.removeAllViews();
+        verificarServiciosVisibles();
 
+        for (String servicio : serviciosSeleccionados) {
+            LinearLayout chip = new LinearLayout(requireContext());
+            chip.setOrientation(LinearLayout.HORIZONTAL);
+            chip.setBackgroundResource(R.drawable.customedittext);
+            chip.setPadding(16, 12, 16, 12);
+            chip.setGravity(Gravity.CENTER_VERTICAL);
+            LinearLayout.LayoutParams chipParams = new LinearLayout.LayoutParams(
+                    (int) (getResources().getDisplayMetrics().widthPixels * 0.55),  // 65% del ancho
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            chipParams.setMargins(0, 8, 0, 0);
+            chip.setLayoutParams(chipParams);
+
+            TextView textView = new TextView(requireContext());
+            textView.setText(servicio);
+            textView.setTextSize(16);
+            textView.setTextColor(getResources().getColor(android.R.color.black));
+            LinearLayout.LayoutParams tvParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+            textView.setLayoutParams(tvParams);
+
+            ImageView icono = new ImageView(requireContext());
+            icono.setImageResource(R.drawable.ic_delete);
+            icono.setColorFilter(getResources().getColor(android.R.color.holo_red_dark));
+            LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(40, 40);
+            iconParams.setMargins(16, 0, 0, 0);
+            icono.setLayoutParams(iconParams);
+
+            icono.setOnClickListener(v -> {
+                serviciosSeleccionados.remove(servicio);
+                renderizarServicios();
+            });
+
+            chip.addView(textView);
+            chip.addView(icono);
+            binding.layoutServicioDinamico.addView(chip);
+        }
+    }
+
+    private void verificarServiciosVisibles() {
+        if (serviciosSeleccionados.isEmpty()) {
+            binding.textServicioVacio.setVisibility(View.VISIBLE);
+        } else {
+            binding.textServicioVacio.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public void onDestroyView() {
