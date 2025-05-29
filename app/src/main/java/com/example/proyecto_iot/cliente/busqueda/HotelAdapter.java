@@ -49,6 +49,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.imagen.setImageResource(hotel.getImagenResId());
 
 
+
         for (int i = 0; i < 5; i++) {
             holder.estrellas[i].setImageResource(i < hotel.getEstrellas() ? R.drawable.ic_star : R.drawable.ic_star_border);
         }
@@ -58,6 +59,23 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
                 listener.onHotelClick(hotel, position);
             }
         });
+
+        if (hotel.isFavorito()) {
+            holder.iconFavorite.setImageResource(R.drawable.ic_favorite);
+        } else {
+            holder.iconFavorite.setImageResource(R.drawable.ic_favorite_border);
+        }
+
+        holder.iconFavorite.setOnClickListener(v -> {
+            boolean nuevoEstado = !hotel.isFavorito();
+            hotel.setFavorito(nuevoEstado);
+            notifyItemChanged(holder.getAdapterPosition());
+        });
+
+
+
+
+
     }
 
     @Override
@@ -70,6 +88,9 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         TextView nombre, ubicacion, precio;
         ImageView[] estrellas = new ImageView[5];
         Button btnVerHotel;
+        ImageView iconFavorite;
+
+
 
         public HotelViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +98,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
             nombre = itemView.findViewById(R.id.textNombreHotel);
             ubicacion = itemView.findViewById(R.id.textUbicacion);
             precio = itemView.findViewById(R.id.textPrecio);
+            iconFavorite = itemView.findViewById(R.id.iconFavorite);
             btnVerHotel = itemView.findViewById(R.id.btnVerHotel);
 
             estrellas[0] = itemView.findViewById(R.id.star1);
@@ -86,4 +108,9 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
             estrellas[4] = itemView.findViewById(R.id.star5);
         }
     }
+    public void actualizarLista(List<Hotel> nuevaLista) {
+        this.listaHoteles = nuevaLista;
+        notifyDataSetChanged();
+    }
+
 }

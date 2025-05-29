@@ -13,7 +13,11 @@ public class Hotel implements Serializable {
     private int estrellas;
     private List<String> servicios;
 
-    public Hotel(String nombre, String ubicacion, int precio, int imagenResId, int estrellas, List<String> servicios, int id) {
+    private boolean favorito;
+
+
+
+    public Hotel(String nombre, String ubicacion, int precio, int imagenResId, int estrellas, List<String> servicios, int id, boolean favorito) {
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.precio = precio;
@@ -21,6 +25,23 @@ public class Hotel implements Serializable {
         this.estrellas = estrellas;
         this.servicios = servicios;
         this.id = id;
+        this.favorito=favorito;
+    }
+
+    public boolean isFavorito() {
+        return favorito;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setFavorito(boolean favorito) {
+        this.favorito = favorito;
     }
 
     public String getNombre() { return nombre; }

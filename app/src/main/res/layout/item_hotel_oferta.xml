@@ -7,99 +7,144 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="6dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="364dp">
 
         <!-- Imagen del hotel -->
         <ImageView
             android:id="@+id/imageHotel"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="180dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/hotel1" />
+            android:src="@drawable/hotel1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Ícono corazón (favorito) -->
+
+        <!-- Nombre del hotel -->
         <ImageView
             android:id="@+id/iconFavorite"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_gravity="end"
-            android:layout_margin="-40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_margin="8dp"
+            android:layout_marginEnd="16dp"
+            android:clickable="true"
+            android:contentDescription="@string/favorite"
+            android:focusable="true"
             android:padding="4dp"
             android:src="@drawable/ic_favorite_border"
-            android:contentDescription="@string/favorite" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imageHotel"
+            app:layout_constraintVertical_bias="0.603" />
 
-        <!-- Info del hotel -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textNombreHotel"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="12dp">
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:text="Hotel Caribe"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageHotel" />
 
-            <TextView
-                android:id="@+id/textNombreHotel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hotel Caribe"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+        <!-- Ubicación -->
+        <ImageView
+            android:id="@+id/iconLocation"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_location"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textNombreHotel" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/textUbicacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="San Miguel"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/iconLocation"
+            app:layout_constraintTop_toTopOf="@id/iconLocation" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_location"
-                    android:contentDescription="@string/location" />
+        <!-- Estrellas -->
+        <LinearLayout
+            android:id="@+id/layoutStars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iconLocation">
 
-                <TextView
-                    android:id="@+id/textUbicacion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="San Miguel"
-                    android:textSize="14sp" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/star1"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_star" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/star2"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_star" />
 
-                <!-- Estrellas -->
-                <ImageView android:layout_width="16dp" android:id="@+id/star1" android:layout_height="16dp" android:src="@drawable/ic_star" />
-                <ImageView android:layout_width="16dp" android:id="@+id/star2" android:layout_height="16dp" android:src="@drawable/ic_star" />
-                <ImageView android:layout_width="16dp" android:id="@+id/star3" android:layout_height="16dp" android:src="@drawable/ic_star" />
-                <ImageView android:layout_width="16dp" android:id="@+id/star4" android:layout_height="16dp" android:src="@drawable/ic_star" />
-                <ImageView android:layout_width="16dp" android:id="@+id/star5" android:layout_height="16dp" android:src="@drawable/ic_star_border" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/star3"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_star" />
 
-            <TextView
-                android:id="@+id/textPrecio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="A partir de S/. 2550"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/star4"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_star" />
 
-            <!-- Botón Ver hotel -->
-            <Button
-                android:id="@+id/btnVerHotel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Ver hotel"
-                android:backgroundTint="#FFC107"
-                android:textColor="@color/black" />
+            <ImageView
+                android:id="@+id/star5"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_star_border" />
         </LinearLayout>
-    </LinearLayout>
+
+        <!-- Precio -->
+        <TextView
+            android:id="@+id/textPrecio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:text="A partir de S/. 2550"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutStars" />
+
+        <!-- Botón Ver hotel -->
+        <Button
+            android:id="@+id/btnVerHotel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="#FFC107"
+            android:text="Ver hotel"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textPrecio" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -96,8 +96,13 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
 
 
         hotelList = new ArrayList<>();
-        hotelList.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5, servicios1,1 ));
-        hotelList.add(new Hotel("Hotel Las Rosas", "San Miguel", 355, R.drawable.hotel2, 4, servicios2, 2));
+        hotelList.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5, servicios1,1, false));
+        hotelList.add(new Hotel("Hotel Las Rosas", "San Juan de Lurigancho", 355, R.drawable.hotel2, 4, servicios2, 2, false));
+        hotelList.add(new Hotel("Hotel dfghj", "Comas", 2550, R.drawable.hotel1, 5, servicios1,1, false));
+        hotelList.add(new Hotel("Hotel noseeee", "Carabayllo", 355, R.drawable.hotel2, 4, servicios2, 2, true));
+        hotelList.add(new Hotel("Hotel Cbe", "Jesus María", 2550, R.drawable.hotel1, 5, servicios1,1, false));
+        hotelList.add(new Hotel("Hotel Laosas", "San Miguel", 355, R.drawable.hotel2, 4, servicios2, 2, true));
+
 
         hotelAdapter = new HotelAdapter(getContext(), hotelList, this);
         recyclerView.setAdapter(hotelAdapter);
