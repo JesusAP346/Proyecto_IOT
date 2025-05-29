@@ -1,5 +1,10 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
+import static android.Manifest.permission.POST_NOTIFICATIONS;
+
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,9 +16,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
 import com.example.proyecto_iot.administradorHotel.entity.Reserva;
 import com.example.proyecto_iot.databinding.FragmentDetalleHuespedBinding;
 
@@ -39,21 +48,77 @@ public class DetalleHuespedFragment extends Fragment {
             }
         }
 
+        boolean simulado = getArguments() != null && getArguments().getBoolean("simulado", false);
+
+        // ✅ Deshabilitar por defecto
+        binding.btnCheckout.setEnabled(false);
+        binding.btnCheckout.setAlpha(0.5f);
+
+        if (simulado) {
+            habilitarCheckout();
+        }
+
         binding.backdetallehuesped.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
 
+        // ✅ Listener siempre preparado, pero sólo funcional si está habilitado
         binding.btnCheckout.setOnClickListener(v -> {
-            CheckoutFragment checkoutFragment = new CheckoutFragment();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("reserva", reserva);
-            checkoutFragment.setArguments(bundle);
+            if (binding.btnCheckout.isEnabled()) {
+                CheckoutFragment checkoutFragment = new CheckoutFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("reserva", reserva);
+                checkoutFragment.setArguments(bundle);
 
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame_layout, checkoutFragment)
-                    .addToBackStack(null)
-                    .commit();
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_layout, checkoutFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        binding.btnSimularCheckout.setOnClickListener(v -> {
+            // ✅ Simula notificación
+            habilitarCheckout();
+            simularNotificacionCheckOut();
         });
     }
+
+    private void simularNotificacionCheckOut() {
+        Intent intent = new Intent(requireContext(), PagPrincipalAdmin.class);
+        intent.putExtra("reservaNombre", reserva.getNombreCompleto());
+        intent.putExtra("simulado", true);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                requireContext(),
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), "importanteDefault")
+                .setSmallIcon(R.drawable.icono_checkout) // tu ícono válido
+                .setContentTitle("⚠️ Alerta de Check-Out")
+                .setContentText("El huésped " + reserva.getNombreCompleto() + " ha solicitado su check-out.")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+        NotificationManagerCompat manager = NotificationManagerCompat.from(requireContext());
+        if (ActivityCompat.checkSelfPermission(requireContext(), POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            manager.notify((int) System.currentTimeMillis(), builder.build());
+        }
+    }
+
+
+
+
+
+    private void habilitarCheckout() {
+        binding.btnCheckout.setEnabled(true);
+        binding.btnCheckout.setAlpha(1f);
+    }
+
+
 
     private void mostrarDatosReserva() {
         // Datos huésped

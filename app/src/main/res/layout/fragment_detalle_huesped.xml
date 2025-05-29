@@ -478,6 +478,22 @@
 
 
         <!-- Botón de check-out (mitad del ancho y centrado) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_simular_checkout"
+            android:layout_width="wrap_content"
+            android:layout_height="54dp"
+            android:minHeight="60dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="8dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Simular Check-out"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="12dp"
+            app:cornerRadius="12dp"
+            app:strokeColor="#2C5928"
+            app:strokeWidth="1dp"
+            app:backgroundTint="#CEFAC3" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_checkout"

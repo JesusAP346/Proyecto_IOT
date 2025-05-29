@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.content.Context;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -150,7 +151,17 @@ public class HotelFragment extends Fragment {
 
         selectedButton.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.boton_seleccionado));
         EstadoHotelUI.ultimoBotonSeleccionado = selectedButton;
+
+        // 🟢 Desplaza automáticamente el botón seleccionado al centro del ScrollView
+        selectedButton.post(() -> {
+            View parentScroll = (View) selectedButton.getParent().getParent(); // HorizontalScrollView
+            if (parentScroll instanceof HorizontalScrollView) {
+                int scrollX = selectedButton.getLeft() - (parentScroll.getWidth() - selectedButton.getWidth()) / 2;
+                ((HorizontalScrollView) parentScroll).smoothScrollTo(scrollX, 0);
+            }
+        });
     }
+
 
     private void loadChildFragment(Fragment fragment) {
         getChildFragmentManager()

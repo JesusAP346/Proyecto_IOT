@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
 import com.example.proyecto_iot.cliente.NotificacionesFragment;
 import com.example.proyecto_iot.databinding.FragmentHomeBinding;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
@@ -83,6 +83,53 @@ public class HomeFragment extends Fragment {
                     .replace(R.id.frame_layout, adminNotificacionesFragment)
                     .addToBackStack(null)
                     .commit();
+        });
+
+        binding.btnHabitaciones.setOnClickListener(v -> {
+            // Cambia visualmente la pestaña seleccionada en el BottomNavigationView
+            PagPrincipalAdmin activity = (PagPrincipalAdmin) requireActivity();
+            activity.seleccionarTab(R.id.hotel);
+
+            // Reemplaza manualmente el fragmento con la sección de habitaciones
+            Fragment hotelFragment = HotelFragment.newInstance("habitaciones");
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frame_layout, hotelFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+        binding.btnServiciosExtras.setOnClickListener(v -> {
+            // Cambia visualmente la pestaña a "Hotel"
+            PagPrincipalAdmin activity = (PagPrincipalAdmin) requireActivity();
+            activity.seleccionarTab(R.id.hotel);
+
+            // Reemplaza con la sección de servicios cargada
+            Fragment hotelFragment = HotelFragment.newInstance("servicios");
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, hotelFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        binding.btnReportes.setOnClickListener(v -> {
+            // Cambia visualmente la pestaña a "Hotel"
+            PagPrincipalAdmin activity = (PagPrincipalAdmin) requireActivity();
+            activity.seleccionarTab(R.id.hotel);
+
+            // Reemplaza con la sección de servicios cargada
+            Fragment hotelFragment = HotelFragment.newInstance("reportes");
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, hotelFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        binding.btnReservas.setOnClickListener(v -> {
+            // Cambia visualmente la pestaña a "Hotel"
+            PagPrincipalAdmin activity = (PagPrincipalAdmin) requireActivity();
+            activity.seleccionarTab(R.id.reservas);
+
         });
     }
 
