@@ -23,16 +23,6 @@ public class SeguridadActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-
-
-
-
-
     }
 
 

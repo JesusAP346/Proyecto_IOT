@@ -15,6 +15,7 @@ import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.MisReservasFragment;
 
 import com.example.proyecto_iot.cliente.NotificacionesFragment;
+import com.example.proyecto_iot.cliente.PerfilFragmentC;
 import com.example.proyecto_iot.cliente.TaxiFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -58,6 +59,8 @@ public class ClienteBusquedaActivity extends AppCompatActivity {
                 fragment = new MisReservasFragment();
             } else if (id == R.id.nav_taxi) {
                 fragment = new TaxiFragment();  // ✅ Aquí agregamos el fragmento de taxi
+            } else if (id == R.id.nav_perfil) {
+                fragment = new PerfilFragmentC();
             }
 
             if (fragment != null) {
