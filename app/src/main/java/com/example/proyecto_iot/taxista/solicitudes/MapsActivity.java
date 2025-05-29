@@ -33,17 +33,28 @@ public class MapsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot()); // usa el layout inflado correctamente
+        setContentView(binding.getRoot());
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // Acción del botón de retroceso
-        binding.btnBack.setOnClickListener(v -> {
-            finish(); // ← Esto cierra la Activity y vuelve atrás
-        });
+        // Botón atrás
+        binding.btnBack.setOnClickListener(v -> finish());
+
+        // RECIBIR DATOS DEL INTENT
+        String nombre = getIntent().getStringExtra("nombre");
+        String telefono = getIntent().getStringExtra("telefono");
+        String viajes = getIntent().getStringExtra("viajes");
+        String hotel = getIntent().getStringExtra("hotel"); // opcional si lo quieres mostrar en subtitulo
+
+        //  MOSTRAR LOS DATOS EN LOS TEXTVIEWS
+        binding.tvNombre.setText(nombre != null ? nombre : "Sin nombre");
+        binding.tvTelefono.setText(telefono != null ? telefono : "Sin teléfono");
+        binding.tvViajes.setText(viajes != null ? viajes : "0 viajes");
+        binding.subtitulo.setText(hotel != null ? hotel : "Destino no especificado");
 
         obtenerUbicacion();
     }
+
 
     private void obtenerUbicacion() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

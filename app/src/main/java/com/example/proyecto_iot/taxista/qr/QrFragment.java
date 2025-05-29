@@ -74,7 +74,7 @@ public class QrFragment extends Fragment {
                     startActivity(intent);
                 }
                 else if (contenido.startsWith("serviciotaxi:")) {
-                    String idServicio = contenido.substring("serviciotaxig:".length()).trim();
+                    String idServicio = contenido.substring("serviciotaxi:".length()).trim();
                     String mensaje = "QR escaneado correctamente. Servicio #" + idServicio + " finalizado con éxito.";
 
                     Context context = requireContext();

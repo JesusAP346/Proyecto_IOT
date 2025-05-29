@@ -72,27 +72,27 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         holder.btnAceptar.setOnClickListener(v -> {
             Context context = v.getContext();
 
-            // Crear canal de notificación si no existe (Android 8+)
-            crearCanalNotificacion(context);
-
-            // Crear mensaje para la notificación
             String mensaje = "Has aceptado la solicitud de " + solicitud.nombre;
 
-            // Lanzar notificación local
             lanzarNotificacion(context, mensaje);
 
-            // Guardar la notificación en almacenamiento interno
             Notificacion notificacion = new Notificacion(
                     mensaje,
                     obtenerHoraActual(),
-                    R.drawable.ic_taxi  // Ajusta al ícono que tengas
+                    R.drawable.ic_taxi
             );
             guardarNotificacionEnStorage(context, notificacion);
 
-            // Abrir MapsActivity
+            // 🔵 Enviar los datos con el Intent
             Intent intent = new Intent(context, MapsActivity.class);
+            intent.putExtra("nombre", solicitud.nombre);
+            intent.putExtra("telefono", solicitud.telefono);
+            intent.putExtra("viajes", solicitud.viajes + " viajes");
+            intent.putExtra("hotel", "Hotel Paraíso"); // o cambia si sabes cuál es
+
             context.startActivity(intent);
         });
+
 
         holder.btnRechazar.setOnClickListener(v -> {
             // Implementa lógica para rechazar si quieres
