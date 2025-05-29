@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
@@ -22,9 +24,27 @@ public class TarjetaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private List<Tarjeta> tarjetaList;
     private Context context;
+    private int tarjetaSeleccionada = -1; // Índice de la tarjeta seleccionada
+    private OnTarjetaSelectedListener listener;
+
+    // Interface para comunicar la selección
+    public interface OnTarjetaSelectedListener {
+        void onTarjetaSelected(boolean haySeleccion);
+    }
 
     public TarjetaAdapter(List<Tarjeta> tarjetaList) {
         this.tarjetaList = tarjetaList;
+    }
+
+    public void setOnTarjetaSelectedListener(OnTarjetaSelectedListener listener) {
+        this.listener = listener;
+    }
+
+    public Tarjeta getTarjetaSeleccionada() {
+        if (tarjetaSeleccionada >= 0 && tarjetaSeleccionada < tarjetaList.size()) {
+            return tarjetaList.get(tarjetaSeleccionada);
+        }
+        return null;
     }
 
     @Override
@@ -57,7 +77,13 @@ public class TarjetaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             TarjetaViewHolder vh = (TarjetaViewHolder) holder;
 
             vh.tvBanco.setText(tarjeta.getBanco());
-            vh.tvNumero.setText(tarjeta.getNumero());
+            // Mostrar solo los últimos 4 dígitos
+            String numeroTarjeta = tarjeta.getNumero();
+            if (numeroTarjeta.length() >= 4) {
+                vh.tvNumero.setText("**** " + numeroTarjeta.substring(numeroTarjeta.length() - 4));
+            } else {
+                vh.tvNumero.setText(numeroTarjeta);
+            }
             vh.tvTitular.setText(tarjeta.getTitular());
             vh.tvTipo.setText(tarjeta.getTipo());
 
@@ -68,6 +94,60 @@ public class TarjetaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 vh.imgLogo.setImageResource(R.drawable.ic_mastercard);  //Cambiar cuando me acuerde :D
             }
+
+            // Configurar apariencia según selección
+            if (position == tarjetaSeleccionada) {
+                vh.constraintLayout.setBackgroundResource(R.drawable.bg_tarjeta_seleccionada);
+                vh.constraintLayout.setElevation(8f);
+            } else {
+                vh.constraintLayout.setBackgroundResource(R.drawable.bg_tarjeta_azul);
+                vh.constraintLayout.setElevation(4f);
+            }
+
+            // Click en la tarjeta para seleccionar
+            vh.itemView.setOnClickListener(v -> {
+                int currentPosition = vh.getAdapterPosition();
+                if (currentPosition != RecyclerView.NO_POSITION) {
+                    int previousSelected = tarjetaSeleccionada;
+                    tarjetaSeleccionada = currentPosition;
+
+                    // Actualizar vista de tarjetas
+                    if (previousSelected != -1 && previousSelected < tarjetaList.size()) {
+                        notifyItemChanged(previousSelected);
+                    }
+                    notifyItemChanged(currentPosition);
+
+                    // Notificar que hay una tarjeta seleccionada
+                    if (listener != null) {
+                        listener.onTarjetaSelected(true);
+                    }
+                }
+            });
+
+            // Click en botón eliminar
+            vh.btnEliminar.setOnClickListener(v -> {
+                int currentPosition = vh.getAdapterPosition();
+                if (currentPosition != RecyclerView.NO_POSITION && currentPosition < tarjetaList.size()) {
+                    // Eliminar tarjeta de la lista y del storage
+                    Tarjeta tarjetaAEliminar = tarjetaList.get(currentPosition);
+                    TarjetaStorage.eliminarTarjeta(context, tarjetaAEliminar);
+                    tarjetaList.remove(currentPosition);
+
+                    // Ajustar índice de selección si es necesario
+                    if (tarjetaSeleccionada == currentPosition) {
+                        tarjetaSeleccionada = -1;
+                        if (listener != null) {
+                            listener.onTarjetaSelected(false);
+                        }
+                    } else if (tarjetaSeleccionada > currentPosition) {
+                        tarjetaSeleccionada--;
+                    }
+
+                    notifyItemRemoved(currentPosition);
+                    notifyItemRangeChanged(currentPosition, getItemCount());
+                }
+            });
+
         } else if (holder instanceof AgregarViewHolder) {
             AgregarViewHolder vh = (AgregarViewHolder) holder;
             vh.itemView.setOnClickListener(v -> {
@@ -76,12 +156,13 @@ public class TarjetaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 context.startActivity(intent);
             });
         }
-
     }
 
     static class TarjetaViewHolder extends RecyclerView.ViewHolder {
         TextView tvBanco, tvNumero, tvTitular, tvTipo;
         ImageView imgLogo;
+        ImageButton btnEliminar;
+        ConstraintLayout constraintLayout;
 
         public TarjetaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +171,8 @@ public class TarjetaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tvTitular = itemView.findViewById(R.id.tvTitular);
             tvTipo = itemView.findViewById(R.id.tvTipo);
             imgLogo = itemView.findViewById(R.id.imgLogo);
+            btnEliminar = itemView.findViewById(R.id.btnEliminar);
+            constraintLayout = (ConstraintLayout) itemView;
         }
     }
 

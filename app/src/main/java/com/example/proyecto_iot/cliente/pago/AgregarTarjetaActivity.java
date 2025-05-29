@@ -51,8 +51,7 @@ public class AgregarTarjetaActivity extends AppCompatActivity {
                 return;
             }
 
-            // Hardcode temporal para ejemplo
-            Tarjeta nueva = new Tarjeta("INTERBANK", "**** " + numero.substring(numero.length() - 4), titular, "Débito", "Visa");
+            Tarjeta nueva = new Tarjeta("INTERBANK", "**** " + numero.substring(numero.length() - 4), titular, "Débito", "Visa","29/05", 1);
 
             List<Tarjeta> tarjetas = TarjetaStorage.obtenerTarjetas(this);
             tarjetas.add(nueva);
