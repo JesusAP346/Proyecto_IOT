@@ -53,14 +53,17 @@
                 android:gravity="center_vertical"
                 android:background="#EEC170">
 
+                <!-- Justo dentro del Card Usuario, reemplaza o agrega este ImageView -->
                 <ImageView
+                    android:id="@+id/ivFotoPerfil"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/roberto"
                     android:scaleType="centerCrop"
                     android:clipToOutline="true"
                     android:background="@drawable/circle_background"
-                    android:layout_marginEnd="16dp" />
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="Foto de perfil" />
+
 
                 <LinearLayout
                     android:layout_width="0dp"

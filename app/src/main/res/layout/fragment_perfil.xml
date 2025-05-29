@@ -69,13 +69,16 @@
         android:backgroundTintMode="src_in">
 
         <ImageView
+            android:id="@+id/ivFotoPerfil"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/roberto"
-            android:background="@drawable/circle_background"
             android:scaleType="centerCrop"
             android:clipToOutline="true"
-            android:layout_marginEnd="12dp" />
+            android:background="@drawable/circle_background"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="Foto de perfil" />
+
+
 
         <LinearLayout
             android:layout_width="0dp"

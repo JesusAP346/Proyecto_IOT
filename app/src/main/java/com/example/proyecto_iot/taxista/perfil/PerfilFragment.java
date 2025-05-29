@@ -1,6 +1,7 @@
 package com.example.proyecto_iot.taxista.perfil;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,14 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.administradorHotel.fragmentos.AdminNotificacionesFragment;
-import com.example.proyecto_iot.cliente.MainActivityCliente;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 import com.example.proyecto_iot.databinding.FragmentPerfilBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -45,6 +45,8 @@ public class PerfilFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentPerfilBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+
+        cargarImagenInterna(); // carga la foto guardada en interno
 
         // Actualizar badge de notificaciones
         int cantidad = obtenerCantidadNotificaciones();
@@ -87,7 +89,21 @@ public class PerfilFragment extends Fragment {
         return view;
     }
 
-
+    private void cargarImagenInterna() {
+        try {
+            String filename = "perfil_taxista.jpg";
+            File file = new File(requireContext().getFilesDir(), filename);
+            if (file.exists()) {
+                Uri uri = Uri.fromFile(file);
+                binding.ivFotoPerfil.setImageURI(uri);
+            } else {
+                binding.ivFotoPerfil.setImageResource(R.drawable.roberto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            binding.ivFotoPerfil.setImageResource(R.drawable.roberto);
+        }
+    }
 
     public void abrirEditarPerfil() {
         startActivity(new Intent(requireContext(), InformacionPersonalActivity.class));
@@ -129,6 +145,4 @@ public class PerfilFragment extends Fragment {
         }
         return cantidad;
     }
-
-
 }
