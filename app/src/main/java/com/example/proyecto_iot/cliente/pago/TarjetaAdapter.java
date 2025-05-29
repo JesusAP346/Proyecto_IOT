@@ -34,7 +34,7 @@ public class TarjetaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return tarjetaList.size() + 1; // +1 para el botón "Agregar tarjeta"
+        return tarjetaList.size() + 1;
     }
 
     @NonNull

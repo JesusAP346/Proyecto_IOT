@@ -103,7 +103,6 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Forzar BottomSheet a pantalla completa
         View parent = (View) view.getParent();
         BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(parent);
 

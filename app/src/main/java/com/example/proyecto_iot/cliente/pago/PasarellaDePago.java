@@ -15,6 +15,8 @@ import java.util.List;
 
 public class PasarellaDePago extends AppCompatActivity {
 
+    private RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,14 +24,10 @@ public class PasarellaDePago extends AppCompatActivity {
         setContentView(R.layout.activity_pasarella_de_pago);
 
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerTarjetas);
+        recyclerView = findViewById(R.id.recyclerTarjetas);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Tarjeta> listaTarjetas = new ArrayList<>();
-        listaTarjetas.add(new Tarjeta("INTERBANK", "**** 1826", "KELY TAFUR", "Crédito", "Visa"));
-        listaTarjetas.add(new Tarjeta("BANCO DE CREDITO DEL PERU", "**** 5089", "ROBERTO TAFUR", "Débito", "Visa"));
-
-
+        List<Tarjeta> listaTarjetas = TarjetaStorage.obtenerTarjetas(this);
         TarjetaAdapter adapter = new TarjetaAdapter(listaTarjetas);
         recyclerView.setAdapter(adapter);
 
@@ -39,6 +37,14 @@ public class PasarellaDePago extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        List<Tarjeta> listaTarjetasActualizadas = TarjetaStorage.obtenerTarjetas(this);
+        TarjetaAdapter adapter = new TarjetaAdapter(listaTarjetasActualizadas);
+        recyclerView.setAdapter(adapter);
     }
 
 
