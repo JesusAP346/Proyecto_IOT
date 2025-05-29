@@ -1,11 +1,15 @@
 package com.example.proyecto_iot.cliente.chat;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -18,12 +22,13 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -107,7 +112,19 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
         bottomSheetBehavior.setHideable(false);
         bottomSheetBehavior.setDraggable(false);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1001);
+            }
+        }
+
+
         updateEstado("En línea");
+
+        recyclerViewMensajes.post(() -> {
+            scrollToBottom();
+        });
     }
 
     private void initStorage() {
@@ -152,12 +169,23 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
         chatAdapter = new ChatAdapter(mensajes);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(false); // Asegura el orden correcto
 
         recyclerViewMensajes.setLayoutManager(layoutManager);
         recyclerViewMensajes.setAdapter(chatAdapter);
 
         if (!mensajes.isEmpty()) {
-            recyclerViewMensajes.scrollToPosition(mensajes.size() - 1);
+            recyclerViewMensajes.post(() -> {
+                recyclerViewMensajes.scrollToPosition(mensajes.size() - 1);
+            });
+        }
+    }
+
+    private void scrollToBottom() {
+        if (recyclerViewMensajes != null && chatAdapter != null && !mensajes.isEmpty()) {
+            recyclerViewMensajes.post(() -> {
+                recyclerViewMensajes.smoothScrollToPosition(mensajes.size() - 1);
+            });
         }
     }
 
@@ -210,7 +238,9 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
 
         mensajes.add(mensaje);
         chatAdapter.notifyItemInserted(mensajes.size() - 1);
-        recyclerViewMensajes.smoothScrollToPosition(mensajes.size() - 1);
+
+        // Scroll inmediato y suave 7u7
+        scrollToBottom();
 
         saveMessages();
         etMensaje.setText("");
@@ -222,6 +252,36 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
             }, 1000);
         }
     }
+
+    private void mostrarNotificacion(String mensaje, String texto) {
+        Context context = requireContext();
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        String channelId = "chat_channel";
+        String channelName = "Chat Notifications";
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    channelName,
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.ic_chat)
+                .setContentTitle("Nuevo mensaje")
+                .setContentText(mensaje)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+    }
+
+
 
     private void responderMensajeHotel() {
         // Agregar mensaje de respuesta para cierta palabra clave
@@ -242,9 +302,12 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
 
         if (chatAdapter != null) {
             chatAdapter.notifyItemInserted(mensajes.size() - 1);
-            recyclerViewMensajes.smoothScrollToPosition(mensajes.size() - 1);
+            scrollToBottom(); // Usar método helper
         }
+
+        mostrarNotificacion(texto, texto);
     }
+
 
     private void toggleRecording() {
         if (!isRecording) {
@@ -277,7 +340,7 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
 
         mensajes.add(mensaje);
         chatAdapter.notifyItemInserted(mensajes.size() - 1);
-        recyclerViewMensajes.smoothScrollToPosition(mensajes.size() - 1);
+        scrollToBottom();
 
         saveMessages();
     }
@@ -383,7 +446,7 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
 
         mensajes.add(mensaje);
         chatAdapter.notifyItemInserted(mensajes.size() - 1);
-        recyclerViewMensajes.smoothScrollToPosition(mensajes.size() - 1);
+        scrollToBottom(); // Usar método helper
 
         saveMessages();
     }
@@ -456,6 +519,10 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
         chatAdapter.notifyDataSetChanged();
         saveMessages();
         agregarMensajeSoporte("¡Hola! ¿En qué puedo ayudarte hoy?");
+
+        recyclerViewMensajes.post(() -> {
+            scrollToBottom();
+        });
     }
 
     public static class ChatMessage {
