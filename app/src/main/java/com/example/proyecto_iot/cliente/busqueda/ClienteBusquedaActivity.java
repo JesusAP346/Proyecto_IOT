@@ -28,16 +28,36 @@ public class ClienteBusquedaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cliente_busqueda);
+
+        boolean mostrarReservas = getIntent().getBooleanExtra("mostrar_reservas", false);
+
+
+        if (mostrarReservas) {
+            BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+            bottomNav.setSelectedItemId(R.id.nav_reservas);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container_busqueda, new MisReservasFragment())
+                    .commit();
+        } else if (savedInstanceState == null) {
+            // Carga fragmento por defecto (Buscar)
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container_busqueda, new BusquedaFragment())
+                    .commit();
+        }
+
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+/*
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container_busqueda, new BusquedaFragment())
                     .commit();
-        }
+        }*/
         Locale locale = new Locale("es");
         Locale.setDefault(locale);
 

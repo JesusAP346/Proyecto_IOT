@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 
 public class SolicitudTaxiActivity extends AppCompatActivity {
     RadioButton rbSi, rbNo;
@@ -60,10 +61,20 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
 
             btnCerrar.setOnClickListener(v1 -> {
                 dialog.dismiss();
-                Intent intent = new Intent(SolicitudTaxiActivity.this, MisReservasActivity.class);
+                /*
+                Intent intent = new Intent(SolicitudTaxiActivity.this, ClienteBusquedaActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                finish(); // opcional: cierra esta activity para no volver atrás
+                finish(); */// opcional: cierra esta activity para no volver atrás
+
+
+                Intent intent = new Intent(SolicitudTaxiActivity.this, ClienteBusquedaActivity.class);
+                intent.putExtra("mostrar_reservas", true);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+
+
             });
             dialog.show();
         });
