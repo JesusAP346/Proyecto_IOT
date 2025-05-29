@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.cliente.chat.ChatBottomSheet;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Arrays;
 import java.util.List;
@@ -75,6 +77,11 @@ public class DetalleHabitacionClienteFragment extends Fragment {
         //ImageSliderAdapter adapter = new ImageSliderAdapter(requireContext(), imageResIds);
         //viewPager.setAdapter(adapter);
 
+        FloatingActionButton fabChat = view.findViewById(R.id.fabChat);
+        fabChat.setOnClickListener(v -> {
+            ChatBottomSheet chatBottomSheet = new ChatBottomSheet();
+            chatBottomSheet.show(getParentFragmentManager(), "ChatBottomSheet");
+        });
 
         return view;
     }

@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.cliente.chat.ChatBottomSheet;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -118,6 +120,12 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
             requireActivity().getSupportFragmentManager().popBackStack();
         });
 
+
+        FloatingActionButton fabChat = view.findViewById(R.id.fabChat);
+        fabChat.setOnClickListener(v -> {
+            ChatBottomSheet chatBottomSheet = new ChatBottomSheet();
+            chatBottomSheet.show(getParentFragmentManager(), "ChatBottomSheet");
+        });
 
 
 
