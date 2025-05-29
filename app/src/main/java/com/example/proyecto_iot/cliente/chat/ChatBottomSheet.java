@@ -214,6 +214,19 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
 
         saveMessages();
         etMensaje.setText("");
+
+        if (texto.trim().equalsIgnoreCase("HOTEL")) {
+            // Responder automáticamente después de un pequeño delay
+            recyclerViewMensajes.postDelayed(() -> {
+                responderMensajeHotel();
+            }, 1000);
+        }
+    }
+
+    private void responderMensajeHotel() {
+        // Agregar mensaje de respuesta para cierta palabra clave
+        agregarMensajeSoporte("MENSAJE DE PRUEBA DE NOTIFICACIÓN");
+
     }
 
     private void agregarMensajeSoporte(String texto) {
