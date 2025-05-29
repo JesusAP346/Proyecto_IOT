@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="16dp"
             app:cardCornerRadius="10dp"
             app:cardElevation="4dp"
             app:cardBackgroundColor="#F0EFEA">
@@ -100,103 +100,211 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- ✅ GRUPO 1: Info General -->
+        <!-- ✅ HEADER INFO GENERAL -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="3dp"
-            app:cardBackgroundColor="@android:color/white">
+            android:layout_marginBottom="4dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="#FFFFFF">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Información general"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:layout_marginBottom="12dp" />
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Tipo de habitación" android:textStyle="bold" android:textSize="12sp" />
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Stándar" android:textSize="14sp" android:background="@drawable/bg_edittext_simulado" android:padding="8dp" android:layout_marginBottom="12dp"/>
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Capacidad" android:textStyle="bold" android:textSize="12sp" />
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="2 adultos" android:textSize="14sp" android:background="@drawable/bg_edittext_simulado" android:padding="8dp" android:layout_marginBottom="12dp"/>
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Tamaño en m²" android:textStyle="bold" android:textSize="12sp" />
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="78" android:textSize="14sp" android:background="@drawable/bg_edittext_simulado" android:padding="8dp" android:layout_marginBottom="12dp"/>
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Precio por noche (soles S/.)" android:textStyle="bold" android:textSize="12sp" />
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="150" android:textSize="14sp" android:background="@drawable/bg_edittext_simulado" android:padding="8dp" android:layout_marginBottom="12dp"/>
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Cantidad de habitaciones" android:textStyle="bold" android:textSize="12sp" />
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="3" android:textSize="14sp" android:background="@drawable/bg_edittext_simulado" android:padding="8dp" android:layout_marginBottom="12dp"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- ✅ GRUPO 2: Equipamiento -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="3dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Equipamiento"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:layout_marginBottom="12dp" />
+                android:padding="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:layout_marginBottom="16dp">
 
-                    <!-- Fila 1 -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Habitación"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="S/. 150"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="#E74C3C" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="/noche"
+                            android:textSize="14sp"
+                            android:textColor="#7F8C8D"
+                            android:layout_marginStart="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Bullets -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/bullet_point"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tipo: Stándar"
+                            android:textSize="15sp"
+                            android:textColor="#34495E" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/bullet_point"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Capacidad: 2 adultos"
+                            android:textSize="15sp"
+                            android:textColor="#34495E" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/bullet_point"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tamaño: 78 m²"
+                            android:textSize="15sp"
+                            android:textColor="#34495E" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/bullet_point"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Habitaciones registradas: 3"
+                            android:textSize="15sp"
+                            android:textColor="#34495E" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Equipamiento con iconos -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Equipamiento"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="#2C3E50"
+                    android:layout_marginBottom="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Fila 1: TV + Aire acondicionado -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="2"
-                        android:layout_marginBottom="8dp">
+                        android:layout_marginBottom="12dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="horizontal"
-                            android:padding="8dp"
-                            android:background="@drawable/bg_edittext_simulado"
-                            android:layout_marginEnd="8dp"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:layout_marginEnd="8dp">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="📺"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:text="TV"
-                                android:textColor="#000000"
-                                android:textSize="14sp" />
-
-
+                                android:textSize="15sp"
+                                android:textColor="#34495E" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -204,49 +312,56 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="horizontal"
-                            android:padding="8dp"
-                            android:background="@drawable/bg_edittext_simulado"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="8dp">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="❄️"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Aire acondicionado"
-                                android:textColor="#000000"
-                                android:textSize="14sp" />
-
-
+                                android:text="Aire A/C"
+                                android:textSize="15sp"
+                                android:textColor="#34495E" />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Fila 2 -->
+                    <!-- Fila 2: Toalla + Caja fuerte -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="2"
-                        android:layout_marginBottom="8dp">
+                        android:layout_marginBottom="12dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="horizontal"
-                            android:padding="8dp"
-                            android:background="@drawable/bg_edittext_simulado"
-                            android:layout_marginEnd="8dp"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:layout_marginEnd="8dp">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="🛁"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Toalla"
-                                android:textColor="#000000"
-                                android:textSize="14sp" />
-
-
+                                android:text="Toallas"
+                                android:textSize="15sp"
+                                android:textColor="#34495E" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -254,23 +369,27 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="horizontal"
-                            android:padding="8dp"
-                            android:background="@drawable/bg_edittext_simulado"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="8dp">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="🔒"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:text="Caja fuerte"
-                                android:textColor="#000000"
-                                android:textSize="14sp" />
-
-
+                                android:textSize="15sp"
+                                android:textColor="#34495E" />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Fila 3 -->
+                    <!-- Fila 3: WiFi + Escritorio -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -282,20 +401,23 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="horizontal"
-                            android:padding="8dp"
-                            android:background="@drawable/bg_edittext_simulado"
-                            android:layout_marginEnd="8dp"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:layout_marginEnd="8dp">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="📶"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Wifi"
-                                android:textColor="#000000"
-                                android:textSize="14sp" />
-
-
+                                android:text="WiFi"
+                                android:textSize="15sp"
+                                android:textColor="#34495E" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -303,150 +425,171 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="horizontal"
-                            android:padding="8dp"
-                            android:background="@drawable/bg_edittext_simulado"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="8dp">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:text="🪑"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:text="Escritorio"
-                                android:textColor="#000000"
-                                android:textSize="14sp" />
-
-
+                                android:textSize="15sp"
+                                android:textColor="#34495E" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-
-
-
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- ✅ GRUPO 3: Servicios -->
+        <!-- Servicios con iconos -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="3dp">
+            android:layout_marginBottom="4dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#FFFFFF">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Servicios"
+                    android:text="Servicios incluidos"
+                    android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:layout_marginBottom="12dp" />
+                    android:textColor="#2C3E50"
+                    android:layout_marginBottom="16dp" />
 
-                <!-- Servicios -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="12dp">
+                    android:orientation="vertical">
 
+                    <!-- Traslado aeropuerto -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edittext_simulado"
-                        android:padding="8dp"
-                        android:layout_marginBottom="8dp"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:text="✈️"
+                            android:textSize="18sp"
+                            android:gravity="center"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Traslado a aeropuerto"
-                            android:textSize="14sp"
-                            android:textColor="#000000" />
-
-
+                            android:text="Traslado al aeropuerto"
+                            android:textSize="15sp"
+                            android:textColor="#34495E" />
                     </LinearLayout>
 
+                    <!-- Gimnasio -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edittext_simulado"
-                        android:padding="8dp"
-                        android:layout_marginBottom="8dp"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:text="💪"
+                            android:textSize="18sp"
+                            android:gravity="center"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Gimnasio"
-                            android:textSize="14sp"
-                            android:textColor="#000000" />
-
-
+                            android:text="Acceso al gimnasio"
+                            android:textSize="15sp"
+                            android:textColor="#34495E" />
                     </LinearLayout>
 
+                    <!-- Desayuno -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edittext_simulado"
-                        android:padding="8dp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Desayuno"
-                            android:textSize="14sp"
-                            android:textColor="#000000" />
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:text="🍳"
+                            android:textSize="18sp"
+                            android:gravity="center"
+                            android:layout_marginEnd="12dp" />
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Desayuno incluido"
+                            android:textSize="15sp"
+                            android:textColor="#34495E" />
                     </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- ✅ GRUPO 4: FOTOS -->
+        <!-- Galería de fotos -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="3dp">
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#FFFFFF">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fotos de la habitación"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="#000000"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Galería de fotos"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50" />
+
+                </LinearLayout>
 
                 <org.imaginativeworld.whynotimagecarousel.ImageCarousel
                     android:id="@+id/carousel"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp" />
+                    android:layout_height="220dp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
         <!-- ✅ BOTÓN FINALIZAR -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -469,4 +612,3 @@
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
-
