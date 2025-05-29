@@ -14,6 +14,14 @@ import com.example.proyecto_iot.administradorHotel.fragmentos.AdminNotificacione
 import com.example.proyecto_iot.cliente.MainActivityCliente;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 import com.example.proyecto_iot.databinding.FragmentPerfilBinding;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class PerfilFragment extends Fragment {
 
@@ -35,30 +43,19 @@ public class PerfilFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflar usando binding
         binding = FragmentPerfilBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        // Acción: Información Personal
-        binding.informacionPersonal.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), InformacionPersonalActivity.class));
-        });
+        // Actualizar badge de notificaciones
+        int cantidad = obtenerCantidadNotificaciones();
+        if (cantidad > 0) {
+            binding.notificacionBadge.setText(String.valueOf(cantidad));
+            binding.notificacionBadge.setVisibility(View.VISIBLE);
+        } else {
+            binding.notificacionBadge.setVisibility(View.GONE);
+        }
 
-        // Acción: Seguridad
-        binding.seguridadPersonal.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), SeguridadActivity.class));
-        });
-
-        // Acción: Perfil del Taxista
-        binding.cardPerfil.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), PerfilTaxistaActivity.class));
-        });
-
-        // Acción: Cambiar a modo cliente
-        binding.btnModoCliente.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), ClienteBusquedaActivity.class));
-        });
-
+        // Listener para abrir fragmento de notificaciones
         binding.iconoCampana.setOnClickListener(v -> {
             Fragment notificacionesTaxistaFragment = new NotificacionesTaxistaFragment();
             requireActivity().getSupportFragmentManager().beginTransaction()
@@ -67,8 +64,30 @@ public class PerfilFragment extends Fragment {
                     .commit();
         });
 
+        // Listener para información personal
+        binding.informacionPersonal.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), InformacionPersonalActivity.class));
+        });
+
+        // Listener para seguridad
+        binding.seguridadPersonal.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), SeguridadActivity.class));
+        });
+
+        // Listener para perfil del taxista
+        binding.cardPerfil.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), PerfilTaxistaActivity.class));
+        });
+
+        // Listener para cambiar a modo cliente
+        binding.btnModoCliente.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), ClienteBusquedaActivity.class));
+        });
+
         return view;
     }
+
+
 
     public void abrirEditarPerfil() {
         startActivity(new Intent(requireContext(), InformacionPersonalActivity.class));
@@ -79,4 +98,37 @@ public class PerfilFragment extends Fragment {
         super.onDestroyView();
         binding = null; // evitar memory leaks
     }
+
+    //storage:
+    private static final String FILE_NOTIFICACIONES = "notificaciones.json";
+
+    private int obtenerCantidadNotificaciones() {
+        int cantidad = 0;
+        try {
+            FileInputStream fis = requireContext().openFileInput(FILE_NOTIFICACIONES);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+
+            StringBuilder sb = new StringBuilder();
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                sb.append(linea);
+            }
+            br.close();
+
+            String json = sb.toString();
+
+            Type listType = new TypeToken<List<NotificacionDTO>>() {}.getType();
+            List<NotificacionDTO> dtoList = new Gson().fromJson(json, listType);
+
+            cantidad = dtoList != null ? dtoList.size() : 0;
+
+        } catch (Exception e) {
+            // archivo puede no existir o estar vacío
+            cantidad = 0;
+        }
+        return cantidad;
+    }
+
+
 }

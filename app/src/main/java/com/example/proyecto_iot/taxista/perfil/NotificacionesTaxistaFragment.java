@@ -52,7 +52,17 @@ public class NotificacionesTaxistaFragment extends Fragment {
         listaNotificaciones = leerNotificacionesDesdeStorage();
 
         if (listaNotificaciones.isEmpty()) {
-            listaNotificaciones = crearListaHardcodeada(); // método con las notificaciones de ejemplo
+            listaNotificaciones = crearListaHardcodeada();
+            guardarNotificacionesEnStorage(listaNotificaciones);
+        }
+
+// Ahora sí invertimos la lista para mostrar las más recientes primero
+        Collections.reverse(listaNotificaciones);
+
+
+
+        if (listaNotificaciones.isEmpty()) {
+            listaNotificaciones = crearListaHardcodeada(); // metodo con las notificaciones de ejemplo
             guardarNotificacionesEnStorage(listaNotificaciones); // guardarlas para futuras cargas
         }
 
@@ -127,12 +137,7 @@ public class NotificacionesTaxistaFragment extends Fragment {
                     R.drawable.ic_qr));
         }
 
-        for (int i = 1; i <= 10; i++) {
-            lista.add(new Notificacion(
-                    "Nueva ubicación de recogida actualizada por Hotel Casa Andina",
-                    "Hoy, 11:" + (10 + i) + " AM",
-                    R.drawable.ic_location));
-        }
+
 
         return lista;
     }
