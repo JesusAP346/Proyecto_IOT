@@ -74,7 +74,13 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
 
             String mensaje = "Has aceptado la solicitud de " + solicitud.nombre;
 
-            lanzarNotificacion(context, mensaje);
+            // Lanzar notificación con todos los datos para el PendingIntent
+            lanzarNotificacion(context, mensaje,
+                    solicitud.nombre,
+                    solicitud.telefono,
+                    solicitud.viajes + " viajes",
+                    solicitud.origen,
+                    solicitud.imagenPerfil);
 
             Notificacion notificacion = new Notificacion(
                     mensaje,
@@ -83,16 +89,15 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
             );
             guardarNotificacionEnStorage(context, notificacion);
 
-            // 🔵 Enviar los datos con el Intent
+            // Abrir MapsActivity con datos
             Intent intent = new Intent(context, MapsActivity.class);
             intent.putExtra("nombre", solicitud.nombre);
             intent.putExtra("telefono", solicitud.telefono);
             intent.putExtra("viajes", solicitud.viajes + " viajes");
-            intent.putExtra("hotel", "Hotel Paraíso"); // o cambia si sabes cuál es
-
+            intent.putExtra("hotel", solicitud.origen);
+            intent.putExtra("imagenPerfil", solicitud.imagenPerfil);
             context.startActivity(intent);
         });
-
 
         holder.btnRechazar.setOnClickListener(v -> {
             // Implementa lógica para rechazar si quieres
@@ -142,8 +147,18 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         }
     }
 
-    private void lanzarNotificacion(Context context, String mensaje) {
+    private void lanzarNotificacion(Context context, String mensaje,
+                                    String nombre, String telefono, String viajes,
+                                    String hotel, int imagenPerfil) {
+        crearCanalNotificacion(context);
+
         Intent intent = new Intent(context, MapsActivity.class);
+        intent.putExtra("nombre", nombre);
+        intent.putExtra("telefono", telefono);
+        intent.putExtra("viajes", viajes);
+        intent.putExtra("hotel", hotel);
+        intent.putExtra("imagenPerfil", imagenPerfil);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CANAL_ID)

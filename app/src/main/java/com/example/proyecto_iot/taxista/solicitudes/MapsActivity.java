@@ -2,26 +2,17 @@ package com.example.proyecto_iot.taxista.solicitudes;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.ActivityMapsBinding;
-import com.example.proyecto_iot.databinding.FragmentNotificacionesTaxistaBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends AppCompatActivity {
 
@@ -46,11 +37,17 @@ public class MapsActivity extends AppCompatActivity {
         String viajes = getIntent().getStringExtra("viajes");
         String hotel = getIntent().getStringExtra("hotel"); // opcional si lo quieres mostrar en subtitulo
 
-        //  MOSTRAR LOS DATOS EN LOS TEXTVIEWS
+        // AGREGADO: Recibir el id del drawable para la imagen del pasajero
+        int imagenPerfil = getIntent().getIntExtra("imagenPerfil", R.drawable.roberto);
+
+        // MOSTRAR LOS DATOS EN LOS TEXTVIEWS
         binding.tvNombre.setText(nombre != null ? nombre : "Sin nombre");
         binding.tvTelefono.setText(telefono != null ? telefono : "Sin teléfono");
         binding.tvViajes.setText(viajes != null ? viajes : "0 viajes");
         binding.subtitulo.setText(hotel != null ? hotel : "Destino no especificado");
+
+        // AGREGADO: Actualizar la imagen del pasajero dinámicamente
+        binding.imgConductor.setImageResource(imagenPerfil);
 
         obtenerUbicacion();
     }
