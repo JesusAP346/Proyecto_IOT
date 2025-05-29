@@ -27,11 +27,19 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         void onHotelClick(Hotel hotel, int position);
     }
 
-    public HotelAdapter(Context context, List<Hotel> listaHoteles, OnHotelClickListener listener) {
+    public interface OnFavoritoClickListener {
+        void onFavoritoClick(Hotel hotel, int position, boolean nuevoEstado);
+    }
+
+    private OnFavoritoClickListener favListener;
+
+    public HotelAdapter(Context context, List<Hotel> listaHoteles, OnHotelClickListener listener, OnFavoritoClickListener favListener) {
         this.context = context;
         this.listaHoteles = listaHoteles;
         this.listener = listener;
+        this.favListener = favListener;
     }
+
 
     @NonNull
     @Override
@@ -69,11 +77,18 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.iconFavorite.setOnClickListener(v -> {
             boolean nuevoEstado = !hotel.isFavorito();
             hotel.setFavorito(nuevoEstado);
+            HotelPreferences.guardarFavorito(context, hotel.getId(), nuevoEstado);
             notifyItemChanged(holder.getAdapterPosition());
         });
 
-
-
+        holder.iconFavorite.setOnClickListener(v -> {
+            boolean nuevoEstado = !hotel.isFavorito();
+            hotel.setFavorito(nuevoEstado);
+            notifyItemChanged(holder.getAdapterPosition());
+            if (favListener != null) {
+                favListener.onFavoritoClick(hotel, holder.getAdapterPosition(), nuevoEstado);
+            }
+        });
 
 
     }

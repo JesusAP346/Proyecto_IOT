@@ -15,6 +15,7 @@ import com.example.proyecto_iot.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,37 +76,17 @@ public class ClienteFavoritosFragment extends Fragment implements HotelAdapter.O
         recyclerView = view.findViewById(R.id.recyclerHoteles);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        List<String> servicios1 = new ArrayList<>();
-        servicios1.add("Wi-Fi");
-        servicios1.add("Piscina");
-        servicios1.add("Gimnasio");
-        servicios1.add("Desayuno incluido");
-        servicios1.add("Recepción 24h");
-        servicios1.add("Aire acondicionado");
-        servicios1.add("Estacionamiento gratuito");
+        hotelList = HotelData.getTodosLosHoteles();
 
-        List<String> servicios2 = new ArrayList<>();
-        servicios2.add("Wi-Fi");
-        servicios2.add("Spa");
-        servicios2.add("Restaurante");
-        servicios2.add("Bar");
-        servicios2.add("Servicio a la habitación");
-        servicios2.add("Transporte al aeropuerto");
-        servicios2.add("Centro de negocios");
+        for (Hotel hotel : hotelList) {
+            hotel.setFavorito(HotelPreferences.esFavorito(getContext(), hotel.getId()));
+        }
 
+        hotelAdapter = new HotelAdapter(getContext(), hotelList, this, (hotel, pos, favorito) -> {
+            actualizarEstadoFavoritos(hotel, favorito);
+            cargarFavoritos();
+        });
 
-        hotelList = new ArrayList<>();
-
-        hotelList.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5, servicios1, 1, true));
-        hotelList.add(new Hotel("Hotel Las Rosas", "San Pincho", 355, R.drawable.hotel2, 4, servicios2, 1, true));
-        hotelList.add(new Hotel("Hotel ASD", "San Isidro", 2550, R.drawable.hotel1, 5, servicios1, 1, true));
-        hotelList.add(new Hotel("Hotel JKL", "Pueblo libre", 355, R.drawable.hotel2, 4, servicios2, 1, true));
-        hotelList.add(new Hotel("Hotel BYU", "San Miguel", 2550, R.drawable.hotel1, 5, servicios1, 1, true));
-        hotelList.add(new Hotel("Hotel 98I", "Miraflores", 355, R.drawable.hotel2, 4, servicios2, 1, true));
-        hotelList.add(new Hotel("Hotel MNB", "San Borja", 2550, R.drawable.hotel1, 5, servicios1, 1, true));
-        hotelList.add(new Hotel("Hotel FOX", "Surquillo", 355, R.drawable.hotel2, 4, servicios2, 1, true));
-
-        hotelAdapter = new HotelAdapter(getContext(), hotelList, (this));
         recyclerView.setAdapter(hotelAdapter);
 
         TextView txtBuscar = view.findViewById(R.id.txtBuscar);
@@ -120,6 +101,40 @@ public class ClienteFavoritosFragment extends Fragment implements HotelAdapter.O
 
         return  view;
     }
+
+    private void actualizarEstadoFavoritos(Hotel hotel, boolean favorito) {
+        Set<Integer> favoritos = FavoritosStorage.obtenerFavoritos(getContext());
+        if (favorito) {
+            favoritos.add(hotel.getId());
+        } else {
+            favoritos.remove(hotel.getId());
+        }
+        FavoritosStorage.guardarFavoritos(getContext(), favoritos);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        cargarFavoritos();
+    }
+
+    private void cargarFavoritos() {
+        Set<Integer> favoritosIds = FavoritosStorage.obtenerFavoritos(getContext());
+        List<Hotel> todos = HotelData.getTodosLosHoteles();
+        List<Hotel> favoritos = new ArrayList<>();
+
+        for (Hotel hotel : todos) {
+            hotel.setFavorito(favoritosIds.contains(hotel.getId()));
+            if (hotel.isFavorito()) {
+                favoritos.add(hotel);
+            }
+        }
+
+        hotelList = favoritos;
+        hotelAdapter.actualizarLista(hotelList);
+    }
+
     @Override
     public void onHotelClick(Hotel hotel, int position) {
         // Crear una instancia del DetalleHotelFragment con los datos del hotel
