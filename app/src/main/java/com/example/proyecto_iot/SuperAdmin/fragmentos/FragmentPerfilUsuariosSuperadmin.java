@@ -11,19 +11,32 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.SuperAdmin.domain.UsuariosDomain;
 import com.squareup.picasso.Picasso;
 
 public class FragmentPerfilUsuariosSuperadmin extends Fragment {
 
-    private UsuariosDomain usuario;
+    private String dni, nombre, numeroTelefono, imagenPerfil, correo, direccion, fechaNacimiento,
+            rol, estadoCuenta, nivelCompletado, calificacion;
+    private int habitacionesRegistradas;
 
     public FragmentPerfilUsuariosSuperadmin() {}
 
-    public static FragmentPerfilUsuariosSuperadmin newInstance(UsuariosDomain usuario) {
+    // Cambiado para aceptar UsuariosEntity (por campos)
+    public static FragmentPerfilUsuariosSuperadmin newInstance(com.example.proyecto_iot.SuperAdmin.database.UsuariosEntity usuario) {
         FragmentPerfilUsuariosSuperadmin fragment = new FragmentPerfilUsuariosSuperadmin();
         Bundle args = new Bundle();
-        args.putParcelable("usuario", usuario);
+        args.putString("dni", usuario.dni);
+        args.putString("nombre", usuario.nombre);
+        args.putString("numeroTelefono", usuario.numeroTelefono);
+        args.putString("imagenPerfil", usuario.imagenPerfil);
+        args.putString("correo", usuario.correo);
+        args.putString("direccion", usuario.direccion);
+        args.putString("fechaNacimiento", usuario.fechaNacimiento);
+        args.putString("rol", usuario.rol);
+        args.putInt("habitacionesRegistradas", usuario.habitacionesRegistradas);
+        args.putString("estadoCuenta", usuario.estadoCuenta);
+        args.putString("nivelCompletado", usuario.nivelCompletado);
+        args.putString("calificacion", usuario.calificacion);
         fragment.setArguments(args);
         return fragment;
     }
@@ -32,7 +45,18 @@ public class FragmentPerfilUsuariosSuperadmin extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            usuario = getArguments().getParcelable("usuario");
+            dni = getArguments().getString("dni");
+            nombre = getArguments().getString("nombre");
+            numeroTelefono = getArguments().getString("numeroTelefono");
+            imagenPerfil = getArguments().getString("imagenPerfil");
+            correo = getArguments().getString("correo");
+            direccion = getArguments().getString("direccion");
+            fechaNacimiento = getArguments().getString("fechaNacimiento");
+            rol = getArguments().getString("rol");
+            habitacionesRegistradas = getArguments().getInt("habitacionesRegistradas");
+            estadoCuenta = getArguments().getString("estadoCuenta");
+            nivelCompletado = getArguments().getString("nivelCompletado");
+            calificacion = getArguments().getString("calificacion");
         }
     }
 
@@ -44,9 +68,6 @@ public class FragmentPerfilUsuariosSuperadmin extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        if (usuario == null) return;
-
-        // Asignar datos al layout
         ImageView ivFoto = view.findViewById(R.id.ivFotoUsuario);
         TextView tvNombre = view.findViewById(R.id.tvNombreUsuario);
         TextView tvViajes = view.findViewById(R.id.tvViajes);
@@ -58,15 +79,15 @@ public class FragmentPerfilUsuariosSuperadmin extends Fragment {
         TextView tvHabitaciones = view.findViewById(R.id.tvHabitaciones);
         TextView tvEstado = view.findViewById(R.id.tvEstado);
 
-        Picasso.get().load(usuario.getImagenPerfil()).into(ivFoto);
-        tvNombre.setText(usuario.getNombre());
-        tvViajes.setText(usuario.getTotalViajes());
-        tvCalificacion.setText(usuario.getCalificacion());
-        tvDocumento.setText("✔ Documento de identidad: " + usuario.getDocumentoIdentidad());
-        tvCorreo.setText("✔ Correo electrónico: " + usuario.getCorreo());
-        tvTelefono.setText("✔ Teléfono: " + usuario.getNumeroTelefono());
-        tvDireccion.setText("✔ Dirección: " + usuario.getDireccion());
-        tvHabitaciones.setText("✔ Habitaciones registradas: " + usuario.getHabitacionesRegistradas());
-        tvEstado.setText("✔ Estado de cuenta: " + usuario.getEstadoCuenta());
+        Picasso.get().load(imagenPerfil).into(ivFoto);
+        tvNombre.setText(nombre);
+        tvViajes.setText(nivelCompletado); // usando campo `nivelCompletado` como "viajes"
+        tvCalificacion.setText(calificacion);
+        tvDocumento.setText("✔ Documento de identidad: " + dni);
+        tvCorreo.setText("✔ Correo electrónico: " + correo);
+        tvTelefono.setText("✔ Teléfono: " + numeroTelefono);
+        tvDireccion.setText("✔ Dirección: " + direccion);
+        tvHabitaciones.setText("✔ Habitaciones registradas: " + habitacionesRegistradas);
+        tvEstado.setText("✔ Estado de cuenta: " + estadoCuenta);
     }
 }

@@ -1,5 +1,9 @@
 package com.example.proyecto_iot.SuperAdmin.adapter;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +14,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.SuperAdmin.UsuariosDataStore;
-import com.example.proyecto_iot.SuperAdmin.domain.UsuariosDomain;
+import com.example.proyecto_iot.SuperAdmin.database.AppDatabase;
+import com.example.proyecto_iot.SuperAdmin.database.UsuariosEntity;
 import com.example.proyecto_iot.SuperAdmin.fragmentos.FragmentPerfilUsuariosSuperadmin;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.squareup.picasso.Picasso;
@@ -23,10 +31,25 @@ import java.util.List;
 
 public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHolder> {
 
-    private final List<UsuariosDomain> usuariosList;
+    private final List<UsuariosEntity> usuariosList;
+    private final Context context;
+    private final AppDatabase db;
+    public interface OnUsuarioActualizadoListener {
+        void onUsuarioActualizado();
+    }
 
-    public UsuariosAdapter(List<UsuariosDomain> usuariosList) {
+    private OnUsuarioActualizadoListener listener;
+
+    public void setOnUsuarioActualizadoListener(OnUsuarioActualizadoListener listener) {
+        this.listener = listener;
+    }
+
+    public UsuariosAdapter(List<UsuariosEntity> usuariosList, Context context) {
         this.usuariosList = usuariosList;
+        this.context = context;
+        this.db = Room.databaseBuilder(context, AppDatabase.class, "usuarios-db")
+                .allowMainThreadQueries() // para pruebas
+                .build();
     }
 
     @NonNull
@@ -39,27 +62,25 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        UsuariosDomain usuario = usuariosList.get(position);
+        UsuariosEntity usuario = usuariosList.get(position);
 
-        holder.nombre.setText(usuario.getNombre());
-        holder.numero.setText("Teléfono: " + usuario.getNumeroTelefono());
-        holder.ubicacion.setText("Dirección: " + usuario.getDireccion());
-        holder.hotel.setText("Habitaciones: " + usuario.getHabitacionesRegistradas());
-        holder.rol.setText("Rol: " + usuario.getRol());
-        holder.estado.setText("Estado cuenta: " + usuario.getEstadoCuenta());
+        holder.nombre.setText(usuario.nombre);
+        holder.numero.setText("Teléfono: " + usuario.numeroTelefono);
+        holder.ubicacion.setText("Dirección: " + usuario.direccion);
+        holder.hotel.setText("Habitaciones: " + usuario.habitacionesRegistradas);
+        holder.rol.setText("Rol: " + usuario.rol);
+        holder.estado.setText("Estado cuenta: " + usuario.estadoCuenta);
 
-        Picasso.get().load(usuario.getImagenPerfil()).into(holder.imagen);
+        Picasso.get().load(usuario.imagenPerfil).into(holder.imagen);
 
         holder.itemView.setOnClickListener(view -> {
             FragmentPerfilUsuariosSuperadmin fragment = FragmentPerfilUsuariosSuperadmin.newInstance(usuario);
-
             ((AppCompatActivity) view.getContext()).getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_layout, fragment)
                     .addToBackStack(null)
                     .commit();
         });
-
 
         holder.btnOpciones.setOnClickListener(v -> {
             BottomSheetDialog dialog = new BottomSheetDialog(v.getContext());
@@ -73,12 +94,11 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
             TextView btnEliminar = sheetView.findViewById(R.id.btnEliminar);
             TextView btnActivar = sheetView.findViewById(R.id.btnActivar);
 
-            tvNombre.setText(usuario.getNombre());
-            tvNumero.setText(usuario.getNumeroTelefono());
-            Picasso.get().load(usuario.getImagenPerfil()).into(ivFoto);
+            tvNombre.setText(usuario.nombre);
+            tvNumero.setText(usuario.numeroTelefono);
+            Picasso.get().load(usuario.imagenPerfil).into(ivFoto);
 
-            // Cambiar texto e ícono del botón según el estado del usuario
-            if (usuario.getEstadoCuenta().equalsIgnoreCase("activo")) {
+            if (usuario.estadoCuenta.equalsIgnoreCase("activo")) {
                 btnActivar.setText("Desactivar");
                 btnActivar.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_desactivo, 0, 0, 0);
             } else {
@@ -100,30 +120,31 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
                 dialog.dismiss();
                 int positionToRemove = holder.getAdapterPosition();
                 if (positionToRemove != RecyclerView.NO_POSITION) {
-                    UsuariosDataStore.usuariosList.remove(positionToRemove); // elimina del origen original
-                    usuariosList.remove(positionToRemove);                   // elimina del adapter
+                    db.usuariosDao().deleteByDni(usuario.dni);
+                    usuariosList.remove(positionToRemove);
                     notifyItemRemoved(positionToRemove);
                     notifyItemRangeChanged(positionToRemove, usuariosList.size());
-
+                    mostrarNotificacion("Se eliminó a " + usuario.nombre);
+                    Toast.makeText(v.getContext(), "Usuario eliminado", Toast.LENGTH_SHORT).show();
                 }
-
-                Toast.makeText(v.getContext(), "Usuario eliminado", Toast.LENGTH_SHORT).show();
-
             });
 
             btnActivar.setOnClickListener(view -> {
                 dialog.dismiss();
-                if (usuario.getEstadoCuenta().equalsIgnoreCase("activo")) {
-                    usuario.setEstadoCuenta("suspendido");
-                    Toast.makeText(v.getContext(), usuario.getNombre() + " desactivado", Toast.LENGTH_SHORT).show();
+                String nuevoEstado = usuario.estadoCuenta.equalsIgnoreCase("activo") ? "suspendido" : "activo";
+                usuario.estadoCuenta = nuevoEstado;
 
-                } else {
-                    usuario.setEstadoCuenta("activo");
-                    Toast.makeText(v.getContext(), usuario.getNombre() + " activado", Toast.LENGTH_SHORT).show();
-
-                }
+                db.usuariosDao().updateEstado(usuario.dni, nuevoEstado);
                 notifyItemChanged(holder.getAdapterPosition());
+
+                Toast.makeText(v.getContext(), usuario.nombre + " " + (nuevoEstado.equals("activo") ? "activado" : "desactivado"), Toast.LENGTH_SHORT).show();
+
+                // Notifica al fragmento para que se reaplique el filtro
+                if (listener != null) {
+                    listener.onUsuarioActualizado();
+                }
             });
+
 
             dialog.setContentView(sheetView);
             dialog.show();
@@ -144,25 +165,40 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
         TextView hotel;
         TextView rol;
         TextView estado;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imagen = itemView.findViewById(R.id.imagen_list_usuarios);  // asegúrate que este ID esté en item_usuarios_superadmin.xml
-            nombre = itemView.findViewById(R.id.nameAdministradores);         // idem
-            numero = itemView.findViewById(R.id.numberUsuario);              // idem
-            ubicacion=itemView.findViewById(R.id.ubicaUsuario);
-            hotel=itemView.findViewById(R.id.hotelUsuario);
-            rol=itemView.findViewById(R.id.rolUsuario);
-            estado=itemView.findViewById(R.id.estadoCuentaUsuario);
+            imagen = itemView.findViewById(R.id.imagen_list_usuarios);
+            nombre = itemView.findViewById(R.id.nameAdministradores);
+            numero = itemView.findViewById(R.id.numberUsuario);
+            ubicacion = itemView.findViewById(R.id.ubicaUsuario);
+            hotel = itemView.findViewById(R.id.hotelUsuario);
+            rol = itemView.findViewById(R.id.rolUsuario);
+            estado = itemView.findViewById(R.id.estadoCuentaUsuario);
             btnOpciones = itemView.findViewById(R.id.btnOpciones);
-
         }
     }
 
-    //Metodo que dijimos que se crea para el buscador
-    public void updateList(List<UsuariosDomain> nuevaLista) {
+    public void updateList(List<UsuariosEntity> nuevaLista) {
         usuariosList.clear();
         usuariosList.addAll(nuevaLista);
         notifyDataSetChanged();
     }
+
+    private void mostrarNotificacion(String mensaje) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "canal_usuarios")
+                    .setSmallIcon(R.drawable.icon_deleteadmin) // asegúrate de que el ícono exista
+                    .setContentTitle("Usuario eliminado")
+                    .setContentText(mensaje)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        }
+    }
+
 
 }

@@ -10,17 +10,27 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 //Para el buscador
+import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.SuperAdmin.UsuariosDataStore;
 import com.example.proyecto_iot.SuperAdmin.adapter.UsuariosAdapter;
+import com.example.proyecto_iot.SuperAdmin.database.UsuariosSeeder;
 import com.example.proyecto_iot.SuperAdmin.domain.AdministradoresDomain;
 import com.example.proyecto_iot.SuperAdmin.domain.UsuariosDomain;
 
 import java.util.List;
+
+import androidx.room.Room;
+import com.example.proyecto_iot.SuperAdmin.adapter.UsuariosAdapter;
+import com.example.proyecto_iot.SuperAdmin.database.AppDatabase;
+import com.example.proyecto_iot.SuperAdmin.database.UsuariosEntity;
+
 
 public class fragment_usuarios_superadmin extends Fragment {
 
@@ -32,7 +42,11 @@ public class fragment_usuarios_superadmin extends Fragment {
 
     private RecyclerView recyclerView;
     private UsuariosAdapter usuariosAdapter;
-    private List<UsuariosDomain> usuariosList = UsuariosDataStore.usuariosList;
+    private List<UsuariosEntity> usuariosList = new ArrayList<>();
+    private List<UsuariosEntity> usuariosFiltrados = new ArrayList<>();
+    private String filtroActual = "todos";  // Puede ser: "todos", "activos", "desactivos"
+
+
 
     public fragment_usuarios_superadmin() {
         // Required empty public constructor
@@ -64,14 +78,28 @@ public class fragment_usuarios_superadmin extends Fragment {
         // Referencias
         recyclerView = view.findViewById(R.id.rv_music);
         SearchView searchView = view.findViewById(R.id.searchViewUsuarios);
+        Button btnActivos = view.findViewById(R.id.FiltroActivos);
+        Button btnDesactivos = view.findViewById(R.id.FiltroDesactivos);
+        Button btnTodos = view.findViewById(R.id.FiltroTodos);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Inicializar adapter con copia mutable
-        usuariosAdapter = new UsuariosAdapter(new ArrayList<>(usuariosList));
+        UsuariosSeeder.insertarUsuariosPorDefecto(requireContext());
+
+        // Cargar desde Room
+        AppDatabase db = Room.databaseBuilder(requireContext(), AppDatabase.class, "usuarios-db")
+                .allowMainThreadQueries()
+                .build();
+
+        usuariosList = db.usuariosDao().getAll();
+        usuariosFiltrados = new ArrayList<>(usuariosList); // copia inicial que se usará en buscador
+        usuariosAdapter = new UsuariosAdapter(new ArrayList<>(usuariosFiltrados), requireContext());
+        usuariosAdapter.setOnUsuarioActualizadoListener(() -> aplicarFiltro(filtroActual));
+
+
         recyclerView.setAdapter(usuariosAdapter);
 
-        // Buscar
+        // Buscador
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -80,20 +108,123 @@ public class fragment_usuarios_superadmin extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                List<UsuariosDomain> filtrados = new ArrayList<>();
-                for (UsuariosDomain usuario : usuariosList) {
-                    if (usuario.getNombre().toLowerCase().contains(newText.toLowerCase())) {
-                        filtrados.add(usuario);
+                AppDatabase db = Room.databaseBuilder(requireContext(), AppDatabase.class, "usuarios-db")
+                        .allowMainThreadQueries()
+                        .build();
+                usuariosList = db.usuariosDao().getAll();
+
+                usuariosFiltrados.clear();
+                for (UsuariosEntity u : usuariosList) {
+                    switch (filtroActual) {
+                        case "todos":
+                            usuariosFiltrados.add(u);
+                            break;
+                        case "activos":
+                            if (u.estadoCuenta.equalsIgnoreCase("activo")) usuariosFiltrados.add(u);
+                            break;
+                        case "desactivos":
+                            if (u.estadoCuenta.equalsIgnoreCase("suspendido") || u.estadoCuenta.equalsIgnoreCase("desactivo")) usuariosFiltrados.add(u);
+                            break;
                     }
                 }
-                //Este es un metodo para UsuariosAdapter
-                usuariosAdapter.updateList(filtrados);
+
+                List<UsuariosEntity> filtradosPorTexto = new ArrayList<>();
+                for (UsuariosEntity usuario : usuariosFiltrados) {
+                    if (usuario.nombre.toLowerCase().contains(newText.toLowerCase())) {
+                        filtradosPorTexto.add(usuario);
+                    }
+                }
+
+                usuariosAdapter.updateList(filtradosPorTexto);
                 return true;
             }
         });
 
+
+
+        btnActivos.setOnClickListener(v -> {
+            filtroActual = "activos";
+            aplicarFiltro(filtroActual);
+            Toast.makeText(requireContext(), "Mostrando usuarios activos", Toast.LENGTH_SHORT).show();
+        });
+
+        btnDesactivos.setOnClickListener(v -> {
+            filtroActual = "desactivos";
+            aplicarFiltro(filtroActual);
+            Toast.makeText(requireContext(), "Mostrando usuarios desactivos", Toast.LENGTH_SHORT).show();
+        });
+
+        btnTodos.setOnClickListener(v -> {
+            filtroActual = "todos";
+            aplicarFiltro(filtroActual);
+            Toast.makeText(requireContext(), "Mostrando todos los usuarios", Toast.LENGTH_SHORT).show();
+        });
+
+
+
+
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        aplicarFiltro(filtroActual);
+
+        // Reaplicar el texto del SearchView si existía
+        SearchView searchView = requireView().findViewById(R.id.searchViewUsuarios);
+        String texto = searchView.getQuery().toString();
+        if (!texto.isEmpty()) {
+            List<UsuariosEntity> filtrados = new ArrayList<>();
+            for (UsuariosEntity usuario : usuariosFiltrados) {
+                if (usuario.nombre.toLowerCase().contains(texto.toLowerCase())) {
+                    filtrados.add(usuario);
+                }
+            }
+            usuariosAdapter.updateList(filtrados);
+        }
+    }
+
+    private void aplicarFiltro(String tipo) {
+        AppDatabase db = Room.databaseBuilder(requireContext(), AppDatabase.class, "usuarios-db")
+                .allowMainThreadQueries()
+                .build();
+        usuariosList = db.usuariosDao().getAll(); // actualiza la lista base
+
+        usuariosFiltrados.clear();
+
+        // 1. Aplica filtro de botón (estado)
+        for (UsuariosEntity u : usuariosList) {
+            switch (tipo) {
+                case "todos":
+                    usuariosFiltrados.add(u);
+                    break;
+                case "activos":
+                    if (u.estadoCuenta.equalsIgnoreCase("activo")) usuariosFiltrados.add(u);
+                    break;
+                case "desactivos":
+                    if (u.estadoCuenta.equalsIgnoreCase("suspendido") || u.estadoCuenta.equalsIgnoreCase("desactivo")) usuariosFiltrados.add(u);
+                    break;
+            }
+        }
+
+        // 2. Aplica filtro de texto si existe
+        SearchView searchView = requireView().findViewById(R.id.searchViewUsuarios);
+        String texto = searchView.getQuery().toString();
+        if (!texto.isEmpty()) {
+            List<UsuariosEntity> filtradosPorTexto = new ArrayList<>();
+            for (UsuariosEntity usuario : usuariosFiltrados) {
+                if (usuario.nombre.toLowerCase().contains(texto.toLowerCase())) {
+                    filtradosPorTexto.add(usuario);
+                }
+            }
+            usuariosAdapter.updateList(filtradosPorTexto);
+        } else {
+            usuariosAdapter.updateList(new ArrayList<>(usuariosFiltrados));
+        }
+    }
+
+
 
 //    Oncreate sin buscador
 //    @Override

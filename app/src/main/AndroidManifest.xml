@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
 
     <application
         android:allowBackup="true"
@@ -24,6 +26,9 @@
             android:name=".cliente.pago.PasarellaDePago"
             android:exported="false">
         </activity>
+        <activity android:name=".cliente.MapaTaxiActivity" />
+        <activity android:name=".cliente.MisReservasActivity" />
+
         <activity
             android:name=".taxista.qr.CustomCaptureActivity"
             android:exported="false" />
@@ -42,12 +47,8 @@
 
         <activity
             android:name=".cliente.busqueda.ClienteBusquedaActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".login.ForgotPasswordActivity"
@@ -81,7 +82,13 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".taxista.perfil.PerfilTaxistaActivity"
@@ -100,11 +107,7 @@
             android:name=".administradorHotel.PagPrincipalAdmin"
             android:exported="true">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
