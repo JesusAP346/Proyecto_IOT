@@ -1,8 +1,15 @@
 package com.example.proyecto_iot.SuperAdmin;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,6 +32,24 @@ public class PagPrincipalSuperAdmin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainSuperAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        //------------------------------------------------------
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "canal_usuarios",
+                    "Notificaciones de Usuarios",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
+
+        //---------------------------------------------------------
 
         // Fragmento por defecto
         replaceFragment(new fragment_home_superadmin());
