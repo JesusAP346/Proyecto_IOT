@@ -72,20 +72,20 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         holder.btnAceptar.setOnClickListener(v -> {
             Context context = v.getContext();
 
-            // Crear canal si no existe (Android 8+)
+            // Crear canal de notificación si no existe (Android 8+)
             crearCanalNotificacion(context);
 
-            // Mensaje de notificación
+            // Crear mensaje para la notificación
             String mensaje = "Has aceptado la solicitud de " + solicitud.nombre;
 
             // Lanzar notificación local
             lanzarNotificacion(context, mensaje);
 
-            // Guardar notificación en almacenamiento interno
+            // Guardar la notificación en almacenamiento interno
             Notificacion notificacion = new Notificacion(
                     mensaje,
                     obtenerHoraActual(),
-                    R.drawable.ic_taxi  // Ícono para la notificación, ajusta si quieres
+                    R.drawable.ic_taxi  // Ajusta al ícono que tengas
             );
             guardarNotificacionEnStorage(context, notificacion);
 
@@ -95,7 +95,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         });
 
         holder.btnRechazar.setOnClickListener(v -> {
-            // lógica rechazar (implementa si quieres)
+            // Implementa lógica para rechazar si quieres
         });
     }
 
@@ -126,7 +126,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         }
     }
 
-    // Métodos para notificación:
+    // Métodos para notificaciones
 
     private void crearCanalNotificacion(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -189,7 +189,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
             Type listType = new TypeToken<List<Notificacion>>() {}.getType();
             lista = new Gson().fromJson(sb.toString(), listType);
         } catch (Exception e) {
-            // archivo puede no existir la primera vez, ignora
+            // Ignora si el archivo no existe o está vacío la primera vez
         }
         return lista;
     }
