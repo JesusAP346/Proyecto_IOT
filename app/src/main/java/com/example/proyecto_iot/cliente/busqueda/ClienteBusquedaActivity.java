@@ -1,14 +1,26 @@
 package com.example.proyecto_iot.cliente.busqueda;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+//import com.example.proyecto_iot.Manifest;
+import android.Manifest;
 
 import com.example.proyecto_iot.R;
 //import com.example.proyecto_iot.administradorHotel.fragmentos.ReservasFragment;
@@ -25,9 +37,15 @@ public class ClienteBusquedaActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        ///super.onCreate(savedInstanceState);
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cliente_busqueda);
+        //setContentView(R.layout.activity_solicitud_taxi);
+
+        crearCanalNotificacion();
 
         boolean mostrarReservas = getIntent().getBooleanExtra("mostrar_reservas", false);
 
@@ -93,4 +111,46 @@ public class ClienteBusquedaActivity extends AppCompatActivity {
         });
 
     }
+
+
+    private static final String CHANNEL_ID = "canal_reservas";
+
+    private void crearCanalNotificacion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Canal Reservas";
+            String description = "Canal para notificaciones de reservas y taxi";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void mostrarNotificacion() {
+        // Solicitar permiso para Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+                return; // Espera a que el usuario conceda permiso
+            }
+        }
+
+        Intent intent = new Intent(this, ClienteBusquedaActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_chat_notification) // Cambia por tu ícono
+                .setContentTitle("Reserva Confirmada")
+                .setContentText("Tu solicitud de taxi fue registrada correctamente.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(1001, builder.build());
+    }
+
+
 }
