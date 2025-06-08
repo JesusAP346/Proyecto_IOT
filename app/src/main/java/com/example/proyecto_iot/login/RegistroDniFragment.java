@@ -13,6 +13,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
 import com.example.proyecto_iot.R;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,29 +67,17 @@ public class RegistroDniFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_registro_dni, container, false);
+        View view = inflater.inflate(R.layout.fragment_registro_dni, container, false);
 
-        Button botonRegresar = view.findViewById(R.id.botonRegresar);
-        botonRegresar.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                getParentFragmentManager().popBackStack();
-            }
-        });
-        Button botonSiguiente = view.findViewById(R.id.botonSiguiente);
-        botonSiguiente.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                RegisterBirthdateFragment registerBirthdateFragment = new RegisterBirthdateFragment();
-
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, registerBirthdateFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
-
+        // Referencias a los elementos del layout
         AutoCompleteTextView autoCompleteTextView = view.findViewById(R.id.autoCompleteTextView2);
+        TextInputLayout inputTipoDoc = view.findViewById(R.id.inputTipoDoc);
+        TextInputEditText etDocumento = view.findViewById(R.id.textInputLayout3).findViewById(R.id.etDocumento);
+        TextInputLayout layoutDocumento = view.findViewById(R.id.textInputLayout3);
+        Button botonSiguiente = view.findViewById(R.id.botonSiguiente);
+        Button botonRegresar = view.findViewById(R.id.botonRegresar);
+
+        // Configurar adapter para el dropdown
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.tipo_documento_array,
@@ -95,6 +85,54 @@ public class RegistroDniFragment extends Fragment {
         );
         autoCompleteTextView.setAdapter(adapter);
 
+        // Botón regresar
+        botonRegresar.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                getParentFragmentManager().popBackStack();
+            }
+        });
+
+        // Botón siguiente con validaciones
+        botonSiguiente.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                // Obtener valores
+                String tipoDocumento = autoCompleteTextView.getText().toString().trim();
+                String documento = etDocumento.getText() != null ? etDocumento.getText().toString().trim() : "";
+
+                boolean isValid = true;
+
+                // Validar tipo de documento
+                if (tipoDocumento.isEmpty()) {
+                    inputTipoDoc.setError("Debe seleccionar un tipo de documento");
+                    isValid = false;
+                } else {
+                    inputTipoDoc.setError(null);
+                }
+
+                // Validar documento
+                if (documento.isEmpty()) {
+                    layoutDocumento.setError("Este campo es obligatorio");
+                    isValid = false;
+                } else if (!documento.matches("\\d+")) {
+                    layoutDocumento.setError("Solo se permiten números");
+                    isValid = false;
+                } else {
+                    layoutDocumento.setError(null);
+                }
+
+                // Si todas las validaciones pasan, continuar al siguiente fragmento
+                if (isValid) {
+                    RegisterBirthdateFragment registerBirthdateFragment = new RegisterBirthdateFragment();
+
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, registerBirthdateFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            }
+        });
 
         return view;
     }

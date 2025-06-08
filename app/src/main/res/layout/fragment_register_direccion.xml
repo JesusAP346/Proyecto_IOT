@@ -8,28 +8,33 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="0dp"
+        android:layout_marginEnd="12dp"
         android:text="@string/lbl_donde_vives"
         android:textColor="@color/white"
         android:textSize="28sp"
+        android:gravity="start"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView9"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
         android:text="@string/lbl_selecciona_dep"
         android:textColor="@color/white"
         android:textSize="18sp"
+        android:gravity="start"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView" />
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/idDepartamento"
@@ -38,6 +43,8 @@
         android:textColorHint="@color/white"
         android:layout_height="60dp"
         android:layout_marginTop="12dp"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/ErrorTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9">
@@ -54,18 +61,18 @@
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
-
     <TextView
         android:id="@+id/uwu"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
         android:text="@string/lbl_selecciona_prov"
         android:textColor="@color/white"
         android:textSize="18sp"
+        android:gravity="start"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.075"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idDepartamento" />
 
@@ -76,6 +83,8 @@
         android:textColorHint="@color/white"
         android:layout_height="60dp"
         android:layout_marginTop="12dp"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/ErrorTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uwu">
@@ -94,15 +103,16 @@
 
     <TextView
         android:id="@+id/uwuw2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
         android:text="@string/lbl_selecciona_dist"
         android:textColor="@color/white"
         android:textSize="18sp"
+        android:gravity="start"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.01"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idProvincia" />
 
@@ -113,6 +123,8 @@
         android:layout_height="60dp"
         android:textColorHint="@color/white"
         android:layout_marginTop="12dp"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/ErrorTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uwuw2">
@@ -131,15 +143,16 @@
 
     <TextView
         android:id="@+id/uwuw22"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
         android:text="@string/lbl_direccion"
         android:textColor="@color/white"
         android:textSize="18sp"
+        android:gravity="start"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/distrito" />
 
@@ -151,44 +164,52 @@
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/ErrorTextStyle"
         app:layout_constraintTop_toBottomOf="@+id/uwuw22">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/direccionEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_input_rounded_register"
-            android:clickable="true"
-            android:focusable="false"
             android:hint="@string/hint_direccion"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:inputType="textPostalAddress"
+            android:maxLines="2" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/botonSiguiente"
-        android:layout_width="148dp"
-        android:layout_height="60dp"
+    <!-- Container para centrar los botones -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:backgroundTint="#5C5524"
-        android:text="@string/btn_siguiente"
-        app:cornerRadius="20dp"
+        android:orientation="horizontal"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/direccion" />
+        app:layout_constraintTop_toBottomOf="@+id/direccion">
 
-    <Button
-        android:id="@+id/botonRegresar"
-        android:layout_width="148dp"
-        android:layout_height="60dp"
-        android:backgroundTint="#312F19"
-        android:layout_marginTop="24dp"
-        android:text="@string/btn_regresar"
-        app:cornerRadius="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/botonSiguiente"
-        app:layout_constraintTop_toBottomOf="@+id/direccion" />
+        <Button
+            android:id="@+id/botonSiguiente"
+            android:layout_width="148dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#5C5524"
+            android:text="@string/btn_siguiente"
+            app:cornerRadius="20dp" />
 
+        <Button
+            android:id="@+id/botonRegresar"
+            android:layout_width="148dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#312F19"
+            android:text="@string/btn_regresar"
+            app:cornerRadius="20dp" />
 
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

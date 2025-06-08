@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="16dp"
         android:text="@string/lbl_cuando_naciste"
         android:textColor="@color/white"
         android:textSize="28sp"
@@ -30,18 +30,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView" />
 
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/fechaNac"
         style="@style/CustomTextInputRegister"
         android:layout_width="322dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/ErrorTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFechaNacimiento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_input_rounded_register"
@@ -57,11 +59,12 @@
         android:layout_width="148dp"
         android:layout_height="60dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="6dp"
         android:backgroundTint="#5C5524"
         android:text="@string/btn_siguiente"
         app:cornerRadius="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
+        app:layout_constraintEnd_toStartOf="@+id/botonRegresar"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fechaNac" />
 
@@ -70,11 +73,12 @@
         android:layout_width="148dp"
         android:layout_marginTop="24dp"
         android:layout_height="60dp"
+        android:layout_marginStart="6dp"
         android:backgroundTint="#312F19"
         android:text="@string/btn_regresar"
         app:cornerRadius="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/botonSiguiente"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fechaNac" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,16 +8,18 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="0dp"
+        android:layout_marginEnd="12dp"
         android:text="@string/lbl_sube_foto"
         android:textColor="@color/white"
         android:textSize="28sp"
+        android:gravity="start"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <FrameLayout
         android:id="@+id/fotoContainer"
@@ -58,31 +60,36 @@
         app:layout_constraintEnd_toEndOf="@+id/fotoContainer"
         app:layout_constraintStart_toStartOf="@+id/fotoContainer" />
 
-    <Button
-        android:id="@+id/botonSiguiente"
-        android:layout_width="148dp"
-        android:layout_height="60dp"
+    <!-- Container para centrar los botones -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:backgroundTint="#5C5524"
-        android:text="@string/btn_siguiente"
-        app:cornerRadius="20dp"
+        android:orientation="horizontal"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.155"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fotoContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/fotoContainer">
 
-    <Button
-        android:id="@+id/botonRegresar"
-        android:layout_width="148dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="#312F19"
-        android:text="@string/btn_regresar"
-        app:cornerRadius="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toEndOf="@+id/botonSiguiente"
-        app:layout_constraintTop_toBottomOf="@+id/fotoContainer" />
+        <Button
+            android:id="@+id/botonSiguiente"
+            android:layout_width="148dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#5C5524"
+            android:text="@string/btn_siguiente"
+            app:cornerRadius="20dp" />
 
+        <Button
+            android:id="@+id/botonRegresar"
+            android:layout_width="148dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#312F19"
+            android:text="@string/btn_regresar"
+            app:cornerRadius="20dp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

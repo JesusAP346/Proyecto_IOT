@@ -8,9 +8,7 @@
     android:fillViewport="true"
     android:background="#A28858"
     tools:context=".login.RegistroActivity">
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,13 +17,13 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
+            android:layout_width="173dp"
+            android:layout_height="168dp"
             android:layout_marginTop="45dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_hotel_solid" />
+            app:srcCompat="@drawable/hotelevago_foreground" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
@@ -41,16 +39,16 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="30dp" />
 
+
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="350dp"
             android:layout_height="0dp"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toStartOf="@id/guideline5"
-            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintHorizontal_bias="0.529"
             app:layout_constraintStart_toStartOf="@id/guideline4"
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
 
         <TextView
             android:id="@+id/ya_tengo_cuenta_txt"

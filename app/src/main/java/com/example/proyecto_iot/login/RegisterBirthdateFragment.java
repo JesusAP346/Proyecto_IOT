@@ -15,7 +15,11 @@ import com.example.proyecto_iot.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,28 +73,55 @@ public class RegisterBirthdateFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register_birthdate, container, false);
+
+        // Referencias a los elementos
+        TextInputLayout inputLayout = view.findViewById(R.id.fechaNac);
+        TextInputEditText editTextFecha = (TextInputEditText) inputLayout.getEditText();
+        Button botonSiguiente = view.findViewById(R.id.botonSiguiente);
         Button botonRegresar = view.findViewById(R.id.botonRegresar);
+
+        // Botón regresar
         botonRegresar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 getParentFragmentManager().popBackStack();
             }
         });
-        Button botonSiguiente = view.findViewById(R.id.botonSiguiente);
+
+        // Botón siguiente con validaciones
         botonSiguiente.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                RegisterContactFragment registerContactFragment = new RegisterContactFragment();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, registerContactFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                String fechaNacimiento = editTextFecha.getText() != null ? editTextFecha.getText().toString().trim() : "";
+
+                boolean isValid = true;
+
+                // Validar que no esté vacío
+                if (fechaNacimiento.isEmpty()) {
+                    inputLayout.setError("Debe seleccionar una fecha de nacimiento");
+                    isValid = false;
+                } else {
+                    // Validar que sea mayor de 13 años
+                    if (!esMayorDe13Anos(fechaNacimiento)) {
+                        inputLayout.setError("Debe ser mayor de 13 años");
+                        isValid = false;
+                    } else {
+                        inputLayout.setError(null);
+                    }
+                }
+
+                // Si la validación pasa, continuar al siguiente fragmento
+                if (isValid) {
+                    RegisterContactFragment registerContactFragment = new RegisterContactFragment();
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, registerContactFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
             }
         });
 
-        TextInputLayout inputLayout = view.findViewById(R.id.fechaNac);
-        TextInputEditText editTextFecha = (TextInputEditText) inputLayout.getEditText();
-
+        // Configurar DatePicker
         if (editTextFecha != null) {
             editTextFecha.setOnClickListener(v -> {
                 final Calendar calendario = Calendar.getInstance();
@@ -104,13 +135,52 @@ public class RegisterBirthdateFragment extends Fragment {
                             // Formato: DD/MM/AAAA
                             String fechaSeleccionada = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year);
                             editTextFecha.setText(fechaSeleccionada);
+                            // Limpiar error cuando se selecciona una fecha
+                            inputLayout.setError(null);
                         },
                         año, mes, dia
                 );
+
+                // Establecer fecha máxima (hoy) para evitar fechas futuras
+                selectorFecha.getDatePicker().setMaxDate(System.currentTimeMillis());
+
                 selectorFecha.show();
             });
         }
 
         return view;
+    }
+
+    /**
+     * Método para validar si la persona es mayor de 13 años
+     * @param fechaNacimiento fecha en formato DD/MM/AAAA
+     * @return true si es mayor de 13 años, false en caso contrario
+     */
+    private boolean esMayorDe13Anos(String fechaNacimiento) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date fechaNac = sdf.parse(fechaNacimiento);
+
+            if (fechaNac == null) return false;
+
+            Calendar fechaNacimiento_cal = Calendar.getInstance();
+            fechaNacimiento_cal.setTime(fechaNac);
+
+            Calendar fechaActual = Calendar.getInstance();
+
+            // Calcular la edad
+            int edad = fechaActual.get(Calendar.YEAR) - fechaNacimiento_cal.get(Calendar.YEAR);
+
+            // Ajustar si aún no ha cumplido años este año
+            if (fechaActual.get(Calendar.DAY_OF_YEAR) < fechaNacimiento_cal.get(Calendar.DAY_OF_YEAR)) {
+                edad--;
+            }
+
+            return edad >= 13;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

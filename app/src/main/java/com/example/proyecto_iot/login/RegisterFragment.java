@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.proyecto_iot.R;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,14 +68,48 @@ public class RegisterFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         Button botonSiguiente = view.findViewById(R.id.botonSiguiente);
+        TextInputEditText etNombres = view.findViewById(R.id.etNombres);
+        TextInputEditText etApellidos = view.findViewById(R.id.etApellidos);
+        TextInputLayout layoutNombres = view.findViewById(R.id.textInputLayout2);
+        TextInputLayout layoutApellidos = view.findViewById(R.id.textInputLayoutApellidos);
+
         botonSiguiente.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                RegistroDniFragment registroDniFragment = new RegistroDniFragment();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, registroDniFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                String nombres = etNombres.getText() != null ? etNombres.getText().toString().trim() : "";
+                String apellidos = etApellidos.getText() != null ? etApellidos.getText().toString().trim() : "";
+
+                String regex = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$";
+
+                boolean isValid = true;
+
+                if (nombres.isEmpty()) {
+                    layoutNombres.setError("Este campo es obligatorio");
+                    isValid = false;
+                } else if (!nombres.matches(regex)) {
+                    layoutNombres.setError("Solo se permiten letras y espacios");
+                    isValid = false;
+                } else {
+                    layoutNombres.setError(null);
+                }
+
+                if (apellidos.isEmpty()) {
+                    layoutApellidos.setError("Este campo es obligatorio");
+                    isValid = false;
+                } else if (!apellidos.matches(regex)) {
+                    layoutApellidos.setError("Solo se permiten letras y espacios");
+                    isValid = false;
+                } else {
+                    layoutApellidos.setError(null);
+                }
+
+                if (isValid) {
+                    RegistroDniFragment registroDniFragment = new RegistroDniFragment();
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, registroDniFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
             }
         });
 
