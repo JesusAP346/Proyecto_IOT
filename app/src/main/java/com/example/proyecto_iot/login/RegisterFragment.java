@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,7 @@ public class RegisterFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         Button botonSiguiente = view.findViewById(R.id.botonSiguiente);
+        UsuarioClienteViewModel viewModel = new ViewModelProvider(requireActivity()).get(UsuarioClienteViewModel.class);
         TextInputEditText etNombres = view.findViewById(R.id.etNombres);
         TextInputEditText etApellidos = view.findViewById(R.id.etApellidos);
         TextInputLayout layoutNombres = view.findViewById(R.id.textInputLayout2);
@@ -104,6 +106,8 @@ public class RegisterFragment extends Fragment {
                 }
 
                 if (isValid) {
+                    viewModel.actualizarCampo("nombres", nombres);
+                    viewModel.actualizarCampo("apellidos", apellidos);
                     RegistroDniFragment registroDniFragment = new RegistroDniFragment();
                     FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, registroDniFragment);

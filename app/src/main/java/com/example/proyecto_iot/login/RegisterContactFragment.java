@@ -5,6 +5,7 @@ import android.util.Patterns;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +76,9 @@ public class RegisterContactFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register_contact, container, false);
 
+        UsuarioClienteViewModel viewModel = new ViewModelProvider(requireActivity()).get(UsuarioClienteViewModel.class);
+
+
         // Inicializar referencias a los campos
         numeroCelularLayout = view.findViewById(R.id.numeroCelular);
         emailLayout = view.findViewById(R.id.email);
@@ -94,6 +98,13 @@ public class RegisterContactFragment extends Fragment {
             @Override
             public void onClick(View v){
                 if (validarCampos()) {
+
+                    String numeroCelular = numeroCelularEditText.getText().toString().trim();
+                    String email = emailEditText.getText().toString().trim();
+
+                    viewModel.actualizarCampo("numCelular", numeroCelular);
+                    viewModel.actualizarCampo("email", email);
+
                     RegisterDireccionFragment registerDireccionFragment = new RegisterDireccionFragment();
                     FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, registerDireccionFragment);

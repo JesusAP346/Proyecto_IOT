@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,8 @@ public class RegisterBirthdateFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register_birthdate, container, false);
 
+        UsuarioClienteViewModel viewModel = new ViewModelProvider(requireActivity()).get(UsuarioClienteViewModel.class);
+
         // Referencias a los elementos
         TextInputLayout inputLayout = view.findViewById(R.id.fechaNac);
         TextInputEditText editTextFecha = (TextInputEditText) inputLayout.getEditText();
@@ -112,6 +115,7 @@ public class RegisterBirthdateFragment extends Fragment {
 
                 // Si la validación pasa, continuar al siguiente fragmento
                 if (isValid) {
+                    viewModel.actualizarCampo("fechaNacimiento", fechaNacimiento);
                     RegisterContactFragment registerContactFragment = new RegisterContactFragment();
                     FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, registerContactFragment);

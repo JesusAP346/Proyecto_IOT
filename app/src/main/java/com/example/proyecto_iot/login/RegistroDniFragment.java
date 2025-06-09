@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,8 @@ public class RegistroDniFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_registro_dni, container, false);
 
+        UsuarioClienteViewModel viewModel = new ViewModelProvider(requireActivity()).get(UsuarioClienteViewModel.class);
+
         // Referencias a los elementos del layout
         AutoCompleteTextView autoCompleteTextView = view.findViewById(R.id.autoCompleteTextView2);
         TextInputLayout inputTipoDoc = view.findViewById(R.id.inputTipoDoc);
@@ -125,6 +128,9 @@ public class RegistroDniFragment extends Fragment {
                 // Si todas las validaciones pasan, continuar al siguiente fragmento
                 if (isValid) {
                     RegisterBirthdateFragment registerBirthdateFragment = new RegisterBirthdateFragment();
+
+                    viewModel.actualizarCampo("tipoDocumento", tipoDocumento);
+                    viewModel.actualizarCampo("numDocumento", documento);
 
                     FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, registerBirthdateFragment);

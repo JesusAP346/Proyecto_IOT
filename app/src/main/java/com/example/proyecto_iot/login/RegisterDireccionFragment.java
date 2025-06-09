@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.models.Departamento;
@@ -372,6 +373,9 @@ public class RegisterDireccionFragment extends Fragment {
     }
 
     private void setupButtons(View view) {
+        UsuarioClienteViewModel viewModel = new ViewModelProvider(requireActivity()).get(UsuarioClienteViewModel.class);
+
+
         Button botonRegresar = view.findViewById(R.id.botonRegresar);
         botonRegresar.setOnClickListener(v -> getParentFragmentManager().popBackStack());
 
@@ -388,6 +392,17 @@ public class RegisterDireccionFragment extends Fragment {
                 bundle.putString("distrito_id", distritoSeleccionado.getId());
                 bundle.putString("distrito_nombre", distritoSeleccionado.getNombre());
                 bundle.putString("direccion", direccionEditText.getText().toString().trim());
+
+                String direccionText = direccionEditText.getText().toString().trim();
+                String departamento = dropdownDepartamento.getText().toString().trim();
+                String provincia = dropdownProvincia.getText().toString().trim();
+                String distrito = dropdownDistrito.getText().toString().trim();
+
+
+                viewModel.actualizarCampo("direccion", direccionText);
+                viewModel.actualizarCampo("departamento", departamento);
+                viewModel.actualizarCampo("provincia", provincia);
+                viewModel.actualizarCampo("distrito", distrito);
 
                 RegisterFotoFragment registerFotoFragment = new RegisterFotoFragment();
                 registerFotoFragment.setArguments(bundle);
