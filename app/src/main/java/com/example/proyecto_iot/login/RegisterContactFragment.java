@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.example.proyecto_iot.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,25 +96,56 @@ public class RegisterContactFragment extends Fragment {
         });
 
         Button botonSiguiente = view.findViewById(R.id.botonSiguiente);
-        botonSiguiente.setOnClickListener(new View.OnClickListener(){
+        botonSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 if (validarCampos()) {
-
                     String numeroCelular = numeroCelularEditText.getText().toString().trim();
                     String email = emailEditText.getText().toString().trim();
 
-                    viewModel.actualizarCampo("numCelular", numeroCelular);
-                    viewModel.actualizarCampo("email", email);
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    CollectionReference usuariosRef = db.collection("usuarios");
 
-                    RegisterDireccionFragment registerDireccionFragment = new RegisterDireccionFragment();
-                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, registerDireccionFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    usuariosRef
+                            .whereEqualTo("email", email)
+                            .get()
+                            .addOnSuccessListener(querySnapshot1 -> {
+                                if (!querySnapshot1.isEmpty()) {
+                                    emailLayout.setError("Este correo ya está registrado");
+                                    return;
+                                }
+
+                                usuariosRef
+                                        .whereEqualTo("numCelular", numeroCelular)
+                                        .get()
+                                        .addOnSuccessListener(querySnapshot2 -> {
+                                            if (!querySnapshot2.isEmpty()) {
+                                                numeroCelularLayout.setError("Este número ya está registrado");
+                                                return;
+                                            }
+
+
+                                            viewModel.actualizarCampo("numCelular", numeroCelular);
+                                            viewModel.actualizarCampo("email", email);
+
+                                            RegisterDireccionFragment registerDireccionFragment = new RegisterDireccionFragment();
+                                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                                            transaction.replace(R.id.fragment_container, registerDireccionFragment);
+                                            transaction.addToBackStack(null);
+                                            transaction.commit();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(getContext(), "Error al validar número: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        });
+
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getContext(), "Error al validar email: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
                 }
             }
         });
+
 
         return view;
     }
