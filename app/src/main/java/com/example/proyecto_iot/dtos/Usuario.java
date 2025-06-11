@@ -31,10 +31,18 @@ public class Usuario {
     public String urlFotoAuto;
     public double ubicacionLat;
     public double ubicacionLng;
+    public String estadoSolicitudTaxista;
 
     public boolean tarjetaRegistrada;
 
     // Getters y Setters
+    public String getEstadoSolicitudTaxista() {
+        return estadoSolicitudTaxista;
+    }
+    
+    public void setEstadoSolicitudTaxista(String estadoSolicitudTaxista) {
+        this.estadoSolicitudTaxista = estadoSolicitudTaxista;
+    }
 
     public String getId() {
         return id;
