@@ -22,6 +22,17 @@
             app:shapeAppearanceOverlay="@style/CircleImageView"
             app:strokeWidth="2dp"
             android:elevation="6dp" />
+        <TextView
+            android:id="@+id/tvErrorImagen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selecciona una imagen"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="12sp"
+            android:fontFamily="@font/nunito_black"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"/>
+
 
         <!-- Título -->
         <TextView
@@ -33,14 +44,18 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-        <!-- Campos de texto -->
+        <!-- Nombres -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Nombre completo"
+            android:hint="Nombres"
             app:boxBackgroundMode="outline"
-            app:hintTextAppearance="@style/HintSuperadmin">
+            app:hintTextAppearance="@style/HintSuperadmin"
+            app:errorEnabled="false"
+            app:boxStrokeErrorColor="@color/error_red"
+            app:errorTextAppearance="@style/ErrorAppearance">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etNombre"
@@ -51,16 +66,21 @@
                 android:textSize="15sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Apellidos -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutApellidos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Número de teléfono"
+            android:hint="Apellidos"
             app:boxBackgroundMode="outline"
-            app:hintTextAppearance="@style/HintSuperadmin">
+            app:hintTextAppearance="@style/HintSuperadmin"
+            app:errorEnabled="false"
+            app:boxStrokeErrorColor="@color/error_red"
+            app:errorTextAppearance="@style/ErrorAppearance">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etNumero"
+                android:id="@+id/etApellidos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
@@ -68,13 +88,41 @@
                 android:textSize="15sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Número de teléfono -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutNumero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Número de teléfono"
+            app:boxBackgroundMode="outline"
+            app:hintTextAppearance="@style/HintSuperadmin"
+            app:errorEnabled="false"
+            app:boxStrokeErrorColor="@color/error_red"
+            app:errorTextAppearance="@style/ErrorAppearance">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNumero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:enabled="false"
+                android:fontFamily="@font/nunito_black"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Correo electrónico -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutCorreo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Correo electrónico"
             app:boxBackgroundMode="outline"
-            app:hintTextAppearance="@style/HintSuperadmin">
+            app:hintTextAppearance="@style/HintSuperadmin"
+            app:errorEnabled="false"
+            app:boxStrokeErrorColor="@color/error_red"
+            app:errorTextAppearance="@style/ErrorAppearance">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etCorreo"
@@ -85,13 +133,18 @@
                 android:textSize="15sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Dirección -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutDireccion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Dirección"
             app:boxBackgroundMode="outline"
-            app:hintTextAppearance="@style/HintSuperadmin">
+            app:hintTextAppearance="@style/HintSuperadmin"
+            app:errorEnabled="false"
+            app:boxStrokeErrorColor="@color/error_red"
+            app:errorTextAppearance="@style/ErrorAppearance">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etDireccion"
@@ -102,36 +155,26 @@
                 android:textSize="15sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Fecha de nacimiento -->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutFechaNacimiento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Fecha de nacimiento"
             app:boxBackgroundMode="outline"
-            app:hintTextAppearance="@style/HintSuperadmin">
+            app:hintTextAppearance="@style/HintSuperadmin"
+            app:errorEnabled="false"
+            app:boxStrokeErrorColor="@color/error_red"
+            app:errorTextAppearance="@style/ErrorAppearance">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etFechaNacimiento"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
-                android:fontFamily="@font/nunito_black"
-                android:textSize="15sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Rol"
-            app:boxBackgroundMode="outline"
-            app:hintTextAppearance="@style/HintSuperadmin">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etRol"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="false"
+                android:focusable="false"
+                android:inputType="none"
                 android:fontFamily="@font/nunito_black"
                 android:textSize="15sp" />
         </com.google.android.material.textfield.TextInputLayout>
