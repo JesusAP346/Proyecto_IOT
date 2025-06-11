@@ -1,28 +1,40 @@
 package com.example.proyecto_iot.dtos;
 
+
 public class Usuario {
-    private String id;
-    private String nombres;
-    private String apellidos;
-    private String tipoDocumento;
-    private String numDocumento;
-    private String fechaNacimiento;
-    private String numCelular;
-    private String email;
-    private String departamento;
-    private String provincia;
-    private String distrito;
-    private String direccion;
-    private String password;
-    private String rol;
+    public String id;
+    public String idRol;
 
-    public String getRol() {
-        return rol;
-    }
+    public String nombres;
+    public String apellidos;
+    public String tipoDocumento;
+    public String numDocumento;
+    public String fechaNacimiento;
+    public String numCelular;
+    public String email;
+    public String departamento;
+    public String provincia;
+    public String distrito;
+    public String direccion;
+    public String password;
+    public String urlFotoPerfil;
 
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
+    public boolean estadoCuenta;
+    public String fechaRegistro;
+
+    public String ultimaActualizacion;
+    public String actualizadoPor;
+
+    public String idHotel;
+
+    public String placaAuto;
+    public String urlFotoAuto;
+    public double ubicacionLat;
+    public double ubicacionLng;
+
+    public boolean tarjetaRegistrada;
+
+    // Getters y Setters
 
     public String getId() {
         return id;
@@ -30,6 +42,14 @@ public class Usuario {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(String idRol) {
+        this.idRol = idRol;
     }
 
     public String getNombres() {
@@ -127,4 +147,93 @@ public class Usuario {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getUrlFotoPerfil() {
+        return urlFotoPerfil;
+    }
+
+    public void setUrlFotoPerfil(String urlFotoPerfil) {
+        this.urlFotoPerfil = urlFotoPerfil;
+    }
+
+    public boolean isEstadoCuenta() {
+        return estadoCuenta;
+    }
+
+    public void setEstadoCuenta(boolean estadoCuenta) {
+        this.estadoCuenta = estadoCuenta;
+    }
+
+    public String getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(String fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public String getUltimaActualizacion() {
+        return ultimaActualizacion;
+    }
+
+    public void setUltimaActualizacion(String ultimaActualizacion) {
+        this.ultimaActualizacion = ultimaActualizacion;
+    }
+
+    public String getActualizadoPor() {
+        return actualizadoPor;
+    }
+
+    public void setActualizadoPor(String actualizadoPor) {
+        this.actualizadoPor = actualizadoPor;
+    }
+
+    public String getIdHotel() {
+        return idHotel;
+    }
+
+    public void setIdHotel(String idHotel) {
+        this.idHotel = idHotel;
+    }
+
+    public String getPlacaAuto() {
+        return placaAuto;
+    }
+
+    public void setPlacaAuto(String placaAuto) {
+        this.placaAuto = placaAuto;
+    }
+
+    public String getUrlFotoAuto() {
+        return urlFotoAuto;
+    }
+
+    public void setUrlFotoAuto(String urlFotoAuto) {
+        this.urlFotoAuto = urlFotoAuto;
+    }
+
+    public double getUbicacionLat() {
+        return ubicacionLat;
+    }
+
+    public void setUbicacionLat(double ubicacionLat) {
+        this.ubicacionLat = ubicacionLat;
+    }
+
+    public double getUbicacionLng() {
+        return ubicacionLng;
+    }
+
+    public void setUbicacionLng(double ubicacionLng) {
+        this.ubicacionLng = ubicacionLng;
+    }
+
+    public boolean isTarjetaRegistrada() {
+        return tarjetaRegistrada;
+    }
+
+    public void setTarjetaRegistrada(boolean tarjetaRegistrada) {
+        this.tarjetaRegistrada = tarjetaRegistrada;
+    }
 }
+
