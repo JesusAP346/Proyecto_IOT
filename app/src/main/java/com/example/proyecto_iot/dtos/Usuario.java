@@ -1,6 +1,6 @@
 package com.example.proyecto_iot.dtos;
 
-public class UsuarioCliente {
+public class Usuario {
     private String id;
     private String nombres;
     private String apellidos;

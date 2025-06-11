@@ -13,13 +13,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.dtos.UsuarioCliente;
+import com.example.proyecto_iot.dtos.Usuario;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.MessageDigest;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -112,12 +111,12 @@ public class RegisterPasswordFragment extends Fragment {
                 String passwordEncriptada = sha256(password);
                 viewModel.actualizarCampo("password", passwordEncriptada);
 
-                UsuarioCliente usuario = viewModel.getUsuarioCliente().getValue();
+                Usuario usuario = viewModel.getUsuarioCliente().getValue();
 
                 if (usuario != null) {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                    db.collection("usuarios_clientes")
+                    db.collection("usuarios")
                             .add(usuario)
                             .addOnSuccessListener(documentReference -> {
                                 String idGenerado = documentReference.getId();

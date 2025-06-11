@@ -4,18 +4,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.proyecto_iot.dtos.UsuarioCliente;
+import com.example.proyecto_iot.dtos.Usuario;
 
 public class UsuarioClienteViewModel extends ViewModel {
-    private final MutableLiveData<UsuarioCliente> usuarioCliente = new MutableLiveData<>(new UsuarioCliente());
+    private final MutableLiveData<Usuario> usuarioCliente = new MutableLiveData<>(new Usuario());
 
-    public LiveData<UsuarioCliente> getUsuarioCliente() {
+    public LiveData<Usuario> getUsuarioCliente() {
         return usuarioCliente;
     }
 
     public void actualizarCampo(String campo, String valor) {
-        UsuarioCliente usuario = usuarioCliente.getValue();
-        if (usuario == null) usuario = new UsuarioCliente();
+        Usuario usuario = usuarioCliente.getValue();
+        if (usuario == null) usuario = new Usuario();
 
         switch (campo) {
             case "id":
