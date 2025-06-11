@@ -14,7 +14,15 @@ public class Usuario {
     private String distrito;
     private String direccion;
     private String password;
+    private String rol;
 
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
 
     public String getId() {
         return id;

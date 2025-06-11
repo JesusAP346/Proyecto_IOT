@@ -116,6 +116,8 @@ public class RegisterPasswordFragment extends Fragment {
                 if (usuario != null) {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+                    usuario.setRol("Cliente");
+
                     db.collection("usuarios")
                             .add(usuario)
                             .addOnSuccessListener(documentReference -> {
