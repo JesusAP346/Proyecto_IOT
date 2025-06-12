@@ -30,9 +30,29 @@ public class Usuario implements Serializable {
 
     public String placaAuto;
     public String urlFotoAuto;
+
+    public String getCalificacionTaxista() {
+        return calificacionTaxista;
+    }
+
+    public void setCalificacionTaxista(String calificacionTaxista) {
+        this.calificacionTaxista = calificacionTaxista;
+    }
+
+    public String getNumeroViajes() {
+        return numeroViajes;
+    }
+
+    public void setNumeroViajes(String numeroViajes) {
+        this.numeroViajes = numeroViajes;
+    }
+
+    public String calificacionTaxista;
+    public String numeroViajes;
     public double ubicacionLat;
     public double ubicacionLng;
     public String estadoSolicitudTaxista;
+
 
     public boolean tarjetaRegistrada;
 

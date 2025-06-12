@@ -12,23 +12,26 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.SuperAdmin.domain.TaxistaDomain;
+import com.example.proyecto_iot.dtos.Usuario; // ¡¡IMPORTANTE: Usar tu DTO Usuario!!
+// import com.example.proyecto_iot.SuperAdmin.domain.TaxistaDomain; // ¡¡ELIMINAR ESTA IMPORTACIÓN!!
 import com.squareup.picasso.Picasso;
 
 public class FragmentPerfilTaxistasSuperadmin extends Fragment {
 
-    private static final String ARG_TAXISTA = "taxista";
-    private TaxistaDomain taxista;
+    // Cambiado de "taxista" a "taxista_object" para mayor claridad y evitar posibles conflictos
+    private static final String ARG_TAXISTA_OBJ = "taxista_object";
+    // Cambiado de TaxistaDomain a Usuario
+    private Usuario taxista;
 
     public FragmentPerfilTaxistasSuperadmin() {
         // Required empty public constructor
     }
 
-    public static FragmentPerfilTaxistasSuperadmin newInstance(TaxistaDomain taxista) {
+    // Método newInstance modificado para aceptar un objeto Usuario
+    public static FragmentPerfilTaxistasSuperadmin newInstance(Usuario taxista) { // ¡¡Tipo de parámetro cambiado a Usuario!!
         FragmentPerfilTaxistasSuperadmin fragment = new FragmentPerfilTaxistasSuperadmin();
         Bundle args = new Bundle();
-        args.putParcelable("taxista", taxista); // ✅ Usar putParcelable
-
+        args.putSerializable(ARG_TAXISTA_OBJ, taxista); // Usar putSerializable si Usuario implementa Serializable
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,9 +40,9 @@ public class FragmentPerfilTaxistasSuperadmin extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            taxista = getArguments().getParcelable(ARG_TAXISTA);
+            // Recuperar el objeto Usuario del Bundle
+            taxista = (Usuario) getArguments().getSerializable(ARG_TAXISTA_OBJ); // Recuperar como Serializable y castear a Usuario
         }
-
     }
 
     @Override
@@ -52,7 +55,7 @@ public class FragmentPerfilTaxistasSuperadmin extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Vistas del layout (actualizadas)
+        // Vistas del layout
         ImageView ivFoto = view.findViewById(R.id.ivFotoUsuario);
         ImageView ivFotoAuto = view.findViewById(R.id.ivFotoAuto);
         TextView tvNombre = view.findViewById(R.id.tvNombreUsuario);
@@ -64,18 +67,36 @@ public class FragmentPerfilTaxistasSuperadmin extends Fragment {
         TextView tvEstado = view.findViewById(R.id.tvEstado);
 
 
-        // Asignar valores si taxista no es null
+        // Asignar valores usando los métodos getter de la clase Usuario
         if (taxista != null) {
-            Picasso.get().load(taxista.getImagenPerfil()).into(ivFoto);
-            Picasso.get().load(taxista.getImagenAuto()).into(ivFotoAuto);
+            // Cargar foto de perfil
+            if (taxista.getUrlFotoPerfil() != null && !taxista.getUrlFotoPerfil().isEmpty()) {
+                Picasso.get().load(taxista.getUrlFotoPerfil()).into(ivFoto);
+            } else {
+                ivFoto.setImageResource(R.drawable.ic_generic_user); // Imagen por defecto
+            }
 
-            tvNombre.setText(taxista.getNombre());
-            tvViajes.setText(taxista.getIndiceViajes());
-            tvCalificacion.setText(String.valueOf(taxista.getCalificacion()));
-            tvDocumento.setText("✔ Documento de identidad: " + taxista.getEstadoCuenta());
-            tvCorreo.setText("✔ Correo electrónico: " + taxista.getCorreo());
-            tvTelefono.setText("✔ Teléfono: " + taxista.getNumeroTelefono());
-            tvEstado.setText("✔ Estado de cuenta: " + taxista.getEstadoCuenta());
+            // Cargar foto de auto
+            if (taxista.getUrlFotoAuto() != null && !taxista.getUrlFotoAuto().isEmpty()) {
+                Picasso.get().load(taxista.getUrlFotoAuto()).into(ivFotoAuto);
+            } else {
+                ivFotoAuto.setImageResource(R.drawable.ic_taxi); // Imagen por defecto para auto (asegúrate de tener este drawable)
+            }
+
+
+            tvNombre.setText(taxista.getNombres() + " " + taxista.getApellidos()); // Concatenar nombre y apellido
+            tvViajes.setText(taxista.getNumeroViajes()); // Asumo que getIndiceViajes() ya devuelve un String
+            tvCalificacion.setText(String.valueOf(taxista.getCalificacionTaxista())); // Convertir calificación a String
+            tvDocumento.setText("✔ Documento de identidad: " + taxista.getNumDocumento()); // Usar getNumDocumento()
+            tvCorreo.setText("✔ Correo electrónico: " + taxista.getEmail());
+            tvTelefono.setText("✔ Teléfono: " + taxista.getNumCelular()); // Usar getNumCelular()
+            String estado;
+            if(taxista.isEstadoCuenta()){
+                 estado="Activo";
+            }else{
+                 estado="Suspendido";
+            }
+            tvEstado.setText("✔ Estado de cuenta: " + estado);
 
         }
     }
