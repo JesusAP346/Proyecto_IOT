@@ -9,11 +9,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.SuperAdmin.domain.AdministradoresDomain;
+import com.example.proyecto_iot.dtos.Usuario;
 import com.example.proyecto_iot.SuperAdmin.fragmentos.FragmentGestionAdministradorSuperadmin;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.squareup.picasso.Picasso;
@@ -22,8 +23,9 @@ import java.util.List;
 
 public class AdministradoresAdapter extends RecyclerView.Adapter<AdministradoresAdapter.ViewHolder> {
 
-    List<AdministradoresDomain> items;
-    public AdministradoresAdapter(List<AdministradoresDomain> items){
+    // Cambiado de AdministradoresDomain a Usuario
+    List<Usuario> items;
+    public AdministradoresAdapter(List<Usuario> items){
         this.items = items;
     }
 
@@ -40,18 +42,25 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        // Cambiado de AdministradoresDomain a Usuario
+        Usuario admin = items.get(position);
 
+        // --- CAMBIOS AQUÍ: Usar los métodos getter de la clase Usuario ---
+        holder.nombreAdmin.setText(admin.getNombres()+" "+admin.getApellidos()); // Usa getNombres()
+        holder.numeroAdmin.setText(admin.getNumCelular()); // Usa getNumCelular()
 
-
-        holder.nombreAdmin.setText(items.get(position).getNombreAdmin());
-        holder.numeroAdmin.setText(items.get(position).getNumeroAdmin());
-        Picasso.get().load(items.get(position).getImagenAdmin()).into(holder.imagenAdmin);
-
-        AdministradoresDomain admin = items.get(position);
+        // Asumiendo que 'urlFotoPerfil' es el campo de la URL de la imagen en tu clase Usuario
+        if (admin.getUrlFotoPerfil() != null && !admin.getUrlFotoPerfil().isEmpty()) {
+            Picasso.get().load(admin.getUrlFotoPerfil()).into(holder.imagenAdmin);
+        } else {
+            holder.imagenAdmin.setImageResource(R.drawable.ic_generic_user); // Imagen por defecto
+        }
+        // --- FIN CAMBIOS ---
 
 
         //Ver perfil
         holder.itemView.setOnClickListener(view -> {
+            // Pasa el objeto Usuario
             FragmentGestionAdministradorSuperadmin fragment = FragmentGestionAdministradorSuperadmin.newInstance(admin, false, position);
             ((AppCompatActivity) view.getContext()).getSupportFragmentManager()
                     .beginTransaction()
@@ -59,7 +68,6 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
                     .addToBackStack(null)
                     .commit();
         });
-
 
 
         //Ver el BottonSheet
@@ -74,40 +82,62 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
             TextView btnEditar = sheetView.findViewById(R.id.btnEditar);
             TextView btnEliminar = sheetView.findViewById(R.id.btnEliminar);
 
-            tvNombre.setText(admin.getNombreAdmin());
-            tvNumero.setText(admin.getNumeroAdmin());
-            Picasso.get().load(admin.getImagenAdmin()).into(ivFoto);
+            // --- CAMBIOS AQUÍ: Usar los métodos getter de la clase Usuario ---
+            tvNombre.setText(admin.getNombres()+ " " + admin.getApellidos());
+            tvNumero.setText(admin.getNumCelular());
+            if (admin.getUrlFotoPerfil() != null && !admin.getUrlFotoPerfil().isEmpty()) {
+                Picasso.get().load(admin.getUrlFotoPerfil()).into(ivFoto);
+            } else {
+                ivFoto.setImageResource(R.drawable.ic_generic_user); // Imagen por defecto
+            }
+            // --- FIN CAMBIOS ---
 
             btnEditar.setOnClickListener(view -> {
                 dialog.dismiss();
+                // Pasa el objeto Usuario
                 FragmentGestionAdministradorSuperadmin fragment = FragmentGestionAdministradorSuperadmin.newInstance(admin, true, position);
                 ((AppCompatActivity) v.getContext()).getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.frame_layout, fragment)
                         .addToBackStack(null)
                         .commit();
-
             });
 
             btnEliminar.setOnClickListener(view -> {
-                dialog.dismiss();
+                dialog.dismiss(); // Cierra el BottomSheetDialog
 
-                int positionToRemove = holder.getAdapterPosition();
-                if (positionToRemove != RecyclerView.NO_POSITION) {
-                    items.remove(positionToRemove);
-                    notifyItemRemoved(positionToRemove);
-                    notifyItemRangeChanged(positionToRemove, items.size()); // opcional, para animaciones suaves
-                }
-
-                Toast.makeText(v.getContext(), "Administrador eliminado", Toast.LENGTH_SHORT).show();
-
+                // --- INICIO: AlertDialog de confirmación ---
+                new AlertDialog.Builder(v.getContext())
+                        .setTitle("Confirmar eliminación")
+                        .setMessage("¿Estás seguro de que quieres eliminar a " + admin.getNombres() + " " + admin.getApellidos() + "? Esta acción no se puede deshacer.")
+                        .setPositiveButton("Sí, eliminar", (dialogInterface, i) -> {
+                            // Lógica de eliminación si el usuario confirma
+                            if (admin.getId() != null && !admin.getId().isEmpty()) {
+                                com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+                                db.collection("usuarios").document(admin.getId())
+                                        .delete()
+                                        .addOnSuccessListener(aVoid -> {
+                                            Toast.makeText(v.getContext(), "Administrador " + admin.getNombres() + " " + admin.getApellidos() + " eliminado de Firestore.", Toast.LENGTH_LONG).show();
+                                            // No necesitas modificar 'items' aquí, el SnapshotListener en el fragmento lo hará.
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(v.getContext(), "Error al eliminar administrador: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        });
+                            } else {
+                                Toast.makeText(v.getContext(), "ID del administrador no encontrado para eliminar.", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Cancelar", (dialogInterface, i) -> {
+                            // No hace nada, simplemente cierra el diálogo
+                            dialogInterface.dismiss();
+                        })
+                        .show();
+                // --- FIN: AlertDialog de confirmación ---
             });
 
             dialog.setContentView(sheetView);
             dialog.show();
         });
-
-
     }
 
     @Override
@@ -128,7 +158,6 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
             nombreAdmin= itemView.findViewById(R.id.nameAdministradores);
             numeroAdmin= itemView.findViewById(R.id.numberAdministradores);
             btnOpciones = itemView.findViewById(R.id.btnOpciones);
-
         }
     }
 }

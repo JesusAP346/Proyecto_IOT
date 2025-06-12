@@ -1,7 +1,9 @@
 package com.example.proyecto_iot.dtos;
 
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
     public String id;
     public String idRol;
 
