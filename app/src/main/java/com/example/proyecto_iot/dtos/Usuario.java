@@ -16,7 +16,6 @@ public class Usuario {
     public String provincia;
     public String distrito;
     public String direccion;
-    public String password;
     public String urlFotoPerfil;
 
     public boolean estadoCuenta;
@@ -146,14 +145,6 @@ public class Usuario {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getUrlFotoPerfil() {

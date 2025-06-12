@@ -16,6 +16,7 @@ import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.dtos.Usuario;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.MessageDigest;
@@ -108,28 +109,34 @@ public class RegisterPasswordFragment extends Fragment {
             }
 
             if (isValid) {
-                String passwordEncriptada = sha256(password);
-                viewModel.actualizarCampo("password", passwordEncriptada);
 
                 Usuario usuario = viewModel.getUsuarioCliente().getValue();
 
                 if (usuario != null) {
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    usuario.setIdRol("Cliente");
 
-                    usuario.setId("Cliente");
+                    auth.createUserWithEmailAndPassword(usuario.getEmail(), password)
+                            .addOnSuccessListener(authResult -> {
+                                String uid = authResult.getUser().getUid();
+                                usuario.setId(uid);
 
-                    db.collection("usuarios")
-                            .add(usuario)
-                            .addOnSuccessListener(documentReference -> {
-                                String idGenerado = documentReference.getId();
-                                documentReference.update("id", idGenerado);
-                                Toast.makeText(requireContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
-                                requireActivity().finish();
+                                db.collection("usuarios").document(uid).set(usuario)
+                                        .addOnSuccessListener(unused -> {
+                                            Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
+                                            requireActivity().finish();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.e("Firestore", "Error al guardar perfil", e);
+                                            Toast.makeText(getContext(), "Error al guardar perfil", Toast.LENGTH_SHORT).show();
+                                        });
                             })
                             .addOnFailureListener(e -> {
-                                Log.e("Firestore", "Error al registrar usuario", e);
-                                Toast.makeText(requireContext(), "Error al registrar. Intenta de nuevo.", Toast.LENGTH_SHORT).show();
+                                Log.e("Auth", "Error al registrar en Auth", e);
+                                Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             });
+
                 } else {
                     Log.e("Registro", "El objeto usuario es null");
                 }
@@ -142,20 +149,5 @@ public class RegisterPasswordFragment extends Fragment {
         return view;
     }
 
-    public static String sha256(String base) {
-        try{
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(base.getBytes("UTF-8"));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if(hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch(Exception ex){
-            throw new RuntimeException(ex);
-        }
-    }
 
 }
