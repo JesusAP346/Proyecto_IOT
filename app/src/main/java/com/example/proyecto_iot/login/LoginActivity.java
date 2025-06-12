@@ -87,10 +87,18 @@ public class LoginActivity extends AppCompatActivity {
                             db.collection("usuarios").document(uid).get()
                                     .addOnSuccessListener(documentSnapshot -> {
                                         if (documentSnapshot.exists()) {
-                                            Toast.makeText(LoginActivity.this, "Bienvenido", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(LoginActivity.this, ClienteBusquedaActivity.class);
-                                            startActivity(intent);
-                                            finish();
+                                            String rol = documentSnapshot.getString("idRol");
+                                            if ("Cliente".equalsIgnoreCase(rol)) {
+                                                Toast.makeText(LoginActivity.this, "Bienvenido, cliente", Toast.LENGTH_SHORT).show();
+                                                String idUsuario = documentSnapshot.getId();
+                                                Intent intent = new Intent(LoginActivity.this, ClienteBusquedaActivity.class);
+                                                intent.putExtra("idUsuario", idUsuario);
+                                                startActivity(intent);
+                                                finish();
+                                            } else {
+                                                Toast.makeText(LoginActivity.this, "Acceso solo para clientes", Toast.LENGTH_LONG).show();
+                                                FirebaseAuth.getInstance().signOut();
+                                            }
                                         } else {
                                             Toast.makeText(LoginActivity.this, "Datos de usuario no encontrados", Toast.LENGTH_LONG).show();
                                         }

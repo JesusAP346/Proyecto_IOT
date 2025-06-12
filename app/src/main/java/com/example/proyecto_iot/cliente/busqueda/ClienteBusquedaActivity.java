@@ -18,9 +18,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 //import com.example.proyecto_iot.Manifest;
 import android.Manifest;
+import android.util.Log;
 
 import com.example.proyecto_iot.R;
 //import com.example.proyecto_iot.administradorHotel.fragmentos.ReservasFragment;
@@ -29,12 +31,16 @@ import com.example.proyecto_iot.cliente.MisReservasFragment;
 import com.example.proyecto_iot.cliente.NotificacionesFragment;
 import com.example.proyecto_iot.cliente.PerfilFragmentC;
 import com.example.proyecto_iot.cliente.TaxiFragment;
+import com.example.proyecto_iot.dtos.Usuario;
+import com.example.proyecto_iot.login.UsuarioClienteViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Locale;
 
 public class ClienteBusquedaActivity extends AppCompatActivity {
 
+    private UsuarioClienteViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -109,6 +115,26 @@ public class ClienteBusquedaActivity extends AppCompatActivity {
             }
             return false;
         });
+
+        viewModel = new ViewModelProvider(this).get(UsuarioClienteViewModel.class);
+
+        String idUsuario = getIntent().getStringExtra("idUsuario");
+
+        if (idUsuario != null) {
+            FirebaseFirestore.getInstance()
+                    .collection("usuarios")
+                    .document(idUsuario)
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        if (doc.exists()) {
+                            Usuario cliente = doc.toObject(Usuario.class);
+                            viewModel.setUsuario(cliente);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("MainActivity", "Error al cargar usuario", e);
+                    });
+        }
 
     }
 

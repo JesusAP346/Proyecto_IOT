@@ -13,6 +13,10 @@ public class UsuarioClienteViewModel extends ViewModel {
         return usuarioCliente;
     }
 
+    public void setUsuario(Usuario usuario) {
+        usuarioCliente.setValue(usuario);
+    }
+
     public void actualizarCampo(String campo, String valor) {
         Usuario usuario = usuarioCliente.getValue();
         if (usuario == null) usuario = new Usuario();

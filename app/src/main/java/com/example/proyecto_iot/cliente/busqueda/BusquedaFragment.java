@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.login.UsuarioClienteViewModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.text.SimpleDateFormat;
@@ -140,6 +142,18 @@ public class BusquedaFragment extends Fragment{
                     .addToBackStack(null)
                     .commit();
         });
+
+        UsuarioClienteViewModel viewModel = new ViewModelProvider(requireActivity()).get(UsuarioClienteViewModel.class);
+
+        TextView txtSaludo = view.findViewById(R.id.textView8);
+
+        viewModel.getUsuarioCliente().observe(getViewLifecycleOwner(), usuario -> {
+            if (usuario != null && usuario.getNombres() != null) {
+                String nombre = usuario.getNombres();
+                txtSaludo.setText("Hola " + nombre);
+            }
+        });
+
 
 
         return view;
