@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.login;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -13,10 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.proyecto_iot.MainActivity;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
-import com.example.proyecto_iot.databinding.ActivityLoginBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,9 +23,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
-    ActivityLoginBinding binding;
     FirebaseAuth auth;
     FirebaseFirestore db;
+    ProgressDialog progressDialog; // Nuevo: progreso modal
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,41 +76,58 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
+            showLoadingDialog(); // 👈 Mostrar diálogo de carga
 
             auth.signInWithEmailAndPassword(correo, password)
                     .addOnSuccessListener(authResult -> {
                         FirebaseUser user = auth.getCurrentUser();
                         if (user != null) {
-                            String uid = user.getUid();
-
-                            db.collection("usuarios").document(uid).get()
+                            db.collection("usuarios").document(user.getUid()).get()
                                     .addOnSuccessListener(documentSnapshot -> {
+                                        hideLoadingDialog(); // 👈 Ocultar diálogo
+
                                         if (documentSnapshot.exists()) {
                                             String rol = documentSnapshot.getString("idRol");
                                             if ("Cliente".equalsIgnoreCase(rol)) {
-                                                Toast.makeText(LoginActivity.this, "Bienvenido, cliente", Toast.LENGTH_SHORT).show();
                                                 String idUsuario = documentSnapshot.getId();
                                                 Intent intent = new Intent(LoginActivity.this, ClienteBusquedaActivity.class);
                                                 intent.putExtra("idUsuario", idUsuario);
                                                 startActivity(intent);
                                                 finish();
                                             } else {
-                                                Toast.makeText(LoginActivity.this, "Acceso solo para clientes", Toast.LENGTH_LONG).show();
-                                                FirebaseAuth.getInstance().signOut();
+                                                Toast.makeText(this, "Rol no permitido", Toast.LENGTH_SHORT).show();
+                                                auth.signOut();
                                             }
                                         } else {
-                                            Toast.makeText(LoginActivity.this, "Datos de usuario no encontrados", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(this, "Datos de usuario no encontrados", Toast.LENGTH_LONG).show();
+                                            auth.signOut();
                                         }
                                     })
                                     .addOnFailureListener(e -> {
-                                        Toast.makeText(LoginActivity.this, "Error al cargar datos", Toast.LENGTH_SHORT).show();
-                                        e.printStackTrace();
+                                        hideLoadingDialog(); // 👈 Ocultar diálogo
+                                        Toast.makeText(this, "Error al cargar sesión", Toast.LENGTH_SHORT).show();
                                     });
+                        } else {
+                            hideLoadingDialog(); // 👈 Ocultar diálogo
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(LoginActivity.this, "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                        hideLoadingDialog(); // 👈 Ocultar diálogo
+                        Toast.makeText(this, "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                     });
         });
+    }
+
+    private void showLoadingDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideLoadingDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }
