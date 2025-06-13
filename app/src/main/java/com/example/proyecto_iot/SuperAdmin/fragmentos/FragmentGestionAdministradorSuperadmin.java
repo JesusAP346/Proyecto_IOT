@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.proyecto_iot.dtos.Usuario; // Correct DTO import
 
@@ -27,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.Serializable; // Import Serializable
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -195,7 +197,11 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
 
 
         btnEditarGuardar.setOnClickListener(v -> {
-            if (!isEditMode) { // If currently in "view" mode, switch to "edit" mode
+            // Referencias a Firebase (asegúrate de que db y auth estén inicializados en tu Fragmento)
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseAuth auth = FirebaseAuth.getInstance(); // Inicializar FirebaseAuth
+
+            if (!isEditMode) { // Si actualmente está en modo "ver", cambia a modo "editar"
                 isEditMode = true;
                 btnEditarGuardar.setText("Guardar");
                 etNombre.setEnabled(true);
@@ -204,37 +210,41 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                 etCorreo.setEnabled(true);
                 etDireccion.setEnabled(true);
                 etFechaNacimiento.setEnabled(true);
-                ivFoto.setClickable(true); // Allow image selection
-            } else { // If currently in "edit" mode, try to save
+                ivFoto.setClickable(true); // Permitir selección de imagen
+                // Considera habilitar un campo para la contraseña si es un nuevo registro
+                // etPassword.setVisibility(View.VISIBLE); // Si tienes un campo de contraseña oculto
+            } else { // Si actualmente está en modo "editar", intenta guardar
                 if (!validarCampos(view)) {
-                    return; // Stop if validation fails
+                    return; // Detener si la validación falla
                 }
 
-                // Update currentAdmin object with new values from UI
+                // Actualizar el objeto currentAdmin con los nuevos valores de la UI
                 currentAdmin.setNombres(etNombre.getText().toString().trim());
                 currentAdmin.setApellidos(etApellidos.getText().toString().trim());
                 currentAdmin.setNumCelular(etNumero.getText().toString().trim());
                 currentAdmin.setEmail(etCorreo.getText().toString().trim());
                 currentAdmin.setDireccion(etDireccion.getText().toString().trim());
                 currentAdmin.setFechaNacimiento(etFechaNacimiento.getText().toString().trim());
-                currentAdmin.setUrlFotoPerfil(imagenSeleccionada); // Store the selected image URI/URL
 
-                // Set fixed properties for administrators
-                currentAdmin.setIdRol("Administrador"); // Ensure the role is "Administrador"
-                currentAdmin.setEstadoCuenta(true); // Assuming active account
+                // Manejar la imagen seleccionada. Asumo que 'imagenSeleccionada' es la URL de la imagen subida.
+                // Si 'imagenSeleccionada' es un URI local, deberías subirla a Firebase Storage AQUÍ
+                // antes de guardar la URL en currentAdmin.setUrlFotoPerfil().
+                // Por simplicidad, asumo que ya tienes la URL final en 'imagenSeleccionada'.
+                currentAdmin.setUrlFotoPerfil(imagenSeleccionada);
+
+                // Establecer propiedades fijas para administradores
+                currentAdmin.setIdRol("Administrador"); // Asegurar que el rol sea "Administrador"
+                currentAdmin.setEstadoCuenta(true); // Asumiendo cuenta activa
                 currentAdmin.setUltimaActualizacion(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date()));
-                currentAdmin.setActualizadoPor("superadmin"); // You might want to get the actual superadmin's ID/name
+                currentAdmin.setActualizadoPor("superadmin"); // Obtener el ID/nombre real del superadmin
 
-
-                // --- LOGIC FOR SAVING TO FIRESTORE ---
+                // --- LÓGICA PARA GUARDAR EN FIRESTORE ---
                 if (currentAdmin.getId() != null && !currentAdmin.getId().isEmpty()) {
-                    // 🔄 Edit (Update existing document)
-                    // Use a Map for partial updates, or set the whole object if all fields are populated
+                    // 🔄 Editar (Actualizar documento existente) - No requiere Firebase Auth para la edición de datos de perfil
                     db.collection("usuarios").document(currentAdmin.getId())
-                            .set(currentAdmin) // Overwrites the document
+                            .set(currentAdmin)
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(getContext(), "Administrador actualizado exitosamente", Toast.LENGTH_SHORT).show();
-                                // After successful save, switch back to view mode
                                 isEditMode = false;
                                 btnEditarGuardar.setText("Editar");
                                 etNombre.setEnabled(false);
@@ -243,21 +253,62 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                                 etCorreo.setEnabled(false);
                                 etDireccion.setEnabled(false);
                                 etFechaNacimiento.setEnabled(false);
-                                ivFoto.setClickable(false); // Disable image selection
-                                requireActivity().getSupportFragmentManager().popBackStack(); // Go back to list
+                                ivFoto.setClickable(false);
+                                requireActivity().getSupportFragmentManager().popBackStack();
                             })
                             .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al actualizar administrador: " + e.getMessage(), Toast.LENGTH_LONG).show());
                 } else {
-                    // ➕ Create (Add new document)
+                    // ➕ Crear (Añadir nuevo documento) - ¡¡Aquí integramos Firebase Auth y el correo!!
+                    // 1. Generar contraseña aleatoria
+                    String generatedPassword = generateRandomPassword(12); // Contraseña de 12 caracteres
+
                     currentAdmin.setFechaRegistro(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date()));
-                    db.collection("usuarios").add(currentAdmin)
-                            .addOnSuccessListener(documentReference -> {
-                                // After adding, you might want to save the generated ID back to the object if needed
-                                // currentAdmin.setId(documentReference.getId()); // This is optional, as you're popping back
-                                Toast.makeText(getContext(), "Administrador agregado exitosamente", Toast.LENGTH_SHORT).show();
-                                requireActivity().getSupportFragmentManager().popBackStack(); // Go back to list
+
+                    // PASO 1: Crear usuario en Firebase Authentication con la contraseña generada
+                    auth.createUserWithEmailAndPassword(currentAdmin.getEmail(), generatedPassword)
+                            .addOnSuccessListener(authResult -> {
+                                String uid = authResult.getUser().getUid();
+                                currentAdmin.setId(uid); // Establecer el UID de Auth como ID del documento Firestore
+
+                                // PASO 2: Guardar los datos del usuario en Firestore usando el UID como ID del documento
+                                db.collection("usuarios").document(uid).set(currentAdmin)
+                                        .addOnSuccessListener(unused -> {
+                                            Toast.makeText(getContext(), "Administrador agregado exitosamente.", Toast.LENGTH_SHORT).show();
+
+                                            // PASO 3: Enviar la contraseña por correo usando Intent
+                                            sendAdminCredentialsEmailIntent(currentAdmin.getEmail(),
+                                                    currentAdmin.getNombres() + " " + currentAdmin.getApellidos(),
+                                                    generatedPassword);
+
+                                            // Después de guardar y enviar correo, vuelve al modo de vista/lista
+                                            isEditMode = false;
+                                            btnEditarGuardar.setText("Editar");
+                                            etNombre.setEnabled(false);
+                                            etApellidos.setEnabled(false);
+                                            etNumero.setEnabled(false);
+                                            etCorreo.setEnabled(false);
+                                            etDireccion.setEnabled(false);
+                                            etFechaNacimiento.setEnabled(false);
+                                            ivFoto.setClickable(false);
+                                            requireActivity().getSupportFragmentManager().popBackStack();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            // Si falla Firestore, considera eliminar el usuario de Auth para evitar inconsistencias
+                                            authResult.getUser().delete()
+                                                    .addOnCompleteListener(task -> {
+                                                        if (task.isSuccessful()) {
+                                                            // Log.d(TAG, "Usuario Auth eliminado después de fallo en Firestore.");
+                                                        } else {
+                                                            // Log.w(TAG, "Fallo al eliminar usuario Auth después de fallo en Firestore.");
+                                                        }
+                                                    });
+                                            Toast.makeText(getContext(), "Error al guardar perfil en Firestore: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        });
                             })
-                            .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al registrar administrador: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                            .addOnFailureListener(e -> {
+                                // Si falla la creación en Authentication (ej. correo ya registrado)
+                                Toast.makeText(getContext(), "Error al registrar administrador en Authentication: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            });
                 }
             }
         });
@@ -367,5 +418,61 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
         }
 
         return esValido;
+    }
+
+    private String generateRandomPassword(int length) {
+        String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
+        String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+        String NUMBER = "0123456789";
+        String OTHER_CHAR = "!@#$%^&*()-_+=<>?/{}~"; // Caracteres especiales
+
+        String PASSWORD_CHARS = CHAR_LOWER + CHAR_UPPER + NUMBER + OTHER_CHAR;
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(length);
+
+        // Asegurar al menos una letra minúscula, una mayúscula, un número y un caracter especial
+        sb.append(CHAR_LOWER.charAt(random.nextInt(CHAR_LOWER.length())));
+        sb.append(CHAR_UPPER.charAt(random.nextInt(CHAR_UPPER.length())));
+        sb.append(NUMBER.charAt(random.nextInt(NUMBER.length())));
+        sb.append(OTHER_CHAR.charAt(random.nextInt(OTHER_CHAR.length())));
+
+        // Llenar el resto de la contraseña
+        for (int i = 4; i < length; i++) { // Empezar desde 4 porque ya agregamos 4 caracteres
+            sb.append(PASSWORD_CHARS.charAt(random.nextInt(PASSWORD_CHARS.length())));
+        }
+
+        // Mezclar la cadena para que no tenga un patrón predecible
+        char[] passwordArray = sb.toString().toCharArray();
+        for (int i = passwordArray.length - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+            char temp = passwordArray[i];
+            passwordArray[i] = passwordArray[j];
+            passwordArray[j] = temp;
+        }
+
+        return new String(passwordArray);
+    }
+    private void sendAdminCredentialsEmailIntent(String recipientEmail, String adminName, String generatedPassword) {
+        String subject = "Bienvenido a nuestra plataforma - Credenciales de Administrador";
+        String body = "Hola " + adminName + ",\n\n" +
+                "¡Bienvenido como administrador a nuestra plataforma!\n" +
+                "Tus credenciales de acceso son:\n" +
+                "Usuario (Correo): " + recipientEmail + "\n" +
+                "Contraseña: " + generatedPassword + "\n\n" +
+                "Por favor, cambia tu contraseña después de iniciar sesión por primera vez.\n\n" +
+                "Atentamente,\nEl Equipo de Desarrollo";
+
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:")); // Solo aplicaciones de correo
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipientEmail});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Enviar credenciales por correo..."));
+            Toast.makeText(getContext(), "Correo con credenciales listo para enviar.", Toast.LENGTH_LONG).show();
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getContext(), "No hay clientes de correo instalados para enviar las credenciales.", Toast.LENGTH_LONG).show();
+        }
     }
 }

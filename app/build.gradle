@@ -33,6 +33,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/NOTICE.md' // ¡¡AÑADE ESTA LÍNEA!!
+        // Puedes añadir otras exclusiones si Gradle te lo indica en el futuro, por ejemplo:
+        // exclude 'META-INF/INDEX.LIST'
+        // exclude 'META-INF/*.txt'
+        // exclude 'META-INF/LGPL2.1' // A veces también aparece este
+    }
 }
 
 dependencies {
@@ -72,6 +81,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation("com.google.firebase:firebase-auth")
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
-
+    implementation 'com.sun.mail:android-mail:1.6.7'
+    implementation 'com.sun.mail:android-activation:1.6.7'
 
 }
