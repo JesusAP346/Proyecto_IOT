@@ -11,11 +11,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.proyecto_iot.MainActivity;
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.cliente.modoTaxistaFormulario.RegistroTaxistaActivity;
 import com.example.proyecto_iot.login.LoginActivity;
 import com.example.proyecto_iot.taxista.perfil.InformacionPersonalActivity;
 import com.example.proyecto_iot.taxista.perfil.PerfilTaxistaActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class PerfilFragmentC extends Fragment {
 
@@ -38,10 +41,41 @@ public class PerfilFragmentC extends Fragment {
 
         // Listener para cambiar a modo taxista
         btnModoCliente.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Cambiando a modo taxista...", Toast.LENGTH_SHORT).show();
-            // Lógica para cambiar de modo
-            //startActivity(new Intent(getContext(), InformacionPersonalActivity.class));
+            if (auth.getCurrentUser() == null) {
+                Toast.makeText(getContext(), "No se encontró sesión activa", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String uid = auth.getCurrentUser().getUid();
+
+            FirebaseFirestore.getInstance()
+                    .collection("usuarios")
+                    .document(uid)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String idRol = documentSnapshot.getString("idRol");
+                            Object estadoSolicitud = documentSnapshot.get("estadoSolicitudTaxista"); // puede ser null
+
+                            if ("Cliente".equalsIgnoreCase(idRol) && estadoSolicitud == null) {
+                                Intent intent = new Intent(getContext(), RegistroTaxistaActivity.class);
+                                startActivity(intent);
+                            } else if ("Taxista".equals(idRol)) {
+                                Intent intent = new Intent(getContext(), MainActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getContext(), "Ya enviaste una solicitud o no tienes permiso para registrarte como taxista", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Datos de usuario no encontrados", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Error al obtener datos del usuario", Toast.LENGTH_SHORT).show();
+                    });
         });
+
+
 
         // Listener para cerrar sesión
         btnCerrarSesion.setOnClickListener(v -> {

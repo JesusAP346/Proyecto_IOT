@@ -68,6 +68,7 @@
             tools:layout_editor_absoluteX="24dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -83,6 +84,7 @@
             tools:layout_editor_absoluteX="24dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etApellido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

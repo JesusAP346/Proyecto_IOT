@@ -1,86 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:background="#A28858">
 
-    <FrameLayout
-        android:id="@+id/fragmentContainerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:orientation="horizontal"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:orientation="vertical"
+        android:padding="16dp">
 
+        <!-- Título -->
         <TextView
-            android:id="@+id/txtPaso"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1 de 3"
+            android:text="Registro de Taxista"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Campo Número de Placa -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Número de Placa"
+            app:boxBackgroundColor="@android:color/white"
+            app:boxBackgroundMode="filled">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNumeroPlaca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapCharacters"
+                android:maxLength="8" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Foto de la Placa -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Foto de la Placa"
+            android:textColor="@android:color/white"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/progressBar" />
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
-        <!-- Barra de progreso -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="100dp"
-            android:layout_height="6dp"
-            android:progress="1"
-            android:max="3"
-            android:progressDrawable="@drawable/custom_progress"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtPaso"
-            app:layout_constraintBottom_toBottomOf="parent" />
+        <ImageView
+            android:id="@+id/ivFotoPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/white"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placa_regular" />
 
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnAtras"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btnTomarFotoPlaca"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Tomar Foto de Placa"
+            android:backgroundTint="#5C5524"
+            android:textColor="@android:color/white" />
 
-            app:backgroundTint="#5C5524"
-            app:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnSiguiente"
-            app:srcCompat="@drawable/ic_retroceder" />
-
-
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/btnSiguiente"
-            android:layout_width="153dp"
+        <!-- Campo Modelo del Auto -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="4dp"
-            android:rotationX="6"
-            android:text="Siguiente"
-            android:textColor="@color/white"
+            android:layout_marginBottom="16dp"
+            android:hint="Modelo del Auto"
+            app:boxBackgroundColor="@android:color/white"
+            app:boxBackgroundMode="filled">
 
-            app:backgroundTint="#5C5524"
-            android:textSize="20dp"
-            app:iconTint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etModeloAuto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
 
+        </com.google.android.material.textfield.TextInputLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Campo Color del Auto -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Color del Auto"
+            app:boxBackgroundColor="@android:color/white"
+            app:boxBackgroundMode="filled">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etColorAuto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
 
+        </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Foto del Auto -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Foto del Auto"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/ivFotoAuto"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/white"
+            android:scaleType="centerCrop"
+            android:src="@drawable/auto_roberto" />
+
+        <Button
+            android:id="@+id/btnTomarFotoAuto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Tomar Foto del Auto"
+            android:backgroundTint="#5C5524"
+            android:textColor="@android:color/white" />
+
+        <!-- Botón Enviar -->
+        <Button
+            android:id="@+id/btnEnviar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Enviar Registro"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:backgroundTint="#5C5524"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>

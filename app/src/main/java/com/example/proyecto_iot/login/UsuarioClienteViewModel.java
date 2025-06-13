@@ -58,6 +58,15 @@ public class UsuarioClienteViewModel extends ViewModel {
             case "direccion":
                 usuario.setDireccion(valor);
                 break;
+            case "placaAuto":
+                usuario.setPlacaAuto(valor);
+                break;
+            case "colorAuto":
+                usuario.setColorAuto(valor);
+                break;
+            case "modeloAuto":
+                usuario.setModeloAuto(valor);
+                break;
             default:
                 throw new IllegalArgumentException("Campo desconocido: " + campo);
         }

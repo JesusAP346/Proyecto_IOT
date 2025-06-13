@@ -9,10 +9,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 import com.example.proyecto_iot.databinding.FragmentPerfilBinding;
+import com.example.proyecto_iot.login.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -26,6 +29,9 @@ import java.util.List;
 public class PerfilFragment extends Fragment {
 
     private FragmentPerfilBinding binding;
+
+    private Button btnCerrarSesion;
+    private FirebaseAuth auth;
 
     public PerfilFragment() {
         // Required empty public constructor
@@ -45,6 +51,13 @@ public class PerfilFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentPerfilBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+
+        btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion);
+        auth = FirebaseAuth.getInstance();
+
+        btnCerrarSesion.setOnClickListener(v -> {
+            cerrarSesion();
+        });
 
         cargarImagenInterna(); // carga la foto guardada en interno
 
@@ -144,5 +157,18 @@ public class PerfilFragment extends Fragment {
             cantidad = 0;
         }
         return cantidad;
+    }
+    private void cerrarSesion() {
+
+
+        auth.signOut();
+
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
     }
 }

@@ -14,7 +14,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.proyecto_iot.MainActivity;
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -94,7 +96,19 @@ public class LoginActivity extends AppCompatActivity {
                                                 intent.putExtra("idUsuario", idUsuario);
                                                 startActivity(intent);
                                                 finish();
-                                            } else {
+                                            } else if ("Administrador".equals(rol)) {
+                                                String idUsuario = documentSnapshot.getId();
+                                                Intent intent = new Intent(LoginActivity.this, PagPrincipalAdmin.class);
+                                                intent.putExtra("idUsuario", idUsuario);
+                                                startActivity(intent);
+                                                finish();
+                                            }  else if ("Taxista".equals(rol)) {
+                                                String idUsuario = documentSnapshot.getId();
+                                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                intent.putExtra("idUsuario", idUsuario);
+                                                startActivity(intent);
+                                                finish();
+                                            }else {
                                                 Toast.makeText(this, "Rol no permitido", Toast.LENGTH_SHORT).show();
                                                 auth.signOut();
                                             }

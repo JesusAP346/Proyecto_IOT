@@ -30,6 +30,24 @@ public class Usuario implements Serializable {
 
     public String placaAuto;
     public String urlFotoAuto;
+    public String colorAuto;
+    public String modeloAuto;
+
+    public String getColorAuto() {
+        return colorAuto;
+    }
+
+    public void setColorAuto(String colorAuto) {
+        this.colorAuto = colorAuto;
+    }
+
+    public String getModeloAuto() {
+        return modeloAuto;
+    }
+
+    public void setModeloAuto(String modeloAuto) {
+        this.modeloAuto = modeloAuto;
+    }
 
     public String getCalificacionTaxista() {
         return calificacionTaxista;
