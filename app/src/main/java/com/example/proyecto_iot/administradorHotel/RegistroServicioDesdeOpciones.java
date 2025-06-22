@@ -846,79 +846,77 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
 
     // 8. METODO GUARDAR SERVICIO ACTUALIZADO
     private void guardarServicio(String nombre, String descripcion, double precio) {
-        // Marcar que estamos guardando
+
+        if (todasLasFotos.size() < 2) {
+            mostrarError(binding.errorTipoFotos, "Debes agregar al menos 2 fotos del servicio");
+            return;
+        }
         guardandoServicio = true;
         binding.btnRegistrarServicio.setEnabled(false);
         binding.progressBarGuardar.setVisibility(View.VISIBLE);
         binding.btnRegistrarServicio.setText("Guardando...");
 
-        // Primero subir todas las imágenes
         subirTodasLasImagenes(
-                // OnSuccess - todas las imágenes subidas
                 urlsImagenes -> {
-                    // Ahora guardar en Firestore con las URLs
-
                     ServicioHotel servicio = new ServicioHotel(nombre, descripcion, precio, urlsImagenes);
-
-                    runOnUiThread(() -> {
-                        binding.btnRegistrarServicio.setText("Guardando servicio...");
-                    });
 
                     if (currentUser != null) {
                         String uid = currentUser.getUid();
-                        db.collection("usuarios")
-                                .document(uid)
-                                .collection("servicios")
-                                .add(servicio)
-                                .addOnSuccessListener(documentReference -> {
-                                    runOnUiThread(() -> {
-                                        Toast.makeText(this, "Servicio guardado correctamente con " + urlsImagenes.size() + " imágenes", Toast.LENGTH_LONG).show();
 
-                                        // Restablecer estado
-                                        guardandoServicio = false;
-                                        binding.btnRegistrarServicio.setEnabled(true);
-                                        binding.btnRegistrarServicio.setText("Registrar Servicio");
-                                        binding.progressBarGuardar.setVisibility(View.GONE);
+                        // Obtener el idHotel del usuario (admin)
+                        db.collection("usuarios").document(uid).get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        String idHotel = documentSnapshot.getString("idHotel");
 
-                                        // Limpiar imágenes temporales
-                                        limpiarImagenesTemporales();
+                                        if (idHotel != null && !idHotel.isEmpty()) {
+                                            // Guardamos el servicio en la subcolección de ese hotel
+                                            db.collection("hoteles")
+                                                    .document(idHotel)
+                                                    .collection("servicios")
+                                                    .add(servicio)
+                                                    .addOnSuccessListener(docRef -> runOnUiThread(() -> {
+                                                        Toast.makeText(this, "Servicio guardado correctamente ✅", Toast.LENGTH_LONG).show();
 
-                                        // Regresar
-                                        finish();
-                                    });
+                                                        guardandoServicio = false;
+                                                        binding.btnRegistrarServicio.setEnabled(true);
+                                                        binding.progressBarGuardar.setVisibility(View.GONE);
+                                                        binding.btnRegistrarServicio.setText("Registrar Servicio");
+
+                                                        limpiarImagenesTemporales();
+                                                        finish();
+                                                    }))
+                                                    .addOnFailureListener(e -> runOnUiThread(() -> {
+                                                        Toast.makeText(this, "Error al guardar servicio: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        resetEstadoUI();
+                                                    }));
+                                        } else {
+                                            Toast.makeText(this, "No se encontró el idHotel del usuario", Toast.LENGTH_SHORT).show();
+                                            resetEstadoUI();
+                                        }
+                                    }
                                 })
                                 .addOnFailureListener(e -> {
-                                    runOnUiThread(() -> {
-                                        Toast.makeText(this, "Error al guardar en base de datos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                                        // Restablecer estado
-                                        guardandoServicio = false;
-                                        binding.btnRegistrarServicio.setEnabled(true);
-                                        binding.btnRegistrarServicio.setText("Registrar Servicio");
-                                        binding.progressBarGuardar.setVisibility(View.GONE);
-                                    });
+                                    Toast.makeText(this, "Error obteniendo idHotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    resetEstadoUI();
                                 });
-                    }else {
-                        Toast.makeText(RegistroServicioDesdeOpciones.this, "No está logueado", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "No estás logueado ", Toast.LENGTH_SHORT).show();
+                        resetEstadoUI();
                     }
                 },
-                // OnError - error subiendo imágenes
-                error -> {
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "Error subiendo imágenes: " + error, Toast.LENGTH_SHORT).show();
-
-                        // Restablecer estado
-                        guardandoServicio = false;
-                        binding.btnRegistrarServicio.setEnabled(true);
-                        binding.btnRegistrarServicio.setText("Registrar Servicio");
-                        binding.progressBarGuardar.setVisibility(View.GONE);
-                    });
-                }
+                error -> runOnUiThread(() -> {
+                    Toast.makeText(this, "Error subiendo imágenes: " + error, Toast.LENGTH_SHORT).show();
+                    resetEstadoUI();
+                })
         );
-
     }
-
-
+    private void resetEstadoUI() {
+        guardandoServicio = false;
+        binding.btnRegistrarServicio.setEnabled(true);
+        binding.progressBarGuardar.setVisibility(View.GONE);
+        binding.btnRegistrarServicio.setText("Registrar Servicio");
+    }
 
     ///////////////////////////////////////VALIDACIONES XD ////////////////////////////////////////
 
@@ -926,135 +924,89 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
         boolean esValido = true;
 
         // Limpiar errores previos
-        limpiarErrores();
+        binding.errorTipoNombre.setVisibility(View.GONE);
+        binding.errorTipoDescripcion.setVisibility(View.GONE);
+        binding.errorTipoPrecio.setVisibility(View.GONE);
+        binding.errorTipoFotos.setVisibility(View.GONE);
 
-        // Validar nombre
-        if (!validarNombre()) {
+        // === Validar NOMBRE ===
+        String nombre = binding.inputNombre.getText().toString().trim();
+        if (nombre.isEmpty()) {
+            mostrarError(binding.errorTipoNombre, "Por favor, ingrese el nombre del servicio");
+            esValido = false;
+        } else if (nombre.length() < 3) {
+            mostrarError(binding.errorTipoNombre, "El nombre debe tener al menos 3 caracteres");
+            esValido = false;
+        } else if (nombre.length() > 50) {
+            mostrarError(binding.errorTipoNombre, "El nombre no puede exceder 50 caracteres");
+            esValido = false;
+        } else if (nombre.matches("^[0-9]+$")) {
+            mostrarError(binding.errorTipoNombre, "El nombre no puede contener solo números");
+            esValido = false;
+        } else if (nombre.matches(".*[!@#$%^&*()+={}\\[\\]|\\\\:;\"'<>?/~`]{3,}.*")) {
+            mostrarError(binding.errorTipoNombre, "El nombre contiene demasiados caracteres especiales");
             esValido = false;
         }
 
-        // Validar descripción
-        if (!validarDescripcion()) {
+        // === Validar DESCRIPCIÓN ===
+        String descripcion = binding.inputDescripcion.getText().toString().trim();
+        if (descripcion.isEmpty()) {
+            mostrarError(binding.errorTipoDescripcion, "Por favor, ingrese la descripción del servicio");
+            esValido = false;
+        } else if (descripcion.length() < 10) {
+            mostrarError(binding.errorTipoDescripcion, "La descripción debe tener al menos 10 caracteres");
+            esValido = false;
+        } else if (descripcion.length() > 200) {
+            mostrarError(binding.errorTipoDescripcion, "La descripción no puede exceder 200 caracteres");
+            esValido = false;
+        } else if (descripcion.matches("^[\\s!@#$%^&*()+={}\\[\\]|\\\\:;\"'<>?/~`]+$")) {
+            mostrarError(binding.errorTipoDescripcion, "La descripción debe contener texto válido");
             esValido = false;
         }
 
-        // Validar precio
-        if (!validarPrecio()) {
+        // === Validar PRECIO ===
+        String precioTexto = binding.inputPrecioSoles.getText().toString().trim();
+        if (precioTexto.isEmpty()) {
+            mostrarError(binding.errorTipoPrecio, "Por favor, ingrese el precio del servicio");
+            esValido = false;
+        } else {
+            try {
+                double precio = Double.parseDouble(precioTexto);
+
+                if (precio <= 0) {
+                    mostrarError(binding.errorTipoPrecio, "El precio debe ser mayor a 0");
+                    esValido = false;
+                } else if (precio > 10000) {
+                    mostrarError(binding.errorTipoPrecio, "El precio no puede exceder S/. 10,000");
+                    esValido = false;
+                } else if (precioTexto.contains(".")) {
+                    String[] partes = precioTexto.split("\\.");
+                    if (partes.length > 1 && partes[1].length() > 2) {
+                        mostrarError(binding.errorTipoPrecio, "El precio no puede tener más de 2 decimales");
+                        esValido = false;
+                    }
+                }
+            } catch (NumberFormatException e) {
+                mostrarError(binding.errorTipoPrecio, "Por favor, ingrese un precio válido");
+                esValido = false;
+            }
+        }
+
+        if (todasLasFotos.size() < 4) {
+            binding.errorTipoFotos.setText("Debe agregar al menos 2 fotos del servicio");
+            binding.errorTipoFotos.setVisibility(View.VISIBLE);
             esValido = false;
         }
 
         return esValido;
     }
 
-    private boolean validarNombre() {
-        String nombre = binding.inputNombre.getText().toString().trim();
-
-        if (nombre.isEmpty()) {
-            mostrarError(binding.errorTipoNombre, "Por favor, ingrese el nombre del servicio");
-            return false;
-        }
-
-        if (nombre.length() < 3) {
-            mostrarError(binding.errorTipoNombre, "El nombre debe tener al menos 3 caracteres");
-            return false;
-        }
-
-        if (nombre.length() > 50) {
-            mostrarError(binding.errorTipoNombre, "El nombre no puede exceder 50 caracteres");
-            return false;
-        }
-
-        // Validar que no contenga solo números
-        if (nombre.matches("^[0-9]+$")) {
-            mostrarError(binding.errorTipoNombre, "El nombre no puede contener solo números");
-            return false;
-        }
-
-        // Validar caracteres especiales excesivos
-        if (nombre.matches(".*[!@#$%^&*()+={}\\[\\]|\\\\:;\"'<>?/~`]{3,}.*")) {
-            mostrarError(binding.errorTipoNombre, "El nombre contiene demasiados caracteres especiales");
-            return false;
-        }
-
-        return true;
-    }
-    private boolean validarDescripcion() {
-        String descripcion = binding.inputDescripcion.getText().toString().trim();
-
-        if (descripcion.isEmpty()) {
-            mostrarError(binding.errorTipoDescripcion, "Por favor, ingrese la descripción del servicio");
-            return false;
-        }
-
-        if (descripcion.length() < 10) {
-            mostrarError(binding.errorTipoDescripcion, "La descripción debe tener al menos 10 caracteres");
-            return false;
-        }
-
-        if (descripcion.length() > 200) {
-            mostrarError(binding.errorTipoDescripcion, "La descripción no puede exceder 200 caracteres");
-            return false;
-        }
-
-        // Validar que no sean solo espacios o caracteres especiales
-        if (descripcion.matches("^[\\s!@#$%^&*()+={}\\[\\]|\\\\:;\"'<>?/~`]+$")) {
-            mostrarError(binding.errorTipoDescripcion, "La descripción debe contener texto válido");
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean validarPrecio() {
-        String precioTexto = binding.inputPrecioSoles.getText().toString().trim();
-
-        if (precioTexto.isEmpty()) {
-            mostrarError(binding.errorTipoPrecio, "Por favor, ingrese el precio del servicio");
-            return false;
-        }
-
-        try {
-            double precio = Double.parseDouble(precioTexto);
-
-            if (precio <= 0) {
-                mostrarError(binding.errorTipoPrecio, "El precio debe ser mayor a 0");
-                return false;
-            }
-
-            if (precio > 10000) {
-                mostrarError(binding.errorTipoPrecio, "El precio no puede exceder S/. 10,000");
-                return false;
-            }
-
-            // Validar que no tenga más de 2 decimales
-            if (precioTexto.contains(".")) {
-                String[] partes = precioTexto.split("\\.");
-                if (partes.length > 1 && partes[1].length() > 2) {
-                    mostrarError(binding.errorTipoPrecio, "El precio no puede tener más de 2 decimales");
-                    return false;
-                }
-            }
-
-        } catch (NumberFormatException e) {
-            mostrarError(binding.errorTipoPrecio, "Por favor, ingrese un precio válido");
-            return false;
-        }
-
-        return true;
-    }
     private void mostrarError(TextView errorView, String mensaje) {
         errorView.setText(mensaje);
         errorView.setVisibility(View.VISIBLE);
 
         // Opcional: hacer scroll hacia el error
         errorView.getParent().requestChildFocus(errorView, errorView);
-    }
-
-    // Metodo para limpiar todos los errores
-    private void limpiarErrores() {
-        binding.errorTipoNombre.setVisibility(View.GONE);
-        binding.errorTipoDescripcion.setVisibility(View.GONE);
-        binding.errorTipoPrecio.setVisibility(View.GONE);
     }
 
     // Validación en tiempo real (opcional)
@@ -1125,37 +1077,5 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////
 
-
-    ///////////////////////NO SE PA QUE SIRVEN///////////////////////////////////////////////7
-    // Métodos públicos actualizados para compatibilidad dudosos
-    public List<Uri> getFotosSeleccionadas() {
-        List<Uri> uris = new ArrayList<>();
-        for (FotoItem item : todasLasFotos) {
-            if (item.uri != null) {
-                uris.add(item.uri);
-            }
-        }
-        return uris;
-    }
-
-    public List<Bitmap> getFotosCamara() {
-        List<Bitmap> bitmaps = new ArrayList<>();
-        for (FotoItem item : todasLasFotos) {
-            if (item.bitmap != null) {
-                bitmaps.add(item.bitmap);
-            }
-        }
-        return bitmaps;
-    }
-
-    // Metodo para obtener todas las fotos (nueva funcionalidad)
-    public List<FotoItem> getTodasLasFotos() {
-        return todasLasFotos;
-    }
-
-    public boolean tieneFotos() {
-        return !todasLasFotos.isEmpty();
-    }
 }

@@ -190,7 +190,17 @@
                     android:orientation="vertical"
                     android:layout_marginTop="16dp"
                     android:visibility="gone" />
-
+                <TextView
+                    android:id="@+id/errorTipoFotos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
+                    android:drawableStart="@drawable/ic_warning_admin"
+                    android:drawablePadding="8dp"
+                    android:textColor="#D32F2F"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
                 <!-- Botón Final -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRegistrarServicio"
@@ -210,45 +220,43 @@
                     app:strokeWidth="1dp" />
             </LinearLayout>
 
-
-
-            <RelativeLayout
-                android:id="@+id/progressBarGuardar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#80000000"
-                android:visibility="gone"
-                android:clickable="true"
-                android:focusable="true">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/loading_background"
-                    android:padding="24dp">
-
-                    <ProgressBar
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:indeterminate="true" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Guardando servicio..."
-                        android:textColor="#000000"
-                        android:textSize="16sp"
-                        android:layout_marginTop="16dp" />
-
-                </LinearLayout>
-            </RelativeLayout>
-
         </ScrollView>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/progressBarGuardar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/loading_background"
+            android:padding="24dp">
+
+            <ProgressBar
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminate="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardando servicio..."
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp" />
+
+        </LinearLayout>
+    </RelativeLayout>
     <!-- Fondo semitransparente para el overlay -->
     <View
         android:id="@+id/overlayBackground"

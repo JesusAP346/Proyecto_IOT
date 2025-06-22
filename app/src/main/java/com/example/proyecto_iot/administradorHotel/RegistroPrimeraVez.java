@@ -1012,13 +1012,6 @@ public class RegistroPrimeraVez extends AppCompatActivity {
         // Opcional: hacer scroll hacia el error
         errorView.getParent().requestChildFocus(errorView, errorView);
     }
-
-    private void limpiarErrores() {
-        binding.errorTipoNombre.setVisibility(View.GONE);
-        binding.errorTipoDireccion.setVisibility(View.GONE);
-        binding.errorTipoReferencia.setVisibility(View.GONE);
-        binding.errorTipoFotos.setVisibility(View.GONE);
-    }
     private void configurarValidacionTiempoReal() {
         // Validación en tiempo real para el nombre del hotel
         binding.inputNombre.addTextChangedListener(new TextWatcher() {
