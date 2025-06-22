@@ -112,7 +112,7 @@
             android:textStyle="bold"/>
 
         <EditText
-            android:id="@+id/setTipoHabitacion"
+            android:id="@+id/textTipoHabitacion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/customedittext"
@@ -120,6 +120,18 @@
             android:layout_marginTop="4dp"
             android:padding="8dp"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/errorTipoHabitacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            android:drawableStart="@drawable/ic_warning_admin"
+            android:drawablePadding="8dp"
+            android:textColor="#D32F2F"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="match_parent"
@@ -141,7 +153,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Adultos"
-
                 android:textSize="14sp" />
 
             <ImageButton
@@ -152,7 +163,7 @@
                 android:background="@drawable/bg_circle_outline"
                 android:tint="@color/rojizoProyect"
                 android:layout_marginRight="10dp"
-                android:contentDescription="Más adultos" />
+                android:contentDescription="Menos adultos" />
 
             <TextView
                 android:id="@+id/textCantidadAdultos"
@@ -188,7 +199,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Niños"
-
                 android:textSize="14sp" />
 
             <ImageButton
@@ -199,7 +209,7 @@
                 android:background="@drawable/bg_circle_outline"
                 android:tint="@color/rojizoProyect"
                 android:layout_marginRight="10dp"
-                android:contentDescription="Más adultos" />
+                android:contentDescription="Menos niños" />
 
             <TextView
                 android:id="@+id/textCantidadNinos"
@@ -222,6 +232,18 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/errorCapacidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            android:drawableStart="@drawable/ic_warning_admin"
+            android:drawablePadding="8dp"
+            android:textColor="#D32F2F"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tamaño de la habitación en m²"
@@ -230,7 +252,7 @@
             android:layout_marginTop="13dp" />
 
         <EditText
-            android:id="@+id/setTamanoHabitacion"
+            android:id="@+id/textTamanoHabitacion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/customedittext"
@@ -241,6 +263,18 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/errorTamanoHabitacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            android:drawableStart="@drawable/ic_warning_admin"
+            android:drawablePadding="8dp"
+            android:textColor="#D32F2F"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Precio por noche (soles S/.)"
@@ -249,15 +283,27 @@
             android:layout_marginTop="13dp" />
 
         <EditText
-            android:id="@+id/setPrecioPorNoche"
+            android:id="@+id/textPrecioPorNoche"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/customedittext"
             android:hint="Ej. 120.00 "
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:padding="8dp"
             android:layout_marginTop="4dp"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/errorPrecioPorNoche"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            android:drawableStart="@drawable/ic_warning_admin"
+            android:drawablePadding="8dp"
+            android:textColor="#D32F2F"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="match_parent"
@@ -268,7 +314,7 @@
             android:layout_marginTop="13dp" />
 
         <EditText
-            android:id="@+id/setCantidadHabitaciones"
+            android:id="@+id/textCantidadHabitaciones"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/customedittext"
@@ -277,6 +323,18 @@
             android:padding="8dp"
             android:layout_marginTop="4dp"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/errorCantidadHabitaciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            android:drawableStart="@drawable/ic_warning_admin"
+            android:drawablePadding="8dp"
+            android:textColor="#D32F2F"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
         <!-- Botón siguiente -->
         <LinearLayout

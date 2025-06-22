@@ -103,15 +103,38 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Equipamiento -->
-        <!-- Equipamiento -->
-        <TextView
+        <!-- Equipamiento con botón agregar -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Equipamiento"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Equipamiento"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAgregarEquipamiento"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:minHeight="32dp"
+                android:minWidth="0dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="0dp"
+                android:text="+ AGREGAR"
+                android:textColor="@android:color/black"
+                android:textSize="10sp"
+                app:backgroundTint="#FACEC6"
+                app:cornerRadius="8dp"
+                app:strokeColor="#772f1a"
+                app:strokeWidth="1dp" />
+        </LinearLayout>
 
         <Spinner
             android:id="@+id/spinnerEquipamiento"
@@ -120,6 +143,7 @@
             android:background="@drawable/customedittext"
             android:padding="8dp"
             android:spinnerMode="dropdown" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -127,17 +151,20 @@
             android:textSize="13sp"
             android:textStyle="bold"
             android:layout_marginTop="4dp" />
+
         <!-- Texto vacío -->
         <TextView
             android:id="@+id/textEquipamientoVacio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=" ¡Sin equipamiento agregado! "
-            android:textColor="#7C2D2D"
-            android:textStyle="bold"
-            android:visibility="gone"
-            android:layout_marginTop="6dp" />
-
+            android:text="Sin consumo agregado"
+            android:textColor="#777777"
+            android:textStyle="italic"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
 
         <!-- Chips dinámicos -->
         <LinearLayout
@@ -146,8 +173,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="8dp" />
-
-
 
         <!-- Imágenes -->
         <TextView
