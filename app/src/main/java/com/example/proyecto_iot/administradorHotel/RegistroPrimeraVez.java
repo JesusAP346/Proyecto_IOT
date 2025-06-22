@@ -852,20 +852,18 @@ public class RegistroPrimeraVez extends AppCompatActivity {
             return;
         }
 
-        // Marcar que estamos guardando
+        // Estado de guardado
         guardandoServicio = true;
         binding.btnRegistrarHotel.setEnabled(false);
         binding.progressBarGuardar.setVisibility(View.VISIBLE);
         binding.btnRegistrarHotel.setText("Guardando...");
 
-        // Primero subir todas las imágenes
         subirTodasLasImagenes(
                 // OnSuccess - todas las imágenes subidas
                 urlsImagenes -> {
-
                     String idAdministrador = (currentUser != null) ? currentUser.getUid() : "desconocido";
 
-                    // Ahora guardar en Firestore con las URLs
+                    // Crear objeto Hotel con imágenes subidas
                     Hotel hotel = new Hotel(nombre, direccion, referencias, urlsImagenes, idAdministrador);
 
                     runOnUiThread(() -> {
@@ -873,33 +871,48 @@ public class RegistroPrimeraVez extends AppCompatActivity {
                     });
 
 
+
+
                     db.collection("hoteles")
                             .add(hotel)
                             .addOnSuccessListener(documentReference -> {
                                 String idGenerado = documentReference.getId();
 
-                                // Actualizar el documento para agregar el campo "id"
+                                // Guardar ese ID dentro del mismo documento (campo 'id')
                                 documentReference.update("id", idGenerado)
                                         .addOnSuccessListener(unused -> {
-                                            Toast.makeText(this, "Hotel registrado correctamente ", Toast.LENGTH_LONG).show();
 
-                                            guardandoServicio = false;
-                                            binding.btnRegistrarHotel.setEnabled(true);
-                                            binding.progressBarGuardar.setVisibility(View.GONE);
-                                            binding.btnRegistrarHotel.setText("Registrar hotel");
+                                            // 🔥 NUEVO: guardar también el idHotel en el usuario
+                                            db.collection("usuarios")
+                                                    .document(idAdministrador)
+                                                    .update("idHotel", idGenerado)
+                                                    .addOnSuccessListener(userUpdateSuccess -> {
+                                                        Toast.makeText(this, "Hotel registrado correctamente", Toast.LENGTH_SHORT).show();
 
-                                            limpiarImagenesTemporales();
+                                                        guardandoServicio = false;
+                                                        binding.btnRegistrarHotel.setEnabled(true);
+                                                        binding.progressBarGuardar.setVisibility(View.GONE);
+                                                        binding.btnRegistrarHotel.setText("Registrar hotel");
 
-                                            // Ir a pantalla principal del admin
-                                            Intent intent = new Intent(this, PagPrincipalAdmin.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                            finish();
+                                                        limpiarImagenesTemporales();
+
+                                                        // Ir a pantalla principal del admin
+                                                        Intent intent = new Intent(this, PagPrincipalAdmin.class);
+                                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    })
+                                                    .addOnFailureListener(userUpdateError -> {
+                                                        Toast.makeText(this, "Hotel guardado, pero no se pudo asignar al usuario: " + userUpdateError.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    });
+
                                         })
                                         .addOnFailureListener(e -> {
                                             Toast.makeText(this, "Error al guardar ID del hotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                            finish(); // Igual lo mandamos al home
+                                            finish();
                                         });
+
                             })
                             .addOnFailureListener(e -> {
                                 Toast.makeText(this, "Error al guardar el hotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -914,8 +927,8 @@ public class RegistroPrimeraVez extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             });
-
                 },
+
                 // OnError - error subiendo imágenes
                 error -> {
                     Toast.makeText(this, "Error subiendo imágenes: " + error, Toast.LENGTH_SHORT).show();
@@ -931,8 +944,8 @@ public class RegistroPrimeraVez extends AppCompatActivity {
                     finish();
                 }
         );
-
     }
+
 
     private boolean validarCampos() {
         boolean esValido = true;
