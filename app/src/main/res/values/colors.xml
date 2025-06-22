@@ -25,5 +25,27 @@
     <color name="status_online">#B2DFDB</color>
     <color name="error_red">#D93025</color>
 
+    <!-- Primary Colors -->
+    <color name="orange_primary">#FB8D71</color>
+    <color name="blue_secondary">#3B82F6</color>
+    <color name="indigo_primary">#FBAF3B</color>
+    <color name="indigo_secondary">#6366F1</color>
 
+    <!-- Background Colors -->
+    <color name="background_gradient">#F8FAFC</color>
+    <color name="map_background">#F3F4F6</color>
+    <color name="image_background">#E5E7EB</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#1F2937</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_tertiary">#9CA3AF</color>
+
+    <!-- Standard Colors -->
+    <color name="red">#EF4444</color>
+    <color name="green">#10B981</color>
+
+    <!-- Card Colors -->
+    <color name="card_background">#FFFFFF</color>
+    <color name="card_shadow">#1F294020</color>
 </resources>

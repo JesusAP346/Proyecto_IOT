@@ -20,12 +20,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -34,17 +34,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.entity.FotoItem;
+import com.example.proyecto_iot.administradorHotel.entity.Hotel;
 import com.example.proyecto_iot.administradorHotel.entity.ServicioHotel;
-import com.example.proyecto_iot.databinding.ActivityRegistroServicioDesdeOpcionesBinding;
+import com.example.proyecto_iot.administradorHotel.entity.UploadResponse;
+import com.example.proyecto_iot.administradorHotel.services.AwsService;
+import com.example.proyecto_iot.databinding.ActivityRegistroPrimeraVezBinding;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -54,24 +67,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import java.io.File;
-import com.example.proyecto_iot.administradorHotel.services.AwsService;
-import com.example.proyecto_iot.administradorHotel.entity.UploadResponse;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.FirebaseAuth;
+public class RegistroPrimeraVez extends AppCompatActivity {
 
-public class RegistroServicioDesdeOpciones extends AppCompatActivity {
-
-    ActivityRegistroServicioDesdeOpcionesBinding binding;
+    ActivityRegistroPrimeraVezBinding binding;
 
     FirebaseFirestore db;
     FirebaseUser currentUser;
     private boolean isMenuVisible = false;
+    private final List<String> referencias = new ArrayList<>();
 
     // Lista unificada para todas las fotos
     private List<FotoItem> todasLasFotos = new ArrayList<>();
@@ -87,7 +91,7 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityRegistroServicioDesdeOpcionesBinding.inflate(getLayoutInflater());
+        binding = ActivityRegistroPrimeraVezBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         db = FirebaseFirestore.getInstance();
@@ -100,9 +104,9 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
         configurarValidacionTiempoReal();
 
         // Retroceder al presionar el botón de la flecha
-        binding.backRegistroServicio.setOnClickListener(v -> finish());
+        binding.btnRegistrarHotel.setOnClickListener(v -> finish());
 
-        binding.btnRegistrarServicio.setOnClickListener(v -> {
+        binding.btnRegistrarHotel.setOnClickListener(v -> {
 
             // Prevenir múltiples clics
             if (guardandoServicio) {
@@ -115,21 +119,23 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
 
             // Si llegamos aquí, todos los campos son válidos
             String nombre = binding.inputNombre.getText().toString().trim();
-            String descripcion = binding.inputDescripcion.getText().toString().trim();
-            String precioTexto = binding.inputPrecioSoles.getText().toString().trim();
+            String direccion = binding.inputDireccion.getText().toString().trim();
 
-            try {
-                double precio = Double.parseDouble(precioTexto);
-                guardarServicio(nombre, descripcion, precio);
-            } catch (NumberFormatException e) {
-                // Este catch ya no debería ejecutarse porque validarPrecio()
-                // ya verifica que sea un número válido
-                Toast.makeText(this, "Error inesperado en el precio", Toast.LENGTH_SHORT).show();
+            guardarHotel(nombre, direccion, referencias);
+        });
+
+        binding.btnAgregarReferencia.setOnClickListener(v -> {
+            String texto = binding.inputReferencia.getText().toString().trim();
+            if (!texto.isEmpty() && !referencias.contains(texto)) {
+                referencias.add(texto);
+                agregarChipReferencia(texto);
+                binding.inputReferencia.setText("");
             }
         });
+
     }
 
-    ////////////////////////Para lanzar la calería, cámara o archivos////////////////////////////
+    ///////////////////////TODO ESTO ES PA LAS FOTOS///////////////////////////////////7
     private void inicializarLaunchers() {
         // Launcher para galería
         galeriaLauncher = registerForActivityResult(
@@ -335,7 +341,6 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
             }
         }
     }
-
 
     /////////Lógica para Agregar, eliminar y mostrar (previsualizar) las fotos/////////////////////
 
@@ -593,7 +598,6 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
         }
     }
 
-
     ////////////////////////METODOS PARA EL GUARDADO DE IMAGENES EN AWS//////////////////////////
 
     //METODO PRINCIPAL PARA SUBIR TODAS LAS IMÁGENES
@@ -610,7 +614,7 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
 
         // Mostrar progreso
         binding.progressBarGuardar.setVisibility(View.VISIBLE);
-        binding.btnRegistrarServicio.setText("Subiendo imágenes...");
+        binding.btnRegistrarHotel.setText("Subiendo imágenes...");
 
         for (int i = 0; i < todasLasFotos.size(); i++) {
             FotoItem fotoItem = todasLasFotos.get(i);
@@ -624,7 +628,7 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
 
                         // Actualizar progreso
                         runOnUiThread(() -> {
-                            binding.btnRegistrarServicio.setText("Subiendo " + completadas + "/" + todasLasFotos.size());
+                            binding.btnRegistrarHotel.setText("Subiendo " + completadas + "/" + todasLasFotos.size());
                         });
 
                         // Si todas las imágenes se subieron
@@ -840,208 +844,154 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
         }
     }
 
+    private void guardarHotel(String nombre, String direccion, List<String> referencias) {
 
+        // Validar que haya al menos 4 fotos
+        if (todasLasFotos.size() < 4) {
+            mostrarError(binding.errorTipoFotos, "Debes agregar al menos 4 fotos del hotel");
+            return;
+        }
 
-    //MÉTODOS PARA EL GUARDAD DE BASE EN CLOUDSTORAGE FIREBASE (NOMBRE, DESCRIPCION Y PRECIO)
-
-    // 8. METODO GUARDAR SERVICIO ACTUALIZADO
-    private void guardarServicio(String nombre, String descripcion, double precio) {
         // Marcar que estamos guardando
         guardandoServicio = true;
-        binding.btnRegistrarServicio.setEnabled(false);
+        binding.btnRegistrarHotel.setEnabled(false);
         binding.progressBarGuardar.setVisibility(View.VISIBLE);
-        binding.btnRegistrarServicio.setText("Guardando...");
+        binding.btnRegistrarHotel.setText("Guardando...");
 
         // Primero subir todas las imágenes
         subirTodasLasImagenes(
                 // OnSuccess - todas las imágenes subidas
                 urlsImagenes -> {
-                    // Ahora guardar en Firestore con las URLs
 
-                    ServicioHotel servicio = new ServicioHotel(nombre, descripcion, precio, urlsImagenes);
+                    String idAdministrador = (currentUser != null) ? currentUser.getUid() : "desconocido";
+
+                    // Ahora guardar en Firestore con las URLs
+                    Hotel hotel = new Hotel(nombre, direccion, referencias, urlsImagenes, idAdministrador);
 
                     runOnUiThread(() -> {
-                        binding.btnRegistrarServicio.setText("Guardando servicio...");
+                        binding.btnRegistrarHotel.setText("Guardando servicio...");
                     });
 
-                    if (currentUser != null) {
-                        String uid = currentUser.getUid();
-                        db.collection("usuarios")
-                                .document(uid)
-                                .collection("servicios")
-                                .add(servicio)
-                                .addOnSuccessListener(documentReference -> {
-                                    runOnUiThread(() -> {
-                                        Toast.makeText(this, "Servicio guardado correctamente con " + urlsImagenes.size() + " imágenes", Toast.LENGTH_LONG).show();
 
-                                        // Restablecer estado
-                                        guardandoServicio = false;
-                                        binding.btnRegistrarServicio.setEnabled(true);
-                                        binding.btnRegistrarServicio.setText("Registrar Servicio");
-                                        binding.progressBarGuardar.setVisibility(View.GONE);
+                    db.collection("hoteles")
+                            .add(hotel)
+                            .addOnSuccessListener(documentReference -> {
+                                String idGenerado = documentReference.getId();
 
-                                        // Limpiar imágenes temporales
-                                        limpiarImagenesTemporales();
+                                // Actualizar el documento para agregar el campo "id"
+                                documentReference.update("id", idGenerado)
+                                        .addOnSuccessListener(unused -> {
+                                            Toast.makeText(this, "Hotel registrado correctamente ", Toast.LENGTH_LONG).show();
 
-                                        // Regresar
-                                        finish();
-                                    });
-                                })
-                                .addOnFailureListener(e -> {
-                                    runOnUiThread(() -> {
-                                        Toast.makeText(this, "Error al guardar en base de datos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            guardandoServicio = false;
+                                            binding.btnRegistrarHotel.setEnabled(true);
+                                            binding.progressBarGuardar.setVisibility(View.GONE);
+                                            binding.btnRegistrarHotel.setText("Registrar hotel");
 
-                                        // Restablecer estado
-                                        guardandoServicio = false;
-                                        binding.btnRegistrarServicio.setEnabled(true);
-                                        binding.btnRegistrarServicio.setText("Registrar Servicio");
-                                        binding.progressBarGuardar.setVisibility(View.GONE);
-                                    });
-                                });
-                    }else {
-                        Toast.makeText(RegistroServicioDesdeOpciones.this, "No está logueado", Toast.LENGTH_SHORT).show();
-                    }
+                                            limpiarImagenesTemporales();
+
+                                            // Ir a pantalla principal del admin
+                                            Intent intent = new Intent(this, PagPrincipalAdmin.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            finish();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(this, "Error al guardar ID del hotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            finish(); // Igual lo mandamos al home
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "Error al guardar el hotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                guardandoServicio = false;
+                                binding.btnRegistrarHotel.setEnabled(true);
+                                binding.progressBarGuardar.setVisibility(View.GONE);
+                                binding.btnRegistrarHotel.setText("Registrar hotel");
+
+                                Intent intent = new Intent(this, RegistroPrimeraVez.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            });
+
                 },
                 // OnError - error subiendo imágenes
                 error -> {
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "Error subiendo imágenes: " + error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error subiendo imágenes: " + error, Toast.LENGTH_SHORT).show();
 
-                        // Restablecer estado
-                        guardandoServicio = false;
-                        binding.btnRegistrarServicio.setEnabled(true);
-                        binding.btnRegistrarServicio.setText("Registrar Servicio");
-                        binding.progressBarGuardar.setVisibility(View.GONE);
-                    });
+                    guardandoServicio = false;
+                    binding.btnRegistrarHotel.setEnabled(true);
+                    binding.progressBarGuardar.setVisibility(View.GONE);
+                    binding.btnRegistrarHotel.setText("Registrar hotel");
+
+                    Intent intent = new Intent(this, RegistroPrimeraVez.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
                 }
         );
 
     }
 
-
-
-    ///////////////////////////////////////VALIDACIONES XD ////////////////////////////////////////
-
     private boolean validarCampos() {
         boolean esValido = true;
 
         // Limpiar errores previos
-        limpiarErrores();
+        binding.errorTipoNombre.setVisibility(View.GONE);
+        binding.errorTipoDireccion.setVisibility(View.GONE);
+        binding.errorTipoReferencia.setVisibility(View.GONE);
+        binding.errorTipoFotos.setVisibility(View.GONE);
 
         // Validar nombre
-        if (!validarNombre()) {
+        String nombre = binding.inputNombre.getText().toString().trim();
+        if (nombre.isEmpty()) {
+            binding.errorTipoNombre.setText("Por favor, ingrese el nombre del hotel");
+            binding.errorTipoNombre.setVisibility(View.VISIBLE);
+            esValido = false;
+        } else if (nombre.length() < 3) {
+            binding.errorTipoNombre.setText("El nombre debe tener al menos 3 caracteres");
+            binding.errorTipoNombre.setVisibility(View.VISIBLE);
+            esValido = false;
+        } else if (nombre.length() > 50) {
+            binding.errorTipoNombre.setText("El nombre no puede exceder 50 caracteres");
+            binding.errorTipoNombre.setVisibility(View.VISIBLE);
+            esValido = false;
+        } else if (nombre.matches("^[0-9]+$")) {
+            binding.errorTipoNombre.setText("El nombre no puede contener solo números");
+            binding.errorTipoNombre.setVisibility(View.VISIBLE);
             esValido = false;
         }
 
-        // Validar descripción
-        if (!validarDescripcion()) {
+        // Validar dirección
+        String direccion = binding.inputDireccion.getText().toString().trim();
+        if (direccion.isEmpty()) {
+            binding.errorTipoDireccion.setText("Por favor, ingrese la dirección del hotel");
+            binding.errorTipoDireccion.setVisibility(View.VISIBLE);
+            esValido = false;
+        } else if (direccion.length() < 5) {
+            binding.errorTipoDireccion.setText("La dirección debe tener al menos 5 caracteres");
+            binding.errorTipoDireccion.setVisibility(View.VISIBLE);
             esValido = false;
         }
 
-        // Validar precio
-        if (!validarPrecio()) {
+        // Validar referencias
+        if (referencias.isEmpty()) {
+            binding.errorTipoReferencia.setText("Agregue al menos una referencia");
+            binding.errorTipoReferencia.setVisibility(View.VISIBLE);
+            esValido = false;
+        }
+
+        // Validar mínimo 4 fotos
+        if (todasLasFotos.size() < 4) {
+            binding.errorTipoFotos.setText("Debe agregar al menos 4 fotos del hotel");
+            binding.errorTipoFotos.setVisibility(View.VISIBLE);
             esValido = false;
         }
 
         return esValido;
     }
 
-    private boolean validarNombre() {
-        String nombre = binding.inputNombre.getText().toString().trim();
-
-        if (nombre.isEmpty()) {
-            mostrarError(binding.errorTipoNombre, "Por favor, ingrese el nombre del servicio");
-            return false;
-        }
-
-        if (nombre.length() < 3) {
-            mostrarError(binding.errorTipoNombre, "El nombre debe tener al menos 3 caracteres");
-            return false;
-        }
-
-        if (nombre.length() > 50) {
-            mostrarError(binding.errorTipoNombre, "El nombre no puede exceder 50 caracteres");
-            return false;
-        }
-
-        // Validar que no contenga solo números
-        if (nombre.matches("^[0-9]+$")) {
-            mostrarError(binding.errorTipoNombre, "El nombre no puede contener solo números");
-            return false;
-        }
-
-        // Validar caracteres especiales excesivos
-        if (nombre.matches(".*[!@#$%^&*()+={}\\[\\]|\\\\:;\"'<>?/~`]{3,}.*")) {
-            mostrarError(binding.errorTipoNombre, "El nombre contiene demasiados caracteres especiales");
-            return false;
-        }
-
-        return true;
-    }
-    private boolean validarDescripcion() {
-        String descripcion = binding.inputDescripcion.getText().toString().trim();
-
-        if (descripcion.isEmpty()) {
-            mostrarError(binding.errorTipoDescripcion, "Por favor, ingrese la descripción del servicio");
-            return false;
-        }
-
-        if (descripcion.length() < 10) {
-            mostrarError(binding.errorTipoDescripcion, "La descripción debe tener al menos 10 caracteres");
-            return false;
-        }
-
-        if (descripcion.length() > 200) {
-            mostrarError(binding.errorTipoDescripcion, "La descripción no puede exceder 200 caracteres");
-            return false;
-        }
-
-        // Validar que no sean solo espacios o caracteres especiales
-        if (descripcion.matches("^[\\s!@#$%^&*()+={}\\[\\]|\\\\:;\"'<>?/~`]+$")) {
-            mostrarError(binding.errorTipoDescripcion, "La descripción debe contener texto válido");
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean validarPrecio() {
-        String precioTexto = binding.inputPrecioSoles.getText().toString().trim();
-
-        if (precioTexto.isEmpty()) {
-            mostrarError(binding.errorTipoPrecio, "Por favor, ingrese el precio del servicio");
-            return false;
-        }
-
-        try {
-            double precio = Double.parseDouble(precioTexto);
-
-            if (precio <= 0) {
-                mostrarError(binding.errorTipoPrecio, "El precio debe ser mayor a 0");
-                return false;
-            }
-
-            if (precio > 10000) {
-                mostrarError(binding.errorTipoPrecio, "El precio no puede exceder S/. 10,000");
-                return false;
-            }
-
-            // Validar que no tenga más de 2 decimales
-            if (precioTexto.contains(".")) {
-                String[] partes = precioTexto.split("\\.");
-                if (partes.length > 1 && partes[1].length() > 2) {
-                    mostrarError(binding.errorTipoPrecio, "El precio no puede tener más de 2 decimales");
-                    return false;
-                }
-            }
-
-        } catch (NumberFormatException e) {
-            mostrarError(binding.errorTipoPrecio, "Por favor, ingrese un precio válido");
-            return false;
-        }
-
-        return true;
-    }
     private void mostrarError(TextView errorView, String mensaje) {
         errorView.setText(mensaje);
         errorView.setVisibility(View.VISIBLE);
@@ -1050,16 +1000,14 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
         errorView.getParent().requestChildFocus(errorView, errorView);
     }
 
-    // Metodo para limpiar todos los errores
     private void limpiarErrores() {
         binding.errorTipoNombre.setVisibility(View.GONE);
-        binding.errorTipoDescripcion.setVisibility(View.GONE);
-        binding.errorTipoPrecio.setVisibility(View.GONE);
+        binding.errorTipoDireccion.setVisibility(View.GONE);
+        binding.errorTipoReferencia.setVisibility(View.GONE);
+        binding.errorTipoFotos.setVisibility(View.GONE);
     }
-
-    // Validación en tiempo real (opcional)
     private void configurarValidacionTiempoReal() {
-        // Validación para nombre
+        // Validación en tiempo real para el nombre del hotel
         binding.inputNombre.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -1075,15 +1023,15 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
 
-        // Validación para descripción
-        binding.inputDescripcion.addTextChangedListener(new TextWatcher() {
+        // Validación en tiempo real para la dirección del hotel
+        binding.inputDireccion.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (binding.errorTipoDescripcion.getVisibility() == View.VISIBLE) {
-                    binding.errorTipoDescripcion.setVisibility(View.GONE);
+                if (binding.errorTipoDireccion.getVisibility() == View.VISIBLE) {
+                    binding.errorTipoDireccion.setVisibility(View.GONE);
                 }
             }
 
@@ -1091,15 +1039,15 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
 
-        // Validación para precio
-        binding.inputPrecioSoles.addTextChangedListener(new TextWatcher() {
+        // Validación en tiempo real para referencias (solo borra el error si escribe algo)
+        binding.inputReferencia.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (binding.errorTipoPrecio.getVisibility() == View.VISIBLE) {
-                    binding.errorTipoPrecio.setVisibility(View.GONE);
+                if (binding.errorTipoReferencia.getVisibility() == View.VISIBLE) {
+                    binding.errorTipoReferencia.setVisibility(View.GONE);
                 }
             }
 
@@ -1107,6 +1055,7 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
     }
+
 
     // 9. METODO PARA LIMPIAR IMÁGENES TEMPORALES
     private void limpiarImagenesTemporales() {
@@ -1125,37 +1074,49 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-    ///////////////////////NO SE PA QUE SIRVEN///////////////////////////////////////////////7
-    // Métodos públicos actualizados para compatibilidad dudosos
-    public List<Uri> getFotosSeleccionadas() {
-        List<Uri> uris = new ArrayList<>();
-        for (FotoItem item : todasLasFotos) {
-            if (item.uri != null) {
-                uris.add(item.uri);
-            }
-        }
-        return uris;
+
+    private void agregarChipReferencia(String texto) {
+        // Contenedor externo
+        LinearLayout chip = new LinearLayout(this);
+        chip.setOrientation(LinearLayout.HORIZONTAL);
+        chip.setBackgroundResource(R.drawable.customedittext);
+        chip.setPadding(16, 12, 16, 12);
+        chip.setGravity(Gravity.CENTER_VERTICAL);
+
+        LinearLayout.LayoutParams chipParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        chipParams.setMargins(0, 8, 0, 0);
+        chip.setLayoutParams(chipParams);
+
+        // Texto
+        TextView textView = new TextView(this);
+        textView.setText(texto);
+        textView.setTextSize(16);
+        textView.setTextColor(Color.BLACK);
+        textView.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
+        // Icono eliminar
+        ImageView icono = new ImageView(this);
+        icono.setImageResource(R.drawable.ic_delete);
+        icono.setColorFilter(getResources().getColor(android.R.color.holo_red_dark));
+        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(40, 40);
+        iconParams.setMargins(16, 0, 0, 0);
+        icono.setLayoutParams(iconParams);
+
+        icono.setOnClickListener(v -> {
+            referencias.remove(texto);
+            binding.layoutReferenciasDinamicas.removeView(chip);
+        });
+
+        chip.addView(textView);
+        chip.addView(icono);
+        binding.layoutReferenciasDinamicas.addView(chip);
     }
 
-    public List<Bitmap> getFotosCamara() {
-        List<Bitmap> bitmaps = new ArrayList<>();
-        for (FotoItem item : todasLasFotos) {
-            if (item.bitmap != null) {
-                bitmaps.add(item.bitmap);
-            }
-        }
-        return bitmaps;
-    }
 
-    // Metodo para obtener todas las fotos (nueva funcionalidad)
-    public List<FotoItem> getTodasLasFotos() {
-        return todasLasFotos;
-    }
 
-    public boolean tieneFotos() {
-        return !todasLasFotos.isEmpty();
-    }
 }

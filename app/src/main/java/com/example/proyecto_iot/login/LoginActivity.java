@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.proyecto_iot.MainActivity;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
+import com.example.proyecto_iot.administradorHotel.RegistroPrimeraVez;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -98,11 +99,24 @@ public class LoginActivity extends AppCompatActivity {
                                                 finish();
                                             } else if ("Administrador".equals(rol)) {
                                                 String idUsuario = documentSnapshot.getId();
-                                                Intent intent = new Intent(LoginActivity.this, PagPrincipalAdmin.class);
-                                                intent.putExtra("idUsuario", idUsuario);
-                                                startActivity(intent);
-                                                finish();
-                                            }  else if ("Taxista".equals(rol)) {
+                                                String idHotel = documentSnapshot.getString("idHotel");
+
+                                                if (idHotel == null || idHotel.isEmpty()) {
+                                                    // No tiene hotel aún, va al registro
+                                                    Intent intent = new Intent(LoginActivity.this, RegistroPrimeraVez.class);
+                                                    intent.putExtra("idUsuario", idUsuario);
+                                                    startActivity(intent);
+                                                } else {
+                                                    // Ya tiene hotel, va al panel principal
+                                                    Intent intent = new Intent(LoginActivity.this, PagPrincipalAdmin.class);
+                                                    intent.putExtra("idUsuario", idUsuario);
+                                                    intent.putExtra("idHotel", idHotel); // importante para que luego lo uses en los fragmentos
+                                                    startActivity(intent);
+                                                }
+
+                                                finish(); // cerrar LoginActivity
+                                            }
+                                            else if ("Taxista".equals(rol)) {
                                                 String idUsuario = documentSnapshot.getId();
                                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                 intent.putExtra("idUsuario", idUsuario);
