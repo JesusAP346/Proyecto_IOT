@@ -858,57 +858,64 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
 
         subirTodasLasImagenes(
                 urlsImagenes -> {
-                    ServicioHotel servicio = new ServicioHotel(nombre, descripcion, precio, urlsImagenes);
+                    String uid = currentUser.getUid();
 
-                    if (currentUser != null) {
-                        String uid = currentUser.getUid();
+                    // Obtener el idHotel del usuario (admin)
+                    db.collection("usuarios").document(uid).get()
+                            .addOnSuccessListener(documentSnapshot -> {
+                                if (documentSnapshot.exists()) {
+                                    String idHotel = documentSnapshot.getString("idHotel");
 
-                        // Obtener el idHotel del usuario (admin)
-                        db.collection("usuarios").document(uid).get()
-                                .addOnSuccessListener(documentSnapshot -> {
-                                    if (documentSnapshot.exists()) {
-                                        String idHotel = documentSnapshot.getString("idHotel");
+                                    if (idHotel != null && !idHotel.isEmpty()) {
+                                        ServicioHotel servicio = new ServicioHotel(nombre, descripcion, precio, urlsImagenes);
 
-                                        if (idHotel != null && !idHotel.isEmpty()) {
-                                            // Guardamos el servicio en la subcolección de ese hotel
-                                            db.collection("hoteles")
-                                                    .document(idHotel)
-                                                    .collection("servicios")
-                                                    .add(servicio)
-                                                    .addOnSuccessListener(docRef -> runOnUiThread(() -> {
-                                                        Toast.makeText(this, "Servicio guardado correctamente ✅", Toast.LENGTH_LONG).show();
+                                        // Paso 1: Agregar servicio y dejar que Firestore genere el ID
+                                        db.collection("hoteles")
+                                                .document(idHotel)
+                                                .collection("servicios")
+                                                .add(servicio)
+                                                .addOnSuccessListener(docRef -> {
+                                                    String idGenerado = docRef.getId();
 
-                                                        guardandoServicio = false;
-                                                        binding.btnRegistrarServicio.setEnabled(true);
-                                                        binding.progressBarGuardar.setVisibility(View.GONE);
-                                                        binding.btnRegistrarServicio.setText("Registrar Servicio");
+                                                    // Paso 2: Guardar ese ID dentro del documento
+                                                    docRef.update("id", idGenerado)
+                                                            .addOnSuccessListener(unused -> {
+                                                                Toast.makeText(this, "Servicio guardado correctamente ", Toast.LENGTH_LONG).show();
 
-                                                        limpiarImagenesTemporales();
-                                                        finish();
-                                                    }))
-                                                    .addOnFailureListener(e -> runOnUiThread(() -> {
-                                                        Toast.makeText(this, "Error al guardar servicio: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                        resetEstadoUI();
-                                                    }));
-                                        } else {
-                                            Toast.makeText(this, "No se encontró el idHotel del usuario", Toast.LENGTH_SHORT).show();
-                                            resetEstadoUI();
-                                        }
+                                                                guardandoServicio = false;
+                                                                binding.btnRegistrarServicio.setEnabled(true);
+                                                                binding.progressBarGuardar.setVisibility(View.GONE);
+                                                                binding.btnRegistrarServicio.setText("Registrar Servicio");
+
+                                                                limpiarImagenesTemporales();
+                                                                finish();
+                                                            })
+                                                            .addOnFailureListener(e -> {
+                                                                Toast.makeText(this, "Error al guardar ID del servicio: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                resetEstadoUI();
+                                                            });
+
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(this, "Error al guardar el servicio: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    resetEstadoUI();
+                                                });
+
+                                    } else {
+                                        Toast.makeText(this, "No se encontró el idHotel del usuario", Toast.LENGTH_SHORT).show();
+                                        resetEstadoUI();
                                     }
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(this, "Error obteniendo idHotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    resetEstadoUI();
-                                });
-                    } else {
-                        Toast.makeText(this, "No estás logueado ", Toast.LENGTH_SHORT).show();
-                        resetEstadoUI();
-                    }
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "Error obteniendo idHotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                resetEstadoUI();
+                            });
                 },
-                error -> runOnUiThread(() -> {
+                error -> {
                     Toast.makeText(this, "Error subiendo imágenes: " + error, Toast.LENGTH_SHORT).show();
                     resetEstadoUI();
-                })
+                }
         );
     }
     private void resetEstadoUI() {
@@ -992,7 +999,7 @@ public class RegistroServicioDesdeOpciones extends AppCompatActivity {
             }
         }
 
-        if (todasLasFotos.size() < 4) {
+        if (todasLasFotos.size() < 2) {
             binding.errorTipoFotos.setText("Debe agregar al menos 2 fotos del servicio");
             binding.errorTipoFotos.setVisibility(View.VISIBLE);
             esValido = false;
