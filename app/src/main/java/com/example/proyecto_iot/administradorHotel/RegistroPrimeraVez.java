@@ -20,6 +20,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -52,7 +53,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -86,6 +89,9 @@ public class RegistroPrimeraVez extends AppCompatActivity {
     private ActivityResultLauncher<Intent> archivoLauncher;
     private boolean guardandoServicio = false;
 
+    private ActivityResultLauncher<Intent> mapaLauncher;
+    private double latitudHotel = 0.0;
+    private double longitudHotel = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +192,28 @@ public class RegistroPrimeraVez extends AppCompatActivity {
                         ocultarMenu();
                     }
                 });
+
+        mapaLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            latitudHotel = data.getDoubleExtra("latitud", 0.0);
+                            longitudHotel = data.getDoubleExtra("longitud", 0.0);
+
+                            //TextView tvUbicacion = findViewById(R.id.tvUbicacionSeleccionada);
+                            //tvUbicacion.setText("Ubicación: " + latitudHotel + ", " + longitudHotel);
+                        }
+                    }
+                });
+        Button btnMapa = findViewById(R.id.btnSeleccionarUbicacion);
+        btnMapa.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SeleccionUbicacionActivity.class); // usaremos una actividad en vez de fragment
+            mapaLauncher.launch(intent);
+        });
+
+
     }
 
     //Para mostrar/ocultar el menu de para la selccion de fotos
@@ -886,6 +914,18 @@ public class RegistroPrimeraVez extends AppCompatActivity {
                                                     .document(idAdministrador)
                                                     .update("idHotel", idGenerado)
                                                     .addOnSuccessListener(userUpdateSuccess -> {
+                                                        // Guardar lat/lng si están definidos
+                                                        if (latitudHotel != 0.0 && longitudHotel != 0.0) {
+                                                            Map<String, Object> ubicacionMap = new HashMap<>();
+                                                            ubicacionMap.put("ubicacionLat", latitudHotel);
+                                                            ubicacionMap.put("ubicacionLng", longitudHotel);
+
+                                                            db.collection("usuarios").document(idAdministrador).update(ubicacionMap)
+                                                                    .addOnSuccessListener(unused2 -> Log.d("Firestore", "Ubicación registrada"))
+                                                                    .addOnFailureListener(e -> Log.e("Firestore", "Error al guardar ubicación", e));
+                                                        }
+
+
                                                         Toast.makeText(this, "Hotel registrado correctamente", Toast.LENGTH_SHORT).show();
 
                                                         guardandoServicio = false;

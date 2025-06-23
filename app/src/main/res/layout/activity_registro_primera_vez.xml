@@ -175,13 +175,17 @@
                                         android:textColor="@color/text_secondary"
                                         android:layout_marginBottom="4dp" />
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="(Integración pendiente - Selecciona la ubicación exacta)"
-                                        android:textSize="12sp"
-                                        android:textColor="@color/text_tertiary"
-                                        android:gravity="center" />
+
+                                    <Button
+                                        android:id="@+id/btnSeleccionarUbicacion"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="61dp"
+                                        android:layout_marginTop="16dp"
+                                        android:text="Seleccionar ubicación en el mapa" />
+
+
+
+
 
                                 </LinearLayout>
 
