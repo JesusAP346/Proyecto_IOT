@@ -45,7 +45,6 @@ import com.example.proyecto_iot.databinding.ActivityRegistroPrimeraVezBinding;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;

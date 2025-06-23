@@ -12,12 +12,12 @@ public class HabitacionHotel {
     private double precioPorNoche;
     private int cantidadHabitaciones;
     private List<String> equipamiento;
-    private List<Servicio> servicio;
+    private List<String> servicio;
     private List<String> fotosUrls;
 
     public HabitacionHotel() {}
 
-    public HabitacionHotel(String tipo, int capacidadAdultos, int capacidadNinos, int tamanho, double precioPorNoche, int cantidadHabitaciones, List<String> equipamiento, List<Servicio> servicio, List<String> fotosUrls) {
+    public HabitacionHotel(String tipo, int capacidadAdultos, int capacidadNinos, int tamanho, double precioPorNoche, int cantidadHabitaciones, List<String> equipamiento, List<String> servicio, List<String> fotosUrls) {
         this.tipo = tipo;
         this.capacidadAdultos = capacidadAdultos;
         this.capacidadNinos = capacidadNinos;
@@ -93,11 +93,11 @@ public class HabitacionHotel {
         this.equipamiento = equipamiento;
     }
 
-    public List<Servicio> getServicio() {
+    public List<String> getServicio() {
         return servicio;
     }
 
-    public void setServicio(List<Servicio> servicio) {
+    public void setServicio(List<String> servicio) {
         this.servicio = servicio;
     }
 

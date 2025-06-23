@@ -118,22 +118,23 @@
                 android:text="Equipamiento"
                 android:textSize="13sp"
                 android:textStyle="bold" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAgregarEquipamiento"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:minHeight="32dp"
-                android:minWidth="0dp"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="0dp"
+                android:layout_height="40dp"
+                android:minHeight="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="4dp"
                 android:text="+ AGREGAR"
                 android:textColor="@android:color/black"
-                android:textSize="10sp"
-                app:backgroundTint="#FACEC6"
-                app:cornerRadius="8dp"
-                app:strokeColor="#772f1a"
+                android:textSize="14sp"
+                app:backgroundTint="#FDF9ED"
+                app:cornerRadius="10dp"
+                app:strokeColor="#E9D79E"
                 app:strokeWidth="1dp" />
+
         </LinearLayout>
 
         <Spinner
@@ -157,7 +158,7 @@
             android:id="@+id/textEquipamientoVacio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sin consumo agregado"
+            android:text="Sin equipamiento agregado"
             android:textColor="#777777"
             android:textStyle="italic"
             android:textSize="14sp"
@@ -174,112 +175,77 @@
             android:orientation="vertical"
             android:layout_marginTop="8dp" />
 
-        <!-- Imágenes -->
+        <!-- Sección de Servicios -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Servicios"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRegistrarServicio"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:minHeight="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="4dp"
+                android:text="+ Registrar Servicio"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                app:backgroundTint="#FDF9ED"
+                app:cornerRadius="10dp"
+                app:strokeColor="#E9D79E"
+                app:strokeWidth="1dp" />
+        </LinearLayout>
+
+        <!-- Spinner de selección de servicio -->
+        <Spinner
+            android:id="@+id/spinnerServicios"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@drawable/customedittext"
+            android:padding="8dp"
+            android:layout_marginBottom="4dp"
+            android:spinnerMode="dropdown" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fotos"
+            android:text="Servicios agregados"
             android:textSize="13sp"
             android:textStyle="bold"
             android:layout_marginTop="4dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@drawable/customedittext"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_marginTop="4dp">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_camera"
-                android:tint="#9E9EA6"
-                android:contentDescription="Agregar foto" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subir fotos"
-                android:textSize="14sp"
-                android:textColor="#888888"
-                android:layout_marginTop="4dp" />
-        </LinearLayout>
-
+        <!-- Texto vacío -->
         <TextView
+            android:id="@+id/textServicioVacio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fotos agregadas"
-            android:textStyle="bold"
-            android:textSize="12sp"
+            android:text="Sin servicios agregados"
+            android:textColor="#777777"
+            android:textStyle="italic"
+            android:textSize="14sp"
+            android:gravity="center"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
-
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
         <LinearLayout
+            android:id="@+id/layoutServicioDinamico"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!-- Imagen 1 con botón eliminar -->
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/img1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hotel1"
-                    android:background="@drawable/img_rounded_corners"
-                    android:clipToOutline="true" />
-
-                <ImageButton
-                    android:id="@+id/btnEliminarImg1"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="6dp"
-                    android:background="@drawable/btn_circle_background"
-                    android:padding="6dp"
-                    android:src="@drawable/ic_delete"
-                    app:tint="@android:color/white"
-                    android:contentDescription="Eliminar imagen"
-                    android:scaleType="centerInside" />
-            </FrameLayout>
-
-            <!-- Imagen 2 con botón eliminar -->
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp">
-
-                <ImageView
-                    android:id="@+id/img2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hotel2"
-                    android:background="@drawable/img_rounded_corners"
-                    android:clipToOutline="true" />
-
-                <ImageButton
-                    android:id="@+id/btnEliminarImg2"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="6dp"
-                    android:background="@drawable/btn_circle_background"
-                    android:padding="6dp"
-                    android:src="@drawable/ic_delete"
-                    app:tint="@android:color/white"
-                    android:contentDescription="Eliminar imagen"
-                    android:scaleType="centerInside" />
-            </FrameLayout>
-        </LinearLayout>
+            android:orientation="vertical"
+            android:layout_marginTop="8dp" />
 
         <!-- Botón siguiente -->
         <LinearLayout
@@ -306,5 +272,6 @@
                 app:strokeColor="#772f1a"
                 app:strokeWidth="1dp" />
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

@@ -99,7 +99,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Servicios adicionales"
+                    android:text="Fotos de la habitacion"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_marginTop="12dp"
@@ -107,76 +107,81 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Sección de Servicios -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="4dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Servicios"
-                android:textStyle="bold"
-                android:textSize="14sp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRegistrarServicio"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:minHeight="0dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="0dp"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="4dp"
-                android:text="+ Registrar Servicio"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"
-                app:backgroundTint="#FDF9ED"
-                app:cornerRadius="10dp"
-                app:strokeColor="#E9D79E"
-                app:strokeWidth="1dp" />
-        </LinearLayout>
-
-        <!-- Spinner de selección de servicio -->
-        <Spinner
-            android:id="@+id/spinnerServicios"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:background="@drawable/customedittext"
-            android:padding="8dp"
-            android:layout_marginBottom="4dp"
-            android:spinnerMode="dropdown" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Servicios agregados"
+            android:text="Fotos de la habitación"
             android:textSize="13sp"
             android:textStyle="bold"
-            android:layout_marginTop="4dp" />
-        <!-- Texto vacío -->
-        <TextView
-            android:id="@+id/textServicioVacio"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+
+        <!-- Botón principal para agregar fotos -->
+        <LinearLayout
+            android:id="@+id/btnAgregarFoto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="¡Sin servicios agregados!"
-            android:textColor="#7C2D2D"
-            android:textStyle="bold"
-            android:visibility="gone"
-            android:layout_marginTop="6dp" />
+            android:background="@drawable/photo_selector_background"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="8dp"
+            android:paddingVertical="12dp">
 
-        <!-- Servicios agregados dinámicos -->
+            <!-- Contenedor horizontal para ícono y texto principal -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_add_photo"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="Agregar foto" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Agregar fotos de la habitación"
+                    android:textSize="16sp"
+                    android:textColor="#666666" />
+            </LinearLayout>
+
+            <!-- Texto de mínimo de fotos -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(mínimo 2 fotos)"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Contenedor para vista previa de fotos -->
         <LinearLayout
-            android:id="@+id/layoutServicioDinamico"
+            android:id="@+id/containerFotos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/errorTipoFotos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            android:drawableStart="@drawable/ic_warning_admin"
+            android:drawablePadding="8dp"
+            android:textColor="#D32F2F"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
 
 

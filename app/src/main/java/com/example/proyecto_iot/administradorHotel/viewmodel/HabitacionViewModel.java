@@ -48,7 +48,7 @@ public class HabitacionViewModel extends ViewModel {
                 hab.setEquipamiento((List<String>) valor);
                 break;
             case "servicio":
-                hab.setServicio((List<Servicio>) valor);
+                hab.setServicio((List<String>) valor);
                 break;
             case "fotosUrls":
                 hab.setFotosUrls((List<String>) valor);
