@@ -10,14 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 import com.example.proyecto_iot.databinding.FragmentPerfilBinding;
 import com.example.proyecto_iot.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,6 +35,9 @@ public class PerfilFragment extends Fragment {
 
     private Button btnCerrarSesion;
     private FirebaseAuth auth;
+
+    FirebaseFirestore db;
+
 
     public PerfilFragment() {
         // Required empty public constructor
@@ -55,9 +61,40 @@ public class PerfilFragment extends Fragment {
         btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion);
         auth = FirebaseAuth.getInstance();
 
+        String uid = auth.getCurrentUser().getUid();
+        db = FirebaseFirestore.getInstance();
+
+
+        db.collection("usuarios").document(uid).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String nombres = documentSnapshot.getString("nombres");
+                String apellidos = documentSnapshot.getString("apellidos");
+                String nombreCompleto = nombres + " " + apellidos;
+                String urlFotoPerfil = documentSnapshot.getString("urlFotoPerfil");
+
+                // Actualizar nombre en el card
+                //binding.cardPerfil.findViewById(androidx.appcompat.R.id.text1); // <-- esto no funciona
+                // Mejor:
+                TextView nombreTextView = binding.cardPerfil.findViewById(R.id.tituloNombre); // necesitas dar ID al TextView
+                nombreTextView.setText(nombreCompleto);
+
+                // Actualizar imagen si hay URL
+                if (urlFotoPerfil != null && !urlFotoPerfil.isEmpty()) {
+                    Picasso.get().load(urlFotoPerfil).into(binding.ivFotoPerfil);
+                }
+
+            }
+        }).addOnFailureListener(e -> {
+            e.printStackTrace();
+        });
+
+
+
         btnCerrarSesion.setOnClickListener(v -> {
             cerrarSesion();
         });
+
+        //b = FirebaseFirestore.getInstance();
 
         cargarImagenInterna(); // carga la foto guardada en interno
 
