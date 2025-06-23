@@ -9,6 +9,34 @@ public class Hotel {
     private List<String> referencias;
     private List<String> fotosHotelUrls;
     private String idAdministrador;
+    private Double ubicacionLat;
+    private Double ubicacionLng;
+
+    public Double getUbicacionLat() {
+        return ubicacionLat;
+    }
+
+    public void setUbicacionLat(Double ubicacionLat) {
+        this.ubicacionLat = ubicacionLat;
+    }
+
+    public Double getUbicacionLng() {
+        return ubicacionLng;
+    }
+
+    public void setUbicacionLng(Double ubicacionLng) {
+        this.ubicacionLng = ubicacionLng;
+    }
+
+    public Hotel(String nombre, String direccion, List<String> referencias, List<String> fotosHotelUrls, String idAdministrador, Double ubicacionLat, Double ubicacionLng) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.referencias = referencias;
+        this.fotosHotelUrls = fotosHotelUrls;
+        this.idAdministrador = idAdministrador;
+        this.ubicacionLat = ubicacionLat;
+        this.ubicacionLng = ubicacionLng;
+    }
 
     public Hotel() {}
 

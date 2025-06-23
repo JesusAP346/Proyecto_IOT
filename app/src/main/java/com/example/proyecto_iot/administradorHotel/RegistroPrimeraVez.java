@@ -891,7 +891,7 @@ public class RegistroPrimeraVez extends AppCompatActivity {
                     String idAdministrador = (currentUser != null) ? currentUser.getUid() : "desconocido";
 
                     // Crear objeto Hotel con imágenes subidas
-                    Hotel hotel = new Hotel(nombre, direccion, referencias, urlsImagenes, idAdministrador);
+                    Hotel hotel = new Hotel(nombre, direccion, referencias, urlsImagenes, idAdministrador,latitudHotel,longitudHotel);
 
                     runOnUiThread(() -> {
                         binding.btnRegistrarHotel.setText("Guardando servicio...");
