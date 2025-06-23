@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.taxista.perfil.Notificacion;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -74,13 +73,14 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
 
             String mensaje = "Has aceptado la solicitud de " + solicitud.nombre;
 
-            // Lanzar notificación con todos los datos para el PendingIntent
             lanzarNotificacion(context, mensaje,
                     solicitud.nombre,
                     solicitud.telefono,
                     solicitud.viajes + " viajes",
                     solicitud.origen,
-                    solicitud.imagenPerfil);
+                    solicitud.imagenPerfil,
+                    solicitud.latDestino,
+                    solicitud.lngDestino);
 
             Notificacion notificacion = new Notificacion(
                     mensaje,
@@ -89,18 +89,19 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
             );
             guardarNotificacionEnStorage(context, notificacion);
 
-            // Abrir MapsActivity con datos
             Intent intent = new Intent(context, MapsActivity.class);
             intent.putExtra("nombre", solicitud.nombre);
             intent.putExtra("telefono", solicitud.telefono);
             intent.putExtra("viajes", solicitud.viajes + " viajes");
             intent.putExtra("hotel", solicitud.origen);
             intent.putExtra("imagenPerfil", solicitud.imagenPerfil);
+            intent.putExtra("latDestino", solicitud.latDestino);
+            intent.putExtra("lngDestino", solicitud.lngDestino);
             context.startActivity(intent);
         });
 
         holder.btnRechazar.setOnClickListener(v -> {
-            // Implementa lógica para rechazar si quieres
+            // Lógica de rechazo si deseas
         });
     }
 
@@ -117,7 +118,6 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imagen = itemView.findViewById(R.id.imagePerfil);
             nombre = itemView.findViewById(R.id.tvNombre);
             telefono = itemView.findViewById(R.id.tvTelefono);
@@ -131,8 +131,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         }
     }
 
-    // Métodos para notificaciones
-
+    // Notificaciones
     private void crearCanalNotificacion(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = context.getSystemService(NotificationManager.class);
@@ -149,7 +148,8 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
 
     private void lanzarNotificacion(Context context, String mensaje,
                                     String nombre, String telefono, String viajes,
-                                    String hotel, int imagenPerfil) {
+                                    String hotel, int imagenPerfil,
+                                    double latDestino, double lngDestino) {
         crearCanalNotificacion(context);
 
         Intent intent = new Intent(context, MapsActivity.class);
@@ -158,6 +158,8 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         intent.putExtra("viajes", viajes);
         intent.putExtra("hotel", hotel);
         intent.putExtra("imagenPerfil", imagenPerfil);
+        intent.putExtra("latDestino", latDestino);
+        intent.putExtra("lngDestino", lngDestino);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
@@ -171,7 +173,8 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS)
+                == android.content.pm.PackageManager.PERMISSION_GRANTED) {
             notificationManager.notify(1001, builder.build());
         }
     }
@@ -204,7 +207,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
             Type listType = new TypeToken<List<Notificacion>>() {}.getType();
             lista = new Gson().fromJson(sb.toString(), listType);
         } catch (Exception e) {
-            // Ignora si el archivo no existe o está vacío la primera vez
+            // Ignora si el archivo no existe
         }
         return lista;
     }

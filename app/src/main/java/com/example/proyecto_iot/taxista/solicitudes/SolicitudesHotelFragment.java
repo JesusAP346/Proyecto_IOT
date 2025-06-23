@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -56,6 +57,9 @@ public class SolicitudesHotelFragment extends Fragment {
         binding.nombreHotel.setText("Hotel: " + nombreHotel);
 
         binding.recyclerSolicitudes.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Justo antes de leer:
+        File archivo = new File(requireContext().getFilesDir(), getFileName());
+        archivo.delete(); // ¡Elimina el archivo anterior si existe!
 
         List<Solicitud> solicitudes = leerListaSolicitudes();
 
@@ -147,29 +151,29 @@ public class SolicitudesHotelFragment extends Fragment {
         switch (nombreHotel) {
             case "Hotel Paraíso":
                 lista.add(new Solicitud("Roberto Tafur", "945 854 123", 5, "4 min.\n1.7 km",
-                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.roberto));
+                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.roberto,-12.056101891213803, -77.10993562244279));
                 lista.add(new Solicitud("Ricardo Calderón", "945 854 123", 3, "4 min.\n1.7 km",
-                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.usuario_10));
+                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.usuario_10,-12.056101891213803, -77.10993562244279));
                 lista.add(new Solicitud("Juan Perez", "945 854 123", 3, "4 min.\n1.7 km",
-                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.usuario_11));
+                        "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.usuario_10,-12.056101891213803, -77.10993562244279));
                 lista.add(new Solicitud("Alejandra Ríos", "945 854 123", 3, "4 min.\n1.7 km",
                         "Hotel Paraíso", "SJL", "Aeropuerto", R.drawable.usuario_12));
                 break;
 
             case "Hotel Amanecer":
                 lista.add(new Solicitud("Raul Castillo", "912 345 678", 2, "6 min.\n2.5 km",
-                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.usuario_10));
+                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.usuario_10,-12.056101891213803, -77.10993562244279));
                 lista.add(new Solicitud("Diego Galindo", "912 345 678", 2, "6 min.\n2.5 km",
-                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.usuario_11));
+                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.usuario_11,-12.056101891213803, -77.10993562244279));
                 lista.add(new Solicitud("Carolina Sanchez", "912 345 678", 2, "6 min.\n2.5 km",
-                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.usuario_12));
+                        "Hotel Amanecer", "Miraflores", "Aeropuerto", R.drawable.usuario_12,-12.056101891213803, -77.10993562244279));
                 break;
 
             case "Hotel Playa":
                 lista.add(new Solicitud("Marco Gómez", "987 654 321", 4, "3 min.\n1.0 km",
-                        "Hotel Playa", "Barranco", "Aeropuerto", R.drawable.roberto));
+                        "Hotel Playa", "Barranco", "Aeropuerto", R.drawable.roberto,-12.056101891213803, -77.10993562244279));
                 lista.add(new Solicitud("Leonardo Torres", "987 654 321", 4, "3 min.\n1.0 km",
-                        "Hotel Playa", "Barranco", "Aeropuerto", R.drawable.roberto));
+                        "Hotel Playa", "Barranco", "Aeropuerto", R.drawable.roberto,-12.056101891213803, -77.10993562244279));
                 break;
 
             default:

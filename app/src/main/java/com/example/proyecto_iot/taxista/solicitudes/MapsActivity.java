@@ -18,18 +18,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private FusedLocationProviderClient fusedLocationClient;
     private ActivityMapsBinding binding;
-
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
 
-
-
+    private double latDestino = 0.0;
+    private double lngDestino = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,26 +47,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String nombre = getIntent().getStringExtra("nombre");
         String telefono = getIntent().getStringExtra("telefono");
         String viajes = getIntent().getStringExtra("viajes");
-        String hotel = getIntent().getStringExtra("hotel"); // opcional si lo quieres mostrar en subtitulo
-
-        // AGREGADO: Recibir el id del drawable para la imagen del pasajero
+        String hotel = getIntent().getStringExtra("hotel");
         int imagenPerfil = getIntent().getIntExtra("imagenPerfil", R.drawable.roberto);
+        latDestino = getIntent().getDoubleExtra("latDestino", 0.0);
+        lngDestino = getIntent().getDoubleExtra("lngDestino", 0.0);
+        Log.d("MapsActivity", "LatDestino: " + latDestino + ", LngDestino: " + lngDestino);
 
-        // MOSTRAR LOS DATOS EN LOS TEXTVIEWS
+
+
+        // MOSTRAR INFO
         binding.tvNombre.setText(nombre != null ? nombre : "Sin nombre");
         binding.tvTelefono.setText(telefono != null ? telefono : "Sin teléfono");
         binding.tvViajes.setText(viajes != null ? viajes : "0 viajes");
         binding.subtitulo.setText(hotel != null ? hotel : "Destino no especificado");
-
-        // AGREGADO: Actualizar la imagen del pasajero dinámicamente
         binding.imgConductor.setImageResource(imagenPerfil);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-
-
 
         obtenerUbicacion();
     }
@@ -87,13 +86,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
             if (location != null) {
                 LatLng miUbicacion = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(miUbicacion, 15));
-                mMap.addMarker(new MarkerOptions().position(miUbicacion).title("Estás aquí"));
+                mMap.addMarker(new MarkerOptions().position(miUbicacion).title("Tú estás aquí"));
+
+                // Validar si las coordenadas del destino son distintas de 0
+                if (!(latDestino == 0.0 && lngDestino == 0.0)) {
+                    LatLng destino = new LatLng(latDestino, lngDestino);
+                    mMap.addMarker(new MarkerOptions().position(destino).title("Destino del pasajero"));
+
+                    // Ajustar cámara para mostrar ambos puntos
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                    builder.include(miUbicacion);
+                    builder.include(destino);
+                    LatLngBounds bounds = builder.build();
+
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150));
+                } else {
+                    // Solo centrar en el usuario si no hay destino válido
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(miUbicacion, 15));
+                    Log.w("MapsActivity", "Destino no válido: lat/lng = 0.0");
+                }
             }
         });
+
     }
-
-
 
     private void obtenerUbicacion() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -108,7 +123,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 double lat = location.getLatitude();
                 double lon = location.getLongitude();
                 Log.d("Ubicacion", "Lat: " + lat + ", Lng: " + lon);
-                // Aquí puedes enviar la ubicación a tu backend
+                // Aquí puedes enviar la ubicación al backend
             }
         });
     }
