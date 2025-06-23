@@ -1,614 +1,478 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/frameContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="#FFFFFF">
+    android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <!-- Contenido principal -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:background="#FFFFFF">
 
-        <!-- ✅ STEPPER -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="#F0EFEA">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="12dp"
-                android:gravity="center_horizontal">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:padding="6dp"
-                        android:background="@drawable/step_active_circle"
-                        android:src="@drawable/ic_check"
-                        android:tint="#FFFFFF" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_marginHorizontal="4dp"
-                        android:background="#4CAF50" />
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:padding="6dp"
-                        android:background="@drawable/step_active_circle"
-                        android:src="@drawable/ic_check"
-                        android:tint="#FFFFFF" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_marginHorizontal="4dp"
-                        android:background="#4CAF50" />
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:padding="6dp"
-                        android:background="@drawable/step_active_circle"
-                        android:src="@drawable/ic_check"
-                        android:tint="#FFFFFF" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_marginHorizontal="4dp"
-                        android:background="#4CAF50" />
-
-                    <TextView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:gravity="center"
-                        android:background="@drawable/step_active_circle"
-                        android:text="4"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Resumen de la habitación"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="12dp"
-                    android:textColor="#000000" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- ✅ HEADER INFO GENERAL -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Habitación"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="#2C3E50" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="S/. 150"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:textColor="#E74C3C" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="/noche"
-                            android:textSize="14sp"
-                            android:textColor="#7F8C8D"
-                            android:layout_marginStart="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Bullets -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="8dp"
-                            android:layout_height="8dp"
-                            android:background="@drawable/bullet_point"
-                            android:layout_marginEnd="12dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tipo: Stándar"
-                            android:textSize="15sp"
-                            android:textColor="#34495E" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="8dp"
-                            android:layout_height="8dp"
-                            android:background="@drawable/bullet_point"
-                            android:layout_marginEnd="12dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Capacidad: 2 adultos"
-                            android:textSize="15sp"
-                            android:textColor="#34495E" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="8dp"
-                            android:layout_height="8dp"
-                            android:background="@drawable/bullet_point"
-                            android:layout_marginEnd="12dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tamaño: 78 m²"
-                            android:textSize="15sp"
-                            android:textColor="#34495E" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="8dp"
-                            android:layout_height="8dp"
-                            android:background="@drawable/bullet_point"
-                            android:layout_marginEnd="12dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Habitaciones registradas: 3"
-                            android:textSize="15sp"
-                            android:textColor="#34495E" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Equipamiento con iconos -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Equipamiento"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- Fila 1: TV + Aire acondicionado -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        android:layout_marginBottom="12dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginEnd="8dp">
-
-                            <TextView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:text="📺"
-                                android:textSize="18sp"
-                                android:gravity="center"
-                                android:layout_marginEnd="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="TV"
-                                android:textSize="15sp"
-                                android:textColor="#34495E" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginStart="8dp">
-
-                            <TextView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:text="❄️"
-                                android:textSize="18sp"
-                                android:gravity="center"
-                                android:layout_marginEnd="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Aire A/C"
-                                android:textSize="15sp"
-                                android:textColor="#34495E" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Fila 2: Toalla + Caja fuerte -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        android:layout_marginBottom="12dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginEnd="8dp">
-
-                            <TextView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:text="🛁"
-                                android:textSize="18sp"
-                                android:gravity="center"
-                                android:layout_marginEnd="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Toallas"
-                                android:textSize="15sp"
-                                android:textColor="#34495E" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginStart="8dp">
-
-                            <TextView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:text="🔒"
-                                android:textSize="18sp"
-                                android:gravity="center"
-                                android:layout_marginEnd="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Caja fuerte"
-                                android:textSize="15sp"
-                                android:textColor="#34495E" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Fila 3: WiFi + Escritorio -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginEnd="8dp">
-
-                            <TextView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:text="📶"
-                                android:textSize="18sp"
-                                android:gravity="center"
-                                android:layout_marginEnd="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="WiFi"
-                                android:textSize="15sp"
-                                android:textColor="#34495E" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginStart="8dp">
-
-                            <TextView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:text="🪑"
-                                android:textSize="18sp"
-                                android:gravity="center"
-                                android:layout_marginEnd="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Escritorio"
-                                android:textSize="15sp"
-                                android:textColor="#34495E" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Servicios con iconos -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Servicios incluidos"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- Traslado aeropuerto -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
-
-                        <TextView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:text="✈️"
-                            android:textSize="18sp"
-                            android:gravity="center"
-                            android:layout_marginEnd="12dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Traslado al aeropuerto"
-                            android:textSize="15sp"
-                            android:textColor="#34495E" />
-                    </LinearLayout>
-
-                    <!-- Gimnasio -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
-
-                        <TextView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:text="💪"
-                            android:textSize="18sp"
-                            android:gravity="center"
-                            android:layout_marginEnd="12dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Acceso al gimnasio"
-                            android:textSize="15sp"
-                            android:textColor="#34495E" />
-                    </LinearLayout>
-
-                    <!-- Desayuno -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:text="🍳"
-                            android:textSize="18sp"
-                            android:gravity="center"
-                            android:layout_marginEnd="12dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Desayuno incluido"
-                            android:textSize="15sp"
-                            android:textColor="#34495E" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Galería de fotos -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Galería de fotos"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="#2C3E50" />
-
-                </LinearLayout>
-
-                <org.imaginativeworld.whynotimagecarousel.ImageCarousel
-                    android:id="@+id/carousel"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-        <!-- ✅ BOTÓN FINALIZAR -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="32dp">
+            android:orientation="vertical">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnFinalizar"
-                android:layout_width="wrap_content"
-                android:layout_height="46dp"
-                android:text="Finalizar"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                app:backgroundTint="#FACEC6"
-                app:cornerRadius="12dp"
-                app:strokeColor="#772f1a"
-                app:strokeWidth="1dp" />
+            <!-- ✅ STEPPER -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#F0EFEA">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:gravity="center_horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:padding="6dp"
+                            android:background="@drawable/step_active_circle"
+                            android:src="@drawable/ic_check"
+                            android:tint="#FFFFFF" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="4dp"
+                            android:background="#4CAF50" />
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:padding="6dp"
+                            android:background="@drawable/step_active_circle"
+                            android:src="@drawable/ic_check"
+                            android:tint="#FFFFFF" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="4dp"
+                            android:background="#4CAF50" />
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:padding="6dp"
+                            android:background="@drawable/step_active_circle"
+                            android:src="@drawable/ic_check"
+                            android:tint="#FFFFFF" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="4dp"
+                            android:background="#4CAF50" />
+
+                        <TextView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:gravity="center"
+                            android:background="@drawable/step_active_circle"
+                            android:text="4"
+                            android:textColor="#ffffff"
+                            android:textStyle="bold"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Resumen de la habitación"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="12dp"
+                        android:textColor="#000000" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Cambiar acá -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:layout_marginHorizontal="2dp"
+                android:background="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- SECCIÓN HABITACIÓN -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_habitacion"
+                            app:tint="#6F6F6F"
+                            android:layout_marginEnd="12dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Información de Habitación"
+                                android:textColor="@color/gray_600"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <!-- Tipo de Habitación -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Tipo:"
+                                    android:textColor="@color/gray_700"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/text_tipo_habitacion"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:text="Suite Deluxe"
+                                    android:textColor="@color/gray_800"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                            <!-- Capacidad -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Capacidad:"
+                                    android:textColor="@color/gray_700"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/text_capacidad"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:text="2 Adultos, 1 Niño"
+                                    android:textColor="@color/gray_800"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                            <!-- Tamaño -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Tamaño:"
+                                    android:textColor="@color/gray_700"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/text_tamano"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:text="45 m²"
+                                    android:textColor="@color/gray_800"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                            <!-- Precio -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Precio:"
+                                    android:textColor="@color/gray_700"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/text_precio"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:text="$250.00 por noche"
+                                    android:textColor="@color/gray_700"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                            <!-- Cantidad -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Registradas:"
+                                    android:textColor="@color/gray_700"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/text_cantidad_habitaciones"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:text="15 habitaciones"
+                                    android:textColor="@color/gray_800"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray_200"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- SECCIÓN EQUIPAMIENTO -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_equipamiento"
+                            app:tint="#6F6F6F"
+                            android:layout_marginEnd="12dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:id="@+id/contenedorEquipamiento">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Equipamiento"
+                                android:textColor="@color/gray_600"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <!-- Aquí se agregarán filas con 2 items -->
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray_200"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- SECCIÓN SERVICIOS INCLUIDOS -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_servicio"
+                            app:tint="#6F6F6F"
+                            android:layout_marginEnd="12dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:id="@+id/contenedorServicios">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Servicios Incluidos"
+                                android:textColor="@color/gray_600"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <!-- Aquí se agregarán los servicios -->
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray_200"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- SECCIÓN FOTOS INCLUIDOS -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_camera_admin"
+                            app:tint="#6F6F6F"
+                            android:layout_marginEnd="12dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" Fotos añadidas"
+                                android:textColor="@color/gray_600"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <!-- Contenedor para vista previa de fotos -->
+                            <LinearLayout
+                                android:id="@+id/containerFotos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginTop="16dp"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+
+            <!-- ✅ BOTÓN FINALIZAR -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRegistrarhabitacion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    android:text="Finalizar"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    app:backgroundTint="#FACEC6"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="#772f1a"
+                    app:strokeWidth="1dp" />
+            </LinearLayout>
+
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+
+
+
+
+    </ScrollView>
+
+    <!-- Capa de progreso (va aquí afuera para cubrir todo) -->
+    <RelativeLayout
+        android:id="@+id/progressBarGuardar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#02000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/loading_background"
+            android:padding="24dp">
+
+            <ProgressBar
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminate="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardando servicio..."
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp" />
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

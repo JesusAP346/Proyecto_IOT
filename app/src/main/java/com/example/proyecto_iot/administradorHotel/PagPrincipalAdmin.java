@@ -4,6 +4,7 @@ import static android.Manifest.permission.POST_NOTIFICATIONS;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -153,4 +154,21 @@ public class PagPrincipalAdmin extends AppCompatActivity {
     public void seleccionarTab(int itemId) {
         binding.bottomNavigationView.setSelectedItemId(itemId);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && data != null) {
+            String redireccion = data.getStringExtra("redireccion");
+            if ("habitaciones".equals(redireccion)) {
+                seleccionarTab(R.id.hotel);
+                Fragment hotelFragment = HotelFragment.newInstance("habitaciones");
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_layout, hotelFragment)
+                        .commit();
+            }
+        }
+    }
+
 }

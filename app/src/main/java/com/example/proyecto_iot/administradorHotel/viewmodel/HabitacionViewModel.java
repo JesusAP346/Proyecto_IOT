@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.proyecto_iot.administradorHotel.entity.FotoItem;
 import com.example.proyecto_iot.administradorHotel.entity.HabitacionHotel;
 import com.example.proyecto_iot.administradorHotel.entity.Servicio;
 
@@ -12,6 +13,9 @@ import java.util.List;
 public class HabitacionViewModel extends ViewModel {
 
     private final MutableLiveData<HabitacionHotel> habitacionLiveData = new MutableLiveData<>(new HabitacionHotel());
+
+    // 🆕 Campo temporal para las fotos aún no subidas
+    private List<FotoItem> listaFotosSeleccionadas;
 
     public LiveData<HabitacionHotel> getHabitacion() {
         return habitacionLiveData;
@@ -59,4 +63,15 @@ public class HabitacionViewModel extends ViewModel {
 
         habitacionLiveData.setValue(hab);
     }
+
+    // 🆕 Métodos para fotos seleccionadas (temporal)
+    public void setListaFotosSeleccionadas(List<FotoItem> fotos) {
+        this.listaFotosSeleccionadas = fotos;
+    }
+
+    public List<FotoItem> getListaFotosSeleccionadas() {
+        return listaFotosSeleccionadas;
+    }
+
+
 }

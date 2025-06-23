@@ -1,4 +1,5 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.RegistroHabitacionHotel;
@@ -85,7 +87,8 @@ public class HotelHabitacionesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.btnRegistrarInformacion.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), RegistroHabitacionHotel.class));
+            Intent intent = new Intent(requireContext(), RegistroHabitacionHotel.class);
+            startActivityForResult(intent, 1234); // 1234 es un código arbitrario que puedes mantener
         });
 
         List<Habitacion> mockHabitaciones = getHabitacionesSimuladas();
@@ -212,7 +215,16 @@ public class HotelHabitacionesFragment extends Fragment {
         );
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == 1234 && resultCode == Activity.RESULT_OK) {
+            // 👇 Aquí recargas el fragmento o los datos si quieres
+            // Opcional: Recargar lista de habitaciones reales
+            // o llamar a getHabitacionesSimuladas() otra vez
+        }
+    }
 
 
     @Override

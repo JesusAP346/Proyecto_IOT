@@ -1,215 +1,374 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/registroPaso3Layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:padding="0dp"> <!-- quita el 16dp para evitar interferencias -->
 
-    <LinearLayout
+    <!-- CONTENIDO SCROLLEABLE -->
+    <ScrollView
+        android:id="@+id/scrollContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:fillViewport="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
 
-        <!-- Stepper visual -->
-        <androidx.cardview.widget.CardView
+        <LinearLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="#F0EFEA">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <LinearLayout
+
+            <!-- Stepper visual -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="12dp"
-                android:gravity="center_horizontal">
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#F0EFEA">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:gravity="center_horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <!-- Paso 1 - Completado -->
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:padding="6dp"
+                            android:background="@drawable/step_active_circle"
+                            android:src="@drawable/ic_check"
+                            android:tint="#FFFFFF"
+                            android:contentDescription="Paso 1 completado" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="4dp"
+                            android:background="#4CAF50" />
+
+                        <!-- Paso 2 - Completado -->
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:padding="6dp"
+                            android:background="@drawable/step_active_circle"
+                            android:src="@drawable/ic_check"
+                            android:tint="#FFFFFF"
+                            android:contentDescription="Paso 2 completado" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="4dp"
+                            android:background="#4CAF50" />
+
+                        <!-- Paso 3 - Activo -->
+                        <TextView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:gravity="center"
+                            android:background="@drawable/step_active_circle"
+                            android:text="3"
+                            android:textColor="#ffffff"
+                            android:textStyle="bold"
+                            android:textSize="14sp" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="4dp"
+                            android:background="#FFFFFF" />
+
+                        <!-- Paso 4 - Inactivo -->
+                        <TextView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:gravity="center"
+                            android:background="@drawable/step_inactive_circle"
+                            android:text="4"
+                            android:textColor="#888888"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fotos de la habitacion"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="12dp"
+                        android:textColor="#000000" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fotos de la habitación"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+
+            <!-- Botón principal para agregar fotos -->
+            <LinearLayout
+                android:id="@+id/btnAgregarFoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/photo_selector_background"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginBottom="8dp"
+                android:paddingVertical="12dp">
+
+                <!-- Contenedor horizontal para ícono y texto principal -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center">
 
-                    <!-- Paso 1 - Completado -->
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:padding="6dp"
-                        android:background="@drawable/step_active_circle"
-                        android:src="@drawable/ic_check"
-                        android:tint="#FFFFFF"
-                        android:contentDescription="Paso 1 completado" />
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_add_photo"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="Agregar foto" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_marginHorizontal="4dp"
-                        android:background="#4CAF50" />
-
-                    <!-- Paso 2 - Completado -->
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:padding="6dp"
-                        android:background="@drawable/step_active_circle"
-                        android:src="@drawable/ic_check"
-                        android:tint="#FFFFFF"
-                        android:contentDescription="Paso 2 completado" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_marginHorizontal="4dp"
-                        android:background="#4CAF50" />
-
-                    <!-- Paso 3 - Activo -->
                     <TextView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:gravity="center"
-                        android:background="@drawable/step_active_circle"
-                        android:text="3"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold"
-                        android:textSize="14sp" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_marginHorizontal="4dp"
-                        android:background="#FFFFFF" />
-
-                    <!-- Paso 4 - Inactivo -->
-                    <TextView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:gravity="center"
-                        android:background="@drawable/step_inactive_circle"
-                        android:text="4"
-                        android:textColor="#888888"
-                        android:textSize="14sp" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Agregar fotos de la habitación"
+                        android:textSize="16sp"
+                        android:textColor="#666666" />
                 </LinearLayout>
 
+                <!-- Texto de mínimo de fotos -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Fotos de la habitacion"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="12dp"
-                    android:textColor="#000000" />
+                    android:text="(mínimo 2 fotos)"
+                    android:textSize="12sp"
+                    android:textColor="#999999"
+                    android:layout_marginTop="4dp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fotos de la habitación"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp" />
-
-
-        <!-- Botón principal para agregar fotos -->
-        <LinearLayout
-            android:id="@+id/btnAgregarFoto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/photo_selector_background"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_marginBottom="8dp"
-            android:paddingVertical="12dp">
-
-            <!-- Contenedor horizontal para ícono y texto principal -->
+            <!-- Contenedor para vista previa de fotos -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/containerFotos"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_add_photo"
-                    android:layout_marginEnd="8dp"
-                    android:contentDescription="Agregar foto" />
+            <TextView
+                android:id="@+id/errorTipoFotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="8dp"
+                android:drawableStart="@drawable/ic_warning_admin"
+                android:drawablePadding="8dp"
+                android:textColor="#D32F2F"
+                android:textSize="12sp"
+                android:visibility="gone" />
 
-                <TextView
+            <!-- Botón siguiente -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="32dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSiguientePaso3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Agregar fotos de la habitación"
-                    android:textSize="16sp"
-                    android:textColor="#666666" />
+                    android:layout_height="46dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="0dp"
+                    android:minHeight="60dp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="8dp"
+                    android:text="SIGUIENTE"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    app:backgroundTint="#FACEC6"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="#772f1a"
+                    app:strokeWidth="1dp" />
+                </LinearLayout>
             </LinearLayout>
+    </ScrollView>
 
-            <!-- Texto de mínimo de fotos -->
+
+    <View
+        android:id="@+id/fondoToque"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@android:color/transparent" />
+
+    <!-- 🟠 MENÚ ENCIMA DEL OVERLAY -->
+    <!-- Menú desplegable posicionado absolutamente -->
+    <LinearLayout
+        android:id="@+id/menuOpciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_background"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:elevation="10dp"
+        android:paddingVertical="4dp"
+        android:layout_marginHorizontal="32dp">
+
+        <!-- Opción Galería -->
+        <LinearLayout
+            android:id="@+id/opcionGaleria"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Galería"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_gallery"
+                android:contentDescription="Galería" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <!-- Opción Tomar Foto -->
+        <LinearLayout
+            android:id="@+id/opcionTomarFoto"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tomar foto"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_camera_admin"
+                android:contentDescription="Cámara" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <!-- Opción Seleccionar Archivo -->
+        <LinearLayout
+            android:id="@+id/opcionSeleccionarArchivo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Seleccionar archivo"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_folder"
+                android:contentDescription="Archivos" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
+    <!-- 🟡 PROGRESS BAR TAMBIÉN ENCIMA -->
+    <RelativeLayout
+        android:id="@+id/progressBarGuardar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="#80000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/loading_background"
+            android:padding="24dp">
+
+            <ProgressBar
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminate="true" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="(mínimo 2 fotos)"
-                android:textSize="12sp"
-                android:textColor="#999999"
-                android:layout_marginTop="4dp" />
+                android:text="Guardando servicio..."
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp" />
         </LinearLayout>
-
-        <!-- Contenedor para vista previa de fotos -->
-        <LinearLayout
-            android:id="@+id/containerFotos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="16dp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/errorTipoFotos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="8dp"
-            android:drawableStart="@drawable/ic_warning_admin"
-            android:drawablePadding="8dp"
-            android:textColor="#D32F2F"
-            android:textSize="12sp"
-            android:visibility="gone" />
-
-
-
-
-        <!-- Botón siguiente -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="32dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSiguientePaso3"
-                android:layout_width="wrap_content"
-                android:layout_height="46dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="0dp"
-                android:minHeight="60dp"
-                android:paddingHorizontal="24dp"
-                android:paddingVertical="8dp"
-                android:text="SIGUIENTE"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                app:backgroundTint="#FACEC6"
-                app:cornerRadius="12dp"
-                app:strokeColor="#772f1a"
-                app:strokeWidth="1dp" />
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </RelativeLayout>
+</RelativeLayout>
