@@ -2,6 +2,7 @@ package com.example.proyecto_iot.cliente;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.proyecto_iot.R;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FormularioCheckoutActivity extends AppCompatActivity {
 
@@ -46,12 +51,56 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
                         .setTitle("Por favor, llene todos los campos")
                         .setPositiveButton("OK", null)
                         .show();
-            } else {
+            }
+//            else {
+
+//                SharedPreferences prefs = getSharedPreferences("valoraciones", MODE_PRIVATE);
+//                SharedPreferences.Editor editor = prefs.edit();
+
+                // Guardamos respuestas asociadas al nombre del hotel
+  //              editor.putString(nombreHotel + "_p1", p1);
+    //            editor.putString(nombreHotel + "_p2", p2);
+      //          editor.putString(nombreHotel + "_obs", obs);
+        //        editor.apply(); // guardar
+
+/* COMO SE LEEN
+                SharedPreferences prefs = getSharedPreferences("valoraciones", MODE_PRIVATE);
+                String respuesta1 = prefs.getString(nombreHotel + "_p1", "");
+                String respuesta2 = prefs.getString(nombreHotel + "_p2", "");
+                String observaciones = prefs.getString(nombreHotel + "_obs", "");
+
+*/
                 // Si todos los campos están llenos, continúa al siguiente paso
+           //     Intent intent = new Intent(FormularioCheckoutActivity.this, SolicitudTaxiActivity.class);
+             //   intent.putExtra("nombreHotel", nombreHotel);
+              //  startActivity(intent);
+            //}
+
+            //PROBANDO FIREBASE
+
+            else {
+                SharedPreferences prefs = getSharedPreferences("valoraciones", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(nombreHotel + "_p1", p1);
+                editor.putString(nombreHotel + "_p2", p2);
+                editor.putString(nombreHotel + "_obs", obs);
+                editor.apply();
+
+                // 🔔 Notificación en Firestore
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                Map<String, Object> noti = new HashMap<>();
+                noti.put("mensaje", " ✅ Checkout confirmado en " + nombreHotel);
+                noti.put("timestamp", System.currentTimeMillis());
+
+                db.collection("notificaciones").add(noti);
+
+                // Siguiente paso
                 Intent intent = new Intent(FormularioCheckoutActivity.this, SolicitudTaxiActivity.class);
                 intent.putExtra("nombreHotel", nombreHotel);
                 startActivity(intent);
             }
+
+
         });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

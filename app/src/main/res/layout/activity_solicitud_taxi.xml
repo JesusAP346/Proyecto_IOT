@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sí" />
-
+<!--
         <EditText
             android:id="@+id/etAeropuerto"
             android:layout_width="match_parent"
@@ -62,7 +62,20 @@
             android:padding="10dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="gone" />
+            android:visibility="gone" /> -->
+
+        <TextView
+            android:id="@+id/tvDestinoFijo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Aeropuerto Internacional Jorge Chávez - Lima,Perú"
+            android:visibility="gone"
+            android:background="#E0E0E0"
+            android:padding="10dp"
+            android:textColor="#000000"
+            android:textStyle="italic"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
 
         <RadioButton
             android:id="@+id/rbNo"

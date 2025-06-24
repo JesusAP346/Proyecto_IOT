@@ -66,12 +66,12 @@
         android:id="@+id/pregunta2"
         android:layout_width="343dp"
         android:layout_height="76dp"
-        android:layout_marginTop="296dp"
         android:hint="2. ¿Volvería a hospedarse aquí? ¿Por qué?"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.388"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.449" />
 
     <EditText
         android:id="@+id/observaciones"
@@ -80,10 +80,10 @@
         android:hint="Observaciones adicionales"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.608"
+        app:layout_constraintHorizontal_bias="0.695"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.622" />
+        app:layout_constraintVertical_bias="0.559" />
 
     <TextView
         android:id="@+id/textView14"
@@ -101,7 +101,6 @@
         android:id="@+id/btnEnviar"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="172dp"
         android:backgroundTint="#F57C00"
         android:text="SIGUIENTE"
         android:textColor="@android:color/white"
@@ -109,5 +108,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.708" />
 </androidx.constraintlayout.widget.ConstraintLayout>

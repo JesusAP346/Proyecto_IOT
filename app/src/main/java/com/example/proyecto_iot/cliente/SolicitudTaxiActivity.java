@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //import androidx.activity.ActivityCompat;
@@ -25,6 +27,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SolicitudTaxiActivity extends AppCompatActivity {
 
@@ -38,28 +43,39 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solicitud_taxi);
+        String nombreHotel = getIntent().getStringExtra("nombreHotel");
 
         crearCanalNotificacion();
 
         rbSi = findViewById(R.id.rbSi);
         rbNo = findViewById(R.id.rbNo);
-        etAeropuerto = findViewById(R.id.etAeropuerto);
+        //etAeropuerto = findViewById(R.id.etAeropuerto);
         btnEnviar = findViewById(R.id.btnEnviarTaxi);
 
+        TextView tvDestinoFijo;
+
         // Mostrar o esconder campo según opción
-        rbSi.setOnClickListener(v -> etAeropuerto.setVisibility(View.VISIBLE));
-        rbNo.setOnClickListener(v -> etAeropuerto.setVisibility(View.GONE));
+        //rbSi.setOnClickListener(v -> etAeropuerto.setVisibility(View.VISIBLE));
+        //rbNo.setOnClickListener(v -> etAeropuerto.setVisibility(View.GONE));
+
+
+        tvDestinoFijo = findViewById(R.id.tvDestinoFijo);
+
+        rbSi.setOnClickListener(v -> tvDestinoFijo.setVisibility(View.VISIBLE));
+        rbNo.setOnClickListener(v -> tvDestinoFijo.setVisibility(View.GONE));
+
 
         btnEnviar.setOnClickListener(v -> {
+
             if (!rbSi.isChecked() && !rbNo.isChecked()) {
                 Toast.makeText(this, "Seleccione una opción", Toast.LENGTH_SHORT).show();
                 return;
             }
-
+/*
             if (rbSi.isChecked() && etAeropuerto.getText().toString().trim().isEmpty()) {
                 Toast.makeText(this, "Por favor, ingrese el aeropuerto", Toast.LENGTH_SHORT).show();
                 return;
-            }
+            }*/
 
             View customView = getLayoutInflater().inflate(R.layout.dialog_confirmacion, null);
 
@@ -72,6 +88,57 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
 
             btnCerrar.setOnClickListener(v1 -> {
                 dialog.dismiss();
+
+                boolean deseaTaxi = rbSi.isChecked();
+                String aeropuerto = deseaTaxi ? "Aeropuerto Jorge Chávez" : "Sin taxi";
+
+                SharedPreferences prefs = getSharedPreferences("solicitudes_taxi", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean(nombreHotel + "_taxi", deseaTaxi);
+                editor.putString(nombreHotel + "_aeropuerto", aeropuerto);
+                editor.apply();
+
+/*------------------------------------------------------------------------------
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                Map<String, Object> solicitud = new HashMap<>();
+                solicitud.put("hotel", nombreHotel);
+                solicitud.put("deseaTaxi", deseaTaxi);
+                solicitud.put("aeropuerto", aeropuerto);
+                solicitud.put("timestamp", System.currentTimeMillis());
+
+                db.collection("solicitudes_taxi")
+                        .add(solicitud)
+                        .addOnSuccessListener(documentReference -> {
+                            // Opcional: mensaje de éxito
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(SolicitudTaxiActivity.this, "Error al guardar en Firestore", Toast.LENGTH_SHORT).show();
+                        });
+
+//------------------------------------------------------------------------------*/
+
+// GUARDAR NOTIFICACIÓN EN FIRESTORE
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                Map<String, Object> noti = new HashMap<>();
+                noti.put("mensaje", deseaTaxi ?
+                        " \uD83D\uDE95 Se generó QR para el servicio de taxi. Puede verlo en la sección Taxi" :
+                        "Checkout confirmado sin servicio de taxi");
+                noti.put("timestamp", System.currentTimeMillis());
+
+                db.collection("notificaciones")
+                        .add(noti)
+                        .addOnSuccessListener(documentReference -> {
+                            // Éxito (opcional)
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(SolicitudTaxiActivity.this, "Error al guardar notificación", Toast.LENGTH_SHORT).show();
+                        });
+
+
+
+//---------------------------------------------------------------------------------------------------------
+
+
                 mostrarNotificacion();
 
                 Intent intent = new Intent(SolicitudTaxiActivity.this, ClienteBusquedaActivity.class);
@@ -80,8 +147,10 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             });
+
             dialog.show();
         });
+
     }
 
     private void crearCanalNotificacion() {
