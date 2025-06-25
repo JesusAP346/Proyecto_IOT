@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.proyecto_iot.MainActivity;
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.SuperAdmin.PagPrincipalSuperAdmin;
 import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
 import com.example.proyecto_iot.administradorHotel.RegistroPrimeraVez;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
@@ -122,6 +123,9 @@ public class LoginActivity extends AppCompatActivity {
                                                 intent.putExtra("idUsuario", idUsuario);
                                                 startActivity(intent);
                                                 finish();
+                                            }else if ("SuperAdmin".equals(rol)) {
+                                                Intent intent = new Intent(LoginActivity.this, PagPrincipalSuperAdmin.class);
+                                                startActivity(intent);
                                             }else {
                                                 Toast.makeText(this, "Rol no permitido", Toast.LENGTH_SHORT).show();
                                                 auth.signOut();

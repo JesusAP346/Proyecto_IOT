@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.proyecto_iot.SuperAdmin.entity.AwsService;
+import com.example.proyecto_iot.SuperAdmin.entity.UploadResponse;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,6 +24,16 @@ import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
 import com.google.android.material.textfield.TextInputEditText;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.MultipartBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -36,6 +48,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.HashMap; // For partial updates if needed
 import java.util.Map; // For partial updates if needed
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.MultipartBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FragmentGestionAdministradorSuperadmin extends Fragment {
 
@@ -99,11 +118,13 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                 result -> {
                     if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
                         Uri imageUri = result.getData().getData();
-                        imagenSeleccionada = imageUri.toString(); // Store the Uri string
-                        Picasso.get().load(imagenSeleccionada).into(ivFoto);
+                        if (imageUri != null) {
+                            subirImagenAWS(imageUri);  // ✅ Sube la imagen y guarda la URL real en imagenSeleccionada
+                        }
                     }
                 }
         );
+
     }
 
     @Override
@@ -475,4 +496,80 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
             Toast.makeText(getContext(), "No hay clientes de correo instalados para enviar las credenciales.", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void subirImagenAWS(Uri uri) {
+        try {
+            File file = uriToFile(uri, "foto_admin_" + System.currentTimeMillis());
+            if (file == null) {
+                Toast.makeText(getContext(), "No se pudo procesar la imagen", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Toast.makeText(getContext(), "Subiendo imagen...", Toast.LENGTH_SHORT).show();
+
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://mm5k8l79xd.execute-api.us-west-2.amazonaws.com/")
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            AwsService service = retrofit.create(AwsService.class);
+
+            RequestBody requestFile = RequestBody.create(file, MediaType.parse("image/jpeg"));
+            MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+            service.subirImagen(body).enqueue(new Callback<UploadResponse>() {
+                @Override
+                public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        imagenSeleccionada = response.body().getUrl(); // Se guarda la URL
+                        Picasso.get().load(imagenSeleccionada).into(ivFoto);
+                        Toast.makeText(getContext(), "Imagen subida correctamente", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Error al subir imagen", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UploadResponse> call, Throwable t) {
+                    Toast.makeText(getContext(), "Fallo al subir imagen: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+    private File uriToFile(Uri uri, String fileName) {
+        try {
+            File dir = new File(requireContext().getCacheDir(), "temp_images");
+            if (!dir.exists()) dir.mkdirs();
+            File file = new File(dir, fileName + ".jpg");
+
+            InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
+            FileOutputStream outputStream = new FileOutputStream(file);
+
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            outputStream.close();
+            inputStream.close();
+
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }
