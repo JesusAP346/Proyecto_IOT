@@ -87,17 +87,39 @@ public class SolicitudesHotelFragment extends Fragment {
                     List<Solicitud> solicitudes = new ArrayList<>();
 
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String idCliente = doc.getString("idCliente");
                         String nombre = doc.getString("nombreCliente");
                         String telefono = doc.getString("celularCliente");
                         String destino = doc.getString("destino");
                         String hotel = doc.getString("nombreHotel");
                         String direccionHotel = doc.getString("direccionHotel");
-                        int viajes = 0; // si tienes este campo, puedes obtenerlo como doc.getLong("viajes").intValue()
+                        int viajes = 0;
                         double lat = doc.getDouble("latitudHotel") != null ? doc.getDouble("latitudHotel") : 0.0;
                         double lng = doc.getDouble("longitudHotel") != null ? doc.getDouble("longitudHotel") : 0.0;
 
-                        // Por ahora el campo distrito y tiempoDistancia serán vacíos
-                        solicitudes.add(new Solicitud(nombre, telefono, viajes, "3 min.\n1.2 km", hotel, direccionHotel, destino, R.drawable.usuario_10, lat, lng));
+                        // Consultar foto de perfil del usuario
+                        db.collection("usuarios")
+                                .document(idCliente)
+                                .get()
+                                .addOnSuccessListener(userDoc -> {
+                                    String urlFoto = userDoc.getString("urlFotoPerfil");
+                                    // Si no hay foto o es nula, usar placeholder
+                                    if (urlFoto == null || urlFoto.isEmpty()) {
+                                        urlFoto = "drawable://" + R.drawable.usuario_10;
+                                    }
+
+                                    Solicitud solicitud = new Solicitud(nombre, telefono, viajes, "3 min.\n1.2 km",
+                                            hotel, direccionHotel, destino, urlFoto, lat, lng);
+
+                                    solicitudes.add(solicitud);
+
+                                    // Actualizar el RecyclerView cuando se agregue una nueva solicitud
+                                    binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(solicitudes));
+
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Firestore", "Error al obtener datos del usuario", e);
+                                });
                     }
 
                     SolicitudAdapter adapter = new SolicitudAdapter(solicitudes);
@@ -181,7 +203,7 @@ public class SolicitudesHotelFragment extends Fragment {
 
         return lista;
     }
-
+    /*
     private List<Solicitud> crearSolicitudesHardcodeadas() {
         List<Solicitud> lista = new ArrayList<>();
 
@@ -219,6 +241,8 @@ public class SolicitudesHotelFragment extends Fragment {
         }
         return lista;
     }
+
+     */
 
 
 }

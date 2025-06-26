@@ -11,8 +11,13 @@ public class Solicitud {
     public double latDestino;
     public double lngDestino;
 
+    public String urlFotoPerfil; // en lugar de int fotoPerfil
+
+
+
+
     public Solicitud(String nombre, String telefono, int viajes, String tiempoDistancia,
-                     String origen, String distrito, String destino, int imagenPerfil,
+                     String origen, String distrito, String destino,  String urlFotoPerfil,
                      double latDestino, double lngDestino) {
         this.nombre = nombre;
         this.telefono = telefono;
@@ -21,14 +26,14 @@ public class Solicitud {
         this.origen = origen;
         this.distrito = distrito;
         this.destino = destino;
-        this.imagenPerfil = imagenPerfil;
+        this.urlFotoPerfil = urlFotoPerfil;
         this.latDestino = latDestino;
         this.lngDestino = lngDestino;
     }
 
     // Constructor alternativo para compatibilidad
     public Solicitud(String nombre, String telefono, int viajes, String tiempoDistancia,
-                     String origen, String distrito, String destino, int imagenPerfil) {
+                     String origen, String distrito, String destino, String imagenPerfil) {
         this(nombre, telefono, viajes, tiempoDistancia, origen, distrito, destino, imagenPerfil,
                 -12.0464, -77.0428); // coordenadas reales por defecto
     }

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.taxista.perfil.Notificacion;
 import com.google.gson.Gson;
@@ -66,7 +67,17 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         holder.origen.setText(solicitud.origen);
         holder.distrito.setText(solicitud.distrito);
         holder.destino.setText(solicitud.destino);
-        holder.imagen.setImageResource(solicitud.imagenPerfil);
+
+        // Cargar imagen con Glide si la URL es válida, sino usar imagen local
+        if (solicitud.urlFotoPerfil != null && !solicitud.urlFotoPerfil.isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(solicitud.urlFotoPerfil)
+                    .placeholder(R.drawable.usuario_10)
+                    .error(R.drawable.usuario_10)
+                    .into(holder.imagen);
+        } else {
+            holder.imagen.setImageResource(R.drawable.usuario_10);
+        }
 
         holder.btnAceptar.setOnClickListener(v -> {
             Context context = v.getContext();
@@ -78,7 +89,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
                     solicitud.telefono,
                     solicitud.viajes + " viajes",
                     solicitud.origen,
-                    solicitud.imagenPerfil,
+                    R.drawable.usuario_10, // este campo ya no lo usas porque estás con URL
                     solicitud.latDestino,
                     solicitud.lngDestino);
 
@@ -94,7 +105,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
             intent.putExtra("telefono", solicitud.telefono);
             intent.putExtra("viajes", solicitud.viajes + " viajes");
             intent.putExtra("hotel", solicitud.origen);
-            intent.putExtra("imagenPerfil", solicitud.imagenPerfil);
+            intent.putExtra("imagenPerfilUrl", solicitud.urlFotoPerfil); // pasamos la URL
             intent.putExtra("latDestino", solicitud.latDestino);
             intent.putExtra("lngDestino", solicitud.lngDestino);
             context.startActivity(intent);

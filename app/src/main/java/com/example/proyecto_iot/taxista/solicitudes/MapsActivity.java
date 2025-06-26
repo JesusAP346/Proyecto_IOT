@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.ActivityMapsBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -40,7 +41,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // Botón atrás
         binding.btnBack.setOnClickListener(v -> finish());
 
         // RECIBIR DATOS DEL INTENT
@@ -48,19 +48,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String telefono = getIntent().getStringExtra("telefono");
         String viajes = getIntent().getStringExtra("viajes");
         String hotel = getIntent().getStringExtra("hotel");
-        int imagenPerfil = getIntent().getIntExtra("imagenPerfil", R.drawable.roberto);
+        String imagenPerfilUrl = getIntent().getStringExtra("imagenPerfilUrl");
         latDestino = getIntent().getDoubleExtra("latDestino", 0.0);
         lngDestino = getIntent().getDoubleExtra("lngDestino", 0.0);
+
         Log.d("MapsActivity", "LatDestino: " + latDestino + ", LngDestino: " + lngDestino);
-
-
 
         // MOSTRAR INFO
         binding.tvNombre.setText(nombre != null ? nombre : "Sin nombre");
         binding.tvTelefono.setText(telefono != null ? telefono : "Sin teléfono");
         binding.tvViajes.setText(viajes != null ? viajes : "0 viajes");
         binding.subtitulo.setText(hotel != null ? hotel : "Destino no especificado");
-        binding.imgConductor.setImageResource(imagenPerfil);
+
+        // Mostrar imagen con Glide
+        Glide.with(this)
+                .load(imagenPerfilUrl)
+                .placeholder(R.drawable.usuario_10)
+                .error(R.drawable.usuario_10)
+                .into(binding.imgConductor);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         if (mapFragment != null) {
@@ -88,12 +93,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 LatLng miUbicacion = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(miUbicacion).title("Tú estás aquí"));
 
-                // Validar si las coordenadas del destino son distintas de 0
                 if (!(latDestino == 0.0 && lngDestino == 0.0)) {
                     LatLng destino = new LatLng(latDestino, lngDestino);
                     mMap.addMarker(new MarkerOptions().position(destino).title("Destino del pasajero"));
 
-                    // Ajustar cámara para mostrar ambos puntos
                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
                     builder.include(miUbicacion);
                     builder.include(destino);
@@ -101,13 +104,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150));
                 } else {
-                    // Solo centrar en el usuario si no hay destino válido
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(miUbicacion, 15));
                     Log.w("MapsActivity", "Destino no válido: lat/lng = 0.0");
                 }
             }
         });
-
     }
 
     private void obtenerUbicacion() {
@@ -123,7 +124,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 double lat = location.getLatitude();
                 double lon = location.getLongitude();
                 Log.d("Ubicacion", "Lat: " + lat + ", Lng: " + lon);
-                // Aquí puedes enviar la ubicación al backend
             }
         });
     }
