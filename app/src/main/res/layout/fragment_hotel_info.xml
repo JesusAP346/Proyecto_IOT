@@ -1,175 +1,334 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
+    android:scrollbars="none"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/background_gradient"
     android:padding="16dp">
 
-    <LinearLayout
+
+    <!-- Card con información del hotel -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginBottom="24dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:layout_marginVertical="1dp"
+        android:layout_marginHorizontal="2dp"
+        android:background="@android:color/white">
 
-        <!-- Tipo de habitación -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingVertical="8dp">
+            android:padding="20dp"
+            android:paddingBottom="32dp">
 
-            <TextView
+            <!-- Nombre del Hotel -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tipo de habitación"
-                android:textStyle="bold"
-                android:textSize="12sp"
-                android:textColor="#FF000000" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
 
-            <TextView
-                android:id="@+id/tvTipoHabitacion"
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/icono_hotel"
+                    app:tint="#6F6F6F"
+                    android:layout_marginEnd="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nombre del Hotel"
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_nombre_hotel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/gray_800"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_200"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Dirección -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Estandar"
-                android:background="@drawable/bg_edittext_simulado"
-                android:padding="8dp"
-                android:textSize="16sp"
-                android:textColor="#858585"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_ubicacion_admin"
+                    app:tint="#6F6F6F"
+                    android:layout_marginEnd="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dirección"
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_direccion_hotel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/gray_800"
+                        android:textSize="16sp"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_200"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Ubicación en Maps -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_mapa"
+                    app:tint="#6F6F6F"
+                    android:layout_marginEnd="12dp"
+                    android:layout_gravity="top" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ubicación"
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <!-- Mini mapa preview -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_mini_mapa"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- MapView para previsualización -->
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/map_view_preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="false"
+                        android:focusable="false" />
+
+                    <!-- Overlay con información -->
+                    <LinearLayout
+                        android:id="@+id/btn_ver_ubicacion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:background="@drawable/bg_map_overlay"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_open_in_new"
+                            app:tint="@android:color/black"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Toca para ver la ubicación"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_200"
                 android:layout_marginTop="4dp"
-                android:focusable="false"
-                android:clickable="false" />
+                android:layout_marginBottom="16dp" />
+
+            <!-- Lugares Históricos o Referencias -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_referencias"
+                    app:tint="#6F6F6F"
+                    android:layout_marginEnd="12dp"
+                    android:layout_gravity="top" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lugares Históricos y Referencias"
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <!-- Contenedor para lugares históricos -->
+                    <LinearLayout
+                        android:id="@+id/container_lugares_historicos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_200"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Galería de Imágenes -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_gallery"
+                    app:tint="#6F6F6F"
+                    android:layout_marginEnd="12dp"
+                    android:layout_gravity="top" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Galería de Imágenes"
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <!-- RecyclerView para imágenes horizontales -->
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <org.imaginativeworld.whynotimagecarousel.ImageCarousel
+                android:id="@+id/carrusel_imagenes"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:showIndicator="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Aquí insertamos el botón antes de cerrar el LinearLayout -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_actualizar_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Actualizar información"
+                    android:textColor="@android:color/black"
+                    android:backgroundTint="#EEEEEE"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    app:cornerRadius="10dp"
+                    app:iconPadding="0dp"
+                    app:strokeWidth="0dp"
+                    style="@style/Widget.MaterialComponents.Button" />
+            </LinearLayout>
+
         </LinearLayout>
 
-        <!-- Dirección -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingVertical="8dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Dirección"
-                android:textStyle="bold"
-                android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/tvDireccion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Miraflores"
-                android:textSize="16sp"
-                android:textColor="#858585"
-                android:background="@drawable/bg_edittext_simulado"
-                android:padding="8dp"
-                android:layout_marginTop="4dp"
-                android:focusable="false"
-                android:clickable="false" />
-        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-        <!-- Coordenadas GPS -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingVertical="8dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ubicación"
-                android:textStyle="bold"
-                android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/tvCoordenadas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Acá se seleccionará la ubicación por medio maps"
-                android:textSize="16sp"
-                android:textColor="#858585"
-                android:background="@drawable/bg_edittext_simulado"
-                android:padding="8dp"
-                android:layout_marginTop="4dp"
-                android:focusable="false"
-                android:clickable="false" />
-        </LinearLayout>
-
-        <!-- Referencias -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingVertical="8dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Lugares históricos o referencias"
-                android:textStyle="bold"
-                android:textSize="12sp"
-                android:layout_marginBottom="4dp" />
-
-            <TextView
-                android:id="@+id/tvReferencia1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Parque Kennedy"
-                android:textSize="16sp"
-                android:textColor="#858585"
-                android:background="@drawable/bg_edittext_simulado"
-                android:padding="8dp"
-                android:layout_marginBottom="8dp"
-                android:focusable="false"
-                android:clickable="false" />
-
-            <TextView
-                android:id="@+id/tvReferencia2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Plasa Sésamo"
-                android:textSize="16sp"
-                android:textColor="#858585"
-                android:background="@drawable/bg_edittext_simulado"
-                android:padding="8dp"
-                android:layout_marginBottom="2dp"
-                android:focusable="false"
-                android:clickable="false" />
-        </LinearLayout>
-
-        <!-- Título de Fotos -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fotos del hotel e instalaciones"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp" />
-
-        <org.imaginativeworld.whynotimagecarousel.ImageCarousel
-            android:id="@+id/carousel"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" />
-
-        <!-- Botón Actualizar -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnActualizar"
-            android:layout_width="wrap_content"
-            android:layout_height="54dp"
-            android:minHeight="60dp"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="8dp"
-            android:layout_gravity="center_horizontal"
-            android:text="Actualizar información"
-            android:textSize="15sp"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="24dp"
-            app:cornerRadius="12dp"
-            app:strokeColor="#772f1a"
-            app:strokeWidth="1dp"
-            app:backgroundTint="#FACEC6" />
-    </LinearLayout>
 </ScrollView>

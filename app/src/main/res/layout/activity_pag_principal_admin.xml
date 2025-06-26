@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".administradorHotel.PagPrincipalAdmin">
+    tools:context=".administradorHotel.PagPrincipalAdmin"
+    android:background="@color/background_gradient">
 
     <FrameLayout
         android:id="@+id/frame_layout"
@@ -30,7 +31,7 @@
         app:itemIconTint="@menu/nav_icon_selector"
         app:labelVisibilityMode="labeled"
         app:itemTextColor="@menu/nav_icon_selector"
-        android:background="@color/white" />
+        android:background="@color/background_gradient" />
 
 
 

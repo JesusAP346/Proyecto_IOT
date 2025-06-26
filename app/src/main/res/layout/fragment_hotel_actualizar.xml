@@ -1,291 +1,496 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/hotelActualizar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:padding="16dp">
+    android:background="@android:color/white">
 
-    <LinearLayout
-        android:id="@+id/mainLayout"
+    <ScrollView
+        android:id="@+id/scroll_view_contenido"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:scrollbars="none">
 
-        <!-- Título -->
         <LinearLayout
+            android:id="@+id/mainLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/backActualizar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_arrow_back"
-                android:contentDescription="Atrás" />
-
-            <TextView
-                android:layout_width="0dp"
+            <!-- Título -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Actualizar información del hotel"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
+                android:layout_marginBottom="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <View
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="12dp"
-                android:visibility="invisible" />
-        </LinearLayout>
-        <!-- Nombre -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nombre"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-        <EditText
-            android:id="@+id/etNombre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nombre del hotel"
-            android:text="Televagos"
-            android:background="@drawable/bg_edittext_simulado"
-            android:padding="8dp"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="12dp" />
+                <ImageView
+                    android:id="@+id/backActualizar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="Atrás" />
 
-        <!-- Dirección -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Dirección"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-        <EditText
-            android:id="@+id/etDireccion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Dirección"
-            android:text="Miraflores"
-            android:background="@drawable/bg_edittext_simulado"
-            android:padding="8dp"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="12dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Actualizar información del hotel"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
 
-        <!-- Coordenadas -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ubicación"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-        <EditText
-            android:id="@+id/etCoordenadas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Latitud, Longitud"
-            android:text="Se selecciona mediante maps"
-            android:background="@drawable/bg_edittext_simulado"
-            android:padding="8dp"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="12dp" />
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="12dp"
+                    android:visibility="invisible" />
+            </LinearLayout>
 
-        <!-- Referencias dinámicas -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Lugares históricos o referencias"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="0dp">
+            <!-- Formulario -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre"
+                android:textSize="13sp"
+                android:textStyle="bold"/>
 
             <EditText
-                android:id="@+id/etReferencia"
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_edittext_simulado"
-                android:hint="Ingrese referencias"
-                android:padding="5dp"
-                android:textSize="16sp" />
+                android:id="@+id/editTextNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/customedittext"
+                android:hint="Nombre del hotel"
+                android:text=""
+                android:layout_marginTop="4dp"
+                android:padding="8dp"
+                android:textSize="18sp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAgregarReferencia"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="16dp"
-                android:text="+ Agregar"
+            <!-- Nombre -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dirección"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginTop="13dp" />
+
+            <EditText
+                android:id="@+id/editTextDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/customedittext"
+                android:hint="Nombre del hotel"
+                android:text=""
+                android:layout_marginTop="4dp"
+                android:padding="8dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ubicación"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginTop="13dp" />
+
+            <!-- ESPACIO PARA LA DIRECCION -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_mini_mapa"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- MapView para previsualización -->
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/map_view_preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="false"
+                        android:focusable="false" />
+
+                    <!-- Overlay con información -->
+                    <LinearLayout
+                        android:id="@+id/btn_ver_ubicacion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:background="@drawable/bg_map_overlay"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_open_in_new"
+                            app:tint="@android:color/black"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Toca para actualizar la ubicación"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Coordenadas -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lugares históricos o referencias"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginTop="13dp"
+                android:layout_marginBottom="4dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="0dp">
+
+                <EditText
+                    android:id="@+id/etReferencia"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_edittext_simulado"
+                    android:hint="Ingrese referencias"
+                    android:padding="5dp"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAgregarReferencia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:minHeight="0dp"
+                    android:paddingHorizontal="16dp"
+                    android:text="+ Agregar"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="8dp"
+                    app:cornerRadius="7dp"
+                    app:strokeColor="#772f1a"
+                    app:strokeWidth="1dp"
+                    app:backgroundTint="#FACEC6" />
+            </LinearLayout>
+
+            <!-- Texto vacío -->
+            <TextView
+                android:id="@+id/textReferenciaVacia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sin referencias agregadas"
+                android:textColor="#777777"
+                android:textStyle="italic"
                 android:textSize="14sp"
-                android:textColor="@android:color/black"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone" />
+
+            <!-- Contenedor horizontal para 2 chips -->
+            <LinearLayout
+                android:id="@+id/layoutReferenciasActualizadas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="8dp"/>
+
+
+
+            <!-- Agregar nuevas fotos -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fotos"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginTop="13dp"
+                android:layout_marginBottom="4dp"/>
+
+            <!-- Botón principal para agregar fotos -->
+            <LinearLayout
+                android:id="@+id/btnAgregarFoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/photo_selector_background"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginBottom="8dp"
+                android:paddingVertical="12dp">
+
+                <!-- Contenedor horizontal para ícono y texto principal -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_add_photo"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="Agregar foto" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Agregar fotos de la habitación"
+                        android:textSize="16sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+
+                <!-- Texto de mínimo de fotos -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(mínimo 4 fotos)"
+                    android:textSize="12sp"
+                    android:textColor="#999999"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- Contenedor para vista previa de fotos -->
+            <LinearLayout
+                android:id="@+id/containerFotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/errorTipoFotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:layout_marginStart="8dp"
-                app:cornerRadius="7dp"
-                app:strokeColor="#772f1a"
-                app:strokeWidth="1dp"
-                app:backgroundTint="#FACEC6" />
+                android:drawableStart="@drawable/ic_warning_admin"
+                android:drawablePadding="8dp"
+                android:textColor="#D32F2F"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_cancelar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="Cancelar"
+                    android:textColor="@color/gray_600"
+                    android:textSize="18sp"
+                    app:backgroundTint="@android:color/transparent"
+                    app:cornerRadius="12dp"
+                    app:rippleColor="?attr/colorControlHighlight"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnActualizar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="0dp"
+                    android:minHeight="60dp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="8dp"
+                    android:text="Actualizar"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    app:backgroundTint="#FACEC6"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="#772f1a"
+                    app:strokeWidth="1dp" />
+
+            </LinearLayout>
+
         </LinearLayout>
+    </ScrollView>
+    <!-- 2. progressBarGuardar -->
+    <RelativeLayout
+        android:id="@+id/progressBarGuardar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
 
-        <!-- Texto vacío -->
-        <TextView
-            android:id="@+id/textReferenciaVacia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=" ¡Sin referencias agregadas! "
-            android:textColor="#7C2D2D"
-            android:textStyle="bold"
-            android:visibility="gone"
-            android:layout_marginTop="6dp" />
-        <!-- Contenedor horizontal para 2 chips -->
         <LinearLayout
-            android:id="@+id/layoutReferenciasActualizadas"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:orientation="vertical"
-            android:layout_marginTop="8dp"/>
-
-
-
-        <!-- Agregar nuevas fotos -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Agregar nuevas fotos"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@drawable/bg_edittext_simulado"
             android:gravity="center"
-            android:orientation="vertical"
-            android:layout_marginTop="8dp">
+            android:background="@drawable/loading_background"
+            android:padding="24dp">
 
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_camera"
-                android:tint="#9E9EA6"
-                android:contentDescription="Agregar foto" />
+            <ProgressBar
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminate="true" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Subir fotos"
-                android:textSize="14sp"
-                android:textColor="#888888"
-                android:layout_marginTop="4dp" />
+                android:text="Actualizando datos..."
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp" />
         </LinearLayout>
+    </RelativeLayout>
 
-        <!-- Fotos agregadas -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fotos agregadas"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
+    <!-- 3. Fondo semitransparente para overlay -->
+    <View
+        android:id="@+id/overlayBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true" />
 
+    <View
+        android:id="@+id/fondoToque"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@android:color/transparent" />
+
+    <LinearLayout
+        android:id="@+id/menuOpciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_background"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:elevation="10dp"
+        android:paddingVertical="4dp"
+        android:layout_marginHorizontal="32dp">
+
+        <!-- Opción Galería -->
         <LinearLayout
+            android:id="@+id/opcionGaleria"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
 
-            <!-- Imagen 1 -->
-            <FrameLayout
+            <TextView
                 android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/img1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hotel1"
-                    android:background="@drawable/img_rounded_corners"
-                    android:clipToOutline="true" />
-
-                <ImageButton
-                    android:id="@+id/btnEliminarImg1"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="6dp"
-                    android:background="@drawable/btn_circle_background"
-                    android:padding="6dp"
-                    android:src="@drawable/ic_delete"
-                    app:tint="@android:color/white"
-                    android:contentDescription="Eliminar imagen"
-                    android:scaleType="centerInside" />
-            </FrameLayout>
-
-            <!-- Imagen 2 -->
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp">
+                android:text="Galería"
+                android:textSize="16sp"
+                android:textColor="#333333" />
 
-                <ImageView
-                    android:id="@+id/img2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hotel2"
-                    android:background="@drawable/img_rounded_corners"
-                    android:clipToOutline="true" />
-
-                <ImageButton
-                    android:id="@+id/btnEliminarImg2"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="6dp"
-                    android:background="@drawable/btn_circle_background"
-                    android:padding="6dp"
-                    android:src="@drawable/ic_delete"
-                    app:tint="@android:color/white"
-                    android:contentDescription="Eliminar imagen"
-                    android:scaleType="centerInside" />
-            </FrameLayout>
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_gallery"
+                android:contentDescription="Galería" />
         </LinearLayout>
 
-        <!-- Botón actualizar -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnActualizar"
-            android:layout_width="wrap_content"
-            android:layout_height="54dp"
-            android:minHeight="60dp"
-            android:paddingHorizontal="24dp"
-            android:layout_gravity="center_horizontal"
-            android:text="Actualizar información"
-            android:textSize="15sp"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="24dp"
-            app:cornerRadius="12dp"
-            app:strokeColor="#772f1a"
-            app:strokeWidth="1dp"
-            app:backgroundTint="#FACEC6" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <!-- Opción Tomar Foto -->
+        <LinearLayout
+            android:id="@+id/opcionTomarFoto"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tomar foto"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_camera_admin"
+                android:contentDescription="Cámara" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC" />
+
+        <!-- Opción Seleccionar Archivo -->
+        <LinearLayout
+            android:id="@+id/opcionSeleccionarArchivo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Seleccionar archivo"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_folder"
+                android:contentDescription="Archivos" />
+        </LinearLayout>
     </LinearLayout>
-</ScrollView>
+
+
+</RelativeLayout>

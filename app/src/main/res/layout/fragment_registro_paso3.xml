@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:scrollbars="none"
     android:padding="0dp"> <!-- quita el 16dp para evitar interferencias -->
 
     <!-- CONTENIDO SCROLLEABLE -->
@@ -371,4 +372,8 @@
                 android:layout_marginTop="16dp" />
         </LinearLayout>
     </RelativeLayout>
+
+
+
+
 </RelativeLayout>

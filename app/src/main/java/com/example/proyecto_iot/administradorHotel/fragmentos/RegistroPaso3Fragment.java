@@ -91,7 +91,6 @@ public class RegistroPaso3Fragment extends Fragment {
     private ActivityResultLauncher<Intent> galeriaLauncher;
     private ActivityResultLauncher<Intent> camaraLauncher;
     private ActivityResultLauncher<Intent> archivoLauncher;
-    private boolean guardandoServicio = false;
     private HabitacionViewModel viewModel;
 
     @Override
@@ -635,22 +634,7 @@ public class RegistroPaso3Fragment extends Fragment {
     }
     // Validación en tiempo real (opcional)
 
-    // 9. METODO PARA LIMPIAR IMÁGENES TEMPORALES
-    private void limpiarImagenesTemporales() {
-        try {
-            File tempDir = new File(requireContext().getCacheDir(), "temp_images"); // ← CORREGIDO
-            if (tempDir.exists()) {
-                File[] files = tempDir.listFiles();
-                if (files != null) {
-                    for (File file : files) {
-                        file.delete();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     @Override

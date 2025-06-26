@@ -147,6 +147,7 @@
                             android:orientation="vertical">
 
                             <!-- Map Placeholder -->
+                            <!-- Map Placeholder -->
                             <FrameLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp"
@@ -175,21 +176,33 @@
                                         android:textColor="@color/text_secondary"
                                         android:layout_marginBottom="4dp" />
 
-
-                                    <Button
+                                    <com.google.android.material.button.MaterialButton
                                         android:id="@+id/btnSeleccionarUbicacion"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="61dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
                                         android:layout_marginTop="16dp"
-                                        android:text="Seleccionar ubicación en el mapa" />
-
-
-
-
+                                        android:text="Seleccionar ubicación en el mapa"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        android:paddingHorizontal="24dp"
+                                        android:paddingVertical="12dp"
+                                        app:backgroundTint="#ADAEB1"
+                                        app:cornerRadius="8dp"
+                                        app:strokeWidth="0dp"
+                                        app:elevation="2dp"
+                                        app:rippleColor="#9CA3AF" />
 
                                 </LinearLayout>
 
                             </FrameLayout>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Dirección"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="4dp"/>
 
                             <!-- Location Input -->
                             <EditText
@@ -197,7 +210,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/customedittext"
-                                android:hint="Dirección del mapa"
+                                android:hint="Ingrese la dirección"
                                 android:padding="8dp"
                                 android:layout_marginTop="8dp"
                                 android:textSize="17sp" />
