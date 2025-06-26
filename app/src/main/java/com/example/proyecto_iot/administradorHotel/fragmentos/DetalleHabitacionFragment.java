@@ -1,27 +1,48 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
+import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.entity.Equipamiento;
+import com.example.proyecto_iot.administradorHotel.entity.FotoItem;
 import com.example.proyecto_iot.administradorHotel.entity.Habitacion;
+import com.example.proyecto_iot.administradorHotel.entity.HabitacionHotel;
 import com.example.proyecto_iot.administradorHotel.entity.Servicio;
 import com.example.proyecto_iot.databinding.FragmentDetalleHabitacionBinding;
 
+import com.google.android.material.button.MaterialButton;
+
+import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselType;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,11 +50,9 @@ import java.util.List;
 public class DetalleHabitacionFragment extends Fragment {
 
     private FragmentDetalleHabitacionBinding binding;
-    private final List<String> equipamientosActuales = new ArrayList<>();
-    private final List<String> serviciosActuales = new ArrayList<>();
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDetalleHabitacionBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -42,180 +61,117 @@ public class DetalleHabitacionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Habitacion habitacion = (Habitacion) getArguments().getSerializable("habitacion");
+        // Obtener datos enviados
+        HabitacionHotel habitacion = (HabitacionHotel) getArguments().getSerializable("habitacion");
 
         if (habitacion != null) {
+            // Llenar campos con binding
+            binding.textTipoHabitacion.setText(habitacion.getTipo());
 
-            binding.textCantidadAdultos.setText(String.valueOf(habitacion.getCapacidadAdultos()));
-            binding.textCantidadNinos.setText(String.valueOf(habitacion.getCapacidadNinos()));
+            String capacidadTexto = habitacion.getCapacidadAdultos() + " Adultos, " + habitacion.getCapacidadNinos() + " Niño(s)";
+            binding.textCapacidad.setText(capacidadTexto);
 
-            // Adultos
-            binding.btnMasAdultos.setOnClickListener(v -> {
-                int count = Integer.parseInt(binding.textCantidadAdultos.getText().toString());
-                binding.textCantidadAdultos.setText(String.valueOf(count + 1));
-            });
-            binding.btnMenosAdultos.setOnClickListener(v -> {
-                int count = Integer.parseInt(binding.textCantidadAdultos.getText().toString());
-                if (count > 0) binding.textCantidadAdultos.setText(String.valueOf(count - 1));
-            });
+            binding.textTamano.setText(habitacion.getTamanho() + " m²");
 
-            // Niños
-            binding.btnMasNinos.setOnClickListener(v -> {
-                int count = Integer.parseInt(binding.textCantidadNinos.getText().toString());
-                binding.textCantidadNinos.setText(String.valueOf(count + 1));
-            });
-            binding.btnMenosNinos.setOnClickListener(v -> {
-                int count = Integer.parseInt(binding.textCantidadNinos.getText().toString());
-                if (count > 0) binding.textCantidadNinos.setText(String.valueOf(count - 1));
-            });
+            String precio = "S/ " + habitacion.getPrecioPorNoche();
+            binding.textPrecio.setText(precio);
 
+            String cantidad = habitacion.getCantidadHabitaciones() + " habitaciones";
+            binding.textCantidadHabitaciones.setText(cantidad);
 
-            binding.txtTipo.setText(habitacion.getTipo());
-            binding.txtTamanho.setText(String.valueOf(habitacion.getTamanho()));
-            binding.txtHabitacionesRegistradas.setText(String.valueOf(habitacion.getCantidadHabitaciones()));
-            binding.txtPrecioPorNoche.setText(String.format("%.2f", habitacion.getPrecioPorNoche()));
+            // Mostrar equipamiento
+            if (habitacion.getEquipamiento() != null && !habitacion.getEquipamiento().isEmpty()) {
+                mostrarEquipamiento(binding.contenedorEquipamiento, habitacion.getEquipamiento());
+            }
 
-            if (!habitacion.getFotosResIds().isEmpty()) {
-                binding.img1.setImageResource(habitacion.getFotosResIds().get(0));
-                if (habitacion.getFotosResIds().size() > 1) {
-                    binding.img2.setImageResource(habitacion.getFotosResIds().get(1));
+            // Mostrar servicios
+            if (habitacion.getServicio() != null && !habitacion.getServicio().isEmpty()) {
+                mostrarServicios(binding.contenedorServicios, habitacion.getServicio());
+            }
+
+            ImageCarousel carrusel = binding.carruselImagenes;
+
+            if (habitacion.getFotosUrls() != null && !habitacion.getFotosUrls().isEmpty()) {
+                List<CarouselItem> items = new ArrayList<>();
+
+                for (String url : habitacion.getFotosUrls()) {
+                    items.add(new CarouselItem(url));
                 }
+                carrusel.setCarouselType(CarouselType.BLOCK);
+                carrusel.setAutoPlay(true);
+                carrusel.setData(items);
+            } else {
+                carrusel.setVisibility(View.GONE);
             }
-
-            for (Equipamiento e : habitacion.getEquipamiento()) {
-                equipamientosActuales.add(e.getNombre());
-            }
-            for (Servicio s : habitacion.getServicio()) {
-                serviciosActuales.add(s.getNombre());
-            }
-
-            renderizarChips(binding.layoutEquipamientoDinamico, equipamientosActuales, true);
-            renderizarChips(binding.layoutServicioDinamico, serviciosActuales, false);
         }
 
-        setupSpinner(binding.spinnerEquipamiento, getEquipamientosDisponibles(), true);
-        setupSpinner(binding.spinnerServicios, getServiciosDisponibles(), false);
+        binding.btnActualizarInfo.setOnClickListener(v -> {
+            EditarHabitacionfragment actualizarFragment = new EditarHabitacionfragment();
 
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("habitacion", habitacion);
+            actualizarFragment.setArguments(bundle);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, actualizarFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        // Acción de retroceso
         binding.backdetallehabitacion.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
     }
 
-    private List<String> getEquipamientosDisponibles() {
-        return Arrays.asList("Seleccionar", "TV", "Ducha", "Caja fuerte", "Aire acondicionado", "Frigobar");
-    }
-
-    private List<String> getServiciosDisponibles() {
-        return Arrays.asList("Seleccionar", "Gimnasio", "Spa", "Desayuno incluido", "Parqueo", "Room Service");
-    }
-
-    private void setupSpinner(Spinner spinner, List<String> opciones, boolean esEquipamiento) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, opciones);
-        spinner.setAdapter(adapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String seleccionado = opciones.get(position);
-                if (!seleccionado.equals("Seleccionar")) {
-                    if (esEquipamiento && !equipamientosActuales.contains(seleccionado)) {
-                        equipamientosActuales.add(seleccionado);
-                        renderizarChips(binding.layoutEquipamientoDinamico, equipamientosActuales, true);
-                    } else if (!esEquipamiento && !serviciosActuales.contains(seleccionado)) {
-                        serviciosActuales.add(seleccionado);
-                        renderizarChips(binding.layoutServicioDinamico, serviciosActuales, false);
-                    }
-                    spinner.setSelection(0); // reset
-                }
-            }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    }
-
-    private void renderizarChips(LinearLayout contenedor, List<String> lista, boolean esEquipamiento) {
+    private void mostrarEquipamiento(LinearLayout contenedor, List<String> items) {
         contenedor.removeAllViews();
-        if (esEquipamiento) {
-            verificarEquipamientosVisibles();
-        } else {
-            verificarServiciosVisibles();
-        }
-        for (int i = 0; i < lista.size(); i += 2) {
-            LinearLayout fila = new LinearLayout(requireContext());
-            fila.setOrientation(LinearLayout.HORIZONTAL);
-            fila.setWeightSum(2);
-            fila.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            fila.setPadding(0, 4, 0, 4);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
 
-            fila.addView(crearChip(lista.get(i), lista, esEquipamiento));
-
-            if (i + 1 < lista.size()) {
-                fila.addView(crearChip(lista.get(i + 1), lista, esEquipamiento));
-            } else {
-                // Rellenar con espacio si es impar
-                View espacio = new View(requireContext());
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 0, 1);
-                espacio.setLayoutParams(params);
-                fila.addView(espacio);
+        LinearLayout fila = null;
+        for (int i = 0; i < items.size(); i++) {
+            if (i % 2 == 0) {
+                fila = new LinearLayout(getContext());
+                fila.setOrientation(LinearLayout.HORIZONTAL);
+                fila.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                fila.setPadding(0, 4, 0, 4);
+                contenedor.addView(fila);
             }
 
-            contenedor.addView(fila);
+            TextView tv = new TextView(getContext());
+            tv.setText("• " + items.get(i));
+            tv.setTextSize(14);
+            tv.setTextColor(getResources().getColor(android.R.color.black));
+            tv.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
+            if (i % 2 == 0) {
+                ((LinearLayout.LayoutParams) tv.getLayoutParams()).setMarginEnd(8);
+            }
+
+            if (fila != null) fila.addView(tv);
         }
     }
 
-    private View crearChip(String texto, List<String> lista, boolean esEquipamiento) {
-        LinearLayout chip = new LinearLayout(requireContext());
-        chip.setOrientation(LinearLayout.HORIZONTAL);
-        chip.setBackgroundResource(R.drawable.bg_edittext_simulado);
-        chip.setPadding(16, 12, 16, 12); // Más padding para más altura visual
-        chip.setGravity(Gravity.CENTER_VERTICAL);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        params.setMargins(0, 0, 8, 0);
-        chip.setLayoutParams(params);
-
-        TextView textView = new TextView(requireContext());
-        textView.setText(texto);
-        textView.setTextSize(14);
-        textView.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        textView.setTextColor(getResources().getColor(android.R.color.black));
-
-        ImageView icono = new ImageView(requireContext());
-        icono.setImageResource(R.drawable.ic_delete);
-        icono.setColorFilter(getResources().getColor(android.R.color.holo_red_dark));
-        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(36, 36); // Tamaño ícono grande
-        iconParams.setMargins(16, 0, 0, 0);
-        icono.setLayoutParams(iconParams);
-
-        icono.setOnClickListener(v -> {
-            lista.remove(texto);
-            renderizarChips(
-                    esEquipamiento ? binding.layoutEquipamientoDinamico : binding.layoutServicioDinamico,
-                    lista,
-                    esEquipamiento
-            );
-        });
-
-        chip.addView(textView);
-        chip.addView(icono);
-        return chip;
-    }
-
-    private void verificarEquipamientosVisibles() {
-        if (equipamientosActuales.isEmpty()) {
-            binding.textEquipamientoVacio.setVisibility(View.VISIBLE);
-        } else {
-            binding.textEquipamientoVacio.setVisibility(View.GONE);
+    private void mostrarServicios(LinearLayout contenedor, List<String> servicios) {
+        contenedor.removeAllViews();
+        for (String servicio : servicios) {
+            TextView tv = new TextView(getContext());
+            tv.setText("• " + servicio);
+            tv.setTextSize(14);
+            tv.setTextColor(getResources().getColor(android.R.color.black));
+            tv.setPadding(0, 6, 0, 6);
+            contenedor.addView(tv);
         }
     }
 
-    private void verificarServiciosVisibles() {
-        if (serviciosActuales.isEmpty()) {
-            binding.textServicioVacio.setVisibility(View.VISIBLE);
-        } else {
-            binding.textServicioVacio.setVisibility(View.GONE);
-        }
-    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
+
+    //para las fotos
+
+
 }

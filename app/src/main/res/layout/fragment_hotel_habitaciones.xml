@@ -1,36 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:orientation="vertical"
     android:background="#FFFFFF">
 
-    <!-- Botón sin tocar -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_registrar_informacion"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_gravity="center_horizontal"
-        android:minHeight="60dp"
-        android:text="+ Registrar Habitación"
-        android:textColor="@android:color/black"
-        android:textSize="15sp"
-        app:backgroundTint="#FACEC6"
-        app:cornerRadius="12dp"
-        app:strokeColor="#772f1a"
-        app:strokeWidth="1dp"
-        android:layout_marginBottom="0dp" />
-
-    <!-- RecyclerView más ancho -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerHabitaciones"
+    <!-- Contenedor principal con RelativeLayout -->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingStart="0dp"
-        android:paddingEnd="0dp"
-        android:scrollbars="vertical" />
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <!-- RecyclerView con margen inferior para que no lo tape el FAB -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerHabitaciones"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="65dp"
+            android:clipToPadding="false"
+            android:scrollbars="none" />
+
+        <!-- Mensaje cuando no hay habitaciones -->
+        <LinearLayout
+            android:id="@+id/layoutMensajeVacio"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lo sentimos, aún no ha registrado información\nde las habitaciones"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp" />
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:src="@drawable/habitacion_sad"
+                android:scaleType="centerInside"
+                android:layout_marginTop="24dp" />
+        </LinearLayout>
+        <!-- FAB flotante abajo a la derecha -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_registrar_informacion"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_add"
+            app:backgroundTint="#FACEC6"
+            app:tint="@android:color/black"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp" />
+    </RelativeLayout>
 </LinearLayout>

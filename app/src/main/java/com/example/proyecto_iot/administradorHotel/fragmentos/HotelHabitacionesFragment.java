@@ -1,103 +1,58 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
-
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+import com.example.proyecto_iot.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.example.proyecto_iot.R;
+import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.administradorHotel.RegistroHabitacionHotel;
 import com.example.proyecto_iot.administradorHotel.adapter.HabitacionAdapter;
-import com.example.proyecto_iot.administradorHotel.dto.HabitacionDto;
-import com.example.proyecto_iot.administradorHotel.entity.Equipamiento;
-import com.example.proyecto_iot.administradorHotel.entity.Habitacion;
-import com.example.proyecto_iot.administradorHotel.entity.Servicio;
-import com.example.proyecto_iot.administradorHotel.fragmentos.DetalleHabitacionFragment;
-import com.example.proyecto_iot.databinding.FragmentHotelHabitacionesBinding;
 
-import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+import com.example.proyecto_iot.administradorHotel.entity.HabitacionHotel;
+import com.example.proyecto_iot.administradorHotel.entity.Hotel;
+import com.example.proyecto_iot.databinding.FragmentHotelHabitacionesBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HotelHabitacionesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HotelHabitacionesFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public HotelHabitacionesFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HotelHabitacionesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HotelHabitacionesFragment newInstance(String param1, String param2) {
-        HotelHabitacionesFragment fragment = new HotelHabitacionesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private FragmentHotelHabitacionesBinding binding;
+    private FirebaseFirestore db;
+    private FirebaseUser currentUser;
+    private HabitacionAdapter adapter;
+    private List<HabitacionHotel> listaHabitaciones = new ArrayList<>();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-    FragmentHotelHabitacionesBinding binding;
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHotelHabitacionesBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.btnRegistrarInformacion.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), RegistroHabitacionHotel.class);
-            startActivityForResult(intent, 1234); // 1234 es un código arbitrario que puedes mantener
-        });
+        db = FirebaseFirestore.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        List<Habitacion> mockHabitaciones = getHabitacionesSimuladas();
-
-        List<HabitacionDto> dtoList = new ArrayList<>();
-        for (Habitacion h : mockHabitaciones) dtoList.add(new HabitacionDto(h));
-
-        HabitacionAdapter adapter = new HabitacionAdapter(dtoList, mockHabitaciones, requireContext(), habitacion -> {
+        binding.recyclerHabitaciones.setLayoutManager(new LinearLayoutManager(requireContext()));
+        adapter = new HabitacionAdapter(listaHabitaciones, requireContext(), habitacion -> {
             DetalleHabitacionFragment fragment = new DetalleHabitacionFragment();
+
             Bundle bundle = new Bundle();
             bundle.putSerializable("habitacion", habitacion);
             fragment.setArguments(bundle);
@@ -110,122 +65,79 @@ public class HotelHabitacionesFragment extends Fragment {
         });
 
 
-        binding.recyclerHabitaciones.setLayoutManager(new LinearLayoutManager(requireContext()));
+
         binding.recyclerHabitaciones.setAdapter(adapter);
+
+        cargarHabitacionesDelAdministrador();
+
+        binding.btnRegistrarInformacion.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), RegistroHabitacionHotel.class);
+            startActivityForResult(intent, 1234);
+        });
     }
 
+    private void cargarHabitacionesDelAdministrador() {
+        if (currentUser == null) {
+            mostrarMensajeSinHabitaciones();
+            return;
+        }
 
-    private List<Habitacion> getHabitacionesSimuladas() {
-        return Arrays.asList(
-                new Habitacion(
-                        1,
-                        "Deluxe King",
-                        2,
-                        1,
-                        30,
-                        2,
-                        100,
-                        Arrays.asList(
-                                new Equipamiento("TV"),
-                                new Equipamiento("Ducha"),
-                                new Equipamiento("Escritorio")
-                        ),
-                        Arrays.asList(
-                                new Servicio("Gimnasio", "Acceso libre", 0, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
-                                new Servicio("Desayuno", "Buffet diario", 0, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
-                        ),
-                        Arrays.asList(R.drawable.hotel1, R.drawable.hotel2)
-                ),
-                new Habitacion(
-                        2,
-                        "Suite Ejecutiva",
-                        3,
-                        1,
-                        50,
-                        1,
-                        200,
-                        Arrays.asList(
-                                new Equipamiento("Caja fuerte"),
-                                new Equipamiento("Wifi"),
-                                new Equipamiento("Mini bar")
-                        ),
-                        Arrays.asList(
-                                new Servicio("Spa", "Masajes y jacuzzi", 30, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
-                                new Servicio("Restaurante", "Comida internacional", 20, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
-                        ),
-                        Arrays.asList(R.drawable.hotel3, R.drawable.hotel4)
-                ),
-                new Habitacion(
-                        3,
-                        "Habitación Familiar",
-                        4,
-                        1,
-                        60,
-                        3,
-                        300,
-                        Arrays.asList(
-                                new Equipamiento("Cocina"),
-                                new Equipamiento("Secador"),
-                                new Equipamiento("TV")
-                        ),
-                        Arrays.asList(
-                                new Servicio("Piscina", "Piscina climatizada", 0, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
-                                new Servicio("Transporte", "Shuttle al aeropuerto", 10, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
-                        ),
-                        Arrays.asList(R.drawable.hotel5, R.drawable.hotel6)
-                ),
-                new Habitacion(
-                        4,
-                        "Premium Vista Mar",
-                        2,
-                        1,
-                        45,
-                        1,
-                        400,
-                        Arrays.asList(
-                                new Equipamiento("Aire acondicionado"),
-                                new Equipamiento("Sofá cama"),
-                                new Equipamiento("Cafetera")
-                        ),
-                        Arrays.asList(
-                                new Servicio("Room Service", "Disponible 24h", 15, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
-                                new Servicio("Bar", "Cócteles exclusivos", 12, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
-                        ),
-                        Arrays.asList(R.drawable.hotel1, R.drawable.hotel2)
-                ),
-                new Habitacion(
-                        5,
-                        "Suite Presidencial",
-                        5,
-                        1,
-                        80,
-                        2,
-                        500,
-                        Arrays.asList(
-                                new Equipamiento("Balcón"),
-                                new Equipamiento("Microondas"),
-                                new Equipamiento("Frigobar")
-                        ),
-                        Arrays.asList(
-                                new Servicio("Lavandería", "Servicio exprés", 5, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno)),
-                                new Servicio("Parqueo", "Estacionamiento privado", 8, Arrays.asList(R.drawable.gimnasio, R.drawable.desayuno))
-                        ),
-                        Arrays.asList(R.drawable.hotel3, R.drawable.hotel4)
-                )
-        );
+        String idAdmin = currentUser.getUid();
+
+        // Buscar el hotel que le pertenece al admin
+        db.collection("hoteles")
+                .whereEqualTo("idAdministrador", idAdmin)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot.isEmpty()) {
+                        mostrarMensajeSinHabitaciones();
+                        return;
+                    }
+
+                    DocumentSnapshot hotelDoc = querySnapshot.getDocuments().get(0);
+                    String idHotel = hotelDoc.getId();
+
+                    db.collection("hoteles")
+                            .document(idHotel)
+                            .collection("habitaciones")
+                            .get()
+                            .addOnSuccessListener(snapshot -> {
+                                listaHabitaciones.clear();
+                                for (DocumentSnapshot doc : snapshot) {
+                                    HabitacionHotel habitacion = doc.toObject(HabitacionHotel.class);
+                                    listaHabitaciones.add(habitacion);
+                                }
+
+                                if (listaHabitaciones.isEmpty()) {
+                                    if (isAdded() && binding != null) {
+                                        mostrarMensajeSinHabitaciones();
+                                    }
+                                } else {
+                                    if (isAdded() && binding != null) {
+                                        binding.layoutMensajeVacio.setVisibility(View.GONE); // Ocultamos el mensaje
+                                        binding.recyclerHabitaciones.setVisibility(View.VISIBLE);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(requireContext(), "Error al cargar habitaciones", Toast.LENGTH_SHORT).show();
+                                mostrarMensajeSinHabitaciones();
+                            });
+
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "Error al verificar hotel del administrador", Toast.LENGTH_SHORT).show();
+                    mostrarMensajeSinHabitaciones();
+                });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1234 && resultCode == Activity.RESULT_OK) {
-            // 👇 Aquí recargas el fragmento o los datos si quieres
-            // Opcional: Recargar lista de habitaciones reales
-            // o llamar a getHabitacionesSimuladas() otra vez
+    private void mostrarMensajeSinHabitaciones() {
+        if (binding != null) {
+            binding.recyclerHabitaciones.setVisibility(View.GONE);
+            binding.layoutMensajeVacio.setVisibility(View.VISIBLE);
         }
     }
-
 
     @Override
     public void onDestroyView() {

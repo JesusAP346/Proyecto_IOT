@@ -5,14 +5,14 @@
     android:id="@+id/hotelActualizar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/background_gradient">
 
     <ScrollView
         android:id="@+id/scroll_view_contenido"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        android:scrollbars="none">
+        android:background="@android:color/white"
+        android:padding="16dp">
 
         <LinearLayout
             android:id="@+id/mainLayout"
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Título -->
+            <!-- TÍTULO -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/backActualizar"
+                    android:id="@+id/backdetallehabitacion"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="12dp"
@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Actualizar información del hotel"
+                    android:text="Editar habitación"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#000000" />
@@ -53,158 +53,244 @@
                     android:visibility="invisible" />
             </LinearLayout>
 
-            <!-- Formulario -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nombre"
+                android:text="Tipo de habitación"
                 android:textSize="13sp"
                 android:textStyle="bold"/>
 
             <EditText
-                android:id="@+id/editTextNombre"
+                android:id="@+id/editTextTipoHabitacion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/customedittext"
-                android:hint="Nombre del hotel"
+                android:hint="Tipo de habitación"
                 android:text=""
                 android:layout_marginTop="4dp"
                 android:padding="8dp"
                 android:textSize="18sp" />
 
-            <!-- Nombre -->
+            <!-- Capacidad -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Dirección"
+                android:text="Capacidad"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:layout_marginTop="13dp" />
 
-            <EditText
-                android:id="@+id/editTextDireccion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/customedittext"
-                android:hint="Nombre del hotel"
-                android:text=""
-                android:layout_marginTop="4dp"
-                android:padding="8dp"
-                android:textSize="18sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ubicación"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:layout_marginTop="13dp" />
 
-            <!-- ESPACIO PARA LA DIRECCION -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_mini_mapa"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginTop="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <!-- MapView para previsualización -->
-                    <com.google.android.gms.maps.MapView
-                        android:id="@+id/map_view_preview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:clickable="false"
-                        android:focusable="false" />
-
-                    <!-- Overlay con información -->
-                    <LinearLayout
-                        android:id="@+id/btn_ver_ubicacion"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:background="@drawable/bg_map_overlay"
-                        android:orientation="horizontal"
-                        android:padding="8dp"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:src="@drawable/ic_open_in_new"
-                            app:tint="@android:color/black"
-                            android:layout_marginEnd="6dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Toca para actualizar la ubicación"
-                            android:textColor="@android:color/black"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- Coordenadas -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Lugares históricos o referencias"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:layout_marginTop="13dp"
-                android:layout_marginBottom="4dp"/>
-
+            <!-- Adultos -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="0dp">
+                android:layout_marginTop="4dp">
 
-                <EditText
-                    android:id="@+id/etReferencia"
+                <TextView
                     android:layout_width="0dp"
-                    android:layout_height="35dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_edittext_simulado"
-                    android:hint="Ingrese referencias"
-                    android:padding="5dp"
-                    android:textSize="16sp" />
+                    android:text="Adultos"
 
+                    android:textSize="14sp" />
+
+                <ImageButton
+                    android:id="@+id/btnMenosAdultos"
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
+                    android:src="@drawable/ic_minus6"
+                    android:background="@drawable/bg_circle_outline"
+                    android:tint="@color/rojizoProyect"
+                    android:layout_marginRight="10dp"
+                    android:contentDescription="Más adultos" />
+
+                <TextView
+                    android:id="@+id/textCantidadAdultos"
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textSize="16sp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_square_outline" />
+
+                <ImageButton
+                    android:id="@+id/btnMasAdultos"
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
+                    android:src="@drawable/ic_add"
+                    android:background="@drawable/bg_circle_outline"
+                    android:tint="@color/rojizoProyect"
+                    android:contentDescription="Más adultos" />
+            </LinearLayout>
+
+            <!-- Niños -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Niños"
+
+                    android:textSize="14sp" />
+
+                <ImageButton
+                    android:id="@+id/btnMenosNinos"
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
+                    android:src="@drawable/ic_minus6"
+                    android:background="@drawable/bg_circle_outline"
+                    android:tint="@color/rojizoProyect"
+                    android:layout_marginRight="10dp"
+                    android:contentDescription="Más adultos" />
+
+                <TextView
+                    android:id="@+id/textCantidadNinos"
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textSize="16sp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_square_outline" />
+
+                <ImageButton
+                    android:id="@+id/btnMasNinos"
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
+                    android:src="@drawable/ic_add"
+                    android:background="@drawable/bg_circle_outline"
+                    android:tint="@color/rojizoProyect"
+                    android:contentDescription="Más niños" />
+            </LinearLayout>
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tamaño en m²"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:layout_marginTop="13dp"/>
+
+            <EditText
+                android:id="@+id/editTextTamano"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/customedittext"
+                android:hint="Tamaño de la habitación"
+                android:text=""
+                android:layout_marginTop="4dp"
+                android:padding="8dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Precio por Noche (soles S/. )"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:layout_marginTop="13dp"/>
+
+            <EditText
+                android:id="@+id/editTextPrecio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/customedittext"
+                android:hint="Precio de la habitación"
+                android:text=""
+                android:layout_marginTop="4dp"
+                android:padding="8dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Habitaciones registradas"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:layout_marginTop="13dp"/>
+
+            <EditText
+                android:id="@+id/editTextHabitacionesRegistradas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/customedittext"
+                android:hint="Habitaciones registradas"
+                android:text=""
+                android:layout_marginTop="4dp"
+                android:padding="8dp"
+                android:textSize="18sp" />
+
+
+            <!-- Equipamiento con botón agregar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Equipamiento"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAgregarReferencia"
+                    android:id="@+id/btnAgregarEquipamiento"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:minHeight="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="0dp"
                     android:paddingHorizontal="16dp"
-                    android:text="+ Agregar"
-                    android:textSize="14sp"
+                    android:paddingVertical="4dp"
+                    android:text="+ AGREGAR"
                     android:textColor="@android:color/black"
-                    android:layout_marginStart="8dp"
-                    app:cornerRadius="7dp"
-                    app:strokeColor="#772f1a"
-                    app:strokeWidth="1dp"
-                    app:backgroundTint="#FACEC6" />
+                    android:textSize="14sp"
+                    app:backgroundTint="#FDF9ED"
+                    app:cornerRadius="10dp"
+                    app:strokeColor="#E9D79E"
+                    app:strokeWidth="1dp" />
+
             </LinearLayout>
+
+            <Spinner
+                android:id="@+id/spinnerEquipamiento"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:background="@drawable/customedittext"
+                android:padding="8dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Equipamiento agregado"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp" />
 
             <!-- Texto vacío -->
             <TextView
-                android:id="@+id/textReferenciaVacia"
+                android:id="@+id/textEquipamientoVacio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sin referencias agregadas"
+                android:text="Sin equipamiento agregado"
                 android:textColor="#777777"
                 android:textStyle="italic"
                 android:textSize="14sp"
@@ -213,25 +299,69 @@
                 android:layout_marginBottom="8dp"
                 android:visibility="gone" />
 
-            <!-- Contenedor horizontal para 2 chips -->
+            <!-- Chips dinámicos -->
             <LinearLayout
-                android:id="@+id/layoutReferenciasActualizadas"
+                android:id="@+id/layoutEquipamientoDinamico"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" />
 
+            <!-- Spinner Servicios -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Agregar Servicio"
+                android:textStyle="bold"
+                android:textSize="12sp" />
+            <Spinner
+                android:id="@+id/spinnerServicios"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_edittext_simulado"
+                android:padding="8dp"
+                android:layout_marginTop="4dp"
+                android:entries="@array/servicios_array"
+                android:layout_marginBottom="0dp" />
 
+            <!-- Chips de Servicios -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Servicios"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="8dp" />
 
-            <!-- Agregar nuevas fotos -->
+            <TextView
+                android:id="@+id/textServicioVacio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sin servicios agregados, seleccione uno"
+                android:textColor="#777777"
+                android:textStyle="italic"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/layoutServicioDinamico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Fotos"
-                android:textSize="13sp"
                 android:textStyle="bold"
-                android:layout_marginTop="13dp"
-                android:layout_marginBottom="4dp"/>
+                android:textSize="12sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
 
             <!-- Botón principal para agregar fotos -->
             <LinearLayout
@@ -263,7 +393,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Agregar fotos del hotel"
+                        android:text="Agregar fotos de la habitación"
                         android:textSize="16sp"
                         android:textColor="#666666" />
                 </LinearLayout>
@@ -272,7 +402,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="(mínimo 4 fotos)"
+                    android:text="(mínimo 2 fotos)"
                     android:textSize="12sp"
                     android:textColor="#999999"
                     android:layout_marginTop="4dp" />
@@ -299,11 +429,7 @@
                 android:textSize="12sp"
                 android:visibility="gone" />
 
-
-
-
-
-
+            <!-- Botones: Actualizar y Eliminar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -344,6 +470,7 @@
 
         </LinearLayout>
     </ScrollView>
+
     <!-- 2. progressBarGuardar -->
     <RelativeLayout
         android:id="@+id/progressBarGuardar"
@@ -491,6 +618,7 @@
                 android:contentDescription="Archivos" />
         </LinearLayout>
     </LinearLayout>
+
 
 
 </RelativeLayout>
