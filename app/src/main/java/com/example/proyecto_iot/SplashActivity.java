@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.proyecto_iot.SuperAdmin.PagPrincipalSuperAdmin;
+import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 import com.example.proyecto_iot.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,16 +37,17 @@ public class SplashActivity extends AppCompatActivity {
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
                             String rol = documentSnapshot.getString("idRol");
-                            if ("Cliente".equalsIgnoreCase(rol)) {
-                                String idUsuario = documentSnapshot.getId();
-                                Intent intent = new Intent(SplashActivity.this, ClienteBusquedaActivity.class);
-                                intent.putExtra("idUsuario", idUsuario);
-                                startActivity(intent);
-                                finish();
+                            String idUsuario = documentSnapshot.getId();
+
+                            if (rol != null) {
+                                redirectToRoleActivity(rol, idUsuario);
                             } else {
+                                // Si no tiene rol definido, cerrar sesión y ir al login
+                                auth.signOut();
                                 redirectToLogin();
                             }
                         } else {
+                            // Si el documento del usuario no existe, cerrar sesión
                             auth.signOut();
                             redirectToLogin();
                         }
@@ -55,6 +59,41 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             redirectToLogin();
         }
+    }
+
+    private void redirectToRoleActivity(String rol, String idUsuario) {
+        Intent intent;
+
+        switch (rol.toLowerCase()) {
+            case "cliente":
+                intent = new Intent(SplashActivity.this, ClienteBusquedaActivity.class);
+                intent.putExtra("idUsuario", idUsuario);
+                break;
+
+            case "superadmin":
+                intent = new Intent(SplashActivity.this, PagPrincipalSuperAdmin.class);
+                intent.putExtra("idUsuario", idUsuario);
+                break;
+
+            case "taxista":
+                intent = new Intent(SplashActivity.this, MainActivity.class);
+                intent.putExtra("idUsuario", idUsuario);
+                break;
+
+            case "administrador":
+                intent = new Intent(SplashActivity.this, PagPrincipalAdmin.class);
+                intent.putExtra("idUsuario", idUsuario);
+                break;
+
+            default:
+                // Rol no reconocido, cerrar sesión y ir al login
+                auth.signOut();
+                redirectToLogin();
+                return;
+        }
+
+        startActivity(intent);
+        finish();
     }
 
     private void redirectToLogin() {
