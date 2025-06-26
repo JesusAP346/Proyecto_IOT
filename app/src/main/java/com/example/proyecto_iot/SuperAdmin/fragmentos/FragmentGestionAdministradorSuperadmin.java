@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.example.proyecto_iot.SuperAdmin.entity.AwsService;
 import com.example.proyecto_iot.SuperAdmin.entity.UploadResponse;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -316,82 +318,8 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                     currentAdmin.setFechaRegistro(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date()));
 
                     // PASO 1: Crear usuario en Firebase Authentication con la contraseña generada
-                    auth.createUserWithEmailAndPassword(currentAdmin.getEmail(), generatedPassword)
-                            .addOnSuccessListener(authResult -> {
-                                String uid = authResult.getUser().getUid();
-                                currentAdmin.setId(uid); // Establecer el UID de Auth como ID del documento Firestore
+                    crearAdminSinCerrarSesion(currentAdmin, generatedPassword);
 
-                                // PASO 2: Guardar los datos del usuario en Firestore usando el UID como ID del documento
-                                db.collection("usuarios").document(uid).set(currentAdmin)
-                                        .addOnSuccessListener(unused -> {
-                                            Toast.makeText(getContext(), "Administrador agregado exitosamente.", Toast.LENGTH_SHORT).show();
-
-                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                                            String uidEditor = currentUser.getUid(); // UID del superadmin
-                                            Log.d(TAG, uidEditor);
-
-
-
-                                            FirebaseFirestore.getInstance().collection("usuarios")
-                                                    .document(uidEditor)
-                                                    .get()
-                                                    .addOnSuccessListener(documentSnapshot -> {
-                                                        if (documentSnapshot.exists()) {
-                                                            Usuario usuario = documentSnapshot.toObject(Usuario.class);
-                                                            String nombreEditor = usuario.getNombres() + " " + usuario.getApellidos();
-                                                            String nombreNuevoAdmin = currentAdmin.getNombres() + " " + currentAdmin.getApellidos();
-
-                                                            LogSA log = new LogSA(
-                                                                    null,
-                                                                    "Registro de Administrador",
-                                                                    "Se registró al Administrador " + nombreNuevoAdmin,
-                                                                    nombreEditor,
-                                                                    "Super Admin",
-                                                                    uidEditor,
-                                                                    nombreNuevoAdmin,
-                                                                    new Date()
-                                                            );
-
-                                                            FirebaseFirestore.getInstance().collection("logs").add(log);
-                                                        }
-                                                    });
-
-
-
-                                            // PASO 3: Enviar la contraseña por correo usando Intent
-                                            sendAdminCredentialsEmailIntent(currentAdmin.getEmail(),
-                                                    currentAdmin.getNombres() + " " + currentAdmin.getApellidos(),
-                                                    generatedPassword);
-
-                                            // Después de guardar y enviar correo, vuelve al modo de vista/lista
-                                            isEditMode = false;
-                                            btnEditarGuardar.setText("Editar");
-                                            etNombre.setEnabled(false);
-                                            etApellidos.setEnabled(false);
-                                            etNumero.setEnabled(false);
-                                            etCorreo.setEnabled(false);
-                                            etDireccion.setEnabled(false);
-                                            etFechaNacimiento.setEnabled(false);
-                                            ivFoto.setClickable(false);
-                                            requireActivity().getSupportFragmentManager().popBackStack();
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            // Si falla Firestore, considera eliminar el usuario de Auth para evitar inconsistencias
-                                            authResult.getUser().delete()
-                                                    .addOnCompleteListener(task -> {
-                                                        if (task.isSuccessful()) {
-                                                            // Log.d(TAG, "Usuario Auth eliminado después de fallo en Firestore.");
-                                                        } else {
-                                                            // Log.w(TAG, "Fallo al eliminar usuario Auth después de fallo en Firestore.");
-                                                        }
-                                                    });
-                                            Toast.makeText(getContext(), "Error al guardar perfil en Firestore: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                        });
-                            })
-                            .addOnFailureListener(e -> {
-                                // Si falla la creación en Authentication (ej. correo ya registrado)
-                                Toast.makeText(getContext(), "Error al registrar administrador en Authentication: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                            });
                 }
             }
         });
@@ -632,6 +560,98 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
             return null;
         }
     }
+
+    private void crearAdminSinCerrarSesion(Usuario nuevoAdmin, String contraseñaGenerada) {
+        FirebaseApp firebaseApp = FirebaseApp.initializeApp(
+                requireContext(),
+                new FirebaseOptions.Builder()
+                        .setApiKey("AIzaSyAsh4XzflE6kRCZkOaSqP0Nj0IKltdeiA4") // ← current_key
+                        .setApplicationId("1:103898888660:android:4ee1725b49fafeee2bbe41") // ← mobilesdk_app_id
+                        .setProjectId("proyectoiot-784f3") // ← project_id
+                        .build(),
+                "TempApp"
+        );
+
+
+        FirebaseAuth tempAuth = FirebaseAuth.getInstance(firebaseApp);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        final Usuario finalNuevoAdmin = nuevoAdmin;
+        final String finalPassword = contraseñaGenerada;
+        final FirebaseApp finalFirebaseApp = firebaseApp;
+        final FirebaseAuth finalTempAuth = tempAuth;
+
+        tempAuth.createUserWithEmailAndPassword(finalNuevoAdmin.getEmail(), finalPassword)
+                .addOnSuccessListener(authResult -> {
+                    String uid = authResult.getUser().getUid();
+                    finalNuevoAdmin.setId(uid);
+
+                    db.collection("usuarios").document(uid).set(finalNuevoAdmin)
+                            .addOnSuccessListener(unused -> {
+                                Toast.makeText(getContext(), "Administrador agregado exitosamente.", Toast.LENGTH_SHORT).show();
+
+                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                if (currentUser == null) return;
+
+                                String uidEditor = currentUser.getUid();
+
+                                db.collection("usuarios").document(uidEditor).get()
+                                        .addOnSuccessListener(documentSnapshot -> {
+                                            if (documentSnapshot.exists()) {
+                                                Usuario usuarioEditor = documentSnapshot.toObject(Usuario.class);
+                                                if (usuarioEditor == null) return;
+
+                                                String nombreEditor = usuarioEditor.getNombres() + " " + usuarioEditor.getApellidos();
+                                                String nombreNuevo = finalNuevoAdmin.getNombres() + " " + finalNuevoAdmin.getApellidos();
+
+                                                LogSA log = new LogSA(
+                                                        null,
+                                                        "Registro de Administrador",
+                                                        "Se registró al Administrador " + nombreNuevo,
+                                                        nombreEditor,
+                                                        "Super Admin",
+                                                        uidEditor,
+                                                        nombreNuevo,
+                                                        new Date()
+                                                );
+
+                                                db.collection("logs").add(log);
+                                            }
+                                        });
+
+                                sendAdminCredentialsEmailIntent(
+                                        finalNuevoAdmin.getEmail(),
+                                        finalNuevoAdmin.getNombres() + " " + finalNuevoAdmin.getApellidos(),
+                                        finalPassword
+                                );
+
+                                // Salir del modo edición y volver atrás
+                                isEditMode = false;
+                                btnEditarGuardar.setText("Editar");
+                                etNombre.setEnabled(false);
+                                etApellidos.setEnabled(false);
+                                etNumero.setEnabled(false);
+                                etCorreo.setEnabled(false);
+                                etDireccion.setEnabled(false);
+                                etFechaNacimiento.setEnabled(false);
+                                ivFoto.setClickable(false);
+                                requireActivity().getSupportFragmentManager().popBackStack();
+
+                                // Eliminar app temporal
+                                finalTempAuth.signOut();
+                                finalFirebaseApp.delete();
+                            })
+                            .addOnFailureListener(e -> {
+                                authResult.getUser().delete();
+                                Toast.makeText(getContext(), "Error al guardar en Firestore: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Error al registrar en Auth: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+
 
 
 }
