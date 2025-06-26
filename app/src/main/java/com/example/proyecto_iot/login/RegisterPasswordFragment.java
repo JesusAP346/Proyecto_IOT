@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.dtos.LogSA;
 import com.example.proyecto_iot.dtos.Usuario;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.MessageDigest;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -125,6 +127,27 @@ public class RegisterPasswordFragment extends Fragment {
                                 db.collection("usuarios").document(uid).set(usuario)
                                         .addOnSuccessListener(unused -> {
                                             Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
+
+
+
+
+
+                                            LogSA log = new LogSA(
+                                                    "NuevoUsuario",
+                                                    "Nuevo Usuario",
+                                                    "El usuario " + usuario.getNombres() + " se registró en la App",
+                                                    usuario.getNombres() + usuario.getApellidos(),
+                                                    "Usuario",
+                                                    uid,
+                                                    usuario.getNombres() + " " + usuario.getApellidos(),
+                                                    new Date()
+                                            );
+
+                                            db.collection("logs").add(log);
+
+
+
+
                                             requireActivity().finish();
                                         })
                                         .addOnFailureListener(e -> {
