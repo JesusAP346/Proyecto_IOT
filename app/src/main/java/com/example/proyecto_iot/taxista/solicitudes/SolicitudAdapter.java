@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.taxista.perfil.Notificacion;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -79,36 +80,57 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
             holder.imagen.setImageResource(R.drawable.usuario_10);
         }
 
+        if ("pendiente".equals(solicitud.estado)) {
+            holder.btnAceptar.setVisibility(View.VISIBLE);
+            holder.btnRechazar.setVisibility(View.VISIBLE);
+            holder.btnAceptar.setText("Aceptar");
+        } else if ("aceptado".equals(solicitud.estado)) {
+            holder.btnAceptar.setVisibility(View.VISIBLE);
+            holder.btnRechazar.setVisibility(View.GONE);
+            holder.btnAceptar.setText("Ver");
+        }
+
         holder.btnAceptar.setOnClickListener(v -> {
             Context context = v.getContext();
 
-            String mensaje = "Has aceptado la solicitud de " + solicitud.nombre;
+            // 🔁 ACTUALIZAR EN FIRESTORE
+            FirebaseFirestore.getInstance()
+                    .collection("servicios_taxi")
+                    .document(solicitud.idDocumento)
+                    .update("estado", "aceptado")
+                    .addOnSuccessListener(aVoid -> {
+                        String mensaje = "Has aceptado la solicitud de " + solicitud.nombre;
 
-            lanzarNotificacion(context, mensaje,
-                    solicitud.nombre,
-                    solicitud.telefono,
-                    solicitud.viajes + " viajes",
-                    solicitud.origen,
-                    R.drawable.usuario_10, // este campo ya no lo usas porque estás con URL
-                    solicitud.latDestino,
-                    solicitud.lngDestino);
+                        lanzarNotificacion(context, mensaje,
+                                solicitud.nombre,
+                                solicitud.telefono,
+                                solicitud.viajes + " viajes",
+                                solicitud.origen,
+                                R.drawable.usuario_10, // ya no se usa directamente si tienes la URL
+                                solicitud.latDestino,
+                                solicitud.lngDestino);
 
-            Notificacion notificacion = new Notificacion(
-                    mensaje,
-                    obtenerHoraActual(),
-                    R.drawable.ic_taxi
-            );
-            guardarNotificacionEnStorage(context, notificacion);
+                        Notificacion notificacion = new Notificacion(
+                                mensaje,
+                                obtenerHoraActual(),
+                                R.drawable.ic_taxi
+                        );
+                        guardarNotificacionEnStorage(context, notificacion);
 
-            Intent intent = new Intent(context, MapsActivity.class);
-            intent.putExtra("nombre", solicitud.nombre);
-            intent.putExtra("telefono", solicitud.telefono);
-            intent.putExtra("viajes", solicitud.viajes + " viajes");
-            intent.putExtra("hotel", solicitud.origen);
-            intent.putExtra("imagenPerfilUrl", solicitud.urlFotoPerfil); // pasamos la URL
-            intent.putExtra("latDestino", solicitud.latDestino);
-            intent.putExtra("lngDestino", solicitud.lngDestino);
-            context.startActivity(intent);
+                        Intent intent = new Intent(context, MapsActivity.class);
+                        intent.putExtra("nombre", solicitud.nombre);
+                        intent.putExtra("telefono", solicitud.telefono);
+                        intent.putExtra("viajes", solicitud.viajes + " viajes");
+                        intent.putExtra("hotel", solicitud.origen);
+                        intent.putExtra("imagenPerfilUrl", solicitud.urlFotoPerfil);
+                        intent.putExtra("latDestino", solicitud.latDestino);
+                        intent.putExtra("lngDestino", solicitud.lngDestino);
+                        context.startActivity(intent);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Manejo de error
+                        e.printStackTrace();
+                    });
         });
 
         holder.btnRechazar.setOnClickListener(v -> {

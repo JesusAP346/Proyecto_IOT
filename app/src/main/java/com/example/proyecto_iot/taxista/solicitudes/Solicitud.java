@@ -1,24 +1,16 @@
 package com.example.proyecto_iot.taxista.solicitudes;
 public class Solicitud {
-    public String nombre;
-    public String telefono;
+    public String nombre, telefono, origen, distrito, destino, urlFotoPerfil;
     public int viajes;
     public String tiempoDistancia;
-    public String origen;
-    public String distrito;
-    public String destino;
-    public int imagenPerfil;
-    public double latDestino;
-    public double lngDestino;
+    public double latDestino, lngDestino;
+    public String idDocumento; // ← NECESARIO para actualizar el documento
 
-    public String urlFotoPerfil; // en lugar de int fotoPerfil
-
-
-
+    public String estado;
 
     public Solicitud(String nombre, String telefono, int viajes, String tiempoDistancia,
-                     String origen, String distrito, String destino,  String urlFotoPerfil,
-                     double latDestino, double lngDestino) {
+                     String origen, String distrito, String destino,
+                     String urlFotoPerfil, double latDestino, double lngDestino, String idDocumento, String estado) {
         this.nombre = nombre;
         this.telefono = telefono;
         this.viajes = viajes;
@@ -29,13 +21,23 @@ public class Solicitud {
         this.urlFotoPerfil = urlFotoPerfil;
         this.latDestino = latDestino;
         this.lngDestino = lngDestino;
+        this.idDocumento = idDocumento;
+        this.estado = estado;
     }
-
-    // Constructor alternativo para compatibilidad
     public Solicitud(String nombre, String telefono, int viajes, String tiempoDistancia,
-                     String origen, String distrito, String destino, String imagenPerfil) {
-        this(nombre, telefono, viajes, tiempoDistancia, origen, distrito, destino, imagenPerfil,
-                -12.0464, -77.0428); // coordenadas reales por defecto
-    }
+                     String origen, String distrito, String destino,
+                     String urlFotoPerfil, double latDestino, double lngDestino, String idDocumento) {
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.viajes = viajes;
+        this.tiempoDistancia = tiempoDistancia;
+        this.origen = origen;
+        this.distrito = distrito;
+        this.destino = destino;
+        this.urlFotoPerfil = urlFotoPerfil;
+        this.latDestino = latDestino;
+        this.lngDestino = lngDestino;
+        this.idDocumento = idDocumento;
 
+    }
 }
