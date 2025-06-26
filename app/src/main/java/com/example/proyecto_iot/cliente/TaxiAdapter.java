@@ -4,6 +4,7 @@ package com.example.proyecto_iot.cliente;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.proyecto_iot.R;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
+
 import java.util.List;
 
 public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.ViewHolder> {
@@ -60,6 +66,9 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.ViewHolder> {
         holder.imgFoto.setImageResource(item.getFotoResId());
         holder.imgQR1.setImageResource(R.drawable.qrcode_solid);
        // holder.imgQR2.setImageResource(R.drawable.qrcode_solid);
+        String contenidoQR = "serviciotaxi:#" + item.getIdServicio();
+        Bitmap bitmapQR = generarCodigoQR(contenidoQR, 500, 500);  // tamaño del QR
+        holder.imgQR1.setImageBitmap(bitmapQR);
 
         /* Cambiar color y estado del botón
         if (item.isActiva()) {
@@ -116,4 +125,18 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.ViewHolder> {
     public int getItemCount() {
         return lista.size();
     }
+
+    private Bitmap generarCodigoQR(String contenido, int ancho, int alto) {
+        try {
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(
+                    contenido, BarcodeFormat.QR_CODE, ancho, alto, null
+            );
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            return barcodeEncoder.createBitmap(bitMatrix);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
