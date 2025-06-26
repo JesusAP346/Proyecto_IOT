@@ -7,12 +7,23 @@ public class CarouselItemModel {
     public String location;
     public String stars;
 
+    public String imageUrl;
+
+
     public CarouselItemModel(int imageResId, String title, String subtitle, String location, String stars) {
         this.imageResId = imageResId;
         this.title = title;
         this.subtitle = subtitle;
         this.location = location;
         this.stars = stars;
+    }
+    public CarouselItemModel(int imageResId, String title, String subtitle, String location, String stars, String imageUrl) {
+        this.imageResId = imageResId;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.location = location;
+        this.stars = stars;
+        this.imageUrl = imageUrl;
     }
 }
 

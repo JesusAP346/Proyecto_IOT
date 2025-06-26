@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.R;
 
 import java.util.List;
@@ -44,7 +45,16 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CarouselItemModel item = items.get(position);
-        holder.imageView.setImageResource(item.imageResId);
+        /*holder.imageView.setImageResource(item.imageResId);*/
+        if (item.imageUrl != null && !item.imageUrl.isEmpty()) {
+            Glide.with(holder.imageView.getContext())
+                    .load(item.imageUrl)
+                    .placeholder(R.drawable.hotel1) // opcional
+                    .into(holder.imageView);
+        } else {
+            holder.imageView.setImageResource(item.imageResId); // imagen por defecto si no hay URL
+        }
+
         holder.titleText.setText(item.title);
         holder.subText.setText(item.subtitle);
         holder.titleText.setText(item.title);

@@ -28,6 +28,11 @@ import com.example.proyecto_iot.databinding.FragmentSolicitudesHotelBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+
+
 
 public class SolicitudesHotelFragment extends Fragment {
 
@@ -57,7 +62,7 @@ public class SolicitudesHotelFragment extends Fragment {
         binding.nombreHotel.setText("Hotel: " + nombreHotel);
 
         binding.recyclerSolicitudes.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Justo antes de leer:
+        /* Justo antes de leer: *
         File archivo = new File(requireContext().getFilesDir(), getFileName());
         archivo.delete(); // ¡Elimina el archivo anterior si existe!
 
@@ -70,6 +75,38 @@ public class SolicitudesHotelFragment extends Fragment {
 
         SolicitudAdapter adapter = new SolicitudAdapter(solicitudes);
         binding.recyclerSolicitudes.setAdapter(adapter);
+        */
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("servicios_taxi")
+                .whereEqualTo("nombreHotel", nombreHotel)
+                .whereEqualTo("estado", "pendiente")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Solicitud> solicitudes = new ArrayList<>();
+
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String nombre = doc.getString("nombreCliente");
+                        String telefono = doc.getString("celularCliente");
+                        String destino = doc.getString("destino");
+                        String hotel = doc.getString("nombreHotel");
+                        String direccionHotel = doc.getString("direccionHotel");
+                        int viajes = 0; // si tienes este campo, puedes obtenerlo como doc.getLong("viajes").intValue()
+                        double lat = doc.getDouble("latitudHotel") != null ? doc.getDouble("latitudHotel") : 0.0;
+                        double lng = doc.getDouble("longitudHotel") != null ? doc.getDouble("longitudHotel") : 0.0;
+
+                        // Por ahora el campo distrito y tiempoDistancia serán vacíos
+                        solicitudes.add(new Solicitud(nombre, telefono, viajes, "3 min.\n1.2 km", hotel, direccionHotel, destino, R.drawable.usuario_10, lat, lng));
+                    }
+
+                    SolicitudAdapter adapter = new SolicitudAdapter(solicitudes);
+                    binding.recyclerSolicitudes.setAdapter(adapter);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error al obtener solicitudes", e);
+                });
+
 
         return binding.getRoot();
     }
