@@ -12,15 +12,7 @@ public class RepositorioHotel {
     private RepositorioHotel() {
         hoteles = new ArrayList<>();
 
-        List<String> servicios1 = List.of("Wi-Fi", "Piscina", "Gimnasio", "Desayuno incluido", "Recepción 24h", "Aire acondicionado", "Estacionamiento gratuito");
-        List<String> servicios2 = List.of("Wi-Fi", "Spa", "Restaurante", "Bar", "Servicio a la habitación", "Transporte al aeropuerto", "Centro de negocios");
 
-        hoteles.add(new Hotel("Hotel Caribe", "San Miguel", 2550, R.drawable.hotel1, 5, servicios1, 1, false));
-        hoteles.add(new Hotel("Hotel Las Rosas", "San Juan de Lurigancho", 355, R.drawable.hotel2, 4, servicios2, 2, false));
-        hoteles.add(new Hotel("Hotel dfghj", "Comas", 2550, R.drawable.hotel1, 5, servicios1, 1, false));
-        hoteles.add(new Hotel("Hotel noseeee", "Carabayllo", 355, R.drawable.hotel2, 4, servicios2, 2, true));
-        hoteles.add(new Hotel("Hotel Cbe", "Jesús María", 2550, R.drawable.hotel1, 5, servicios1, 1, false));
-        hoteles.add(new Hotel("Hotel Laosas", "San Miguel", 355, R.drawable.hotel2, 4, servicios2, 2, true));
     }
 
     public static RepositorioHotel getInstancia() {

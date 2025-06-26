@@ -11,7 +11,7 @@ public class HotelPreferences {
     private static final String PREF_NAME = "hotel_favoritos";
     private static final String KEY_FAVORITOS = "favoritos";
 
-    public static void guardarFavorito(Context context, int hotelId, boolean esFavorito) {
+    public static void guardarFavorito(Context context, String hotelId, boolean esFavorito) {
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         Set<String> favoritos = new HashSet<>(prefs.getStringSet(KEY_FAVORITOS, new HashSet<>()));
 

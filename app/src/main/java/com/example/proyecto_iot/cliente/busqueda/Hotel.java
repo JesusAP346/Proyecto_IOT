@@ -5,53 +5,78 @@ import java.util.List;
 
 public class Hotel implements Serializable {
 
-    private int id;
+    private String id;
     private String nombre;
     private String ubicacion;
-    private int precio;
-    private int imagenResId;
+    private String precio;
+    private String imagenResId;
     private int estrellas;
     private List<String> servicios;
 
     private boolean favorito;
 
 
+    public String getId() {
+        return id;
+    }
 
-    public Hotel(String nombre, String ubicacion, int precio, int imagenResId, int estrellas, List<String> servicios, int id, boolean favorito) {
-        this.nombre = nombre;
-        this.ubicacion = ubicacion;
-        this.precio = precio;
-        this.imagenResId = imagenResId;
-        this.estrellas = estrellas;
-        this.servicios = servicios;
+    public void setId(String id) {
         this.id = id;
-        this.favorito=favorito;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public String getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(String precio) {
+        this.precio = precio;
+    }
+
+    public String getImagenResId() {
+        return imagenResId;
+    }
+
+    public void setImagenResId(String imagenResId) {
+        this.imagenResId = imagenResId;
+    }
+
+    public int getEstrellas() {
+        return estrellas;
+    }
+
+    public void setEstrellas(int estrellas) {
+        this.estrellas = estrellas;
+    }
+
+    public List<String> getServicios() {
+        return servicios;
+    }
+
+    public void setServicios(List<String> servicios) {
+        this.servicios = servicios;
     }
 
     public boolean isFavorito() {
         return favorito;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setFavorito(boolean favorito) {
         this.favorito = favorito;
-    }
-
-    public String getNombre() { return nombre; }
-    public String getUbicacion() { return ubicacion; }
-    public int getPrecio() { return precio; }
-    public int getImagenResId() { return imagenResId; }
-    public int getEstrellas() { return estrellas; }
-    public List<String> getServicios() { return servicios; } // Getter
-
-    public void setServicios(List<String> servicios) {
-        this.servicios = servicios;
     }
 }

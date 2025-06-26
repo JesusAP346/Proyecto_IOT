@@ -54,9 +54,6 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.nombre.setText(hotel.getNombre());
         holder.ubicacion.setText(hotel.getUbicacion());
         holder.precio.setText("A partir de S/. " + hotel.getPrecio());
-        holder.imagen.setImageResource(hotel.getImagenResId());
-
-
 
         for (int i = 0; i < 5; i++) {
             holder.estrellas[i].setImageResource(i < hotel.getEstrellas() ? R.drawable.ic_star : R.drawable.ic_star_border);

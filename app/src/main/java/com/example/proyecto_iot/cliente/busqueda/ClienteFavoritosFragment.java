@@ -78,9 +78,7 @@ public class ClienteFavoritosFragment extends Fragment implements HotelAdapter.O
 
         hotelList = HotelData.getTodosLosHoteles();
 
-        for (Hotel hotel : hotelList) {
-            hotel.setFavorito(HotelPreferences.esFavorito(getContext(), hotel.getId()));
-        }
+
 
         hotelAdapter = new HotelAdapter(getContext(), hotelList, this, (hotel, pos, favorito) -> {
             actualizarEstadoFavoritos(hotel, favorito);
@@ -103,7 +101,7 @@ public class ClienteFavoritosFragment extends Fragment implements HotelAdapter.O
     }
 
     private void actualizarEstadoFavoritos(Hotel hotel, boolean favorito) {
-        Set<Integer> favoritos = FavoritosStorage.obtenerFavoritos(getContext());
+        Set<String> favoritos = FavoritosStorage.obtenerFavoritos(getContext());
         if (favorito) {
             favoritos.add(hotel.getId());
         } else {
@@ -120,7 +118,7 @@ public class ClienteFavoritosFragment extends Fragment implements HotelAdapter.O
     }
 
     private void cargarFavoritos() {
-        Set<Integer> favoritosIds = FavoritosStorage.obtenerFavoritos(getContext());
+        Set<String> favoritosIds = FavoritosStorage.obtenerFavoritos(getContext());
         List<Hotel> todos = HotelData.getTodosLosHoteles();
         List<Hotel> favoritos = new ArrayList<>();
 
