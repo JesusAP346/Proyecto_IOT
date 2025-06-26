@@ -19,10 +19,13 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.proyecto_iot.BuildConfig;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.login.UsuarioClienteViewModel;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
@@ -36,6 +39,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -57,6 +61,7 @@ public class BusquedaFragment extends Fragment{
     private String mParam2;
     private TextView txtFechas;
     private TextView txtHuespedes;
+    private Button btnBuscar;
 
     private MaterialAutoCompleteTextView etDestino;
     private RecyclerView recyclerSugerencias;
@@ -64,6 +69,11 @@ public class BusquedaFragment extends Fragment{
     private List<String> sugerenciasList = new ArrayList<>();
     private boolean isSelecting = false; // Flag para controlar la selección
     private View rootView;
+
+    // Variables para validación
+    private boolean destinoCompleto = false;
+    private boolean fechasCompletas = false;
+    private boolean huespedesCompletos = false;
 
     public BusquedaFragment() {
         // Required empty public constructor
@@ -101,19 +111,41 @@ public class BusquedaFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_busqueda, container, false);
         rootView = view;
 
+        // Inicializar vistas
+        txtFechas = view.findViewById(R.id.txtFechas);
+        txtHuespedes = view.findViewById(R.id.txtHuespedes);
+        btnBuscar = view.findViewById(R.id.btnBuscar);
+        etDestino = view.findViewById(R.id.etDestino);
+
+        // Inicializar botón como deshabilitado
+        btnBuscar.setEnabled(false);
+        btnBuscar.setAlpha(0.5f);
+
         // Ajustar comportamiento cuando aparece/desaparece el teclado
         setupKeyboardListener();
-
-        TextView txtFechas = view.findViewById(R.id.txtFechas);
-        TextView txtHuespedes = view.findViewById(R.id.txtHuespedes);
 
         txtFechas.setOnClickListener(v -> {
             // Ocultar sugerencias al seleccionar fechas
             ocultarSugerencias();
 
+            // Crear restricciones de calendario para no permitir fechas pasadas (permite hoy)
+            Calendar yesterday = Calendar.getInstance();
+            yesterday.add(Calendar.DAY_OF_MONTH, -1);
+
+            CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+            constraintsBuilder.setValidator(DateValidatorPointForward.from(yesterday.getTimeInMillis()));
+
             MaterialDatePicker.Builder<Pair<Long, Long>> builder =
                     MaterialDatePicker.Builder.dateRangePicker();
             builder.setTitleText("Selecciona rango de fechas");
+            builder.setCalendarConstraints(constraintsBuilder.build());
+
+            // Establecer fecha mínima como hoy
+            Calendar today = Calendar.getInstance();
+            builder.setSelection(Pair.create(
+                    today.getTimeInMillis(),
+                    today.getTimeInMillis() + (24 * 60 * 60 * 1000) // Mañana como fecha de salida por defecto
+            ));
 
             MaterialDatePicker<Pair<Long, Long>> picker = builder.build();
 
@@ -122,12 +154,36 @@ public class BusquedaFragment extends Fragment{
                     Long startDate = selection.first;
                     Long endDate = selection.second;
 
+                    // Validar que la fecha de salida sea posterior a la de entrada
+                    if (endDate <= startDate) {
+                        Toast.makeText(getContext(), "La fecha de salida debe ser posterior a la fecha de entrada", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Validar que no sean fechas anteriores a hoy
+                    Calendar todayValidation = Calendar.getInstance();
+                    todayValidation.set(Calendar.HOUR_OF_DAY, 0);
+                    todayValidation.set(Calendar.MINUTE, 0);
+                    todayValidation.set(Calendar.SECOND, 0);
+                    todayValidation.set(Calendar.MILLISECOND, 0);
+
+                    if (startDate < todayValidation.getTimeInMillis()) {
+                        Toast.makeText(getContext(), "No se pueden seleccionar fechas anteriores a hoy", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     SimpleDateFormat formato = new SimpleDateFormat("dd MMM", Locale.getDefault());
                     String inicio = formato.format(new Date(startDate));
                     String fin = formato.format(new Date(endDate));
 
                     txtFechas.setText(inicio + " - " + fin);
+                    fechasCompletas = true;
+                    validarFormulario();
                 }
+            });
+
+            picker.addOnNegativeButtonClickListener(v1 -> {
+                // Si se cancela, no cambiar el estado
             });
 
             picker.show(getParentFragmentManager(), picker.toString());
@@ -139,8 +195,14 @@ public class BusquedaFragment extends Fragment{
 
             HuespedesBottomSheetDialogFragment dialog = new HuespedesBottomSheetDialogFragment();
             dialog.setOnHuespedesSelectedListener((adultos, ninos, habitaciones) -> {
-                int totalHuespedes = adultos + ninos;
-                txtHuespedes.setText(totalHuespedes + " Huésp, " + habitaciones + " hab.");
+                if (adultos > 0 || ninos > 0) { // Al menos debe haber un huésped
+                    int totalHuespedes = adultos + ninos;
+                    txtHuespedes.setText(totalHuespedes + " Huésp, " + habitaciones + " hab.");
+                    huespedesCompletos = true;
+                } else {
+                    huespedesCompletos = false;
+                }
+                validarFormulario();
             });
             dialog.show(getParentFragmentManager(), "HuespedesBottomSheet");
         });
@@ -165,15 +227,17 @@ public class BusquedaFragment extends Fragment{
                     .commit();
         });
 
-        Button btnBuscar = view.findViewById(R.id.btnBuscar);
-
         btnBuscar.setOnClickListener(v -> {
-            ResultadosDeBusquedaFragment resultadosDeBusquedaFragment = new ResultadosDeBusquedaFragment();
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container_busqueda, resultadosDeBusquedaFragment)
-                    .addToBackStack(null)
-                    .commit();
+            if (validarFormularioCompleto()) {
+                ResultadosDeBusquedaFragment resultadosDeBusquedaFragment = new ResultadosDeBusquedaFragment();
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container_busqueda, resultadosDeBusquedaFragment)
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                mostrarCamposFaltantes();
+            }
         });
 
         UsuarioClienteViewModel viewModel = new ViewModelProvider(requireActivity()).get(UsuarioClienteViewModel.class);
@@ -188,7 +252,6 @@ public class BusquedaFragment extends Fragment{
         });
 
         //Sugerencias de búsqueda:
-        etDestino = view.findViewById(R.id.etDestino);
         recyclerSugerencias = view.findViewById(R.id.recyclerSugerencias);
 
         sugerenciaAdapter = new SugerenciaAdapter(sugerenciasList, lugar -> {
@@ -197,6 +260,10 @@ public class BusquedaFragment extends Fragment{
             etDestino.setSelection(lugar.length()); // Posicionar cursor al final
             ocultarSugerencias();
             isSelecting = false; // Desactivar flag después de completar la selección
+
+            // Marcar destino como completo
+            destinoCompleto = true;
+            validarFormulario();
 
             // Ocultar teclado
             InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -218,6 +285,16 @@ public class BusquedaFragment extends Fragment{
                 // No hacer nada si estamos en proceso de selección
                 if (isSelecting) return;
 
+                // Validar si el destino está completo
+                if (s.length() > 0) {
+                    // Si hay texto pero no se ha seleccionado de las sugerencias, considerar incompleto
+                    destinoCompleto = false;
+                    validarFormulario();
+                } else {
+                    destinoCompleto = false;
+                    validarFormulario();
+                }
+
                 if (s.length() > 2) {
                     obtenerSugerenciasDesdeAPI(s.toString());
                 } else {
@@ -238,6 +315,33 @@ public class BusquedaFragment extends Fragment{
         });
 
         return view;
+    }
+
+    private void validarFormulario() {
+        boolean formularioCompleto = destinoCompleto && fechasCompletas && huespedesCompletos;
+
+        btnBuscar.setEnabled(formularioCompleto);
+        btnBuscar.setAlpha(formularioCompleto ? 1.0f : 0.5f);
+    }
+
+    private boolean validarFormularioCompleto() {
+        return destinoCompleto && fechasCompletas && huespedesCompletos;
+    }
+
+    private void mostrarCamposFaltantes() {
+        StringBuilder mensaje = new StringBuilder("Por favor, completa los siguientes campos:\n");
+
+        if (!destinoCompleto) {
+            mensaje.append("• Destino\n");
+        }
+        if (!fechasCompletas) {
+            mensaje.append("• Fechas de entrada y salida\n");
+        }
+        if (!huespedesCompletos) {
+            mensaje.append("• Huéspedes y habitaciones\n");
+        }
+
+        Toast.makeText(getContext(), mensaje.toString().trim(), Toast.LENGTH_LONG).show();
     }
 
     private void setupKeyboardListener() {
@@ -271,8 +375,6 @@ public class BusquedaFragment extends Fragment{
             int screenHeight = getResources().getDisplayMetrics().heightPixels;
             int keyboardHeight = 250; // Altura estimada del teclado
             int availableHeight = screenHeight - location[1] - etDestino.getHeight() - keyboardHeight;
-
-
         }
     }
 
