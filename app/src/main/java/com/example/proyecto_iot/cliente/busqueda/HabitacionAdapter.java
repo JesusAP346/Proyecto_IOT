@@ -44,7 +44,7 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Habitacion h = listaHabitaciones.get(position);
-        holder.textPrecio.setText(h.getPrecio());
+        holder.textPrecio.setText("S/. "+ String.valueOf(h.getPrecio()) + " por noche");
         holder.textEtiqueta.setText(h.getEtiqueta());
         holder.textDescripcion.setText(h.getDescripcion());
 
