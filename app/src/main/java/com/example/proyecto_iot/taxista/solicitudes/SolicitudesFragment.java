@@ -2,19 +2,17 @@ package com.example.proyecto_iot.taxista.solicitudes;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.FragmentSolicitudesBinding;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,69 +20,13 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-
 
 public class SolicitudesFragment extends Fragment {
 
     private FragmentSolicitudesBinding binding;
 
-    public SolicitudesFragment() {
-        // Constructor vacío requerido
-    }
-    /*
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentSolicitudesBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
-
-        binding.carouselRecyclerView.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
-        );
-
-        List<CarouselItemDTO> dtoList = leerHotelesDesdeJson();
-
-        if (dtoList.isEmpty()) {
-            dtoList = crearListaHardcodeadaDTO();
-            guardarHotelesEnJson(dtoList);
-        }
-
-        List<CarouselItemModel> itemList = convertirDtoAModelo(dtoList);
-
-        CarouselAdapter adapter = new CarouselAdapter(itemList, item -> {
-            SolicitudesHotelFragment fragment = new SolicitudesHotelFragment();
-            fragment.setNombreHotel(item.title);
-
-            getChildFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.contenedor_fragment_hijo, fragment)
-                    .commit();
-        });
-        binding.carouselRecyclerView.setAdapter(adapter);
-
-        // Cargar por defecto el hotel "Hotel Paraíso"
-        for (CarouselItemModel item : itemList) {
-            if ("Hotel Paraíso".equals(item.title)) {
-                SolicitudesHotelFragment defaultFragment = new SolicitudesHotelFragment();
-                defaultFragment.setNombreHotel(item.title);
-                getChildFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.contenedor_fragment_hijo, defaultFragment)
-                        .commit();
-                break;
-            }
-        }
-
-        return view;
-    }
-
-
-    */
+    public SolicitudesFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,6 +44,7 @@ public class SolicitudesFragment extends Fragment {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<CarouselItemModel> itemList = new ArrayList<>();
+                    int totalHoteles = queryDocumentSnapshots.size();
 
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         String idHotel = doc.getString("id");
@@ -112,7 +55,6 @@ public class SolicitudesFragment extends Fragment {
                         String urlPrimeraFoto = (fotos != null && !fotos.isEmpty()) ? fotos.get(0) : null;
                         int resId = getDrawableIdPorNombre("hotel1");
 
-                        // Subconsulta: contar solicitudes por hotel con estado pendiente
                         db.collection("servicios_taxi")
                                 .whereEqualTo("idHotel", idHotel)
                                 .whereEqualTo("estado", "pendiente")
@@ -123,16 +65,18 @@ public class SolicitudesFragment extends Fragment {
                                     itemList.add(new CarouselItemModel(
                                             resId,
                                             nombre,
-                                            cantidad + " solicitudes ",
+                                            cantidad + " solicitudes",
                                             location,
                                             "★★★★☆",
                                             urlPrimeraFoto
                                     ));
 
-                                    // Verifica si ya se cargaron todos los hoteles
-                                    if (itemList.size() == queryDocumentSnapshots.size()) {
+                                    if (isAdded() && binding != null && itemList.size() == totalHoteles) {
                                         cargarAdapter(itemList);
                                     }
+                                })
+                                .addOnFailureListener(e -> {
+                                    e.printStackTrace();
                                 });
                     }
                 })
@@ -142,6 +86,10 @@ public class SolicitudesFragment extends Fragment {
     }
 
     private void cargarAdapter(List<CarouselItemModel> itemList) {
+        if (!isAdded() || binding == null) {
+            return;
+        }
+
         CarouselAdapter adapter = new CarouselAdapter(itemList, item -> {
             SolicitudesHotelFragment fragment = new SolicitudesHotelFragment();
             fragment.setNombreHotel(item.title);
@@ -151,6 +99,7 @@ public class SolicitudesFragment extends Fragment {
                     .replace(R.id.contenedor_fragment_hijo, fragment)
                     .commit();
         });
+
         binding.carouselRecyclerView.setAdapter(adapter);
 
         if (!itemList.isEmpty()) {
@@ -164,17 +113,14 @@ public class SolicitudesFragment extends Fragment {
         }
     }
 
-
-
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;  // Limpieza para evitar memory leaks
+        binding = null;
     }
 
-    //storage:
+    // Métodos auxiliares
+
     private static final String FILE_NAME = "hoteles.json";
 
     private List<CarouselItemDTO> leerHotelesDesdeJson() {
@@ -214,7 +160,7 @@ public class SolicitudesFragment extends Fragment {
 
     private int getDrawableIdPorNombre(String nombre) {
         Context context = getContext();
-        if (context == null) return R.drawable.ic_launcher_foreground; // drawable por defecto
+        if (context == null) return R.drawable.ic_launcher_foreground;
         return context.getResources().getIdentifier(nombre, "drawable", context.getPackageName());
     }
 
@@ -234,9 +180,4 @@ public class SolicitudesFragment extends Fragment {
         lista.add(new CarouselItemDTO("hotel3", "Hotel Playa", "2 solicitud", "Barranco", "★★★☆☆"));
         return lista;
     }
-
-
-
-
-
 }

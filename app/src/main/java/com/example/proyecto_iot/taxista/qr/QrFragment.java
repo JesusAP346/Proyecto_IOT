@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,7 +66,27 @@ public class QrFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Manejo del botón Atrás
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Volver manualmente al fragmento de solicitudes
+                Fragment solicitudesFragment = new SolicitudesFragment();
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_layout, solicitudesFragment)
+                        .commit();
+
+
+                // Actualizar el menú inferior
+                if (requireActivity() instanceof MainActivity) {
+                    ((MainActivity) requireActivity()).binding.bottomNavigationView.setSelectedItemId(R.id.solicitudes);
+                }
+            }
+        });
+
         qrLauncher = registerForActivityResult(new ScanContract(), result -> {
+            if (!isAdded()) return; // Evita errores si el fragmento ya fue destruido
+
             if (result.getContents() != null) {
                 String contenido = result.getContents();
 
@@ -100,13 +121,15 @@ public class QrFragment extends Fragment {
 
             } else {
                 Toast.makeText(getContext(), "Escaneo cancelado", Toast.LENGTH_SHORT).show();
-                requireActivity()
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frame_layout, new SolicitudesFragment())
-                        .commit();
 
-                ((MainActivity) requireActivity()).binding.bottomNavigationView.setSelectedItemId(R.id.solicitudes);
+                if (isAdded()) {
+                    requireActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frame_layout, new SolicitudesFragment())
+                            .commit();
+
+                    ((MainActivity) requireActivity()).binding.bottomNavigationView.setSelectedItemId(R.id.solicitudes);
+                }
             }
         });
 
