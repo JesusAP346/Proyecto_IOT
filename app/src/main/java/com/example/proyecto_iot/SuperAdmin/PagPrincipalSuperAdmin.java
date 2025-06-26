@@ -3,6 +3,7 @@ package com.example.proyecto_iot.SuperAdmin;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -75,8 +76,10 @@ public class PagPrincipalSuperAdmin extends AppCompatActivity {
         });
 
         binding.btnPerfil.setOnClickListener(v -> {
-            replaceFragment(new PerfilSuperAdminFragment());
+            Intent intent = new Intent(PagPrincipalSuperAdmin.this, PerfilSuperAdminActivity.class);
+            startActivity(intent);
         });
+
 
     }
 
