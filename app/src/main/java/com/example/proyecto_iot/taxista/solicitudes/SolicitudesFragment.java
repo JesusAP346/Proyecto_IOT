@@ -24,6 +24,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+
 
 public class SolicitudesFragment extends Fragment {
 
@@ -32,7 +36,7 @@ public class SolicitudesFragment extends Fragment {
     public SolicitudesFragment() {
         // Constructor vacío requerido
     }
-
+    /*
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,6 +84,85 @@ public class SolicitudesFragment extends Fragment {
     }
 
 
+    */
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentSolicitudesBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+
+        binding.carouselRecyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
+        );
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("hoteles")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<CarouselItemModel> itemList = new ArrayList<>();
+
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String idHotel = doc.getString("id");
+                        String nombre = doc.getString("nombre");
+                        List<String> referencias = (List<String>) doc.get("referencias");
+                        String location = (referencias != null && !referencias.isEmpty()) ? referencias.get(0) : "";
+                        List<String> fotos = (List<String>) doc.get("fotosHotelUrls");
+                        String urlPrimeraFoto = (fotos != null && !fotos.isEmpty()) ? fotos.get(0) : null;
+                        int resId = getDrawableIdPorNombre("hotel1");
+
+                        // Subconsulta: contar solicitudes por hotel con estado pendiente
+                        db.collection("servicios_taxi")
+                                .whereEqualTo("idHotel", idHotel)
+                                .whereEqualTo("estado", "pendiente")
+                                .get()
+                                .addOnSuccessListener(solicitudesSnapshot -> {
+                                    int cantidad = solicitudesSnapshot.size();
+
+                                    itemList.add(new CarouselItemModel(
+                                            resId,
+                                            nombre,
+                                            cantidad + " solicitudes ",
+                                            location,
+                                            "★★★★☆",
+                                            urlPrimeraFoto
+                                    ));
+
+                                    // Verifica si ya se cargaron todos los hoteles
+                                    if (itemList.size() == queryDocumentSnapshots.size()) {
+                                        cargarAdapter(itemList);
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> e.printStackTrace());
+
+        return view;
+    }
+
+    private void cargarAdapter(List<CarouselItemModel> itemList) {
+        CarouselAdapter adapter = new CarouselAdapter(itemList, item -> {
+            SolicitudesHotelFragment fragment = new SolicitudesHotelFragment();
+            fragment.setNombreHotel(item.title);
+
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedor_fragment_hijo, fragment)
+                    .commit();
+        });
+        binding.carouselRecyclerView.setAdapter(adapter);
+
+        if (!itemList.isEmpty()) {
+            CarouselItemModel primerHotel = itemList.get(0);
+            SolicitudesHotelFragment defaultFragment = new SolicitudesHotelFragment();
+            defaultFragment.setNombreHotel(primerHotel.title);
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedor_fragment_hijo, defaultFragment)
+                    .commit();
+        }
+    }
 
 
 

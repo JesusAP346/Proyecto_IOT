@@ -3,6 +3,7 @@ package com.example.proyecto_iot.SuperAdmin;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,11 +16,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.SuperAdmin.fragmentos.PerfilSuperAdminFragment;
 import com.example.proyecto_iot.SuperAdmin.fragmentos.fragment_home_superadmin;
 import com.example.proyecto_iot.SuperAdmin.fragmentos.fragment_administradores_superadmin;
 import com.example.proyecto_iot.SuperAdmin.fragmentos.fragment_reportes_superadmin;
 import com.example.proyecto_iot.SuperAdmin.fragmentos.fragment_usuarios_superadmin;
 import com.example.proyecto_iot.SuperAdmin.fragmentos.fragment_taxistas_superadmin;
+import com.example.proyecto_iot.SuperAdmin.fragmentos.LogsFragment;
 import com.example.proyecto_iot.SuperAdmin.fragmentos.fragment_reservas_superadmin;
 import com.example.proyecto_iot.databinding.ActivityMainSuperAdminBinding;
 
@@ -66,11 +69,18 @@ public class PagPrincipalSuperAdmin extends AppCompatActivity {
             } else if (itemId == R.id.nav_users) {
                 replaceFragment(new fragment_usuarios_superadmin());
             } else if (itemId == R.id.nav_reservas) {
-                replaceFragment(new fragment_reservas_superadmin());
+                replaceFragment(new LogsFragment());
             }
 
             return true;
         });
+
+        binding.btnPerfil.setOnClickListener(v -> {
+            Intent intent = new Intent(PagPrincipalSuperAdmin.this, PerfilSuperAdminActivity.class);
+            startActivity(intent);
+        });
+
+
     }
 
     private void replaceFragment(Fragment fragment) {

@@ -10,21 +10,21 @@ public class FavoritosStorage {
     private static final String PREF_NAME = "favoritos_pref";
     private static final String KEY_FAVORITOS = "hoteles_favoritos";
 
-    public static void guardarFavoritos(Context context, Set<Integer> idsFavoritos) {
+    public static void guardarFavoritos(Context context, Set<String> idsFavoritos) {
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         Set<String> idStrings = new HashSet<>();
-        for (int id : idsFavoritos) {
+        for (String id : idsFavoritos) {
             idStrings.add(String.valueOf(id));
         }
         prefs.edit().putStringSet(KEY_FAVORITOS, idStrings).apply();
     }
 
-    public static Set<Integer> obtenerFavoritos(Context context) {
+    public static Set<String> obtenerFavoritos(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         Set<String> idStrings = prefs.getStringSet(KEY_FAVORITOS, new HashSet<>());
-        Set<Integer> ids = new HashSet<>();
+        Set<String> ids = new HashSet<>();
         for (String idStr : idStrings) {
-            ids.add(Integer.parseInt(idStr));
+            ids.add(idStr);
         }
         return ids;
     }

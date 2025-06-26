@@ -28,6 +28,11 @@ import com.example.proyecto_iot.databinding.FragmentSolicitudesHotelBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+
+
 
 public class SolicitudesHotelFragment extends Fragment {
 
@@ -54,26 +59,80 @@ public class SolicitudesHotelFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentSolicitudesHotelBinding.inflate(inflater, container, false);
 
+        Log.d("SolicitudesHotel", "Fragment iniciado para hotel: " + nombreHotel);
+
         binding.nombreHotel.setText("Hotel: " + nombreHotel);
-
         binding.recyclerSolicitudes.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Justo antes de leer:
-        File archivo = new File(requireContext().getFilesDir(), getFileName());
-        archivo.delete(); // ¡Elimina el archivo anterior si existe!
 
-        List<Solicitud> solicitudes = leerListaSolicitudes();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        if (solicitudes.isEmpty()) {
-            solicitudes = crearSolicitudesHardcodeadas();
-            guardarListaSolicitudes(solicitudes);
-        }
+        db.collection("servicios_taxi")
+                .whereEqualTo("nombreHotel", nombreHotel)
+                .whereEqualTo("estado", "pendiente")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Solicitud> solicitudes = new ArrayList<>();
 
-        SolicitudAdapter adapter = new SolicitudAdapter(solicitudes);
-        binding.recyclerSolicitudes.setAdapter(adapter);
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        Log.w("SolicitudesHotel", "No hay documentos para el hotel: " + nombreHotel);
+                    }
+
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Log.d("SolicitudesHotel", "Documento encontrado: " + doc.getId());
+
+                        String idCliente = doc.getString("idCliente");
+                        String nombre = doc.getString("nombreCliente");
+                        String telefono = doc.getString("celularCliente");
+                        String destino = doc.getString("destino");
+                        String hotel = doc.getString("nombreHotel");
+                        String direccionHotel = doc.getString("direccionHotel");
+                        int viajes = 0;
+                        double lat = doc.getDouble("latitudHotel") != null ? doc.getDouble("latitudHotel") : 0.0;
+                        double lng = doc.getDouble("longitudHotel") != null ? doc.getDouble("longitudHotel") : 0.0;
+
+                        if (idCliente == null || idCliente.isEmpty()) {
+                            Log.e("SolicitudesHotel", "idCliente es nulo o vacío en doc: " + doc.getId());
+                            continue;
+                        }
+
+                        db.collection("usuarios")
+                                .document(idCliente)
+                                .get()
+                                .addOnSuccessListener(userDoc -> {
+                                    String urlFoto = userDoc.getString("urlFotoPerfil");
+
+                                    if (urlFoto == null || urlFoto.isEmpty()) {
+                                        urlFoto = "drawable://" + R.drawable.usuario_10;
+                                        Log.w("SolicitudesHotel", "Usuario sin foto, usando default: " + idCliente);
+                                    } else {
+                                        Log.d("SolicitudesHotel", "Foto de usuario encontrada: " + urlFoto);
+                                    }
+
+                                    Solicitud solicitud = new Solicitud(
+                                            nombre, telefono, viajes, "3 min.\n1.2 km",
+                                            hotel, direccionHotel, destino,
+                                            urlFoto, lat, lng
+                                    );
+
+                                    solicitudes.add(solicitud);
+
+                                    // ¡Actualizar el RecyclerView!
+                                    binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(solicitudes));
+                                    Log.d("SolicitudesHotel", "Solicitud agregada: " + nombre);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Firestore", "Error al obtener usuario: " + idCliente, e);
+                                });
+                    }
+
+                    Log.d("SolicitudesHotel", "Total solicitudes iniciales encontradas: " + queryDocumentSnapshots.size());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error al obtener solicitudes", e);
+                });
 
         return binding.getRoot();
     }
-
 
 
     public void abrirMapa() {
@@ -144,7 +203,7 @@ public class SolicitudesHotelFragment extends Fragment {
 
         return lista;
     }
-
+    /*
     private List<Solicitud> crearSolicitudesHardcodeadas() {
         List<Solicitud> lista = new ArrayList<>();
 
@@ -182,6 +241,8 @@ public class SolicitudesHotelFragment extends Fragment {
         }
         return lista;
     }
+
+     */
 
 
 }

@@ -27,6 +27,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
@@ -98,6 +100,97 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
                 editor.putString(nombreHotel + "_aeropuerto", aeropuerto);
                 editor.apply();
 
+// ⬇⬇ Guardar el servicio en Firestore ⬇⬇
+
+                /*--------------------moddddd
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                // GUARDAR SERVICIO DE TAXI EN FIRESTORE (para generar QR)
+                Map<String, Object> servicio = new HashMap<>();
+                servicio.put("nombreHotel", nombreHotel);
+                servicio.put("destino", "Aeropuerto Internacional Jorge Chávez");
+                servicio.put("estado", "pendiente");
+                servicio.put("timestamp", System.currentTimeMillis());
+
+                FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+                if (usuario != null) {
+                    servicio.put("idCliente", usuario.getUid());
+                }
+
+                // TEMPORAL: puedes asignar un idTaxista fijo si aún no lo eligen dinámicamente
+// Ejemplo:
+                //servicio.put("idTaxista", "we2XgqecngOv8BLF5YUXIWtJKw42");
+
+                db.collection("servicios_taxi")
+                        .add(servicio)
+                        .addOnSuccessListener(documentReference -> {
+                            String idServicio = documentReference.getId();
+                            SharedPreferences prefsQR = getSharedPreferences("servicios_qr", MODE_PRIVATE);
+                            prefsQR.edit().putString("idUltimoServicio", idServicio).apply();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(SolicitudTaxiActivity.this, "Error al registrar servicio", Toast.LENGTH_SHORT).show();
+                        }); */
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+                if (usuario == null) return;
+
+                String uidCliente = usuario.getUid();
+
+// Buscar los datos del cliente
+                db.collection("usuarios").document(uidCliente).get()
+                        .addOnSuccessListener(clienteDoc -> {
+                            String nombreCliente = clienteDoc.getString("nombres");
+                            String celularCliente = clienteDoc.getString("numCelular");
+
+                            // Ahora consulta el hotel
+                            db.collection("hoteles")
+                                    .whereEqualTo("nombre", nombreHotel)
+                                    .get()
+                                    .addOnSuccessListener(hotelQuery -> {
+                                        if (!hotelQuery.isEmpty()) {
+                                            String idHotel = hotelQuery.getDocuments().get(0).getId();
+                                            String direccion = hotelQuery.getDocuments().get(0).getString("direccion");
+                                            Double lat = hotelQuery.getDocuments().get(0).getDouble("ubicacionLat");
+                                            Double lng = hotelQuery.getDocuments().get(0).getDouble("ubicacionLng");
+
+                                            Map<String, Object> servicio = new HashMap<>();
+                                            servicio.put("nombreHotel", nombreHotel);
+                                            servicio.put("idHotel", idHotel);
+                                            servicio.put("direccionHotel", direccion);
+                                            servicio.put("latitudHotel", lat);
+                                            servicio.put("longitudHotel", lng);
+                                            servicio.put("destino", "Aeropuerto Internacional Jorge Chávez");
+                                            servicio.put("estado", "pendiente");
+                                            servicio.put("timestamp", System.currentTimeMillis());
+                                            servicio.put("idCliente", uidCliente);
+                                            servicio.put("nombreCliente", nombreCliente);
+                                            servicio.put("celularCliente", celularCliente);
+
+                                            db.collection("servicios_taxi")
+                                                    .add(servicio)
+                                                    .addOnSuccessListener(documentReference -> {
+                                                        String idServicio = documentReference.getId();
+                                                        SharedPreferences prefsQR = getSharedPreferences("servicios_qr", MODE_PRIVATE);
+                                                        prefsQR.edit().putString("idUltimoServicio", idServicio).apply();
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Toast.makeText(SolicitudTaxiActivity.this, "Error al registrar servicio", Toast.LENGTH_SHORT).show();
+                                                    });
+                                        } else {
+                                            Toast.makeText(this, "No se encontró información del hotel", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(this, "Error al buscar hotel", Toast.LENGTH_SHORT).show();
+                                    });
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(this, "Error al buscar datos del cliente", Toast.LENGTH_SHORT).show();
+                        });
+
+
+
 /*------------------------------------------------------------------------------
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 Map<String, Object> solicitud = new HashMap<>();
@@ -114,11 +207,10 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
                         .addOnFailureListener(e -> {
                             Toast.makeText(SolicitudTaxiActivity.this, "Error al guardar en Firestore", Toast.LENGTH_SHORT).show();
                         });
-
 //------------------------------------------------------------------------------*/
 
 // GUARDAR NOTIFICACIÓN EN FIRESTORE
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                //FirebaseFirestore db = FirebaseFirestore.getInstance();
                 Map<String, Object> noti = new HashMap<>();
                 noti.put("mensaje", deseaTaxi ?
                         " \uD83D\uDE95 Se generó QR para el servicio de taxi. Puede verlo en la sección Taxi" :
@@ -134,10 +226,7 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
                             Toast.makeText(SolicitudTaxiActivity.this, "Error al guardar notificación", Toast.LENGTH_SHORT).show();
                         });
 
-
-
 //---------------------------------------------------------------------------------------------------------
-
 
                 mostrarNotificacion();
 

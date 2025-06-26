@@ -21,7 +21,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.EventListener;
 
@@ -76,7 +75,7 @@ public class fragment_administradores_superadmin extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_administradores_superadmin, container, false);
 
-        recyclerView = view.findViewById(R.id.rv_music);
+        recyclerView = view.findViewById(R.id.recyclerLogs);
         administradoresAdapter = new AdministradoresAdapter(adminsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(administradoresAdapter);

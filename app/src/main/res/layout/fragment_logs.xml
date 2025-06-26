@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/nunito_black"
-        android:text="Usuarios"
+        android:text="Logs del sistema"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.087"
@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <SearchView
-            android:id="@+id/searchViewUsuarios"
+            android:id="@+id/buscarSolicitud"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </androidx.cardview.widget.CardView>
@@ -38,7 +38,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
         android:layout_width="350dp"
-        android:layout_height="110dp"
+        android:layout_height="100dp"
         android:layout_marginTop="16dp"
         app:cardBackgroundColor="#F1F3F8"
         app:cardCornerRadius="10dp"
@@ -54,16 +54,18 @@
                 android:id="@+id/textView16"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:fallbackLineSpacing="false"
                 android:fontFamily="@font/nunito_semibold"
                 android:justificationMode="inter_word"
                 android:lineSpacingExtra="-8sp"
-                android:text="Como SuperAdmin tienes un control absoluto sobre los miembros de la aplicación."
+                android:text="Como Super Amin es capaz de observar y gestionar las eventualidades que ocurren en el sistema"
                 android:textSize="19sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.136" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
@@ -78,52 +80,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView4" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView4"
-        android:layout_width="400dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3" >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/FiltroDesactivos"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Desactivos"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/FiltroActivos"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/FiltroActivos"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="Activos"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/FiltroTodos"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="Limpiar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/FiltroDesactivos"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toBottomOf="@+id/cardView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

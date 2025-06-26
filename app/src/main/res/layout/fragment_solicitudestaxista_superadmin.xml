@@ -11,7 +11,6 @@
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:fontFamily="@font/nunito_black"
         android:text="Solicitudes a taxistas"
         android:textSize="34sp"
@@ -83,7 +82,7 @@
 
     <!-- RecyclerView directamente en el ConstraintLayout -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_music"
+        android:id="@+id/recyclerLogs"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
