@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.proyecto_iot.R;
 
@@ -62,6 +64,26 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        if (getArguments() != null) {
+            String destinoBusqueda = getArguments().getString("destino", "");
+            String fechasBusqueda = getArguments().getString("fechas", "");
+            String huespedesBusqueda = getArguments().getString("huespedes", "");
+
+            // Recibir coordenadas si están disponibles
+            double destinoLat = getArguments().getDouble("destinoLat", 0.0);
+            double destinoLng = getArguments().getDouble("destinoLng", 0.0);
+            String destinoPlaceId = getArguments().getString("destinoPlaceId", "");
+
+
+
+            Log.d("RESULTADOS", "Datos recibidos:");
+            Log.d("RESULTADOS", "Destino: " + destinoBusqueda);
+            Log.d("RESULTADOS", "Fechas: " + fechasBusqueda);
+            Log.d("RESULTADOS", "Huéspedes: " + huespedesBusqueda);
+            Log.d("RESULTADOS", "Coordenadas: " + destinoLat + ", " + destinoLng);
+            Log.d("RESULTADOS", "Destino ID: " + destinoPlaceId);
+        }
     }
 
     private RecyclerView recyclerView;
@@ -95,6 +117,21 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
             requireActivity().getSupportFragmentManager().popBackStack();
         });
 
+        if (getArguments() != null) {
+            String destinoBusqueda = getArguments().getString("destino", "");
+            String fechasBusqueda = getArguments().getString("fechas", "");
+            String huespedesBusqueda = getArguments().getString("huespedes", "");
+
+            TextView textUbicacion = view.findViewById(R.id.textUbicacion);
+            TextView textFechas = view.findViewById(R.id.textFechas);
+            TextView textHuespedes = view.findViewById(R.id.textHuespedes);
+
+            textUbicacion.setText(destinoBusqueda);
+            textFechas.setText(fechasBusqueda);
+            textHuespedes.setText(huespedesBusqueda);
+
+        }
+
 
         return view;
     }
@@ -108,6 +145,7 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
         }
         FavoritosStorage.guardarFavoritos(getContext(), favoritos);
     }
+
 
     @Override
     public void onHotelClick(Hotel hotel, int position) {

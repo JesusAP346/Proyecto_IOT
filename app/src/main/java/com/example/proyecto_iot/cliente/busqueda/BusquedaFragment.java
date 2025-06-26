@@ -63,6 +63,9 @@ public class BusquedaFragment extends Fragment{
     private TextView txtHuespedes;
     private Button btnBuscar;
 
+    private SugerenciaItem destinoSeleccionado;
+    private List<SugerenciaItem> sugerenciasConCoordenadas = new ArrayList<>();
+
     private MaterialAutoCompleteTextView etDestino;
     private RecyclerView recyclerSugerencias;
     private SugerenciaAdapter sugerenciaAdapter;
@@ -229,10 +232,27 @@ public class BusquedaFragment extends Fragment{
 
         btnBuscar.setOnClickListener(v -> {
             if (validarFormularioCompleto()) {
-                ResultadosDeBusquedaFragment resultadosDeBusquedaFragment = new ResultadosDeBusquedaFragment();
+                Bundle bundle = new Bundle();
+
+                // Datos básicos
+                bundle.putString("destino", etDestino.getText().toString().trim());
+                bundle.putString("fechas", txtFechas.getText().toString());
+                bundle.putString("huespedes", txtHuespedes.getText().toString());
+
+                // Coordenadas del destino (si están disponibles)
+                if (destinoSeleccionado != null) {
+                    bundle.putDouble("destinoLat", destinoSeleccionado.getLat());
+                    bundle.putDouble("destinoLng", destinoSeleccionado.getLng());
+                    bundle.putString("destinoPlaceId", destinoSeleccionado.getPlaceId());
+                }
+
+                // Crear fragment y pasar datos
+                ResultadosDeBusquedaFragment resultadosFragment = new ResultadosDeBusquedaFragment();
+                resultadosFragment.setArguments(bundle);
+
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container_busqueda, resultadosDeBusquedaFragment)
+                        .replace(R.id.fragment_container_busqueda, resultadosFragment)
                         .addToBackStack(null)
                         .commit();
             } else {
@@ -254,14 +274,23 @@ public class BusquedaFragment extends Fragment{
         //Sugerencias de búsqueda:
         recyclerSugerencias = view.findViewById(R.id.recyclerSugerencias);
 
-        sugerenciaAdapter = new SugerenciaAdapter(sugerenciasList, lugar -> {
-            isSelecting = true; // Activar flag antes de establecer el texto
-            etDestino.setText(lugar);
-            etDestino.setSelection(lugar.length()); // Posicionar cursor al final
-            ocultarSugerencias();
-            isSelecting = false; // Desactivar flag después de completar la selección
 
-            // Marcar destino como completo
+
+        sugerenciaAdapter = new SugerenciaAdapter(sugerenciasList, lugar -> {
+            isSelecting = true;
+            etDestino.setText(lugar);
+            etDestino.setSelection(lugar.length());
+
+            // Buscar el item seleccionado para obtener sus coordenadas
+            for (SugerenciaItem item : sugerenciasConCoordenadas) {
+                if (item.getDescripcion().equals(lugar)) {
+                    destinoSeleccionado = item;
+                    break;
+                }
+            }
+
+            ocultarSugerencias();
+            isSelecting = false;
             destinoCompleto = true;
             validarFormulario();
 
@@ -417,24 +446,72 @@ public class BusquedaFragment extends Fragment{
                     JSONArray predictions = jsonResponse.getJSONArray("predictions");
 
                     List<String> resultados = new ArrayList<>();
-                    for (int i = 0; i < Math.min(predictions.length(), 8); i++) { // Limitar a 8 sugerencias
-                        String descripcion = predictions.getJSONObject(i).getString("description");
+                    sugerenciasConCoordenadas.clear();
+
+                    for (int i = 0; i < Math.min(predictions.length(), 8); i++) {
+                        JSONObject prediction = predictions.getJSONObject(i);
+                        String descripcion = prediction.getString("description");
+                        String placeId = prediction.getString("place_id");
+
                         resultados.add(descripcion);
+
+                        // Crear item con place_id para obtener coordenadas después
+                        SugerenciaItem item = new SugerenciaItem(descripcion, placeId);
+                        sugerenciasConCoordenadas.add(item);
+
+                        // Obtener coordenadas usando Place Details API
+                        obtenerCoordenadasDelLugar(item);
                     }
 
                     requireActivity().runOnUiThread(() -> {
-                        if (!isSelecting && etDestino.hasFocus()) { // Solo actualizar si no estamos seleccionando y el campo tiene foco
+                        if (!isSelecting && etDestino.hasFocus()) {
                             sugerenciasList.clear();
                             sugerenciasList.addAll(resultados);
                             sugerenciaAdapter.notifyDataSetChanged();
                             mostrarSugerencias();
                         }
                     });
-                } else {
-                    Log.e("SUGERENCIAS", "Error en la conexión: " + responseCode);
                 }
             } catch (Exception e) {
                 Log.e("SUGERENCIAS", "Exception: " + e.getMessage(), e);
+            }
+        }).start();
+    }
+
+    private void obtenerCoordenadasDelLugar(SugerenciaItem item) {
+        new Thread(() -> {
+            try {
+                String apiKey = BuildConfig.MAPS_API_KEY;
+                String urlStr = "https://maps.googleapis.com/maps/api/place/details/json" +
+                        "?place_id=" + item.getPlaceId() +
+                        "&fields=geometry" +
+                        "&key=" + apiKey;
+
+                URL url = new URL(urlStr);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) response.append(line);
+                    in.close();
+
+                    JSONObject jsonResponse = new JSONObject(response.toString());
+                    JSONObject result = jsonResponse.getJSONObject("result");
+                    JSONObject geometry = result.getJSONObject("geometry");
+                    JSONObject location = geometry.getJSONObject("location");
+
+                    double lat = location.getDouble("lat");
+                    double lng = location.getDouble("lng");
+
+                    item.setLat(lat);
+                    item.setLng(lng);
+                }
+            } catch (Exception e) {
+                Log.e("COORDENADAS", "Error obteniendo coordenadas: " + e.getMessage(), e);
             }
         }).start();
     }
