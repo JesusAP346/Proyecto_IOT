@@ -5,32 +5,48 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.proyecto_iot.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+//import com.google.type.LatLng;
+import com.google.android.gms.maps.model.LatLng; // ✅ ESTA ES LA CORRECTA
 
-public class MapaTaxiActivity extends AppCompatActivity {
+
+public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private double latitud, longitud;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mapa_taxi);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        // Recibir coordenadas
+        latitud = getIntent().getDoubleExtra("latitud", 0.0);
+        longitud = getIntent().getDoubleExtra("longitud", 0.0);
+
+        // Iniciar el mapa
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
+        // UI previa (nombre, placa, etc.)
         ImageView btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> finish());
 
-
-        //SSS
         String nombre = getIntent().getStringExtra("nombre");
         String placa = getIntent().getStringExtra("placa");
         String tiempo = getIntent().getStringExtra("tiempo");
@@ -45,21 +61,12 @@ public class MapaTaxiActivity extends AppCompatActivity {
         tvPlaca.setText("Placa: " + placa);
         tvTiempo.setText(tiempo);
         tvDistancia.setText(distancia);
+    }
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_buscar) {
-                // Abrir otra activity o fragment
-                return true;
-            } else if (id == R.id.nav_taxi) {
-                return true;
-            } else if (id == R.id.nav_notificaciones) {
-                return true;
-            }
-            return false;
-        });
-
-
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        LatLng ubicacionTaxista = new LatLng(latitud, longitud);
+        googleMap.addMarker(new MarkerOptions().position(ubicacionTaxista).title("Ubicación del taxista"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionTaxista, 16));
     }
 }
