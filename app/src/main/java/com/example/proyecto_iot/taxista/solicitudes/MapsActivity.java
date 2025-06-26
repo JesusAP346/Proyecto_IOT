@@ -14,52 +14,47 @@ import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.BuildConfig;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.ActivityMapsBinding;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.location.*;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private FusedLocationProviderClient fusedLocationClient;
     private ActivityMapsBinding binding;
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
 
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
+
     private double latDestino = 0.0;
     private double lngDestino = 0.0;
+    private String idServicioActual;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        db = FirebaseFirestore.getInstance();
 
         binding.btnBack.setOnClickListener(v -> finish());
 
+        // Datos recibidos
         String nombre = getIntent().getStringExtra("nombre");
         String telefono = getIntent().getStringExtra("telefono");
         String viajes = getIntent().getStringExtra("viajes");
@@ -67,9 +62,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String imagenPerfilUrl = getIntent().getStringExtra("imagenPerfilUrl");
         latDestino = getIntent().getDoubleExtra("latDestino", 0.0);
         lngDestino = getIntent().getDoubleExtra("lngDestino", 0.0);
+        idServicioActual = getIntent().getStringExtra("idServicio");
 
-        Log.d("MapsActivity", "LatDestino: " + latDestino + ", LngDestino: " + lngDestino);
-
+        // UI
         binding.tvNombre.setText(nombre != null ? nombre : "Sin nombre");
         binding.tvTelefono.setText(telefono != null ? telefono : "Sin teléfono");
         binding.tvViajes.setText(viajes != null ? viajes : "0 viajes");
@@ -86,7 +81,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapFragment.getMapAsync(this);
         }
 
-        obtenerUbicacion();
+        configurarActualizacionUbicacion();
     }
 
     @Override
@@ -126,6 +121,49 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    private void configurarActualizacionUbicacion() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(10000); // cada 10s
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                if (locationResult == null || idServicioActual == null) return;
+
+                android.location.Location location = locationResult.getLastLocation();
+                if (location != null) {
+                    double lat = location.getLatitude();
+                    double lng = location.getLongitude();
+
+                    db.collection("servicios_taxi")
+                            .document(idServicioActual)
+                            .update("latTaxista", lat, "longTaxista", lng)
+                            .addOnSuccessListener(aVoid ->
+                                    Log.d("Ubicacion", "Ubicación actualizada: " + lat + ", " + lng))
+                            .addOnFailureListener(e ->
+                                    Log.e("Ubicacion", "Error al actualizar ubicación", e));
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+    }
+
     private void trazarRuta(LatLng origen, LatLng destino) {
         String apiKey = BuildConfig.MAPS_API_KEY;
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + origen.latitude + "," + origen.longitude +
@@ -144,8 +182,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String json = response.body().string();
-                    Log.d("Ruta", "Respuesta de Directions API: " + json);
-
                     try {
                         JSONObject jsonObject = new JSONObject(json);
                         JSONArray routes = jsonObject.getJSONArray("routes");
@@ -155,13 +191,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             String points = overviewPolyline.getString("points");
 
                             List<LatLng> decodedPath = decodePolyline(points);
-
                             runOnUiThread(() -> {
                                 mMap.addPolyline(new PolylineOptions()
                                         .addAll(decodedPath)
                                         .width(10)
                                         .color(Color.parseColor("#FF5722")));
-
                             });
                         }
                     } catch (JSONException e) {
@@ -204,23 +238,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return poly;
     }
 
-    private void obtenerUbicacion() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-            return;
-        }
-
-        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-            if (location != null) {
-                double lat = location.getLatitude();
-                double lon = location.getLongitude();
-                Log.d("Ubicacion", "Lat: " + lat + ", Lng: " + lon);
-            }
-        });
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
@@ -228,7 +245,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100 && grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            obtenerUbicacion();
+            configurarActualizacionUbicacion();
         }
     }
 }

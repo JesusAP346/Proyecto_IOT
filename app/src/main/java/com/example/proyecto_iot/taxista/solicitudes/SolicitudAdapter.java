@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.taxista.perfil.Notificacion;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -97,7 +98,10 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
             FirebaseFirestore.getInstance()
                     .collection("servicios_taxi")
                     .document(solicitud.idDocumento)
-                    .update("estado", "aceptado")
+                    .update(
+                            "estado", "aceptado",
+                            "idTaxista", FirebaseAuth.getInstance().getCurrentUser().getUid()
+                    )
                     .addOnSuccessListener(aVoid -> {
                         String mensaje = "Has aceptado la solicitud de " + solicitud.nombre;
 
@@ -125,6 +129,10 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
                         intent.putExtra("imagenPerfilUrl", solicitud.urlFotoPerfil);
                         intent.putExtra("latDestino", solicitud.latDestino);
                         intent.putExtra("lngDestino", solicitud.lngDestino);
+                        intent.putExtra("idServicio", solicitud.idDocumento);
+
+
+
                         context.startActivity(intent);
                     })
                     .addOnFailureListener(e -> {
