@@ -30,9 +30,18 @@ public class Usuario implements Serializable {
 
     public String placaAuto;
     public String urlFotoAuto;
+
+    public String urlFotoPlaca;
     public String colorAuto;
     public String modeloAuto;
 
+    public String getUrlFotoPlaca() {
+        return urlFotoPlaca;
+    }
+
+    public void setUrlFotoPlaca(String urlFotoPlaca) {
+        this.urlFotoPlaca = urlFotoPlaca;
+    }
     public String getColorAuto() {
         return colorAuto;
     }
