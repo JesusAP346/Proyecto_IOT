@@ -18,16 +18,13 @@ import java.util.ArrayList;
 
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.SuperAdmin.UsuariosDataStore;
 import com.example.proyecto_iot.SuperAdmin.adapter.UsuariosAdapter;
 import com.example.proyecto_iot.SuperAdmin.database.UsuariosSeeder;
-import com.example.proyecto_iot.SuperAdmin.domain.AdministradoresDomain;
-import com.example.proyecto_iot.SuperAdmin.domain.UsuariosDomain;
 
 import java.util.List;
 
 import androidx.room.Room;
-import com.example.proyecto_iot.SuperAdmin.adapter.UsuariosAdapter;
+
 import com.example.proyecto_iot.SuperAdmin.database.AppDatabase;
 import com.example.proyecto_iot.SuperAdmin.database.UsuariosEntity;
 
@@ -76,7 +73,7 @@ public class fragment_usuarios_superadmin extends Fragment {
         View view = inflater.inflate(R.layout.fragment_usuarios_superadmin, container, false);
 
         // Referencias
-        recyclerView = view.findViewById(R.id.rv_music);
+        recyclerView = view.findViewById(R.id.recyclerLogs);
         SearchView searchView = view.findViewById(R.id.searchViewUsuarios);
         Button btnActivos = view.findViewById(R.id.FiltroActivos);
         Button btnDesactivos = view.findViewById(R.id.FiltroDesactivos);

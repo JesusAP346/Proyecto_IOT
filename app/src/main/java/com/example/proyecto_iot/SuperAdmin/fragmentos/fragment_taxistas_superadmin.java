@@ -78,7 +78,7 @@ public class fragment_taxistas_superadmin extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_taxistas_superadmin, container, false);
 
-        recyclerView = view.findViewById(R.id.rv_music); // Asegúrate de que 'rv_music' sea el ID de tu RecyclerView
+        recyclerView = view.findViewById(R.id.recyclerLogs); // Asegúrate de que 'rv_music' sea el ID de tu RecyclerView
         taxistasAdapter = new TaxistasAdapter(taxistasList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(taxistasAdapter);

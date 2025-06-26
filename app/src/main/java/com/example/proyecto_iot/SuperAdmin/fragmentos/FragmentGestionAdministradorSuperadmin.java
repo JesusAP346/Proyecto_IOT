@@ -1,9 +1,14 @@
 package com.example.proyecto_iot.SuperAdmin.fragmentos;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import com.example.proyecto_iot.dtos.LogSA;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +20,7 @@ import com.example.proyecto_iot.SuperAdmin.entity.AwsService;
 import com.example.proyecto_iot.SuperAdmin.entity.UploadResponse;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.proyecto_iot.dtos.Usuario; // Correct DTO import
 
@@ -39,22 +45,13 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.Serializable; // Import Serializable
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.HashMap; // For partial updates if needed
-import java.util.Map; // For partial updates if needed
 import java.util.concurrent.TimeUnit;
-
-import okhttp3.MultipartBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FragmentGestionAdministradorSuperadmin extends Fragment {
 
@@ -266,6 +263,39 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                             .set(currentAdmin)
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(getContext(), "Administrador actualizado exitosamente", Toast.LENGTH_SHORT).show();
+
+                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                if (currentUser != null) {
+                                    String uidEditor = currentUser.getUid();
+
+                                    FirebaseFirestore.getInstance().collection("usuarios")
+                                            .document(uidEditor)
+                                            .get()
+                                            .addOnSuccessListener(documentSnapshot -> {
+                                                if (documentSnapshot.exists()) {
+                                                    Usuario editor = documentSnapshot.toObject(Usuario.class);
+                                                    String nombreEditor = editor.getNombres() + " " + editor.getApellidos();
+
+                                                    // Suponiendo que ya tienes el usuario editado (adminEditado)
+                                                    String nombreEditado = etNombre.getText().toString().trim() + " " + etApellidos.getText().toString().trim();
+
+                                                    LogSA log = new LogSA(
+                                                            null,
+                                                            "Edición de Administrador",
+                                                            "Se modificó al Administrador " + nombreEditado,
+                                                            nombreEditor,
+                                                            "Super Admin",
+                                                            uidEditor,
+                                                            nombreEditado,
+                                                            new Date()
+                                                    );
+
+                                                    FirebaseFirestore.getInstance().collection("logs").add(log);
+                                                }
+                                            });
+                                }
+
+
                                 isEditMode = false;
                                 btnEditarGuardar.setText("Editar");
                                 etNombre.setEnabled(false);
@@ -295,6 +325,38 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                                 db.collection("usuarios").document(uid).set(currentAdmin)
                                         .addOnSuccessListener(unused -> {
                                             Toast.makeText(getContext(), "Administrador agregado exitosamente.", Toast.LENGTH_SHORT).show();
+
+                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                            String uidEditor = currentUser.getUid(); // UID del superadmin
+                                            Log.d(TAG, uidEditor);
+
+
+
+                                            FirebaseFirestore.getInstance().collection("usuarios")
+                                                    .document(uidEditor)
+                                                    .get()
+                                                    .addOnSuccessListener(documentSnapshot -> {
+                                                        if (documentSnapshot.exists()) {
+                                                            Usuario usuario = documentSnapshot.toObject(Usuario.class);
+                                                            String nombreEditor = usuario.getNombres() + " " + usuario.getApellidos();
+                                                            String nombreNuevoAdmin = currentAdmin.getNombres() + " " + currentAdmin.getApellidos();
+
+                                                            LogSA log = new LogSA(
+                                                                    null,
+                                                                    "Registro de Administrador",
+                                                                    "Se registró al Administrador " + nombreNuevoAdmin,
+                                                                    nombreEditor,
+                                                                    "Super Admin",
+                                                                    uidEditor,
+                                                                    nombreNuevoAdmin,
+                                                                    new Date()
+                                                            );
+
+                                                            FirebaseFirestore.getInstance().collection("logs").add(log);
+                                                        }
+                                                    });
+
+
 
                                             // PASO 3: Enviar la contraseña por correo usando Intent
                                             sendAdminCredentialsEmailIntent(currentAdmin.getEmail(),

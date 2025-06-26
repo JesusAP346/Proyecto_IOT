@@ -71,7 +71,7 @@
 
     <!-- RecyclerView directamente en el ConstraintLayout -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_music"
+        android:id="@+id/recyclerLogs"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"

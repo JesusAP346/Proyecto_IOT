@@ -14,11 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.dtos.LogSA;
 import com.example.proyecto_iot.dtos.Usuario;
 import com.example.proyecto_iot.SuperAdmin.fragmentos.FragmentGestionAdministradorSuperadmin;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
-
+import java.util.Date;
 import java.util.List;
 
 public class AdministradoresAdapter extends RecyclerView.Adapter<AdministradoresAdapter.ViewHolder> {
@@ -118,6 +121,35 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
                                         .delete()
                                         .addOnSuccessListener(aVoid -> {
                                             Toast.makeText(v.getContext(), "Administrador " + admin.getNombres() + " " + admin.getApellidos() + " eliminado de Firestore.", Toast.LENGTH_LONG).show();
+
+                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                            if (currentUser != null) {
+                                                String uidEditor = currentUser.getUid();
+
+                                                db.collection("usuarios").document(uidEditor)
+                                                        .get()
+                                                        .addOnSuccessListener(documentSnapshot -> {
+                                                            if (documentSnapshot.exists()) {
+                                                                Usuario editor = documentSnapshot.toObject(Usuario.class);
+                                                                String nombreEditor = editor.getNombres() + " " + editor.getApellidos();
+                                                                String nombreEliminado = admin.getNombres() + " " + admin.getApellidos();
+
+                                                                LogSA log = new LogSA(
+                                                                        null,
+                                                                        "Eliminación de Administrador",
+                                                                        "Se eliminó al Administrador " + nombreEliminado,
+                                                                        nombreEditor,
+                                                                        "Super Admin",
+                                                                        uidEditor,
+                                                                        nombreEliminado,
+                                                                        new Date()
+                                                                );
+
+                                                                db.collection("logs").add(log);
+                                                            }
+                                                        });
+                                            }
+
                                             // No necesitas modificar 'items' aquí, el SnapshotListener en el fragmento lo hará.
                                         })
                                         .addOnFailureListener(e -> {
