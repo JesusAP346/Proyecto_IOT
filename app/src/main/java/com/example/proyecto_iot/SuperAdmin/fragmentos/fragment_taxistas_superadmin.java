@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SearchView;
 
@@ -46,6 +47,8 @@ public class fragment_taxistas_superadmin extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private TextView tvCantidadTaxistas;
+
     public fragment_taxistas_superadmin() {
         // Constructor público vacío requerido
     }
@@ -77,6 +80,9 @@ public class fragment_taxistas_superadmin extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_taxistas_superadmin, container, false);
+
+        tvCantidadTaxistas = view.findViewById(R.id.textView19);
+
 
         recyclerView = view.findViewById(R.id.recyclerLogs); // Asegúrate de que 'rv_music' sea el ID de tu RecyclerView
         taxistasAdapter = new TaxistasAdapter(taxistasList);
@@ -152,8 +158,11 @@ public class fragment_taxistas_superadmin extends Fragment {
                                     allTaxistasLoaded.add(usuario); // Añadir a la lista de todos los taxistas
                                 }
                             }
+
+
                             // Después de cargar todos, aplicar el filtro actual del SearchView
                             filterTaxistas(etBuscarTaxista.getQuery().toString());
+                            loadCantidadSolicitudesTaxista();
                         }
                     }
                 });
@@ -197,4 +206,18 @@ public class fragment_taxistas_superadmin extends Fragment {
         }
         taxistasAdapter.notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
     }
+    private void loadCantidadSolicitudesTaxista() {
+        usersCollectionRef.whereEqualTo("estadoSolicitudTaxista", "pendiente")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int cantidadSolicitudes = queryDocumentSnapshots.size();
+                    int cantidadTaxistas = allTaxistasLoaded.size(); // ya cargada antes
+                    tvCantidadTaxistas.setText("Tienes "  + cantidadSolicitudes + " solicitudes pendientes");
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Error al contar solicitudes: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
 }

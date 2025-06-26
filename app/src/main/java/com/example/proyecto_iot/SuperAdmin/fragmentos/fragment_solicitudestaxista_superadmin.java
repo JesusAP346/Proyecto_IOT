@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SearchView; // Importar SearchView
 
@@ -42,6 +43,8 @@ public class fragment_solicitudestaxista_superadmin extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
+    private TextView tvCantidadSolicitudes;
+
 
     public fragment_solicitudestaxista_superadmin() {
         // Required empty public constructor
@@ -74,6 +77,9 @@ public class fragment_solicitudestaxista_superadmin extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_solicitudestaxista_superadmin, container, false);
+
+        tvCantidadSolicitudes = view.findViewById(R.id.textView19);
+
 
         recyclerView = view.findViewById(R.id.recyclerLogs); // Asegúrate de que el ID sea correcto en tu layout
         // Pasa 'solicitudesList' al constructor del adapter
@@ -134,6 +140,9 @@ public class fragment_solicitudestaxista_superadmin extends Fragment {
                                     allSolicitudesLoaded.add(usuario);
                                 }
                             }
+
+                            int cantidad = allSolicitudesLoaded.size();
+                            tvCantidadSolicitudes.setText("Tienes " + cantidad + " solicitudes");
                             // Después de cargar todos, aplicar el filtro actual de la SearchView
                             filterSolicitudes(etBuscarSolicitud.getQuery().toString());
                         }

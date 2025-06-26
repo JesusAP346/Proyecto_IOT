@@ -85,10 +85,15 @@ public class TaxiFragment extends Fragment {
                                     destino,
                                     R.drawable.roberto,
                                     false,
-                                    doc.getId()
+                                    doc.getId(),
+                                    0.0,  // latitud
+                                    0.0   // longitud
                             ));
+
+
+
                             adapter.notifyDataSetChanged();
-                            return;
+                            continue;
                         }
 
                         // Obtener datos del taxista
@@ -96,6 +101,10 @@ public class TaxiFragment extends Fragment {
                                 .addOnSuccessListener(taxistaDoc -> {
                                     String nombre = taxistaDoc.getString("nombres");
                                     String placa = taxistaDoc.getString("placaAuto");
+
+                                    Double lat = taxistaDoc.getDouble("ubicacionLat");
+                                    Double lng = taxistaDoc.getDouble("ubicacionLng");
+
 /*
                                     lista.add(new TaxiItem(
                                             placa != null ? placa : "Sin placa",
@@ -106,6 +115,7 @@ public class TaxiFragment extends Fragment {
                                     ));*/
                                     String idServicio = doc.getId();  // ID de Firestore
 
+                                    /*
                                     lista.add(new TaxiItem(
                                             placa != null ? placa : "Sin placa",
                                             nombre != null ? nombre : "Sin nombre",
@@ -113,7 +123,23 @@ public class TaxiFragment extends Fragment {
                                             R.drawable.roberto,
                                             "pendiente".equalsIgnoreCase(estado),
                                             idServicio
+                                    ));*/
+
+
+
+                                    boolean activa = "aceptado".equalsIgnoreCase(estado);  // ✅ Activar si ya fue aceptado
+                                    lista.add(new TaxiItem(
+                                            placa != null ? placa : "Sin placa",
+                                            nombre != null ? nombre : "Sin nombre",
+                                            destino,
+                                            R.drawable.roberto,
+                                            activa,
+                                            idServicio,
+                                            lat != null ? lat : 0,
+                                            lng != null ? lng : 0
                                     ));
+
+
 
 
 

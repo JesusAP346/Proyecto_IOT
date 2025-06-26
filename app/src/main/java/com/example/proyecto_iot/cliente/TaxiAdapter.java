@@ -94,6 +94,9 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.ViewHolder> {
                 intent.putExtra("placa", item.getPlaca());
                 intent.putExtra("tiempo", "2 min.");
                 intent.putExtra("distancia", "0.85 km");
+                // ⬅⬅ Agregar estas dos líneas
+                intent.putExtra("latitud", item.getLatitud());
+                intent.putExtra("longitud", item.getLongitud());
                 context.startActivity(intent);
             });
         } else {
