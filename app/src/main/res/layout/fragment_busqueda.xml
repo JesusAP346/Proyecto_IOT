@@ -105,170 +105,189 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+    <!-- ScrollView principal que contiene todo el contenido -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="8dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <!-- Destino -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Destino"
-                android:textColor="#808080"
-                android:textSize="14sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilDestino"
+            <!-- CardView del formulario de búsqueda -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:hintEnabled="false">
+                android:layout_margin="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp"
+                app:cardUseCompatPadding="true">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/etDestino"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:hint="¿A dónde vamos?"
-                    android:padding="0dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
+                    <!-- Destino -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Destino"
+                        android:textColor="#808080"
+                        android:textSize="14sp" />
 
-            <!-- RecyclerView para sugerencias -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDestino"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/etDestino"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:hint="¿A dónde vamos?"
+                            android:padding="0dp"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:inputType="text" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Línea divisoria -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="8dp"
+                        android:background="#D0D0D0" />
+
+                    <!-- Fechas y huéspedes en 2 columnas -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <!-- Fechas -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Fecha de entrada/salida"
+                                android:textColor="#808080"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/txtFechas"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Seleccionar fechas"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="#808080" />
+                        </LinearLayout>
+
+                        <!-- Separador vertical -->
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="8dp"
+                            android:background="#D0D0D0" />
+
+                        <!-- Huéspedes -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Huéspedes y habitaciones"
+                                android:textColor="#808080"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/txtHuespedes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Seleccionar huéspedes"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="#808080" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Botón buscar -->
+                    <Button
+                        android:id="@+id/btnBuscar"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="16dp"
+                        android:backgroundTint="#FFA500"
+                        android:text="Buscar"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        app:cornerRadius="12dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Sección de búsquedas recientes -->
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_busquedas_recientes"
+                android:layout_marginStart="24dp"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerSugerencias"
+                android:id="@+id/recyclerRecientes"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:maxHeight="200dp"
-                android:scrollbars="vertical" />
-
-            <!-- Línea divisoria -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="8dp"
-                android:background="#D0D0D0" />
-
-            <!-- Fechas y huéspedes en 2 columnas -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="160dp"
+                android:layout_marginTop="0dp"
+                android:clipToPadding="false"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
 
-                <!-- Fechas -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Fecha de entrada/salida"
-                        android:textColor="#808080"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/txtFechas"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Seleccionar fechas"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="#808080" />
-                </LinearLayout>
-
-                <!-- Separador vertical -->
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="8dp"
-                    android:background="#D0D0D0" />
-
-                <!-- Huéspedes -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Huéspedes y habitaciones"
-                        android:textColor="#808080"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/txtHuespedes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Seleccionar huéspedes"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="#808080" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Botón buscar -->
-            <Button
-                android:id="@+id/btnBuscar"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="#FFA500"
-                android:text="Buscar"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                app:cornerRadius="12dp" />
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </androidx.core.widget.NestedScrollView>
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/lbl_busquedas_recientes"
-        android:layout_marginStart="24dp"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView" />
-
+    <!-- RecyclerView de sugerencias fuera del CardView, con overlay -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerRecientes"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_marginTop="0dp"
-        android:clipToPadding="false"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:id="@+id/recyclerSugerencias"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:background="@drawable/bg_dropdown"
+        android:elevation="12dp"
+        android:visibility="gone"
+        android:maxHeight="250dp"
+        android:scrollbars="vertical"
+        android:nestedScrollingEnabled="true"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

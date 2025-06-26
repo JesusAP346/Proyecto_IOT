@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.cliente.busqueda;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.core.util.Pair;
@@ -8,16 +9,31 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.proyecto_iot.BuildConfig;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.login.UsuarioClienteViewModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +58,13 @@ public class BusquedaFragment extends Fragment{
     private TextView txtFechas;
     private TextView txtHuespedes;
 
+    private MaterialAutoCompleteTextView etDestino;
+    private RecyclerView recyclerSugerencias;
+    private SugerenciaAdapter sugerenciaAdapter;
+    private List<String> sugerenciasList = new ArrayList<>();
+    private boolean isSelecting = false; // Flag para controlar la selección
+    private View rootView;
+
     public BusquedaFragment() {
         // Required empty public constructor
     }
@@ -54,7 +77,6 @@ public class BusquedaFragment extends Fragment{
      * @param param2 Parameter 2.
      * @return A new instance of fragment BusquedaFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static BusquedaFragment newInstance(String param1, String param2) {
         BusquedaFragment fragment = new BusquedaFragment();
         Bundle args = new Bundle();
@@ -77,10 +99,18 @@ public class BusquedaFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_busqueda, container, false);
+        rootView = view;
+
+        // Ajustar comportamiento cuando aparece/desaparece el teclado
+        setupKeyboardListener();
+
         TextView txtFechas = view.findViewById(R.id.txtFechas);
         TextView txtHuespedes = view.findViewById(R.id.txtHuespedes);
 
         txtFechas.setOnClickListener(v -> {
+            // Ocultar sugerencias al seleccionar fechas
+            ocultarSugerencias();
+
             MaterialDatePicker.Builder<Pair<Long, Long>> builder =
                     MaterialDatePicker.Builder.dateRangePicker();
             builder.setTitleText("Selecciona rango de fechas");
@@ -104,6 +134,9 @@ public class BusquedaFragment extends Fragment{
         });
 
         txtHuespedes.setOnClickListener(v -> {
+            // Ocultar sugerencias al seleccionar huéspedes
+            ocultarSugerencias();
+
             HuespedesBottomSheetDialogFragment dialog = new HuespedesBottomSheetDialogFragment();
             dialog.setOnHuespedesSelectedListener((adultos, ninos, habitaciones) -> {
                 int totalHuespedes = adultos + ninos;
@@ -154,9 +187,153 @@ public class BusquedaFragment extends Fragment{
             }
         });
 
+        //Sugerencias de búsqueda:
+        etDestino = view.findViewById(R.id.etDestino);
+        recyclerSugerencias = view.findViewById(R.id.recyclerSugerencias);
 
+        sugerenciaAdapter = new SugerenciaAdapter(sugerenciasList, lugar -> {
+            isSelecting = true; // Activar flag antes de establecer el texto
+            etDestino.setText(lugar);
+            etDestino.setSelection(lugar.length()); // Posicionar cursor al final
+            ocultarSugerencias();
+            isSelecting = false; // Desactivar flag después de completar la selección
+
+            // Ocultar teclado
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(etDestino.getWindowToken(), 0);
+        });
+
+        // Configurar RecyclerView con mejor scroll
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerSugerencias.setLayoutManager(layoutManager);
+        recyclerSugerencias.setAdapter(sugerenciaAdapter);
+        recyclerSugerencias.setNestedScrollingEnabled(true);
+
+        etDestino.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // No hacer nada si estamos en proceso de selección
+                if (isSelecting) return;
+
+                if (s.length() > 2) {
+                    obtenerSugerenciasDesdeAPI(s.toString());
+                } else {
+                    ocultarSugerencias();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        // Ocultar sugerencias cuando el campo pierde el foco
+        etDestino.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                // Usar un pequeño delay para permitir que el click en la sugerencia se complete
+                etDestino.postDelayed(this::ocultarSugerencias, 150);
+            }
+        });
 
         return view;
     }
 
+    private void setupKeyboardListener() {
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Obtener la altura visible de la pantalla
+                int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
+
+                // Si la diferencia es mayor a 200px, probablemente el teclado está visible
+                boolean isKeyboardVisible = heightDiff > 200;
+
+                if (isKeyboardVisible) {
+                    // El teclado está visible, ajustar posición de sugerencias si es necesario
+                    adjustSuggestionsPosition();
+                }
+            }
+        });
+    }
+
+    private void adjustSuggestionsPosition() {
+        if (recyclerSugerencias.getVisibility() == View.VISIBLE) {
+            // Recalcular la posición de las sugerencias basado en la posición del EditText
+            int[] location = new int[2];
+            etDestino.getLocationOnScreen(location);
+
+            // Ajustar márgenes si es necesario para que las sugerencias sean visibles
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) recyclerSugerencias.getLayoutParams();
+
+            // Asegurar que el RecyclerView no exceda los límites de la pantalla
+            int screenHeight = getResources().getDisplayMetrics().heightPixels;
+            int keyboardHeight = 250; // Altura estimada del teclado
+            int availableHeight = screenHeight - location[1] - etDestino.getHeight() - keyboardHeight;
+
+
+        }
+    }
+
+    private void ocultarSugerencias() {
+        sugerenciasList.clear();
+        sugerenciaAdapter.notifyDataSetChanged();
+        recyclerSugerencias.setVisibility(View.GONE);
+    }
+
+    private void mostrarSugerencias() {
+        if (!sugerenciasList.isEmpty()) {
+            recyclerSugerencias.setVisibility(View.VISIBLE);
+            adjustSuggestionsPosition();
+        }
+    }
+
+    private void obtenerSugerenciasDesdeAPI(String input) {
+        new Thread(() -> {
+            try {
+                String apiKey = BuildConfig.MAPS_API_KEY;
+                String urlStr = "https://maps.googleapis.com/maps/api/place/autocomplete/json" +
+                        "?input=" + URLEncoder.encode(input, "UTF-8") +
+                        "&types=geocode" +
+                        "&components=country:pe" +
+                        "&key=" + apiKey;
+
+                URL url = new URL(urlStr);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) response.append(line);
+                    in.close();
+
+                    JSONObject jsonResponse = new JSONObject(response.toString());
+                    JSONArray predictions = jsonResponse.getJSONArray("predictions");
+
+                    List<String> resultados = new ArrayList<>();
+                    for (int i = 0; i < Math.min(predictions.length(), 8); i++) { // Limitar a 8 sugerencias
+                        String descripcion = predictions.getJSONObject(i).getString("description");
+                        resultados.add(descripcion);
+                    }
+
+                    requireActivity().runOnUiThread(() -> {
+                        if (!isSelecting && etDestino.hasFocus()) { // Solo actualizar si no estamos seleccionando y el campo tiene foco
+                            sugerenciasList.clear();
+                            sugerenciasList.addAll(resultados);
+                            sugerenciaAdapter.notifyDataSetChanged();
+                            mostrarSugerencias();
+                        }
+                    });
+                } else {
+                    Log.e("SUGERENCIAS", "Error en la conexión: " + responseCode);
+                }
+            } catch (Exception e) {
+                Log.e("SUGERENCIAS", "Exception: " + e.getMessage(), e);
+            }
+        }).start();
+    }
 }
