@@ -128,26 +128,23 @@ public class BusquedaFragment extends Fragment{
         setupKeyboardListener();
 
         txtFechas.setOnClickListener(v -> {
-            // Ocultar sugerencias al seleccionar fechas
             ocultarSugerencias();
 
-            // Crear restricciones de calendario para no permitir fechas pasadas (permite hoy)
-            Calendar yesterday = Calendar.getInstance();
-            yesterday.add(Calendar.DAY_OF_MONTH, -1);
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
 
             CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
-            constraintsBuilder.setValidator(DateValidatorPointForward.from(yesterday.getTimeInMillis()));
+            constraintsBuilder.setValidator(DateValidatorPointForward.from(today.getTimeInMillis()));
 
-            MaterialDatePicker.Builder<Pair<Long, Long>> builder =
-                    MaterialDatePicker.Builder.dateRangePicker();
+            MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
             builder.setTitleText("Selecciona rango de fechas");
             builder.setCalendarConstraints(constraintsBuilder.build());
-
-            // Establecer fecha mínima como hoy
-            Calendar today = Calendar.getInstance();
             builder.setSelection(Pair.create(
                     today.getTimeInMillis(),
-                    today.getTimeInMillis() + (24 * 60 * 60 * 1000) // Mañana como fecha de salida por defecto
+                    today.getTimeInMillis() + (24 * 60 * 60 * 1000)
             ));
 
             MaterialDatePicker<Pair<Long, Long>> picker = builder.build();
@@ -157,27 +154,15 @@ public class BusquedaFragment extends Fragment{
                     Long startDate = selection.first;
                     Long endDate = selection.second;
 
-                    // Validar que la fecha de salida sea posterior a la de entrada
                     if (endDate <= startDate) {
-                        Toast.makeText(getContext(), "La fecha de salida debe ser posterior a la fecha de entrada", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "La fecha de salida debe ser posterior a la de entrada", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    // Validar que no sean fechas anteriores a hoy
-                    Calendar todayValidation = Calendar.getInstance();
-                    todayValidation.set(Calendar.HOUR_OF_DAY, 0);
-                    todayValidation.set(Calendar.MINUTE, 0);
-                    todayValidation.set(Calendar.SECOND, 0);
-                    todayValidation.set(Calendar.MILLISECOND, 0);
-
-                    if (startDate < todayValidation.getTimeInMillis()) {
-                        Toast.makeText(getContext(), "No se pueden seleccionar fechas anteriores a hoy", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
+                    // Ajuste visual: mostrar bien la fecha fin
                     SimpleDateFormat formato = new SimpleDateFormat("dd MMM", Locale.getDefault());
                     String inicio = formato.format(new Date(startDate));
-                    String fin = formato.format(new Date(endDate));
+                    String fin = formato.format(new Date(endDate - 1));
 
                     txtFechas.setText(inicio + " - " + fin);
                     fechasCompletas = true;
@@ -185,12 +170,9 @@ public class BusquedaFragment extends Fragment{
                 }
             });
 
-            picker.addOnNegativeButtonClickListener(v1 -> {
-                // Si se cancela, no cambiar el estado
-            });
-
             picker.show(getParentFragmentManager(), picker.toString());
         });
+
 
         txtHuespedes.setOnClickListener(v -> {
             // Ocultar sugerencias al seleccionar huéspedes

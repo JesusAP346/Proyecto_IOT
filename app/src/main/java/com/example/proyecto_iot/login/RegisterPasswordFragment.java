@@ -143,6 +143,7 @@ public class RegisterPasswordFragment extends Fragment {
                                                     new Date()
                                             );
 
+                                            auth.signOut();
                                             db.collection("logs").add(log);
 
 
