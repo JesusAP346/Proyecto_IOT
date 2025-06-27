@@ -36,14 +36,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/roundedContainer"
         android:layout_width="330dp"
-        android:layout_height="437dp"
+        android:layout_height="500dp"
         android:layout_marginTop="48dp"
         android:background="@drawable/rounded_background"
         android:padding="24dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/imageView">
-
 
         <TextView
             android:id="@+id/textView2"
@@ -127,6 +126,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPassword" />
 
+        <!-- Nuevo botón para Google Sign-In -->
+        <Button
+            android:id="@+id/btnGoogleSignIn"
+            android:layout_width="200dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#4285F4"
+            android:text="Continuar con Google"
+            android:textColor="@color/white"
+            android:drawableStart="@drawable/ic_google"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            app:cornerRadius="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnIngresar" />
+
         <TextView
             android:id="@+id/forgotPassID"
             android:layout_width="wrap_content"
@@ -137,7 +153,7 @@
             android:text="@string/lbl_olvido_credenciales"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnIngresar" />
+            app:layout_constraintTop_toBottomOf="@+id/btnGoogleSignIn" />
 
         <TextView
             android:id="@+id/registro_nuevo_usuario"
@@ -145,12 +161,11 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:text="@string/lbl_crear_cuenta"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/forgotPassID" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
