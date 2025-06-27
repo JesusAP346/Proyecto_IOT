@@ -102,8 +102,12 @@ public class TaxiFragment extends Fragment {
                                     String nombre = taxistaDoc.getString("nombres");
                                     String placa = taxistaDoc.getString("placaAuto");
 
-                                    Double lat = taxistaDoc.getDouble("ubicacionLat");
-                                    Double lng = taxistaDoc.getDouble("ubicacionLng");
+                                   // Double lat = taxistaDoc.getDouble("ubicacionLat");
+                                    //Double lng = taxistaDoc.getDouble("ubicacionLng");
+
+                                    Double lat = doc.getDouble("latTaxista");
+                                    Double lng = doc.getDouble("longTaxista");
+
 
 /*
                                     lista.add(new TaxiItem(
