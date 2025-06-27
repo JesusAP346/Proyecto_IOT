@@ -3,6 +3,7 @@ package com.example.proyecto_iot.SuperAdmin.fragmentos;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import com.google.android.material.tabs.TabLayout;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -18,9 +19,27 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import androidx.viewpager2.widget.ViewPager2;
+import com.example.proyecto_iot.SuperAdmin.adapter.CarruselAdapter;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import android.os.Handler;
 
 public class fragment_home_superadmin extends Fragment {
+
+    private ViewPager2 imageSlider;
+    private Handler sliderHandler = new Handler();
+    private int currentPosition = 0;
+    private List<String> imageList = new ArrayList<>();
+
+    private TabLayout tabLayout;
 
     public fragment_home_superadmin() {
         // Required empty public constructor
@@ -79,6 +98,63 @@ public class fragment_home_superadmin extends Fragment {
         ratingEntries.add(new Entry(3, 4.6f));
         ratingEntries.add(new Entry(4, 4.6f));
         setupSparkline(chartRating, ratingEntries, "#F44336");
+        // 5) Carrusel
+        imageSlider = view.findViewById(R.id.imageSlider);
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+// Obtener IDs de hoteles
+        db.collection("hoteles").get().addOnSuccessListener(hotelSnap -> {
+            List<String> hotelIds = new ArrayList<>();
+            for (DocumentSnapshot doc : hotelSnap.getDocuments()) {
+                hotelIds.add(doc.getId());
+            }
+
+            // Obtener todas las reservas
+            db.collection("reservas").get().addOnSuccessListener(reservaSnap -> {
+                Map<String, Integer> conteoHoteles = new HashMap<>();
+
+                for (DocumentSnapshot reserva : reservaSnap.getDocuments()) {
+                    String idHotel = reserva.getString("idHotel");
+                    if (idHotel != null && hotelIds.contains(idHotel)) {
+                        conteoHoteles.put(idHotel, conteoHoteles.getOrDefault(idHotel, 0) + 1);
+                    }
+                }
+
+                // Hotel con más reservas
+                String hotelMasReservado = null;
+                int maxReservas = 0;
+                for (Map.Entry<String, Integer> entry : conteoHoteles.entrySet()) {
+                    if (entry.getValue() > maxReservas) {
+                        maxReservas = entry.getValue();
+                        hotelMasReservado = entry.getKey();
+                    }
+                }
+
+                // Obtener imágenes
+                if (hotelMasReservado != null) {
+                    db.collection("hoteles").document(hotelMasReservado).get().addOnSuccessListener(hotelDoc -> {
+                        List<String> fotos = (List<String>) hotelDoc.get("fotosHotelUrls");
+                        if (fotos != null && !fotos.isEmpty()) {
+                            imageList = fotos;
+                            CarruselAdapter adapter = new CarruselAdapter(requireContext(), imageList);
+                            imageSlider.setAdapter(adapter);
+
+
+
+                            // Auto-slide
+                            sliderHandler.postDelayed(sliderRunnable, 10000);
+                        }
+                    });
+                }
+            });
+        });
+
+
+
+// Iniciar auto-slide cada 3 segundos
+        sliderHandler.postDelayed(sliderRunnable, 3000);
 
         return view;
     }
@@ -117,4 +193,20 @@ public class fragment_home_superadmin extends Fragment {
 
         chart.invalidate(); // refresca el gráfico
     }
+    private final Runnable sliderRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (imageList == null || imageList.size() == 0) return;
+
+            currentPosition = (currentPosition + 1) % imageList.size();
+            imageSlider.setCurrentItem(currentPosition, true);
+            sliderHandler.postDelayed(this, 3000); // 3 segundos
+        }
+    };
+
+
+
+
 }
+
+
