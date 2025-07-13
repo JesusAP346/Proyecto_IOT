@@ -34,12 +34,47 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/imageHotel"
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hotel2" />
+                    android:layout_height="200dp">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewPagerImagenesHotel"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <!-- Indicadores de página (dots) -->
+                    <LinearLayout
+                        android:id="@+id/layoutIndicadores"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="12dp"
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:background="@drawable/bg_indicadores"
+                        android:visibility="gone" />
+
+                    <!-- Contador de imágenes -->
+                    <TextView
+                        android:id="@+id/textContadorImagenes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="12dp"
+                        android:background="@drawable/bg_contador"
+                        android:padding="8dp"
+                        android:text="1/1"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
 
                 <TextView
                     android:id="@+id/textTituloHotel"
@@ -64,7 +99,7 @@
                         android:text="Valoración"
                         android:textColor="#000000" />
 
-                    <!-- Estrellas (puedes usar una vista personalizada) -->
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

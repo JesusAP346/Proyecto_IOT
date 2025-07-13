@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.chat.ChatBottomSheet;
@@ -33,8 +34,14 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
     private RecyclerView recyclerHabitaciones;
     private FirebaseFirestore db;
-    private Hotel hotel;
 
+    private ViewPager2 viewPagerImagenesHotel;
+
+    // 🆕 Nuevas variables para los indicadores
+    private LinearLayout layoutIndicadores;
+    private TextView textContadorImagenes;
+
+    private Hotel hotel;
     private TextView textTituloHotel;
 
     public DetalleHotelFragment() {
@@ -54,7 +61,6 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             String hotelId = getArguments().getString(ARG_HOTEL_ID);
-
             Log.d("DETALLE_HOTEL", "Hotel ID recibido: " + hotelId);
         }
     }
@@ -65,17 +71,51 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         View view = inflater.inflate(R.layout.fragment_detalle_hotel, container, false);
         db = FirebaseFirestore.getInstance();
 
-        recyclerHabitaciones = view.findViewById(R.id.recyclerHabitaciones);
+        // 🆕 Inicializar las nuevas vistas
+        initViews(view);
 
+        recyclerHabitaciones = view.findViewById(R.id.recyclerHabitaciones);
         recyclerHabitaciones.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
         List<Habitacion> lista = new ArrayList<>();
-
-
         HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, (this));
         recyclerHabitaciones.setAdapter(adapter);
 
+        // Tu código existente para los tabs
+        setupTabs(view);
+
+        textTituloHotel = view.findViewById(R.id.textTituloHotel);
+
+        if (getArguments() != null) {
+            String hotelId = getArguments().getString(ARG_HOTEL_ID);
+            Log.d("DETALLE_HOTEL", "Hotel ID recibido: " + hotelId);
+            cargarHabitaciones(hotelId);
+            cargarDatosHotel(hotelId);
+        }
+
+        ImageButton btnBack = view.findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
+
+        FloatingActionButton fabChat = view.findViewById(R.id.fabChat);
+        fabChat.setOnClickListener(v -> {
+            ChatBottomSheet chatBottomSheet = new ChatBottomSheet();
+            chatBottomSheet.show(getParentFragmentManager(), "ChatBottomSheet");
+        });
+
+        return view;
+    }
+
+    // 🆕 Método para inicializar las vistas de indicadores
+    private void initViews(View view) {
+        viewPagerImagenesHotel = view.findViewById(R.id.viewPagerImagenesHotel);
+        layoutIndicadores = view.findViewById(R.id.layoutIndicadores);
+        textContadorImagenes = view.findViewById(R.id.textContadorImagenes);
+    }
+
+    // 🆕 Método para configurar los tabs (extraído para organizar el código)
+    private void setupTabs(View view) {
         TextView tabPrecios = view.findViewById(R.id.tabPrecios);
         TextView tabInformacion = view.findViewById(R.id.tabInformacion);
         RecyclerView recyclerHabitaciones = view.findViewById(R.id.recyclerHabitaciones);
@@ -100,53 +140,103 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
             recyclerHabitaciones.setVisibility(View.GONE);
             layoutInformacion.setVisibility(View.VISIBLE);
         });
+    }
 
-        textTituloHotel = view.findViewById(R.id.textTituloHotel);
+    // 🆕 Método para cargar datos del hotel (extraído y mejorado)
+    private void cargarDatosHotel(String hotelId) {
+        db.collection("hoteles").document(hotelId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        hotel = documentSnapshot.toObject(Hotel.class);
+                        assert hotel != null;
+                        Log.d("DETALLE_HOTEL", "Hotel encontrado: " + hotel.getNombre());
 
-        if (getArguments() != null) {
-            String hotelId = getArguments().getString(ARG_HOTEL_ID);
-            Log.d("DETALLE_HOTEL", "Hotel ID recibido: " + hotelId);
-            cargarHabitaciones(hotelId);
-
-            // 🔍 Obtener el documento del hotel
-            assert hotelId != null;
-            db.collection("hoteles").document(hotelId).get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            hotel = documentSnapshot.toObject(Hotel.class);
-                            assert hotel != null;
-                            Log.d("DETALLE_HOTEL", "Hotel encontrado: " + hotel.getNombre());
-
-                            if (textTituloHotel != null) {
-                                textTituloHotel.setText(hotel.getNombre());
-                            }
-                        } else {
-                            Log.w("DETALLE_HOTEL", "No se encontró el hotel con ID: " + hotelId);
+                        if (textTituloHotel != null) {
+                            textTituloHotel.setText(hotel.getNombre());
                         }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("DETALLE_HOTEL", "Error al obtener hotel", e);
-                    });
+
+                        // 🆕 Configurar ViewPager con indicadores
+                        if (hotel.getFotosHotelUrls() != null && !hotel.getFotosHotelUrls().isEmpty()) {
+                            setupViewPagerWithIndicators(hotel.getFotosHotelUrls());
+                        }
+                    } else {
+                        Log.w("DETALLE_HOTEL", "No se encontró el hotel con ID: " + hotelId);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("DETALLE_HOTEL", "Error al obtener hotel", e);
+                });
+    }
+
+    // 🆕 Método para configurar ViewPager con indicadores
+    private void setupViewPagerWithIndicators(List<String> imagenesUrls) {
+        // Configurar el adapter
+        ImagenHotelAdapter adapterImagenes = new ImagenHotelAdapter(getContext(), imagenesUrls);
+        viewPagerImagenesHotel.setAdapter(adapterImagenes);
+
+        // Si hay más de una imagen, mostrar indicadores
+        if (imagenesUrls.size() > 1) {
+            setupIndicadores(imagenesUrls.size());
+            setupPageChangeListener();
+        }
+    }
+
+    //  Método para configurar los indicadores (dots)
+    private void setupIndicadores(int cantidadImagenes) {
+        layoutIndicadores.removeAllViews();
+
+        // Crear dots para cada imagen
+        for (int i = 0; i < cantidadImagenes; i++) {
+            ImageView dot = new ImageView(getContext());
+            dot.setImageResource(R.drawable.dot_indicador);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(8, 0, 8, 0);
+
+            dot.setLayoutParams(params);
+            dot.setSelected(i == 0); // Primer dot activo
+
+            layoutIndicadores.addView(dot);
         }
 
+        // Mostrar indicadores y contador
+        layoutIndicadores.setVisibility(View.VISIBLE);
+        textContadorImagenes.setVisibility(View.VISIBLE);
 
-
-        ImageButton btnBack = view.findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-        });
-
-
-        FloatingActionButton fabChat = view.findViewById(R.id.fabChat);
-        fabChat.setOnClickListener(v -> {
-            ChatBottomSheet chatBottomSheet = new ChatBottomSheet();
-            chatBottomSheet.show(getParentFragmentManager(), "ChatBottomSheet");
-        });
-
-
-
-        return view;
+        // Actualizar contador inicial
+        updateContador(0, cantidadImagenes);
     }
+
+    // Método para configurar el listener de cambio de página
+    private void setupPageChangeListener() {
+        viewPagerImagenesHotel.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                updateIndicadores(position);
+                updateContador(position, layoutIndicadores.getChildCount());
+            }
+        });
+    }
+
+
+    private void updateIndicadores(int position) {
+        for (int i = 0; i < layoutIndicadores.getChildCount(); i++) {
+            ImageView dot = (ImageView) layoutIndicadores.getChildAt(i);
+            dot.setSelected(i == position);
+        }
+    }
+
+
+    private void updateContador(int position, int total) {
+        String contador = (position + 1) + "/" + total;
+        textContadorImagenes.setText(contador);
+    }
+
+
     public void onHabitacionClick(Habitacion habitacion, int position){
         DetalleHabitacionClienteFragment detalleHabitacionClienteFragment = DetalleHabitacionClienteFragment.newInstance(habitacion);
 
@@ -173,7 +263,6 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                         if (cantHab != 1) descripcion.append("es");
                         descripcion.append("\n");
 
-
                         int adultos = habitacion.getCapacidadAdultos();
                         descripcion.append("• ").append(adultos).append(" cama");
                         if (adultos != 1) descripcion.append("s");
@@ -181,14 +270,12 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                         if (adultos != 1) descripcion.append("s");
                         descripcion.append("\n");
 
-
                         int ninos = habitacion.getCapacidadNinos();
                         if (ninos > 0) {
                             descripcion.append("• ").append(ninos).append(" niño");
                             if (ninos != 1) descripcion.append("s");
                             descripcion.append("\n");
                         }
-
 
                         List<String> equipamiento = habitacion.getEquipamiento();
                         if (equipamiento != null) {
@@ -198,13 +285,13 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                         }
 
                         // Asignar descripción
-                        habitacion.setDescripcion(descripcion.toString().trim()); // sin salto final
+                        habitacion.setDescripcion(descripcion.toString().trim());
                         lista.add(habitacion);
                     }
 
                     if (!lista.isEmpty()) {
                         Habitacion masBarata = lista.get(0);
-                        double precioMinimo = masBarata.getPrecio(); // Asumimos getter devuelve double
+                        double precioMinimo = masBarata.getPrecio();
 
                         for (Habitacion h : lista) {
                             double precioActual = h.getPrecio();
@@ -234,5 +321,4 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                     Log.e("DETALLE_HOTEL", "Error al obtener habitaciones", e);
                 });
     }
-
 }

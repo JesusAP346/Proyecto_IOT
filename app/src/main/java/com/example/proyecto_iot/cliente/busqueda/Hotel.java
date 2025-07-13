@@ -12,6 +12,15 @@ public class Hotel implements Serializable {
     private String imagenResId;
     private int estrellas;
     private List<String> servicios;
+    private List<String> fotosHotelUrls;
+
+    public List<String> getFotosHotelUrls() {
+        return fotosHotelUrls;
+    }
+
+    public void setFotosHotelUrls(List<String> fotosHotelUrls) {
+        this.fotosHotelUrls = fotosHotelUrls;
+    }
 
     private boolean favorito;
 

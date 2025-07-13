@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.R;
 
 import java.util.List;
@@ -54,6 +55,19 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.nombre.setText(hotel.getNombre());
         holder.ubicacion.setText(hotel.getUbicacion());
         holder.precio.setText("A partir de S/. " + hotel.getPrecio());
+        holder.imagen.setImageResource(R.drawable.hotel1);
+
+        List<String> fotos = hotel.getFotosHotelUrls();
+        if (fotos != null && !fotos.isEmpty()) {
+            Glide.with(context)
+                    .load(fotos.get(0))
+                    .placeholder(R.drawable.placeholder_hotel)
+                    .error(R.drawable.error_imagen)
+                    .into(holder.imagen);
+        } else {
+            holder.imagen.setImageResource(R.drawable.placeholder_hotel);
+        }
+
 
         for (int i = 0; i < 5; i++) {
             holder.estrellas[i].setImageResource(i < hotel.getEstrellas() ? R.drawable.ic_star : R.drawable.ic_star_border);

@@ -1,4 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorOnSurface">
 
-</selector>
+    <!-- Edificio principal del hotel -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M4,21h16V9H4V21z" />
+
+    <!-- Techo del hotel -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M2,9l10,-6l10,6v2H2V9z" />
+
+    <!-- Ventanas del hotel -->
+    <path
+        android:fillColor="@android:color/black"
+        android:pathData="M6,12h2v2H6V12z" />
+
+    <path
+        android:fillColor="@android:color/black"
+        android:pathData="M10,12h2v2h-2V12z" />
+
+    <path
+        android:fillColor="@android:color/black"
+        android:pathData="M14,12h2v2h-2V12z" />
+
+    <!-- Ventanas segunda fila -->
+    <path
+        android:fillColor="@android:color/black"
+        android:pathData="M6,16h2v2H6V16z" />
+
+    <path
+        android:fillColor="@android:color/black"
+        android:pathData="M10,16h2v2h-2V16z" />
+
+    <path
+        android:fillColor="@android:color/black"
+        android:pathData="M14,16h2v2h-2V16z" />
+
+    <!-- Puerta de entrada -->
+    <path
+        android:fillColor="@android:color/black"
+        android:pathData="M16,15h2v6h-2V15z" />
+
+    <!-- Letrero "H" del hotel -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M11,4h2v3h-2V4z" />
+
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M10,5h4v1h-4V5z" />
+</vector>
