@@ -2,6 +2,7 @@ package com.example.proyecto_iot.cliente.busqueda;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.pago.PasarellaDePago;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -24,14 +26,17 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
 
     private OnHabitacionClickListener listener;
 
+    private String hotelId;
+
     public interface OnHabitacionClickListener{
-        void onHabitacionClick(Habitacion habitacion, int position);
+        void onHabitacionClick(Habitacion2 habitacion);
     }
 
-    public HabitacionAdapter(Context context, List<Habitacion> listaHabitaciones, OnHabitacionClickListener listener) {
+    public HabitacionAdapter(Context context, List<Habitacion> listaHabitaciones, OnHabitacionClickListener listener, String hotelId) {
         this.listaHabitaciones = listaHabitaciones;
         this.context = context;
         this.listener = listener;
+        this.hotelId = hotelId;
     }
 
     @NonNull
@@ -57,8 +62,25 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
         });
 
         holder.btnVerDetalle.setOnClickListener(v -> {
-            if(listener != null){
-                listener.onHabitacionClick(h, position);            }
+            if (listener != null && hotelId != null && h.getId() != null) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("hoteles")
+                        .document(hotelId)
+                        .collection("habitaciones")
+                        .document(h.getId())
+                        .get()
+                        .addOnSuccessListener(doc -> {
+                            if (doc.exists()) {
+                                Habitacion2 habitacion2 = doc.toObject(Habitacion2.class);
+                                habitacion2.setId(doc.getId());
+
+                                listener.onHabitacionClick(habitacion2);
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("Firestore", "Error al obtener habitación", e);
+                        });
+            }
         });
     }
 

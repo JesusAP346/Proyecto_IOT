@@ -37,7 +37,7 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
     private ViewPager2 viewPagerImagenesHotel;
 
-    // 🆕 Nuevas variables para los indicadores
+    // Nuevas variables para los indicadores
     private LinearLayout layoutIndicadores;
     private TextView textContadorImagenes;
 
@@ -71,14 +71,14 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         View view = inflater.inflate(R.layout.fragment_detalle_hotel, container, false);
         db = FirebaseFirestore.getInstance();
 
-        // 🆕 Inicializar las nuevas vistas
+        // Inicializar las nuevas vistas
         initViews(view);
 
         recyclerHabitaciones = view.findViewById(R.id.recyclerHabitaciones);
         recyclerHabitaciones.setLayoutManager(new LinearLayoutManager(getContext()));
 
         List<Habitacion> lista = new ArrayList<>();
-        HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, (this));
+        HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, (this), ARG_HOTEL_ID);
         recyclerHabitaciones.setAdapter(adapter);
 
         // Tu código existente para los tabs
@@ -107,14 +107,14 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         return view;
     }
 
-    // 🆕 Método para inicializar las vistas de indicadores
+    // Método para inicializar las vistas de indicadores
     private void initViews(View view) {
         viewPagerImagenesHotel = view.findViewById(R.id.viewPagerImagenesHotel);
         layoutIndicadores = view.findViewById(R.id.layoutIndicadores);
         textContadorImagenes = view.findViewById(R.id.textContadorImagenes);
     }
 
-    // 🆕 Método para configurar los tabs (extraído para organizar el código)
+    // Método para configurar los tabs (extraído para organizar el código)
     private void setupTabs(View view) {
         TextView tabPrecios = view.findViewById(R.id.tabPrecios);
         TextView tabInformacion = view.findViewById(R.id.tabInformacion);
@@ -142,7 +142,7 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         });
     }
 
-    // 🆕 Método para cargar datos del hotel (extraído y mejorado)
+    // Método para cargar datos del hotel (extraído y mejorado)
     private void cargarDatosHotel(String hotelId) {
         db.collection("hoteles").document(hotelId).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -155,7 +155,7 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                             textTituloHotel.setText(hotel.getNombre());
                         }
 
-                        // 🆕 Configurar ViewPager con indicadores
+                        // Configurar ViewPager con indicadores
                         if (hotel.getFotosHotelUrls() != null && !hotel.getFotosHotelUrls().isEmpty()) {
                             setupViewPagerWithIndicators(hotel.getFotosHotelUrls());
                         }
@@ -168,7 +168,7 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                 });
     }
 
-    // 🆕 Método para configurar ViewPager con indicadores
+    // Método para configurar ViewPager con indicadores
     private void setupViewPagerWithIndicators(List<String> imagenesUrls) {
         // Configurar el adapter
         ImagenHotelAdapter adapterImagenes = new ImagenHotelAdapter(getContext(), imagenesUrls);
@@ -237,7 +237,7 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
     }
 
 
-    public void onHabitacionClick(Habitacion habitacion, int position){
+    public void onHabitacionClick(Habitacion2 habitacion){
         DetalleHabitacionClienteFragment detalleHabitacionClienteFragment = DetalleHabitacionClienteFragment.newInstance(habitacion);
 
         getParentFragmentManager().beginTransaction()
@@ -314,7 +314,7 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                         lista.add(0, masBarata);
                     }
 
-                    HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, this);
+                    HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, this, hotelId);
                     recyclerHabitaciones.setAdapter(adapter);
                 })
                 .addOnFailureListener(e -> {
