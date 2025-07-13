@@ -291,10 +291,10 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
                     if (!lista.isEmpty()) {
                         Habitacion masBarata = lista.get(0);
-                        double precioMinimo = masBarata.getPrecio();
+                        double precioMinimo = masBarata.getPrecioPorNoche();
 
                         for (Habitacion h : lista) {
-                            double precioActual = h.getPrecio();
+                            double precioActual = h.getPrecioPorNoche();
                             if (precioActual < precioMinimo) {
                                 masBarata = h;
                                 precioMinimo = precioActual;

@@ -6,7 +6,7 @@ import java.util.List;
 public class Habitacion implements Serializable {
 
     private String id; // Identificador único para la habitación
-    private double precio;
+    private double precioPorNoche;
     private String etiqueta;
     private String descripcion;
     private int cantidadHabitaciones;
@@ -17,9 +17,9 @@ public class Habitacion implements Serializable {
     public Habitacion() {
     }
 
-    public Habitacion(String id, double precio, String etiqueta, String descripcion, int cantidadHabitaciones, int capacidadAdultos, int capacidadNinos, List<String> equipamiento) {
+    public Habitacion(String id, double precioPorNoche, String etiqueta, String descripcion, int cantidadHabitaciones, int capacidadAdultos, int capacidadNinos, List<String> equipamiento) {
         this.id = id;
-        this.precio = precio;
+        this.precioPorNoche = precioPorNoche;
         this.etiqueta = etiqueta;
         this.descripcion = descripcion;
         this.cantidadHabitaciones = cantidadHabitaciones;
@@ -36,12 +36,12 @@ public class Habitacion implements Serializable {
         this.id = id;
     }
 
-    public double getPrecio() {
-        return precio;
+    public double getPrecioPorNoche() {
+        return precioPorNoche;
     }
 
-    public void setPrecio(double precio) {
-        this.precio = precio;
+    public void setPrecioPorNoche(double precioPorNoche) {
+        this.precioPorNoche = precioPorNoche;
     }
 
     public String getEtiqueta() {

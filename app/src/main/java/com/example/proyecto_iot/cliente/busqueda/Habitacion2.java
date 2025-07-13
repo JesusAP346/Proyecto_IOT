@@ -15,6 +15,16 @@ public class Habitacion2 implements Serializable {
     private int tamanho;
     private String tipo;
 
+    private String etiqueta;
+
+    public String getEtiqueta() {
+        return etiqueta;
+    }
+
+    public void setEtiqueta(String etiqueta) {
+        this.etiqueta = etiqueta;
+    }
+
     public Habitacion2() {
 
     }
