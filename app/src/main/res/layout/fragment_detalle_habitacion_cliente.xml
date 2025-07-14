@@ -121,7 +121,7 @@
 
                 </LinearLayout>
 
-                <!-- Servicios -->
+                <!-- Servicios incluidos -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -144,6 +144,43 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" />
+
+                </LinearLayout>
+
+                <!-- Servicios adicionales -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_rounded_8dp"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:text="Servicios adicionales"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="12dp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerServiciosAdicionales"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false" />
+
+                    <TextView
+                        android:id="@+id/textNoServiciosAdicionales"
+                        android:text="No hay servicios adicionales disponibles"
+                        android:textSize="14sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gray_dark"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -171,7 +208,43 @@
                         android:textStyle="bold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/black" />
+
+                    <!-- Mostrar servicios adicionales seleccionados -->
+                    <LinearLayout
+                        android:id="@+id/layoutServiciosSeleccionados"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:text="Servicios adicionales:"
+                            android:textSize="14sp"
+                            android:textColor="@color/gray_dark"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/textServiciosSeleccionados"
+                            android:textSize="14sp"
+                            android:textColor="@color/black"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textPrecioTotal"
+                        android:text="Total: S/. 365.00"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:textColor="@color/black"
+                        android:layout_marginTop="12dp"
                         android:layout_marginBottom="16dp" />
 
                     <Button

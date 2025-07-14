@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Contenedor para la imagen o carrusel -->
+        <RelativeLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="16dp">
+
+            <!-- Imagen única -->
+            <ImageView
+                android:id="@+id/imageServicio"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_rounded_8dp"
+                android:src="@drawable/ic_circle" />
+
+            <!-- Carrusel de imágenes -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerServicios"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:background="@drawable/bg_rounded_8dp"
+                android:clipToPadding="false"
+                android:clipChildren="false" />
+
+            <!-- Indicadores del carrusel -->
+            <LinearLayout
+                android:id="@+id/indicatorContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gimnasio"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/textDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ingreso libre"
+                android:textSize="14sp"
+                android:textColor="@color/gray_dark"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/textPrecio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="S/. 30.00"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/checkBoxSeleccionar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

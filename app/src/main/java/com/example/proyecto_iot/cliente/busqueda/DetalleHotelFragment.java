@@ -238,7 +238,9 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
 
     public void onHabitacionClick(Habitacion2 habitacion){
-        DetalleHabitacionClienteFragment detalleHabitacionClienteFragment = DetalleHabitacionClienteFragment.newInstance(habitacion);
+        assert getArguments() != null;
+        String hotelId = getArguments().getString(ARG_HOTEL_ID);
+        DetalleHabitacionClienteFragment detalleHabitacionClienteFragment = DetalleHabitacionClienteFragment.newInstance(habitacion, hotelId);
 
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_busqueda, detalleHabitacionClienteFragment)

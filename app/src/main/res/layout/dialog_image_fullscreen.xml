@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- ViewPager para las imágenes -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerFullscreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Botón de cerrar -->
+    <ImageButton
+        android:id="@+id/btnCloseFullscreen"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_circle_dark"
+        android:src="@drawable/ic_close"
+        android:contentDescription="Cerrar"
+        android:padding="12dp"
+        android:scaleType="centerInside"
+        android:elevation="8dp" />
+
+    <!-- Contador de posición -->
+    <TextView
+        android:id="@+id/textPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_rounded_dark"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:text="1 / 3"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:elevation="8dp" />
+
+    <!-- Indicadores -->
+    <LinearLayout
+        android:id="@+id/indicatorContainerFullscreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:orientation="horizontal"
+        android:elevation="8dp" />
+
+</RelativeLayout>
