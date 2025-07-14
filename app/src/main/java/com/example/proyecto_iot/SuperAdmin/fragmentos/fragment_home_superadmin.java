@@ -138,6 +138,7 @@ public class fragment_home_superadmin extends Fragment {
                         List<String> fotos = (List<String>) hotelDoc.get("fotosHotelUrls");
                         if (fotos != null && !fotos.isEmpty()) {
                             imageList = fotos;
+                            if (!isAdded()) return;
                             CarruselAdapter adapter = new CarruselAdapter(requireContext(), imageList);
                             imageSlider.setAdapter(adapter);
 
@@ -157,6 +158,12 @@ public class fragment_home_superadmin extends Fragment {
         sliderHandler.postDelayed(sliderRunnable, 3000);
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        sliderHandler.removeCallbacks(sliderRunnable);
     }
 
     /**

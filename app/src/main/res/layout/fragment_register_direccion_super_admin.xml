@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/nunito_black"
+        android:gravity="start"
+        android:text="¿Donde vive el SuperAdmin?"
+        android:textColor="@color/black"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="start"
+        android:text="@string/lbl_selecciona_dep"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/idDepartamento"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="322dp"
+        android:textColorHint="@color/white"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/ErrorTextStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9">
+
+        <AutoCompleteTextView
+            android:id="@+id/dropdownDepartamento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_form_superadmin"
+            android:fontFamily="@font/nunito_semibold"
+            android:hint="@string/hint_depart"
+            android:inputType="none"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textStyle="bold" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/uwu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="start"
+        android:text="@string/lbl_selecciona_prov"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/idDepartamento" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/idProvincia"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="322dp"
+        android:textColorHint="@color/white"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/ErrorTextStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uwu">
+
+        <AutoCompleteTextView
+            android:id="@+id/dropdownProvincia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_form_superadmin"
+            android:fontFamily="@font/nunito_semibold"
+            android:hint="@string/hint_selecciona_prov"
+            android:inputType="none"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textStyle="bold" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/uwuw2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="start"
+        android:text="@string/lbl_selecciona_dist"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/idProvincia" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/distrito"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="322dp"
+        android:layout_height="60dp"
+        android:textColorHint="@color/white"
+        android:layout_marginTop="12dp"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/ErrorTextStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uwuw2">
+
+        <AutoCompleteTextView
+            android:id="@+id/dropdownDistrito"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_form_superadmin"
+            android:fontFamily="@font/nunito_semibold"
+            android:hint="@string/hint_selecciona_dist"
+            android:inputType="none"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textStyle="bold" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/uwuw22"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="start"
+        android:text="@string/lbl_direccion"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/distrito" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/direccion"
+        style="@style/CustomTextInputRegister"
+        android:layout_width="322dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/ErrorTextStyle"
+        app:layout_constraintTop_toBottomOf="@+id/uwuw22">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/direccionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_form_superadmin"
+            android:fontFamily="@font/nunito_semibold"
+            android:hint="@string/hint_direccion"
+            android:inputType="textPostalAddress"
+            android:maxLines="2"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Container para centrar los botones -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/direccion">
+
+        <Button
+            android:id="@+id/botonSiguiente"
+            android:layout_width="148dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#F0C47C"
+            android:fontFamily="@font/nunito_black"
+            android:text="@string/btn_siguiente"
+            app:cornerRadius="20dp" />
+
+        <Button
+            android:id="@+id/botonRegresar"
+            android:layout_width="148dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#5D0E14"
+            android:fontFamily="@font/nunito_black"
+            android:text="@string/btn_regresar"
+            app:cornerRadius="20dp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

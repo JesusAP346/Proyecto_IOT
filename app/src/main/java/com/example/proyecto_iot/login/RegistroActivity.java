@@ -11,7 +11,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.proyecto_iot.R;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -31,7 +30,7 @@ public class RegistroActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, new RegisterFragment())
                 .commit();
 
-        TextView textYaTengoCuenta = findViewById(R.id.ya_tengo_cuenta_txt);
+        TextView textYaTengoCuenta = findViewById(R.id.cancelar);
 
         textYaTengoCuenta.setOnClickListener(v ->{
             Intent intent = new Intent(RegistroActivity.this, LoginActivity.class);

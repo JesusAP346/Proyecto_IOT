@@ -8,11 +8,12 @@
     android:fillViewport="true"
     android:background="#A28858"
     tools:context=".login.RegistroActivity">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#A28858"
+        android:background="#F0E5DC"
         tools:context=".login.RegistroActivity">
 
         <ImageView
@@ -55,8 +56,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="@string/lbl_ya_tengo_cuenta"
-            android:textColor="@color/white"
+            android:text="Regresar a Administradores"
+            android:textColor="#898080"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline5"
             app:layout_constraintStart_toStartOf="@+id/guideline4"
