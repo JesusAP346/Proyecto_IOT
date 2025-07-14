@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.SuperAdmin.fragmentos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import android.widget.SearchView; // Importar SearchView
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.SuperAdmin.RegistroActivitySuperAdmin;
 import com.example.proyecto_iot.SuperAdmin.adapter.AdministradoresAdapter;
 import com.example.proyecto_iot.dtos.Usuario;
 
@@ -107,21 +109,10 @@ public class fragment_administradores_superadmin extends Fragment {
         Button btnAgregar = view.findViewById(R.id.button2);
 
         btnAgregar.setOnClickListener(v -> {
-            Usuario nuevoAdmin = new Usuario();
-            nuevoAdmin.setIdRol("Administrador");
-
-            FragmentGestionAdministradorSuperadmin fragment = FragmentGestionAdministradorSuperadmin.newInstance(
-                    nuevoAdmin,
-                    true,
-                    -1
-            );
-
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_layout, fragment)
-                    .addToBackStack(null)
-                    .commit();
+            Intent intent = new Intent(requireContext(), RegistroActivitySuperAdmin.class);
+            startActivity(intent);
         });
+
 
         return view;
     }

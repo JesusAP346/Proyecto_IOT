@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 
 public class PerfilSuperAdminActivity extends AppCompatActivity {
 
-    private TextView tvNombreCompleto, tvCorreo;
+    private TextView tvNombreCompleto, tvCorreo, gmail, numero, ciudadNatal;
     private ImageView btnBack, ivFotoPerfil;
     private MaterialButton btnEditarPerfil, btnCerrarSesion;
 
@@ -37,6 +37,10 @@ public class PerfilSuperAdminActivity extends AppCompatActivity {
         // Vincular vistas
         tvNombreCompleto = findViewById(R.id.tvNombreCompleto);
         tvCorreo = findViewById(R.id.tvCorreo);
+        gmail=findViewById(R.id.gmail);
+        numero=findViewById(R.id.numero);
+        ciudadNatal=findViewById(R.id.ciudadNatal);
+
         btnBack = findViewById(R.id.btnBack);
         ivFotoPerfil = findViewById(R.id.ivFotoPerfil);
         btnEditarPerfil = findViewById(R.id.btnEditarPerfil);
@@ -70,7 +74,9 @@ public class PerfilSuperAdminActivity extends AppCompatActivity {
                             String apellido = (usuario.getApellidos() != null) ? usuario.getApellidos() : "";
                             tvNombreCompleto.setText(nombre + " " + apellido);
                             tvCorreo.setText(usuario.getEmail());
-
+                            gmail.setText(usuario.getEmail());
+                            numero.setText(usuario.getNumCelular());
+                            ciudadNatal.setText(usuario.getDistrito() + " " +usuario.getProvincia() + " " + usuario.getDepartamento()   );
                             // ✅ Cargar imagen con Picasso si la URL no está vacía
                             if (usuario.getUrlFotoPerfil() != null && !usuario.getUrlFotoPerfil().isEmpty()) {
                                 Picasso.get()
