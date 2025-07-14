@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
-
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -25,16 +26,36 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
 
     private static final String CHANNEL_ID = "PAYMENT_NOTIFICATIONS";
     private static final int NOTIFICATION_ID = 1;
+    private static final String TAG = "PasarellaDePago";
 
     private RecyclerView recyclerView;
     private Button btnPagar;
     private TarjetaAdapter adapter;
+
+    // Firestore Database reference
+    private FirebaseFirestore db;
+
+    // Objeto reserva recibido desde el fragment
+    private Object reserva;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_pasarella_de_pago);
+
+        // Inicializar Firestore
+        db = FirebaseFirestore.getInstance();
+
+        // Obtener el objeto reserva del Intent
+        reserva = getIntent().getSerializableExtra("reserva");
+
+        if (reserva == null) {
+            Log.e(TAG, "No se recibió el objeto reserva");
+            Toast.makeText(this, "Error: No se encontró información de la reserva", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         // Crear canal de notificaciones
         createNotificationChannel();
@@ -89,20 +110,45 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
         Tarjeta tarjetaSeleccionada = adapter.getTarjetaSeleccionada();
 
         if (tarjetaSeleccionada != null) {
-            // Mostrar notificación de pago exitoso
-            mostrarNotificacionPagoExitoso(tarjetaSeleccionada);
+            // Deshabilitar botón para evitar múltiples clics
+            btnPagar.setEnabled(false);
+            btnPagar.setText("Procesando...");
 
-            // Mostrar mensaje temporal
-            Toast.makeText(this, "Pago procesado exitosamente", Toast.LENGTH_SHORT).show();
+            // Guardar reserva en Firebase Database
+            guardarReservaEnFirebase(tarjetaSeleccionada);
 
-            // Redirigir a ClienteBusquedaActivity
-            Intent intent = new Intent(this, ClienteBusquedaActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
         } else {
             Toast.makeText(this, "Por favor selecciona una tarjeta", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void guardarReservaEnFirebase(Tarjeta tarjetaSeleccionada) {
+        // Guardar la reserva en Firestore
+        db.collection("reservas")
+                .add(reserva)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Reserva guardada exitosamente en Firestore con ID: " + documentReference.getId());
+
+                    // Mostrar notificación de pago exitoso
+                    mostrarNotificacionPagoExitoso(tarjetaSeleccionada);
+
+                    // Mostrar mensaje temporal
+                    Toast.makeText(this, "Reserva procesada exitosamente", Toast.LENGTH_SHORT).show();
+
+                    // Redirigir a ClienteBusquedaActivity
+                    Intent intent = new Intent(this, ClienteBusquedaActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error al guardar reserva en Firestore", e);
+                    Toast.makeText(this, "Error al procesar el pago. Intenta nuevamente.", Toast.LENGTH_SHORT).show();
+
+                    // Restaurar estado del botón
+                    btnPagar.setEnabled(true);
+                    btnPagar.setText("Pagar");
+                });
     }
 
     private void createNotificationChannel() {
@@ -121,8 +167,8 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
     private void mostrarNotificacionPagoExitoso(Tarjeta tarjeta) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_check_circle)
-                .setContentTitle("Pago Exitoso")
-                .setContentText("Pago procesado con tarjeta " + tarjeta.getBanco() + " terminada en " +
+                .setContentTitle("Reserva Exitosa")
+                .setContentText("Reserva procesado con tarjeta " + tarjeta.getBanco() + " terminada en " +
                         tarjeta.getNumero().substring(tarjeta.getNumero().length() - 4))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);

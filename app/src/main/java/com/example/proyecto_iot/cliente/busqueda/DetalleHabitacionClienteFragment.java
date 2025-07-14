@@ -1,10 +1,12 @@
 package com.example.proyecto_iot.cliente.busqueda;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.LinearLayout;
@@ -15,7 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.chat.ChatBottomSheet;
+import com.example.proyecto_iot.cliente.pago.PasarellaDePago;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.text.DecimalFormat;
@@ -492,6 +497,10 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
             ChatBottomSheet chatBottomSheet = new ChatBottomSheet();
             chatBottomSheet.show(getParentFragmentManager(), "ChatBottomSheet");
         });
+        Button btnReservar = view.findViewById(R.id.btnReservar);
+        btnReservar.setOnClickListener(v -> {
+            procesarReserva();
+        });
     }
 
     // Método para obtener los servicios seleccionados (útil para el proceso de reserva)
@@ -512,5 +521,62 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
         }
 
         return precioHabitacion + precioServicios;
+    }
+    private void procesarReserva() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Log.e("RESERVA", "No hay usuario autenticado");
+            return;
+        }
+
+        if (habitacion == null || hotelId == null || fechaInicioGlobal == null || fechaFinGlobal == null) {
+            Log.e("RESERVA", "Datos insuficientes para crear la reserva");
+            return;
+        }
+
+        String idCliente = user.getUid();
+
+        int numeroDeNoches = calcularNumeroDeNoches(fechaInicioGlobal, fechaFinGlobal);
+        double precioTotal = getPrecioTotal(); // Ya lo tienes calculado en tu fragmento
+
+        // Construir la lista de servicios seleccionados con duración
+        List<ServicioAdicionalReserva> serviciosParaReserva = new ArrayList<>();
+        for (ServicioAdicional servicio : serviciosSeleccionados) {
+            serviciosParaReserva.add(new ServicioAdicionalReserva(servicio.getId(), numeroDeNoches));
+        }
+
+
+        String idReserva = "xd";
+
+
+
+        Reserva reserva = new Reserva();
+        reserva.setIdReserva(idReserva);
+        reserva.setIdHotel(hotelId);
+        reserva.setIdCliente(idCliente);
+        reserva.setIdHabitacion(habitacion.getId());
+        reserva.setEstado("Activo"); //
+        reserva.setFechaEntrada(fechaInicioGlobal);
+        reserva.setFechaSalida(fechaFinGlobal);
+        reserva.setCantNoches(numeroDeNoches);
+        String precioTotalStr = Double.toString(precioTotal);
+        reserva.setMonto(precioTotalStr);
+        reserva.setServiciosAdicionales(serviciosParaReserva);
+
+        Intent intent = new Intent(getContext(), PasarellaDePago.class);
+        intent.putExtra("reserva", reserva);
+        startActivity(intent);
+
+        Log.d("RESERVA", "Reserva creada:");
+        Log.d("RESERVA", "ID: " + reserva.getIdReserva());
+        Log.d("RESERVA", "Hotel ID: " + reserva.getIdHotel());
+        Log.d("RESERVA", "Cliente ID: " + reserva.getIdCliente());
+        Log.d("RESERVA", "Habitación ID: " + reserva.getIdHabitacion());
+        Log.d("RESERVA", "Estado: " + reserva.getEstado());
+        Log.d("RESERVA", "Fecha entrada: " + reserva.getFechaEntrada());
+        Log.d("RESERVA", "Fecha salida: " + reserva.getFechaSalida());
+        Log.d("RESERVA", "Cantidad de noches: " + reserva.getCantNoches());
+        Log.d("RESERVA", "Monto total: S/. " + reserva.getMonto());
+        Log.d("RESERVA", "Servicios adicionales seleccionados: " + serviciosParaReserva.size());
     }
 }
