@@ -31,6 +31,8 @@ import java.util.List;
 public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.OnHabitacionClickListener{
 
     private static final String ARG_HOTEL_ID = "hotel_id";
+    private String fechaInicioGlobal;
+    private String fechaFinGlobal;
 
     private RecyclerView recyclerHabitaciones;
     private FirebaseFirestore db;
@@ -51,7 +53,10 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
     public static DetalleHotelFragment newInstance(Hotel hotel) {
         DetalleHotelFragment fragment = new DetalleHotelFragment();
         Bundle args = new Bundle();
+        Log.d("DETALLE_HOTEL", "Fechas Recibidas 0W0 22222: " + hotel.getFechaInicio() + hotel.getFechaFin() );
         args.putString(ARG_HOTEL_ID, hotel.getId());
+        args.putString("fechaInicio", hotel.getFechaInicio());
+        args.putString("fechaFin", hotel.getFechaFin());
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,7 +66,7 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             String hotelId = getArguments().getString(ARG_HOTEL_ID);
-            Log.d("DETALLE_HOTEL", "Hotel ID recibido: " + hotelId);
+            Log.d("DETALLE_HOTEL", "Hotel ID XD recibido: " + hotelId);
         }
     }
 
@@ -70,6 +75,8 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detalle_hotel, container, false);
         db = FirebaseFirestore.getInstance();
+
+
 
         // Inicializar las nuevas vistas
         initViews(view);
@@ -88,7 +95,10 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
         if (getArguments() != null) {
             String hotelId = getArguments().getString(ARG_HOTEL_ID);
+            fechaInicioGlobal = getArguments().getString("fechaInicio");
+            fechaFinGlobal = getArguments().getString("fechaFin");
             Log.d("DETALLE_HOTEL", "Hotel ID recibido: " + hotelId);
+            Log.d("DETALLE_HOTEL", "Fechas recibidas en el fragmento: " + fechaInicioGlobal + " - " + fechaFinGlobal);
             cargarHabitaciones(hotelId);
             cargarDatosHotel(hotelId);
         }
@@ -238,6 +248,8 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
 
     public void onHabitacionClick(Habitacion2 habitacion){
+        habitacion.setFechaFin(fechaFinGlobal);
+        habitacion.setFechaInicio(fechaInicioGlobal);
         assert getArguments() != null;
         String hotelId = getArguments().getString(ARG_HOTEL_ID);
         DetalleHabitacionClienteFragment detalleHabitacionClienteFragment = DetalleHabitacionClienteFragment.newInstance(habitacion, hotelId);

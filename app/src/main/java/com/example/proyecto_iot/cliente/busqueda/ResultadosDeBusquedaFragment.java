@@ -42,6 +42,9 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
     private String mParam1;
     private String mParam2;
 
+    private String fechaInicioGlobal;
+    private String fechaFinGlobal;
+
     public ResultadosDeBusquedaFragment() {
         // Required empty public constructor
     }
@@ -81,6 +84,11 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
             double destinoLat = getArguments().getDouble("destinoLat", 0.0);
             double destinoLng = getArguments().getDouble("destinoLng", 0.0);
             String destinoPlaceId = getArguments().getString("destinoPlaceId", "");
+
+            fechaInicioGlobal = getArguments().getString("fechaInicio", "");
+            fechaFinGlobal = getArguments().getString("fechaFin", "");
+
+            Log.d("RESULTADOS_FECHAS", "Fechas guardadas: " + fechaInicioGlobal + " - " + fechaFinGlobal);
 
             Log.d("RESULTADOS", "Datos recibidos:");
             Log.d("RESULTADOS", "Destino: " + destinoBusqueda);
@@ -123,6 +131,12 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
             String destinoBusqueda = getArguments().getString("destino", "");
             String fechasBusqueda = getArguments().getString("fechas", "");
             String huespedesBusqueda = getArguments().getString("huespedes", "");
+
+            fechaInicioGlobal = getArguments().getString("fechaInicio");
+            fechaFinGlobal = getArguments().getString("fechaFin");
+
+            Log.d("ResultadosFragment", ", fechaInicio OWO= " + fechaInicioGlobal
+                    + ", fechaFin OWO = " + fechaFinGlobal);
 
             double destinoLat = getArguments().getDouble("destinoLat", 0.0);
             double destinoLng = getArguments().getDouble("destinoLng", 0.0);
@@ -406,7 +420,10 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
 
     @Override
     public void onHotelClick(Hotel hotel, int position) {
+        hotel.setFechaInicio(fechaInicioGlobal);
+        hotel.setFechaFin(fechaFinGlobal);
         DetalleHotelFragment detalleFragment = DetalleHotelFragment.newInstance(hotel);
+
 
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_busqueda, detalleFragment)

@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +62,9 @@ public class BusquedaFragment extends Fragment{
     private String mParam2;
     private TextView txtFechas;
     private TextView txtHuespedes;
+
+    private Date fechaInicioCompleta;
+    private Date fechaFinCompleta;
     private Button btnBuscar;
 
     private SugerenciaItem destinoSeleccionado;
@@ -130,41 +134,74 @@ public class BusquedaFragment extends Fragment{
         txtFechas.setOnClickListener(v -> {
             ocultarSugerencias();
 
-            Calendar today = Calendar.getInstance();
-            today.set(Calendar.HOUR_OF_DAY, 0);
-            today.set(Calendar.MINUTE, 0);
-            today.set(Calendar.SECOND, 0);
-            today.set(Calendar.MILLISECOND, 0);
+            // Usar zona UTC para alinear con el MaterialDatePicker
+            long hoyUtc = MaterialDatePicker.todayInUtcMilliseconds();
 
+            // Crear calendario desde hoy en UTC
+            Calendar today = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            today.setTimeInMillis(hoyUtc);
+
+            // Configurar restricciones: permitir solo fechas desde hoy
             CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
-            constraintsBuilder.setValidator(DateValidatorPointForward.from(today.getTimeInMillis()));
+            constraintsBuilder.setValidator(DateValidatorPointForward.from(hoyUtc));
 
+            // Selección por defecto: hoy y mañana
+            long startMillis = today.getTimeInMillis();
+            Calendar tomorrow = (Calendar) today.clone();
+            tomorrow.add(Calendar.DATE, 1);
+            long endMillis = tomorrow.getTimeInMillis();
+
+            // Construir el selector de rango de fechas
             MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
             builder.setTitleText("Selecciona rango de fechas");
             builder.setCalendarConstraints(constraintsBuilder.build());
-            builder.setSelection(Pair.create(
-                    today.getTimeInMillis(),
-                    today.getTimeInMillis() + (24 * 60 * 60 * 1000)
-            ));
+            builder.setSelection(new Pair<>(startMillis, endMillis));
 
             MaterialDatePicker<Pair<Long, Long>> picker = builder.build();
 
             picker.addOnPositiveButtonClickListener(selection -> {
                 if (selection != null) {
-                    Long startDate = selection.first;
-                    Long endDate = selection.second;
+                    Long startDate = selection.first + 24 * 60 * 60 * 1000;
+                    Long endDate = selection.second + 24 * 60 * 60 * 1000;
 
                     if (endDate <= startDate) {
                         Toast.makeText(getContext(), "La fecha de salida debe ser posterior a la de entrada", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    // Ajuste visual: mostrar bien la fecha fin
-                    SimpleDateFormat formato = new SimpleDateFormat("dd MMM", Locale.getDefault());
-                    String inicio = formato.format(new Date(startDate));
-                    String fin = formato.format(new Date(endDate - 1));
+                    // Mostrar fechas en hora local (Perú)
+                    TimeZone zonaPeru = TimeZone.getTimeZone("America/Lima");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+                    sdf.setTimeZone(zonaPeru);
+                    SimpleDateFormat sdfShort = new SimpleDateFormat("dd MMM", Locale.getDefault());
+                    sdfShort.setTimeZone(zonaPeru);
+
+                    fechaInicioCompleta = new Date(startDate);
+                    fechaFinCompleta = new Date(endDate);
+                    Date fechaInicio = new Date(startDate);
+                    Date fechaFin = new Date(endDate);
+
+                    Calendar calInicio = Calendar.getInstance(zonaPeru);
+                    calInicio.setTime(fechaInicio);
+
+                    Calendar calFin = Calendar.getInstance(zonaPeru);
+                    calFin.setTime(fechaFin);
+
+                    String inicio, fin;
+
+                    if (calInicio.get(Calendar.YEAR) != calFin.get(Calendar.YEAR)) {
+                        inicio = sdf.format(fechaInicio);
+                        fin = sdf.format(fechaFin);
+                    } else if (calInicio.get(Calendar.MONTH) != calFin.get(Calendar.MONTH)) {
+                        inicio = sdfShort.format(fechaInicio);
+                        fin = sdf.format(fechaFin);
+                    } else {
+                        inicio = sdfShort.format(fechaInicio);
+                        fin = sdfShort.format(fechaFin);
+                    }
 
                     txtFechas.setText(inicio + " - " + fin);
+
                     fechasCompletas = true;
                     validarFormulario();
                 }
@@ -172,6 +209,7 @@ public class BusquedaFragment extends Fragment{
 
             picker.show(getParentFragmentManager(), picker.toString());
         });
+
 
 
         txtHuespedes.setOnClickListener(v -> {
@@ -226,6 +264,12 @@ public class BusquedaFragment extends Fragment{
                     bundle.putDouble("destinoLat", destinoSeleccionado.getLat());
                     bundle.putDouble("destinoLng", destinoSeleccionado.getLng());
                     bundle.putString("destinoPlaceId", destinoSeleccionado.getPlaceId());
+                }
+
+                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                if (fechaInicioCompleta != null && fechaFinCompleta != null) {
+                    bundle.putString("fechaInicio", formatoFecha.format(fechaInicioCompleta));
+                    bundle.putString("fechaFin", formatoFecha.format(fechaFinCompleta));
                 }
 
                 // Crear fragment y pasar datos

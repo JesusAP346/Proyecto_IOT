@@ -19,13 +19,21 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class DetalleHabitacionClienteFragment extends Fragment implements ServicioAdicionalAdapter.OnServicioSeleccionadoListener {
 
     private static final String ARG_HABITACION = "habitacion";
     private static final String ARG_HOTEL_ID = "hotel_id";
+    private String fechaInicioGlobal;
+    private String fechaFinGlobal;
+
     private Habitacion2 habitacion;
     private String hotelId;
 
@@ -33,6 +41,7 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
     private LinearLayout indicatorContainer;
     private TextView textTitulo, textPrecio, textCapacidad, textTamanho, textCantidadHabitaciones;
     private TextView textPrecioTotal, textServiciosSeleccionados, textNoServiciosAdicionales;
+    private TextView textFechasEstadia; // Nueva TextView para mostrar fechas
     private LinearLayout equipamientoContainer, serviciosContainer, layoutServiciosSeleccionados;
     private RecyclerView recyclerServiciosAdicionales;
 
@@ -50,6 +59,8 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
         Bundle args = new Bundle();
         args.putSerializable(ARG_HABITACION, habitacion);
         args.putString(ARG_HOTEL_ID, hotelId);
+        args.putString("fechaInicio", habitacion.getFechaInicio());
+        args.putString("fechaFin", habitacion.getFechaFin());
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +73,8 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
         if (getArguments() != null) {
             habitacion = (Habitacion2) getArguments().getSerializable(ARG_HABITACION);
             hotelId = getArguments().getString(ARG_HOTEL_ID);
+            fechaInicioGlobal = getArguments().getString("fechaInicio");
+            fechaFinGlobal = getArguments().getString("fechaFin");
             if (habitacion != null) {
                 Log.d("DETALLE_HABITACION", "Habitación recibida: ID = " + habitacion.getId());
                 Log.d("DETALLE_HABITACION", "Hotel ID: " + hotelId);
@@ -99,6 +112,7 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
         textPrecioTotal = view.findViewById(R.id.textPrecioTotal);
         textServiciosSeleccionados = view.findViewById(R.id.textServiciosSeleccionados);
         textNoServiciosAdicionales = view.findViewById(R.id.textNoServiciosAdicionales);
+        textFechasEstadia = view.findViewById(R.id.textFechasEstadia); // Inicializar nueva TextView
         equipamientoContainer = view.findViewById(R.id.equipamientoContainer);
         serviciosContainer = view.findViewById(R.id.serviciosContainer);
         layoutServiciosSeleccionados = view.findViewById(R.id.layoutServiciosSeleccionados);
@@ -173,20 +187,92 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
         actualizarServiciosSeleccionados();
     }
 
+    // Método para calcular el número de noches entre dos fechas
+    private int calcularNumeroDeNoches(String fechaInicio, String fechaFin) {
+        try {
+            // Ajusta el formato según el formato de tus fechas
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+            Date dateInicio = sdf.parse(fechaInicio);
+            Date dateFin = sdf.parse(fechaFin);
+
+            if (dateInicio != null && dateFin != null) {
+                long diferenciaMilisegundos = dateFin.getTime() - dateInicio.getTime();
+                int numeroNoches = (int) (diferenciaMilisegundos / (1000 * 60 * 60 * 24)); // Convertir a días
+
+                Log.d("DETALLE_HABITACION", "Fecha inicio: " + fechaInicio + ", Fecha fin: " + fechaFin);
+                Log.d("DETALLE_HABITACION", "Diferencia en milisegundos: " + diferenciaMilisegundos);
+                Log.d("DETALLE_HABITACION", "Número de noches calculado: " + numeroNoches);
+
+                return numeroNoches > 0 ? numeroNoches : 1; // Mínimo 1 noche
+            }
+        } catch (ParseException e) {
+            Log.e("DETALLE_HABITACION", "Error al parsear fechas: " + e.getMessage());
+        }
+
+        return 1; // Valor por defecto: 1 noche
+    }
+
+    // Método para formatear fechas para mostrar al usuario
+    private String formatearFechaParaMostrar(String fecha) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd 'de' MMMM 'del' yyyy", new Locale("es", "ES"));
+
+            Date date = inputFormat.parse(fecha);
+            if (date != null) {
+                return outputFormat.format(date);
+            }
+        } catch (ParseException e) {
+            Log.e("DETALLE_HABITACION", "Error al formatear fecha: " + e.getMessage());
+        }
+        return fecha; // Retornar fecha original si hay error
+    }
+
+    // Método para mostrar las fechas de estadía
+    private void mostrarFechasEstadia() {
+        if (fechaInicioGlobal != null && fechaFinGlobal != null) {
+            String fechaEntrada = formatearFechaParaMostrar(fechaInicioGlobal);
+            String fechaSalida = formatearFechaParaMostrar(fechaFinGlobal);
+
+            String textoFechas = "Entrada: " + fechaEntrada + " - Salida: " + fechaSalida;
+            textFechasEstadia.setText(textoFechas);
+        }
+    }
+
+    // Método modificado para actualizar el precio total
     private void actualizarPrecioTotal() {
         if (habitacion == null) return;
 
-        double precioHabitacion = habitacion.getPrecioPorNoche();
-        double precioServicios = 0;
+        // Calcular número de noches
+        int numeroDeNoches = calcularNumeroDeNoches(fechaInicioGlobal, fechaFinGlobal);
 
+        // Precio de la habitación por el número de noches
+        double precioHabitacion = habitacion.getPrecioPorNoche() * numeroDeNoches;
+
+        // Precio de servicios adicionales MULTIPLICADO por el número de noches
+        double precioServicios = 0;
         for (ServicioAdicional servicio : serviciosSeleccionados) {
-            precioServicios += servicio.getPrecio();
+            precioServicios += servicio.getPrecio() * numeroDeNoches;
         }
 
         double precioTotal = precioHabitacion + precioServicios;
 
         DecimalFormat df = new DecimalFormat("#,##0.00");
-        textPrecioTotal.setText("Total: S/. " + df.format(precioTotal));
+
+        // Mostrar información más detallada
+        String textoTotal = "Total: S/. " + df.format(precioTotal);
+        if (numeroDeNoches > 1) {
+            textoTotal += " (" + numeroDeNoches + " noches)";
+        }
+
+        textPrecioTotal.setText(textoTotal);
+
+        Log.d("DETALLE_HABITACION", "Número de noches: " + numeroDeNoches +
+                ", Precio por noche: " + habitacion.getPrecioPorNoche() +
+                ", Precio total habitación: " + precioHabitacion +
+                ", Precio servicios (por " + numeroDeNoches + " noches): " + precioServicios +
+                ", Precio total final: " + precioTotal);
     }
 
     private void actualizarServiciosSeleccionados() {
@@ -197,11 +283,18 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
 
             StringBuilder serviciosText = new StringBuilder();
             DecimalFormat df = new DecimalFormat("#,##0.00");
+            int numeroDeNoches = calcularNumeroDeNoches(fechaInicioGlobal, fechaFinGlobal);
 
             for (int i = 0; i < serviciosSeleccionados.size(); i++) {
                 ServicioAdicional servicio = serviciosSeleccionados.get(i);
+                double precioTotalServicio = servicio.getPrecio() * numeroDeNoches;
+
                 serviciosText.append("• ").append(servicio.getNombre())
-                        .append(" - S/. ").append(df.format(servicio.getPrecio()));
+                        .append(" - S/. ").append(df.format(precioTotalServicio));
+
+                if (numeroDeNoches > 1) {
+                    serviciosText.append(" (").append(numeroDeNoches).append(" noches)");
+                }
 
                 if (i < serviciosSeleccionados.size() - 1) {
                     serviciosText.append("\n");
@@ -274,6 +367,7 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
             capacidadText += ", " + habitacion.getCapacidadNinos() + " niños";
         }
         textCapacidad.setText(capacidadText);
+        Log.d("DETALLE_HABBBBBBBBB", "Fechas recibidas en el fragmento: " + fechaInicioGlobal + " - " + fechaFinGlobal);
 
         // Tamaño
         textTamanho.setText(habitacion.getTamanho() + " m²");
@@ -289,6 +383,9 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
 
         // Servicios
         populateServicios();
+
+        // Mostrar fechas de estadía
+        mostrarFechasEstadia();
 
         // Inicializar precio total
         actualizarPrecioTotal();
@@ -402,13 +499,16 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
         return new ArrayList<>(serviciosSeleccionados);
     }
 
-    // Método para obtener el precio total
+    // Método modificado para obtener el precio total
     public double getPrecioTotal() {
-        double precioHabitacion = habitacion != null ? habitacion.getPrecioPorNoche() : 0;
+        if (habitacion == null) return 0;
+
+        int numeroDeNoches = calcularNumeroDeNoches(fechaInicioGlobal, fechaFinGlobal);
+        double precioHabitacion = habitacion.getPrecioPorNoche() * numeroDeNoches;
         double precioServicios = 0;
 
         for (ServicioAdicional servicio : serviciosSeleccionados) {
-            precioServicios += servicio.getPrecio();
+            precioServicios += servicio.getPrecio() * numeroDeNoches; // Multiplicar por noches
         }
 
         return precioHabitacion + precioServicios;

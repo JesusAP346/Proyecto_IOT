@@ -237,6 +237,17 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/textFechasEstadia"
+                        android:text=" "
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
                         android:id="@+id/textPrecioTotal"
                         android:text="Total: S/. 365.00"
                         android:textSize="18sp"
@@ -244,7 +255,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="6dp"
                         android:layout_marginBottom="16dp" />
 
                     <Button
