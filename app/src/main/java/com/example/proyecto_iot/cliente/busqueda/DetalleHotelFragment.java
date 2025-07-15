@@ -84,15 +84,6 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         recyclerHabitaciones = view.findViewById(R.id.recyclerHabitaciones);
         recyclerHabitaciones.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        List<Habitacion> lista = new ArrayList<>();
-        HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, (this), ARG_HOTEL_ID);
-        recyclerHabitaciones.setAdapter(adapter);
-
-        // Tu código existente para los tabs
-        setupTabs(view);
-
-        textTituloHotel = view.findViewById(R.id.textTituloHotel);
-
         if (getArguments() != null) {
             String hotelId = getArguments().getString(ARG_HOTEL_ID);
             fechaInicioGlobal = getArguments().getString("fechaInicio");
@@ -102,6 +93,17 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
             cargarHabitaciones(hotelId);
             cargarDatosHotel(hotelId);
         }
+
+        List<Habitacion> lista = new ArrayList<>();
+        HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, (this), ARG_HOTEL_ID, fechaInicioGlobal, fechaFinGlobal);
+        recyclerHabitaciones.setAdapter(adapter);
+
+        // Tu código existente para los tabs
+        setupTabs(view);
+
+        textTituloHotel = view.findViewById(R.id.textTituloHotel);
+
+
 
         ImageButton btnBack = view.findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> {
@@ -328,7 +330,7 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                         lista.add(0, masBarata);
                     }
 
-                    HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, this, hotelId);
+                    HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, this, hotelId, fechaInicioGlobal, fechaFinGlobal);
                     recyclerHabitaciones.setAdapter(adapter);
                 })
                 .addOnFailureListener(e -> {

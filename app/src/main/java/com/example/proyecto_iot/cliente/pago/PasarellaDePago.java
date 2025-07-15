@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
+import com.example.proyecto_iot.cliente.busqueda.Reserva;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -36,7 +38,7 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
     private FirebaseFirestore db;
 
     // Objeto reserva recibido desde el fragment
-    private Object reserva;
+    private Reserva reserva;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,20 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
         db = FirebaseFirestore.getInstance();
 
         // Obtener el objeto reserva del Intent
-        reserva = getIntent().getSerializableExtra("reserva");
+        reserva = (Reserva) getIntent().getSerializableExtra("reserva");
+
+        TextView textMontoTotal = findViewById(R.id.textMontoTotal);
+        TextView textCantNoches = findViewById(R.id.textCantNoches);
+
+        if (reserva != null) {
+            double montoDouble = Double.parseDouble(reserva.getMonto()); // convertir String a double
+            String montoStr = String.format("Monto total: S/. %.2f", montoDouble);
+            String nochesStr = "Noches: " + reserva.getCantNoches();
+
+            textMontoTotal.setText(montoStr);
+            textCantNoches.setText(nochesStr);
+        }
+
 
         if (reserva == null) {
             Log.e(TAG, "No se recibió el objeto reserva");
