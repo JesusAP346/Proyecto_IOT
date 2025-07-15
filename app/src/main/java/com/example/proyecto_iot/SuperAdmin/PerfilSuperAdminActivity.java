@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 
 public class PerfilSuperAdminActivity extends AppCompatActivity {
 
-    private TextView tvNombreCompleto, tvCorreo, gmail, numero, ciudadNatal;
+    private TextView tvNombreCompleto, tvCorreo, gmail, numero, ciudadNatal,dni;
     private ImageView btnBack, ivFotoPerfil;
     private MaterialButton btnEditarPerfil, btnCerrarSesion;
 
@@ -39,6 +39,7 @@ public class PerfilSuperAdminActivity extends AppCompatActivity {
         tvCorreo = findViewById(R.id.tvCorreo);
         gmail=findViewById(R.id.gmail);
         numero=findViewById(R.id.numero);
+        dni=findViewById(R.id.dni);
         ciudadNatal=findViewById(R.id.ciudadNatal);
 
         btnBack = findViewById(R.id.btnBack);
@@ -76,6 +77,7 @@ public class PerfilSuperAdminActivity extends AppCompatActivity {
                             tvCorreo.setText(usuario.getEmail());
                             gmail.setText(usuario.getEmail());
                             numero.setText(usuario.getNumCelular());
+                            dni.setText(usuario.getNumDocumento());
                             ciudadNatal.setText(usuario.getDistrito() + " " +usuario.getProvincia() + " " + usuario.getDepartamento()   );
                             // ✅ Cargar imagen con Picasso si la URL no está vacía
                             if (usuario.getUrlFotoPerfil() != null && !usuario.getUrlFotoPerfil().isEmpty()) {

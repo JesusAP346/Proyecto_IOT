@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutPerfil"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:padding="24dp"
-    android:background="@android:color/white">
+    tools:background="#E7DACF">
 
     <!-- Encabezado -->
     <ImageView
         android:id="@+id/btnBack"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:src="@drawable/ic_arrow_back"
         android:contentDescription="Atrás"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:text="Perfil"
+        android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#000000"
-        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
         app:layout_constraintStart_toEndOf="@id/btnBack"
-        app:layout_constraintTop_toTopOf="@id/btnBack"
-        app:layout_constraintBottom_toBottomOf="@id/btnBack" />
+        app:layout_constraintTop_toTopOf="@id/btnBack" />
 
     <!-- Foto de perfil -->
     <com.google.android.material.imageview.ShapeableImageView
@@ -41,57 +42,100 @@
         android:contentDescription="Foto de perfil"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_generic_user"
-        app:shapeAppearanceOverlay="@style/CircleImageView"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/btnBack"
+        app:shapeAppearanceOverlay="@style/CircleImageView" />
 
     <!-- Nombre -->
     <TextView
         android:id="@+id/tvNombreCompleto"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
         android:text="Nombre Completo"
+        android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#000000"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/ivFotoPerfil"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/ivFotoPerfil" />
 
     <!-- Correo -->
     <TextView
         android:id="@+id/tvCorreo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="correo@ejemplo.com"
-        android:textSize="16sp"
-        android:textColor="#555555"
-        android:gravity="center"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/tvNombreCompleto"
+        android:gravity="center"
+        android:text="correo@ejemplo.com"
+        android:textColor="#555555"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tvNombreCompleto" />
 
     <!-- Sección de información estilo Facebook -->
     <LinearLayout
         android:id="@+id/layoutItems"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvCorreo"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/tvCorreo">
 
         <!-- Ítem 1 -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingVertical="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_dni" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/dni"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="71761570"
+                    android:textColor="#000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Identificación"
+                    android:textColor="#777"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingVertical="12dp">
 
             <ImageView
@@ -102,9 +146,9 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginStart="12dp"
                 android:layout_weight="1"
-                android:layout_marginStart="12dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/ciudadNatal"
@@ -118,8 +162,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ciudad actual"
-                    android:textSize="12sp"
-                    android:textColor="#777" />
+                    android:textColor="#777"
+                    android:textSize="12sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -133,21 +177,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingVertical="12dp">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/fui_ic_googleg_color_24dp" />
+                android:src="@drawable/ic_email" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginStart="12dp"
                 android:layout_weight="1"
-                android:layout_marginStart="12dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/gmail"
@@ -176,8 +220,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingVertical="12dp">
 
             <ImageView
@@ -188,9 +232,9 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginStart="12dp"
                 android:layout_weight="1"
-                android:layout_marginStart="12dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/numero"
@@ -204,8 +248,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Móvil"
-                    android:textSize="12sp"
-                    android:textColor="#777" />
+                    android:textColor="#777"
+                    android:textSize="12sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -219,8 +263,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingVertical="12dp">
 
             <ImageView
@@ -231,9 +275,9 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginStart="12dp"
                 android:layout_weight="1"
-                android:layout_marginStart="12dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -263,21 +307,21 @@
         android:id="@+id/layoutBotones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
         android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/layoutItems"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/layoutItems">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEditarPerfil"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="Editar perfil"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             app:iconPadding="8dp"
-            android:layout_marginEnd="8dp" />
+            tools:backgroundTint="#F0C47C" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCerrarSesion"
