@@ -4,25 +4,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#FFFFFF">
+    android:background="@color/background_gradient">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_registrar_servicio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="+ Registrar Servicio"
-        android:textColor="@android:color/black"
-        android:textSize="15sp"
-        app:backgroundTint="#FACEC6"
-        app:cornerRadius="12dp"
-        app:strokeColor="#772f1a"
-        app:strokeWidth="1dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerServicios"
+    <!-- Contenedor principal con RelativeLayout -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="12dp" />
+        android:layout_weight="1"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <!-- RecyclerView con margen inferior para que no lo tape el FAB -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerServicios"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="68dp"
+            android:clipToPadding="false"
+            android:scrollbars="none" />
+
+        <!-- Mensaje cuando no hay habitaciones -->
+        <LinearLayout
+            android:id="@+id/layoutMensajeVacio"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lo sentimos, aún no ha registrado servicios\nde las habitaciones"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp" />
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:src="@drawable/servicio_sad"
+                android:scaleType="centerInside"
+                android:layout_marginTop="24dp" />
+        </LinearLayout>
+        <!-- FAB flotante abajo a la derecha -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_registrar_servicio"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_add"
+            app:backgroundTint="#FACEC6"
+            app:tint="@android:color/black"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp" />
+    </RelativeLayout>
 </LinearLayout>

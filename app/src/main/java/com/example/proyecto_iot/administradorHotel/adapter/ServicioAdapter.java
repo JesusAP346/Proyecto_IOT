@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.administradorHotel.dto.ServicioDto;
 import com.example.proyecto_iot.administradorHotel.entity.Servicio;
+import com.example.proyecto_iot.administradorHotel.entity.ServicioHotel;
 import com.example.proyecto_iot.databinding.ItemServicioAdminBinding;
 
 import java.util.List;
@@ -16,18 +18,16 @@ import java.util.List;
 public class ServicioAdapter extends RecyclerView.Adapter<ServicioAdapter.ServicioViewHolder> {
 
     public interface OnItemClickListener {
-        void onVerDetallesClick(Servicio servicio);
+        void onVerDetallesClick(ServicioHotel servicio);
     }
 
-    private final List<ServicioDto> listaServicioDto;
-    private final List<Servicio> listaServicioCompleta;
+    private final List<ServicioHotel> listaServicios;
     private final Context context;
     private final OnItemClickListener listener;
 
-    public ServicioAdapter(List<ServicioDto> listaServicioDto, List<Servicio> listaServicioCompleta,
+    public ServicioAdapter(List<ServicioHotel> listaServicios,
                            Context context, OnItemClickListener listener) {
-        this.listaServicioDto = listaServicioDto;
-        this.listaServicioCompleta = listaServicioCompleta;
+        this.listaServicios = listaServicios;
         this.context = context;
         this.listener = listener;
     }
@@ -42,11 +42,19 @@ public class ServicioAdapter extends RecyclerView.Adapter<ServicioAdapter.Servic
 
     @Override
     public void onBindViewHolder(@NonNull ServicioViewHolder holder, int position) {
-        ServicioDto dto = listaServicioDto.get(position);
-        Servicio servicio = listaServicioCompleta.get(position);
 
-        holder.binding.textoTitulo.setText(dto.getNombre());
-        holder.binding.imagenServicio.setImageResource(dto.getImagenResId());
+        ServicioHotel servicio = listaServicios.get(position);
+
+        holder.binding.textoTitulo.setText(servicio.getNombre());
+
+        // Cargar la primera imagen desde la lista de fotos
+        if (servicio.getFotosUrls() != null && !servicio.getFotosUrls().isEmpty()) {
+            Glide.with(context)
+                    .load(servicio.getFotosUrls().get(0))
+                    .into(holder.binding.imagenServicio);
+        } else {
+            holder.binding.imagenServicio.setImageResource(android.R.drawable.ic_menu_gallery); // imagen por defecto
+        }
 
         holder.binding.btnVerDetalles.setOnClickListener(v -> {
             listener.onVerDetallesClick(servicio);
@@ -55,7 +63,7 @@ public class ServicioAdapter extends RecyclerView.Adapter<ServicioAdapter.Servic
 
     @Override
     public int getItemCount() {
-        return listaServicioDto.size();
+        return listaServicios.size();
     }
 
     public static class ServicioViewHolder extends RecyclerView.ViewHolder {

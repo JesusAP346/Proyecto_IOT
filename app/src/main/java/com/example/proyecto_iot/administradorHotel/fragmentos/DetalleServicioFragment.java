@@ -9,14 +9,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.administradorHotel.entity.HabitacionHotel;
 import com.example.proyecto_iot.administradorHotel.entity.Servicio;
+import com.example.proyecto_iot.administradorHotel.entity.ServicioHotel;
 import com.example.proyecto_iot.databinding.FragmentDetalleServicioBinding;
+
+import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetalleServicioFragment extends Fragment {
 
     private FragmentDetalleServicioBinding binding;
 
-    public DetalleServicioFragment() {}
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,25 +39,50 @@ public class DetalleServicioFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Recuperar el objeto Servicio del Bundle
-        Servicio servicio = (Servicio) getArguments().getSerializable("servicio");
+        // Obtener datos enviados
+        ServicioHotel servicio = (ServicioHotel) getArguments().getSerializable("servicio");
 
         if (servicio != null) {
-            binding.editTextNombre.setText(servicio.getNombre());
-            binding.editTextDescripcion.setText(servicio.getDescripcion());
-            binding.editTextPrecio.setText(String.valueOf(servicio.getPrecio()));
+            // Llenar campos
 
-            // Cargar imágenes si hay
-            if (!servicio.getFotosServicioIds().isEmpty()) {
-                binding.img1.setImageResource(servicio.getFotosServicioIds().get(0));
-                if (servicio.getFotosServicioIds().size() > 1) {
-                    binding.img2.setImageResource(servicio.getFotosServicioIds().get(1));
-                } else {
-                    binding.img2.setVisibility(View.GONE);
+            binding.textTipoNombre.setText(servicio.getNombre());
+
+            double precioValor = servicio.getPrecio(); // asegúrate que sea double o float
+            String precio = "S/ " + String.format("%.2f", precioValor);
+            binding.textPrecio.setText(precio);
+
+            binding.textTipoDescripcion.setText(servicio.getDescripcion());
+
+            ImageCarousel carrusel = binding.carruselImagenes;
+
+            if (servicio.getFotosUrls() != null && !servicio.getFotosUrls().isEmpty()) {
+                List<CarouselItem> items = new ArrayList<>();
+
+                for (String url : servicio.getFotosUrls()) {
+                    items.add(new CarouselItem(url));
                 }
+                carrusel.setCarouselType(CarouselType.BLOCK);
+                carrusel.setAutoPlay(true);
+                carrusel.setData(items);
+            } else {
+                carrusel.setVisibility(View.GONE);
             }
+
         }
 
+        binding.btnActualizarInfo.setOnClickListener(v -> {
+            EditarServicioFragment actualizarFragment = new EditarServicioFragment();
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("servicio", servicio);
+            actualizarFragment.setArguments(bundle);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, actualizarFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
         // Acción del botón de retroceso
         binding.backdetalleservicio.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().popBackStack();

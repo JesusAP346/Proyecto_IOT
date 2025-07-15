@@ -83,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="40dp"
-                    android:text="Información"
+                    android:text="Servicios"
                     android:textColor="#000000"
                     app:strokeColor="#E9D79E"
                     app:strokeWidth="0dp"
@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="40dp"
-                    android:text="Información"
+                    android:text="Reportes"
                     android:textColor="#000000"
                     app:strokeColor="#E9D79E"
                     app:strokeWidth="0dp"
@@ -112,56 +112,7 @@
                     android:insetRight="0dp"
                     android:layout_marginEnd="8dp" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_info_nada"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:text="Información"
-                    android:textColor="#000000"
-                    app:strokeColor="#E9D79E"
-                    app:strokeWidth="0dp"
-                    app:cornerRadius="14dp"
-                    app:backgroundTint="#FDF9ED"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:insetLeft="0dp"
-                    android:insetRight="0dp"
-                    android:layout_marginEnd="8dp"  />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_habitaciones_nada"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:text="Información"
-                    android:textColor="#000000"
-                    app:strokeColor="#E9D79E"
-                    app:strokeWidth="0dp"
-                    app:cornerRadius="14dp"
-                    app:backgroundTint="#FDF9ED"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:insetLeft="0dp"
-                    android:insetRight="0dp"
-                    android:layout_marginEnd="8dp"  />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_servicios_nada"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:text="Información"
-                    android:textColor="#000000"
-                    app:strokeColor="#E9D79E"
-                    app:strokeWidth="0dp"
-                    app:cornerRadius="14dp"
-                    app:backgroundTint="#FDF9ED"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:insetLeft="0dp"
-                    android:insetRight="0dp"
-                    android:layout_marginEnd="8dp"  />
 
             </LinearLayout>
         </HorizontalScrollView>
