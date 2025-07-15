@@ -1,58 +1,58 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:padding="16dp">
+    android:background="@color/background_gradient">
 
-    <!-- TÍTULO -->
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reservas"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- SCROLL DE OPCIONES CENTRADO -->
-    <HorizontalScrollView
-        android:id="@+id/scrollOptions"
+    <!-- CONTENEDOR TÍTULO + SCROLL USANDO LINEARLAYOUT -->
+    <LinearLayout
+        android:id="@+id/encabezadoContainer"
+        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:overScrollMode="always"
-        android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
+        android:paddingTop="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Contenedor que ocupa todo el ancho -->
-        <FrameLayout
+        <!-- TÍTULO -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reservas"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <!-- SCROLL DE OPCIONES -->
+        <HorizontalScrollView
+            android:id="@+id/scrollOptions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:overScrollMode="always"
+            android:scrollbars="none"
+            android:layout_marginTop="12dp">
 
-            <!-- Botones centrados -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
+                <!-- BOTONES -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_historial"
+                    android:id="@+id/btn_finalizadas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="40dp"
                     android:text="Finalizadas"
                     android:textColor="#000000"
                     app:strokeColor="#E9D79E"
-                    app:strokeWidth="1dp"
+                    app:strokeWidth="0dp"
                     app:cornerRadius="14dp"
                     app:backgroundTint="#FDF9ED"
                     android:insetTop="0dp"
@@ -62,54 +62,55 @@
                     android:layout_marginEnd="8dp" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_todas"
+                    android:id="@+id/btn_en_curso"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="40dp"
                     android:text="En curso"
                     android:textColor="#000000"
                     app:strokeColor="#E9D79E"
-                    app:strokeWidth="1dp"
+                    app:strokeWidth="0dp"
                     app:cornerRadius="14dp"
                     app:backgroundTint="#FDF9ED"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:insetLeft="0dp"
                     android:insetRight="0dp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="8dp"  />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_reservas"
+                    android:id="@+id/btn_futuras"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="40dp"
                     android:text="Futuras"
                     android:textColor="#000000"
                     app:strokeColor="#E9D79E"
-                    app:strokeWidth="1dp"
+                    app:strokeWidth="0dp"
                     app:cornerRadius="14dp"
                     app:backgroundTint="#FDF9ED"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:insetLeft="0dp"
                     android:insetRight="0dp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="8dp"  />
 
             </LinearLayout>
-        </FrameLayout>
-    </HorizontalScrollView>
+        </HorizontalScrollView>
+    </LinearLayout>
 
-    <!-- FRAME DE FRAGMENTS HIJOS CENTRADO -->
+    <!-- FRAME CONTAINER -->
     <FrameLayout
         android:id="@+id/hotel_dynamic_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/scrollOptions"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="1.0"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/encabezadoContainer"
+        app:layout_constraintVertical_bias="0.0"
+        android:background="@color/background_gradient"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

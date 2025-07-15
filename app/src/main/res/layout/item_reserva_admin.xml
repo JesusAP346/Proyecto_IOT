@@ -1,133 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="-8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="6dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="3dp"
+    android:layout_marginBottom="-4dp"
     app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="@android:color/white"
-    android:foreground="@drawable/card_border_shadow">
+    android:scrollbars="none" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="12dp">
 
-        <!-- Info izquierda -->
-        <LinearLayout
-            android:layout_width="215dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/nombreHuesped"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Nombre"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Tipo de habitación"
-                android:textColor="#666666"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/tipoHabitacion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Deluxe"
-                android:textColor="#000000"
-                android:textSize="13sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="15dp"
-                android:background="#CCCCCC" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <!-- Check in -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Check in"
-                        android:textColor="#666666"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/checkin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="24/04/2025"
-                        android:textColor="#000000"
-                        android:textSize="13sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginEnd="15dp"
-                        android:background="#CCCCCC" />
-                </LinearLayout>
-
-                <!-- Check out -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Check out"
-                        android:textColor="#666666"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/checkout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="26/04/2025"
-                        android:textColor="#000000"
-                        android:textSize="13sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginEnd="15dp"
-                        android:background="#CCCCCC" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- Botón -->
+        <!-- MaterialButton Ver Detalles arriba a la derecha -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnVerDetalles"
             android:layout_width="110dp"
@@ -135,13 +23,164 @@
             android:minHeight="34dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="2dp"
-            android:layout_gravity="center_vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:text="Ver detalles"
             android:textSize="14sp"
             android:textColor="@android:color/black"
             app:cornerRadius="10dp"
-            app:backgroundTint="#FACEC6"
-            app:strokeColor="#772f1a"
+            app:backgroundTint="#F4F4F4"
+            app:strokeColor="#D1D1D1"
             app:strokeWidth="1dp" />
-    </LinearLayout>
+
+        <!-- Nombre del huésped -->
+        <TextView
+            android:id="@+id/nombreHuesped"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/btnVerDetalles"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="8dp"
+            android:text="Juan Pérez García"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <!-- Tipo de habitación con icono -->
+        <LinearLayout
+            android:id="@+id/ll_room_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nombreHuesped"
+            android:layout_toStartOf="@id/btnVerDetalles"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_habitacion"
+                android:layout_marginEnd="6dp"
+                app:tint="@color/gray_500" />
+
+            <TextView
+                android:id="@+id/tipoHabitacion"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Habitación Doble Superior"
+                android:textSize="13sp"
+                android:textColor="@color/gray_600"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+        <!-- Contenedor de fechas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_room_type"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <!-- Check-in -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_login"
+                        android:layout_marginEnd="4dp"
+                        app:tint="@color/gray_500" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Check-in"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_500"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/checkin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15 Jul 2025"
+                    android:textSize="13sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="18dp" />
+
+            </LinearLayout>
+
+            <!-- Separador visual -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/gray_300"
+                android:layout_marginHorizontal="12dp" />
+
+            <!-- Check-out -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_logout"
+                        android:layout_marginEnd="4dp"
+                        app:tint="@color/gray_500" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Check-out"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_500"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/checkout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="18 Jul 2025"
+                    android:textSize="13sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="18dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
 </androidx.cardview.widget.CardView>

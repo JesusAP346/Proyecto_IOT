@@ -59,7 +59,7 @@
 
     <!-- Divisores -->
     <color name="gray_200">#EEEEEE</color>
-
+    <color name="gray_300">#E9E9E9</color>
     <!-- Color principal (para el precio) -->
     <color name="primary">#1976D2</color>
 
