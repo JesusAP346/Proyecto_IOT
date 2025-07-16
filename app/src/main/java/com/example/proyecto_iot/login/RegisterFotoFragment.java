@@ -116,6 +116,11 @@ public class RegisterFotoFragment extends Fragment {
             @Override
             public void onClick(View v){
                 RegisterPasswordFragment registerPasswordFragment = new RegisterPasswordFragment();
+                Bundle args = new Bundle();
+                if (fotoUri != null) {
+                    args.putString("fotoUri", fotoUri.toString());
+                }
+                registerPasswordFragment.setArguments(args);
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, registerPasswordFragment);
                 transaction.addToBackStack(null);
