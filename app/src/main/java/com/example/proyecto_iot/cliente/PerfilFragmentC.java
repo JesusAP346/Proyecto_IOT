@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,7 +26,7 @@ public class PerfilFragmentC extends Fragment {
     private Button btnModoCliente;
     private Button btnCerrarSesion;
     private FirebaseAuth auth;
-
+    private LinearLayout cardPerfil;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,6 +39,7 @@ public class PerfilFragmentC extends Fragment {
         // Inicializar botones
         btnModoCliente = view.findViewById(R.id.btnModoCliente);
         btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion);
+        cardPerfil = view.findViewById(R.id.cardPerfil);
 
         // Listener para cambiar a modo taxista
         btnModoCliente.setOnClickListener(v -> {
@@ -75,7 +77,10 @@ public class PerfilFragmentC extends Fragment {
                     });
         });
 
-
+        cardPerfil.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), PerfilClienteActivity.class);
+            startActivity(intent);
+        });
 
         // Listener para cerrar sesión
         btnCerrarSesion.setOnClickListener(v -> {
