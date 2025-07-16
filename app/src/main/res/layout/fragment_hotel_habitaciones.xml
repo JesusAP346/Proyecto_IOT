@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="@color/background_gradient">
 
     <!-- Contenedor principal con RelativeLayout -->
     <RelativeLayout
@@ -19,7 +19,7 @@
             android:id="@+id/recyclerHabitaciones"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="65dp"
+            android:layout_marginBottom="68dp"
             android:clipToPadding="false"
             android:scrollbars="none" />
 

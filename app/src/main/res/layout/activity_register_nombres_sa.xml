@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#A28858"
+    tools:context=".login.EditarNombreActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F0E5DC"
+        android:padding="24dp">
+
+        <!-- Logo centrado -->
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/hotelevago_foreground"
+            android:contentDescription="Logo" />
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/nunito_black"
+            android:text="Editar nombres completos"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView2" />
+
+        <!-- Subtítulo -->
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Ingrese nombres y apellidos"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:fontFamily="@font/nunito_semibold"
+            app:layout_constraintTop_toBottomOf="@id/textView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Campo Nombres -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutNombres"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/CustomTextInputRegister"
+            android:layout_marginTop="16dp"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:layout_constraintTop_toBottomOf="@id/textView9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNombres"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_form_superadmin"
+                android:fontFamily="@font/nunito_semibold"
+                android:hint="Nombres"
+                android:inputType="textPersonName"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textStyle="bold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo Apellidos -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutApellidos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/CustomTextInputRegister"
+            android:layout_marginTop="8dp"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayoutNombres"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etApellidos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_form_superadmin"
+                android:fontFamily="@font/nunito_semibold"
+                android:hint="Apellidos"
+                android:inputType="textPersonName"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textStyle="bold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botón Siguiente -->
+        <LinearLayout
+            android:id="@+id/layoutBotones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayoutApellidos"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/botonSiguiente"
+                android:layout_width="148dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#F0C47C"
+                android:fontFamily="@font/nunito_black"
+                android:text="Guardar cambios"
+                android:textColor="@color/background_gradient"
+                android:textSize="15sp"
+                app:cornerRadius="20dp" />
+
+            <Button
+                android:id="@+id/cancelar"
+                android:layout_width="148dp"
+                android:layout_height="60dp"
+                android:backgroundTint="#5D0E14"
+                android:fontFamily="@font/nunito_black"
+                android:text="Cancelar"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                app:cornerRadius="20dp" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#A28858"
+    tools:context=".SuperAdmin.RegisterActivityCorreoSA">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F0E5DC"
+        android:padding="24dp">
+
+        <!-- Logo centrado (opcional) -->
+        <ImageView
+            android:id="@+id/imageViewLogo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="24dp"
+            android:contentDescription="Logo"
+            app:srcCompat="@drawable/hotelevago_foreground"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/textViewTitulo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Editar correo electrónico"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/nunito_black"
+            app:layout_constraintTop_toBottomOf="@id/imageViewLogo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Subtítulo -->
+        <TextView
+            android:id="@+id/textViewSubtitulo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Ingrese el nuevo correo electrónico"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/nunito_semibold"
+            app:layout_constraintTop_toBottomOf="@id/textViewTitulo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Campo de correo electrónico -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutCorreo"
+            style="@style/CustomTextInputRegister"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:layout_constraintTop_toBottomOf="@id/textViewSubtitulo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCorreo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Correo electrónico"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/rounded_form_superadmin"
+                android:fontFamily="@font/nunito_semibold"
+                android:textColor="@color/white"
+                android:textColorHint="#FFFFFF"
+                android:textStyle="bold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botón Guardar -->
+        <LinearLayout
+            android:id="@+id/layoutBotones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayoutCorreo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/botonGuardar"
+                android:layout_width="148dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="8dp"
+                android:text="Guardar cambios"
+                android:backgroundTint="#F0C47C"
+                android:fontFamily="@font/nunito_black"
+                android:textColor="@color/background_gradient"
+                app:cornerRadius="20dp" />
+
+            <Button
+                android:id="@+id/botonCancelar"
+                android:layout_width="148dp"
+                android:layout_height="60dp"
+                android:text="Cancelar"
+                android:backgroundTint="#5D0E14"
+                android:fontFamily="@font/nunito_black"
+                android:textColor="@android:color/white"
+                app:cornerRadius="20dp" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

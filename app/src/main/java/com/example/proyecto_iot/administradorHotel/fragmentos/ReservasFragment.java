@@ -26,14 +26,6 @@ public class ReservasFragment extends Fragment {
 
     public ReservasFragment() {}
 
-    public static ReservasFragment newInstance(String param1, String param2) {
-        ReservasFragment fragment = new ReservasFragment();
-        Bundle args = new Bundle();
-        args.putString("param1", param1);
-        args.putString("param2", param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,44 +37,44 @@ public class ReservasFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        allButtons = Arrays.asList(binding.btnHistorial, binding.btnTodas, binding.btnReservas);
+        allButtons = Arrays.asList(binding.btnFinalizadas, binding.btnEnCurso, binding.btnFuturas);
 
         String seccion = EstadoReservaUI.seccionSeleccionada != null
                 ? EstadoReservaUI.seccionSeleccionada
-                : "todas";
+                : "en_curso";
 
         if (getChildFragmentManager().getFragments().isEmpty()) {
             switch (seccion) {
-                case "historial":
+                case "finalizadas":
                     loadChildFragment(new ReservasHistorialFragment());
-                    updateSelectedButton(binding.btnHistorial);
+                    updateSelectedButton(binding.btnFinalizadas);
                     break;
-                case "pendientes":
+                case "futuras":
                     loadChildFragment(new ReservasPendientesFragment());
-                    updateSelectedButton(binding.btnReservas);
+                    updateSelectedButton(binding.btnFuturas);
                     break;
                 default:
                     loadChildFragment(new ReservasTodasFragment());
-                    updateSelectedButton(binding.btnTodas);
+                    updateSelectedButton(binding.btnEnCurso);
                     break;
             }
         }
 
-        binding.btnHistorial.setOnClickListener(v -> {
+        binding.btnFinalizadas.setOnClickListener(v -> {
             loadChildFragment(new ReservasHistorialFragment());
-            updateSelectedButton(binding.btnHistorial);
+            updateSelectedButton(binding.btnFinalizadas);
             EstadoReservaUI.seccionSeleccionada = "historial";
         });
 
-        binding.btnTodas.setOnClickListener(v -> {
+        binding.btnEnCurso.setOnClickListener(v -> {
             loadChildFragment(new ReservasTodasFragment());
-            updateSelectedButton(binding.btnTodas);
+            updateSelectedButton(binding.btnEnCurso);
             EstadoReservaUI.seccionSeleccionada = "todas";
         });
 
-        binding.btnReservas.setOnClickListener(v -> {
+        binding.btnFuturas.setOnClickListener(v -> {
             loadChildFragment(new ReservasPendientesFragment());
-            updateSelectedButton(binding.btnReservas);
+            updateSelectedButton(binding.btnFuturas);
             EstadoReservaUI.seccionSeleccionada = "pendientes";
         });
     }
@@ -98,17 +90,17 @@ public class ReservasFragment extends Fragment {
                 : "todas";
 
         switch (seccion) {
-            case "historial":
-                updateSelectedButton(binding.btnHistorial);
+            case "finalizadas":
+                updateSelectedButton(binding.btnFinalizadas);
                 loadChildFragment(new ReservasHistorialFragment());
                 break;
-            case "pendientes":
-                updateSelectedButton(binding.btnReservas);
+            case "futuras":
+                updateSelectedButton(binding.btnFuturas);
                 loadChildFragment(new ReservasPendientesFragment());
                 break;
             case "todas":
             default:
-                updateSelectedButton(binding.btnTodas);
+                updateSelectedButton(binding.btnEnCurso);
                 loadChildFragment(new ReservasTodasFragment());
                 break;
         }

@@ -68,7 +68,7 @@ public class HotelHabitacionesFragment extends Fragment {
 
         binding.recyclerHabitaciones.setAdapter(adapter);
 
-        cargarHabitacionesDelAdministrador();
+        cargarHabitacionesDelhotel();
 
         binding.btnRegistrarInformacion.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), RegistroHabitacionHotel.class);
@@ -76,7 +76,7 @@ public class HotelHabitacionesFragment extends Fragment {
         });
     }
 
-    private void cargarHabitacionesDelAdministrador() {
+    private void cargarHabitacionesDelhotel() {
         if (currentUser == null) {
             mostrarMensajeSinHabitaciones();
             return;

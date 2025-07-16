@@ -1,8 +1,9 @@
 package com.example.proyecto_iot.administradorHotel.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ServicioHotel {
+public class ServicioHotel implements Serializable {
     private String id;
     private String nombre;
     private String descripcion;

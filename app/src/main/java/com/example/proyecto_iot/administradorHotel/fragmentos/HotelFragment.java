@@ -49,10 +49,7 @@ public class HotelFragment extends Fragment {
                 binding.btnInfo,
                 binding.btnHabitaciones,
                 binding.btnServicios,
-                binding.btnReportes,
-                binding.btnInfoNada,
-                binding.btnHabitacionesNada,
-                binding.btnServiciosNada
+                binding.btnReportes
         );
 
         String seccion = EstadoHotelUI.seccionSeleccionada;
@@ -73,18 +70,7 @@ public class HotelFragment extends Fragment {
                 loadChildFragment(new AdminReportesFragment());
                 updateSelectedButton(binding.btnReportes);
                 break;
-            case "info_nada":
-                loadChildFragment(new HotelInfoNadaFragment());
-                updateSelectedButton(binding.btnInfoNada);
-                break;
-            case "habitaciones_nada":
-                loadChildFragment(new HotelHabitacionesNadaFragment());
-                updateSelectedButton(binding.btnHabitacionesNada);
-                break;
-            case "servicios_nada":
-                loadChildFragment(new HotelServicioNadaFragment());
-                updateSelectedButton(binding.btnServiciosNada);
-                break;
+
             default:
                 loadChildFragment(new HotelInfoFragment());
                 updateSelectedButton(binding.btnInfo);
@@ -115,23 +101,6 @@ public class HotelFragment extends Fragment {
             EstadoHotelUI.seccionSeleccionada = "reportes";
         });
 
-        binding.btnInfoNada.setOnClickListener(v -> {
-            loadChildFragment(new HotelInfoNadaFragment());
-            updateSelectedButton(binding.btnInfoNada);
-            EstadoHotelUI.seccionSeleccionada = "info_nada";
-        });
-
-        binding.btnHabitacionesNada.setOnClickListener(v -> {
-            loadChildFragment(new HotelHabitacionesNadaFragment());
-            updateSelectedButton(binding.btnHabitacionesNada);
-            EstadoHotelUI.seccionSeleccionada = "habitaciones_nada";
-        });
-
-        binding.btnServiciosNada.setOnClickListener(v -> {
-            loadChildFragment(new HotelServicioNadaFragment());
-            updateSelectedButton(binding.btnServiciosNada);
-            EstadoHotelUI.seccionSeleccionada = "servicios_nada";
-        });
     }
 
     @Override

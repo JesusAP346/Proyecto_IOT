@@ -73,7 +73,8 @@ public class DetalleHabitacionFragment extends Fragment {
 
             binding.textTamano.setText(habitacion.getTamanho() + " m²");
 
-            String precio = "S/ " + habitacion.getPrecioPorNoche();
+            double precioValor = habitacion.getPrecioPorNoche(); // asegúrate que sea double o float
+            String precio = "S/ " + String.format("%.2f", precioValor);
             binding.textPrecio.setText(precio);
 
             String cantidad = habitacion.getCantidadHabitaciones() + " habitaciones";
@@ -122,10 +123,10 @@ public class DetalleHabitacionFragment extends Fragment {
         // Acción de retroceso
         binding.backdetallehabitacion.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
+
     }
 
     private void mostrarEquipamiento(LinearLayout contenedor, List<String> items) {
-        contenedor.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         LinearLayout fila = null;
@@ -153,7 +154,6 @@ public class DetalleHabitacionFragment extends Fragment {
     }
 
     private void mostrarServicios(LinearLayout contenedor, List<String> servicios) {
-        contenedor.removeAllViews();
         for (String servicio : servicios) {
             TextView tv = new TextView(getContext());
             tv.setText("• " + servicio);

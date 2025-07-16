@@ -12,24 +12,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -43,6 +25,21 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.entity.FotoItem;
@@ -50,8 +47,8 @@ import com.example.proyecto_iot.administradorHotel.entity.HabitacionHotel;
 import com.example.proyecto_iot.administradorHotel.entity.ServicioHotel;
 import com.example.proyecto_iot.administradorHotel.entity.UploadResponse;
 import com.example.proyecto_iot.administradorHotel.services.AwsService;
-import com.example.proyecto_iot.databinding.DialogAgregarEquipamientoBinding;
 import com.example.proyecto_iot.databinding.FragmentEditarHabitacionfragmentBinding;
+import com.example.proyecto_iot.databinding.FragmentEditarServicioBinding;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -64,7 +61,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -80,14 +76,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class EditarHabitacionfragment extends Fragment {
+public class EditarServicioFragment extends Fragment {
 
-    private FragmentEditarHabitacionfragmentBinding binding;
-    private final List<String> equipamientosSeleccionados = new ArrayList<>();
-    private final List<String> serviciosSeleccionados = new ArrayList<>();
+
+    private FragmentEditarServicioBinding binding;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
 
+    /// ///////////////////ftoos////
     private Uri uriFotoCamara = null;
     private boolean isMenuVisible = false;
 
@@ -100,16 +96,12 @@ public class EditarHabitacionfragment extends Fragment {
     private ActivityResultLauncher<Intent> galeriaLauncher;
     private ActivityResultLauncher<Intent> camaraLauncher;
     private ActivityResultLauncher<Intent> archivoLauncher;
-
     private List<String> urlsOriginales = new ArrayList<>();
 
-    private final List<String> opcionesEquipamiento = Arrays.asList("Seleccionar", "TV", "Toallas", "Wifi", "Escritorio", "Caja fuerte", "Aire acondicionado", "Mini bar", "Secador de cabello", "Plancha", "Cafetera", "Teléfono", "Ropa de cama extra",
-            "Lámpara de lectura", "Espejo ", "Alarma", "Cortinas blackout", "Detector de humo",
-            "Utensilios de cocina", "Mesa de noche", "Sillas", "Estante para maletas");
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentEditarHabitacionfragmentBinding.inflate(inflater, container, false);
+        binding = FragmentEditarServicioBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -117,33 +109,17 @@ public class EditarHabitacionfragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        HabitacionHotel habitacion = (HabitacionHotel) getArguments().getSerializable("habitacion");
-        if (habitacion == null) {
-            Toast.makeText(requireContext(), "No se pudo cargar la habitación", Toast.LENGTH_SHORT).show();
+        ServicioHotel servicio = (ServicioHotel) getArguments().getSerializable("servicio");
+        if (servicio == null) {
+            Toast.makeText(requireContext(), "No se pudo cargar el servicio", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Setear campos
-        binding.editTextTipoHabitacion.setText(habitacion.getTipo());
-        binding.textCantidadAdultos.setText(String.valueOf(habitacion.getCapacidadAdultos()));
-        binding.textCantidadNinos.setText(String.valueOf(habitacion.getCapacidadNinos()));
-        binding.editTextTamano.setText(String.valueOf(habitacion.getTamanho()));
-        binding.editTextPrecio.setText(String.format("%.2f", habitacion.getPrecioPorNoche()));
-        binding.editTextHabitacionesRegistradas.setText(String.valueOf(habitacion.getCantidadHabitaciones()));
+        binding.editTextNombre.setText(servicio.getNombre());
+        binding.editTextPrecio.setText(String.valueOf(servicio.getPrecio()));
+        binding.editTextDescripcion.setText(String.valueOf(servicio.getDescripcion()));
 
-        // Cargar listas de equipamiento y servicio
-        if (habitacion.getEquipamiento() != null) {
-            equipamientosSeleccionados.addAll(habitacion.getEquipamiento());
-        }
-        if (habitacion.getServicio() != null) {
-            serviciosSeleccionados.addAll(habitacion.getServicio());
-        }
-
-        renderizarEquipamientos();
-        renderizarServicios();
-        setupAgregarEquipamientoButton();
-        setupEquipamientoSpinner();
-        setupSpinnerServicios();
 
         // Inicializar menú y launchers
         inicializarLaunchers();
@@ -151,61 +127,33 @@ public class EditarHabitacionfragment extends Fragment {
 
         // Cargar imágenes actuales desde Firebase
         urlsOriginales.clear();
-        urlsOriginales.addAll(habitacion.getFotosUrls());
-        for (String url : habitacion.getFotosUrls()) {
+        urlsOriginales.addAll(servicio.getFotosUrls());
+        for (String url : servicio.getFotosUrls()) {
             agregarFoto(new FotoItem(Uri.parse(url)));
         }
 
         // Acción de actualización
-        binding.btnActualizar.setOnClickListener(v -> actualizarDatosHabitacion(habitacion));
-
-        binding.btnMasAdultos.setOnClickListener(v -> {
-            int count = Integer.parseInt(binding.textCantidadAdultos.getText().toString());
-            if (count < 20) {
-                binding.textCantidadAdultos.setText(String.valueOf(count + 1));
-            }
-        });
-
-        binding.btnMenosAdultos.setOnClickListener(v -> {
-            int count = Integer.parseInt(binding.textCantidadAdultos.getText().toString());
-            if (count > 0) {
-                binding.textCantidadAdultos.setText(String.valueOf(count - 1));
-            }
-        });
-
-        binding.btnMasNinos.setOnClickListener(v -> {
-            int count = Integer.parseInt(binding.textCantidadNinos.getText().toString());
-            if (count < 10) {
-                binding.textCantidadNinos.setText(String.valueOf(count + 1));
-            }
-        });
-
-        binding.btnMenosNinos.setOnClickListener(v -> {
-            int count = Integer.parseInt(binding.textCantidadNinos.getText().toString());
-            if (count > 0) {
-                binding.textCantidadNinos.setText(String.valueOf(count - 1));
-            }
-        });
+        binding.btnActualizar.setOnClickListener(v -> actualizarDatosServicio(servicio));
 
         // Botón para retroceder
-        binding.backdetallehabitacion.setOnClickListener(v ->
+        binding.backdetalleservicio.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
 
         binding.btnEliminar.setOnClickListener(v -> {
-            if (habitacion != null) {
-                eliminarHabitacionDesdeFirestore(habitacion);
+            if (servicio != null) {
+                eliminarServicioDesdeFirestore(servicio);
             } else {
                 Toast.makeText(requireContext(), "No se pudo obtener el servicio", Toast.LENGTH_SHORT).show();
             }
         });
 
+
     }
 
-
-    private void eliminarHabitacionDesdeFirestore(HabitacionHotel habitacion) {
+    private void eliminarServicioDesdeFirestore(ServicioHotel servicio) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("¿Estás seguro?")
-                .setMessage("Esta acción eliminará la habitación de forma permanente.")
+                .setMessage("Esta acción eliminará el servicio de forma permanente.")
                 .setPositiveButton("Sí, eliminar", (dialog, which) -> {
                     binding.progressBarGuardar.setVisibility(View.VISIBLE);
                     binding.btnEliminar.setEnabled(false);
@@ -240,19 +188,20 @@ public class EditarHabitacionfragment extends Fragment {
                                 }
 
                                 db.collection("hoteles").document(idHotel)
-                                        .collection("habitaciones").document(habitacion.getId())
+                                        .collection("servicios").document(servicio.getId())
                                         .delete()
                                         .addOnSuccessListener(unused -> {
                                             binding.progressBarGuardar.setVisibility(View.GONE);
-                                            Toast.makeText(requireContext(), "Habitación eliminada con éxito", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(requireContext(), "Servicio eliminado con éxito", Toast.LENGTH_SHORT).show();
 
                                             requireActivity().getSupportFragmentManager().popBackStack();
                                             requireActivity().getSupportFragmentManager().popBackStack();
+
                                         })
                                         .addOnFailureListener(e -> {
                                             binding.progressBarGuardar.setVisibility(View.GONE);
                                             binding.btnEliminar.setEnabled(true);
-                                            Toast.makeText(requireContext(), "Error al eliminar la habitación", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(requireContext(), "Error al eliminar el servicio", Toast.LENGTH_SHORT).show();
                                         });
 
                             })
@@ -267,30 +216,22 @@ public class EditarHabitacionfragment extends Fragment {
     }
 
 
-
-
-    private void actualizarDatosHabitacion(HabitacionHotel habitacion) {
+    private void actualizarDatosServicio(ServicioHotel servicio) {
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                 .setTitle("¿Estás seguro?")
                 .setMessage("Tus cambios no podrán ser revertidos")
                 .setPositiveButton("Sí, actualizar", (dialog, which) -> {
-                    String tipo = binding.editTextTipoHabitacion.getText().toString().trim();
-                    String tamanoStr = binding.editTextTamano.getText().toString().trim();
+                    String nombre = binding.editTextNombre.getText().toString().trim();
                     String precioStr = binding.editTextPrecio.getText().toString().trim();
-                    String cantidadStr = binding.editTextHabitacionesRegistradas.getText().toString().trim();
-                    String adultosStr = binding.textCantidadAdultos.getText().toString().trim();
-                    String ninosStr = binding.textCantidadNinos.getText().toString().trim();
+                    String descripcion = binding.editTextDescripcion.getText().toString().trim();
 
-                    if (tipo.isEmpty() || tamanoStr.isEmpty() || precioStr.isEmpty() || cantidadStr.isEmpty()) {
+                    if (nombre.isEmpty() || precioStr.isEmpty() || descripcion.isEmpty()) {
                         Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    double tamano = Double.parseDouble(tamanoStr);
                     double precio = Double.parseDouble(precioStr);
-                    int cantidad = Integer.parseInt(cantidadStr);
-                    int adultos = Integer.parseInt(adultosStr);
-                    int ninos = Integer.parseInt(ninosStr);
+
 
                     // Separar fotos actuales y nuevas
                     List<String> urlsActuales = new ArrayList<>();
@@ -314,11 +255,11 @@ public class EditarHabitacionfragment extends Fragment {
                     List<String> urlsFinales = new ArrayList<>(urlsActuales);
 
                     if (nuevasFotos.isEmpty()) {
-                        guardarHabitacionEnFirestore(habitacion, tipo, tamano, precio, cantidad, adultos, ninos, urlsFinales);
+                        guardarServicioEnFirestore(servicio, nombre, precio, descripcion, urlsFinales);
                     } else {
                         subirSoloNuevasImagenes(nuevasFotos, urlsSubidas -> {
                             urlsFinales.addAll(urlsSubidas);
-                            guardarHabitacionEnFirestore(habitacion, tipo, tamano, precio, cantidad, adultos, ninos, urlsFinales);
+                            guardarServicioEnFirestore(servicio, nombre, precio, descripcion, urlsFinales);
                         }, error -> {
                             binding.progressBarGuardar.setVisibility(View.GONE);
                             Toast.makeText(requireContext(), "Error al subir imágenes: " + error, Toast.LENGTH_SHORT).show();
@@ -328,8 +269,10 @@ public class EditarHabitacionfragment extends Fragment {
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
-    private void guardarHabitacionEnFirestore(HabitacionHotel habitacion, String tipo, double tamano, double precio,
-                                              int cantidad, int adultos, int ninos, List<String> urlsFinales) {
+
+
+    private void guardarServicioEnFirestore(ServicioHotel servicio, String nombre, double precio,
+                                            String descripcion, List<String> urlsFinales) {
         binding.progressBarGuardar.setVisibility(View.VISIBLE);
         binding.btnActualizar.setEnabled(false);
 
@@ -363,36 +306,26 @@ public class EditarHabitacionfragment extends Fragment {
                     }
 
                     db.collection("hoteles").document(idHotel)
-                            .collection("habitaciones").document(habitacion.getId())
+                            .collection("servicios").document(servicio.getId())
                             .update(
-                                    "tipo", tipo,
-                                    "tamanho", tamano,
-                                    "precioPorNoche", precio,
-                                    "cantidadHabitaciones", cantidad,
-                                    "capacidadAdultos", adultos,
-                                    "capacidadNinos", ninos,
-                                    "equipamiento", equipamientosSeleccionados,
-                                    "servicio", serviciosSeleccionados,
+                                    "nombre", nombre,
+                                    "precio", precio,
+                                    "descripcion", descripcion,
                                     "fotosUrls", urlsFinales
                             )
                             .addOnSuccessListener(unused -> {
                                 binding.progressBarGuardar.setVisibility(View.GONE);
-                                Toast.makeText(requireContext(), "Habitación actualizada con éxito", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Servicio actualizado con éxito", Toast.LENGTH_SHORT).show();
 
-                                // ✅ Recargar DetalleHabitacionFragment con datos actualizados
-                                habitacion.setTipo(tipo);
-                                habitacion.setTamanho((int) tamano);
-                                habitacion.setPrecioPorNoche(precio);
-                                habitacion.setCantidadHabitaciones(cantidad);
-                                habitacion.setCapacidadAdultos(adultos);
-                                habitacion.setCapacidadNinos(ninos);
-                                habitacion.setEquipamiento(new ArrayList<>(equipamientosSeleccionados));
-                                habitacion.setServicio(new ArrayList<>(serviciosSeleccionados));
-                                habitacion.setFotosUrls(new ArrayList<>(urlsFinales));
+                                // ✅ Recargar DetalleServicioFragment con datos actualizados
+                                servicio.setNombre(nombre);
+                                servicio.setPrecio(precio);
+                                servicio.setDescripcion(descripcion);
+                                servicio.setFotosUrls(new ArrayList<>(urlsFinales));
 
-                                DetalleHabitacionFragment detalleFragment = new DetalleHabitacionFragment();
+                                DetalleServicioFragment detalleFragment = new DetalleServicioFragment();
                                 Bundle args = new Bundle();
-                                args.putSerializable("habitacion", habitacion);
+                                args.putSerializable("servicio", servicio);
                                 detalleFragment.setArguments(args);
 
                                 requireActivity().getSupportFragmentManager().beginTransaction()
@@ -402,7 +335,7 @@ public class EditarHabitacionfragment extends Fragment {
                             .addOnFailureListener(e -> {
                                 binding.progressBarGuardar.setVisibility(View.GONE);
                                 binding.btnActualizar.setEnabled(true);
-                                Toast.makeText(requireContext(), "Error al actualizar habitación", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Error al actualizar servicio", Toast.LENGTH_SHORT).show();
                             });
 
                 })
@@ -443,234 +376,6 @@ public class EditarHabitacionfragment extends Fragment {
                 }
             }
         });
-    }
-
-
-
-    private void setupEquipamientoSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, opcionesEquipamiento);
-        binding.spinnerEquipamiento.setAdapter(adapter);
-
-        binding.spinnerEquipamiento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String seleccionado = opcionesEquipamiento.get(position);
-                if (!seleccionado.equals("Seleccionar") && !equipamientosSeleccionados.contains(seleccionado)) {
-                    equipamientosSeleccionados.add(seleccionado);
-                    renderizarEquipamientos();
-                }
-                binding.spinnerEquipamiento.setSelection(0);
-            }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
-        verificarEquipamientosVisibles();
-
-
-
-
-    }
-
-    private void setupSpinnerServicios() {
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-
-        if (currentUser == null) {
-            Toast.makeText(requireContext(), "No se ha iniciado sesión", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String uid = currentUser.getUid();
-
-        db.collection("usuarios").document(uid).get()
-                .addOnSuccessListener(userDoc -> {
-                    if (!userDoc.exists()) {
-                        Toast.makeText(requireContext(), "No se encontró el usuario", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    String idHotel = userDoc.getString("idHotel");
-                    if (idHotel == null || idHotel.isEmpty()) {
-                        Toast.makeText(requireContext(), "No se encontró el hotel asociado", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    db.collection("hoteles").document(idHotel).collection("servicios")
-                            .get()
-                            .addOnSuccessListener(serviciosSnapshot -> {
-                                List<String> nombresServicios = new ArrayList<>();
-                                nombresServicios.add("Seleccionar");
-
-                                for (var doc : serviciosSnapshot) {
-                                    String nombre = doc.getString("nombre");
-                                    if (nombre != null && !nombre.isEmpty()) {
-                                        nombresServicios.add(nombre);
-                                    }
-                                }
-
-                                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, nombresServicios);
-                                binding.spinnerServicios.setAdapter(adapter);
-
-                                binding.spinnerServicios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        String seleccionado = nombresServicios.get(position);
-                                        if (!seleccionado.equals("Seleccionar") && !serviciosSeleccionados.contains(seleccionado)) {
-                                            serviciosSeleccionados.add(seleccionado);
-                                            renderizarServicios();
-                                        }
-                                        binding.spinnerServicios.setSelection(0);
-                                    }
-                                    @Override public void onNothingSelected(AdapterView<?> parent) {}
-                                });
-                            })
-                            .addOnFailureListener(e ->
-                                    Toast.makeText(requireContext(), "Error al obtener servicios: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(requireContext(), "Error al obtener usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-    }
-
-    private void renderizarEquipamientos() {
-        binding.layoutEquipamientoDinamico.removeAllViews();
-        verificarEquipamientosVisibles();
-
-        for (int i = 0; i < equipamientosSeleccionados.size(); i += 2) {
-            LinearLayout fila = new LinearLayout(requireContext());
-            fila.setOrientation(LinearLayout.HORIZONTAL);
-            fila.setWeightSum(2);
-            fila.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            fila.setPadding(0, 4, 0, 4);
-
-            fila.addView(crearChipEquipamiento(equipamientosSeleccionados.get(i)));
-
-            if (i + 1 < equipamientosSeleccionados.size()) {
-                fila.addView(crearChipEquipamiento(equipamientosSeleccionados.get(i + 1)));
-            } else {
-                View espacio = new View(requireContext());
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 0, 1);
-                espacio.setLayoutParams(params);
-                fila.addView(espacio);
-            }
-            binding.layoutEquipamientoDinamico.addView(fila);
-        }
-    }
-
-    private View crearChipEquipamiento(String texto) {
-        LinearLayout chip = new LinearLayout(requireContext());
-        chip.setOrientation(LinearLayout.HORIZONTAL);
-        chip.setBackgroundResource(R.drawable.customedittext);
-        chip.setPadding(16, 12, 16, 12);
-        chip.setGravity(Gravity.CENTER_VERTICAL);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        params.setMargins(0, 0, 8, 0);
-        chip.setLayoutParams(params);
-
-        TextView textView = new TextView(requireContext());
-        textView.setText(texto);
-        textView.setTextSize(14);
-        textView.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        textView.setTextColor(getResources().getColor(android.R.color.black));
-
-        ImageView icono = new ImageView(requireContext());
-        icono.setImageResource(R.drawable.ic_delete);
-        icono.setColorFilter(getResources().getColor(android.R.color.holo_red_dark));
-        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(36, 36);
-        iconParams.setMargins(16, 0, 0, 0);
-        icono.setLayoutParams(iconParams);
-
-        icono.setOnClickListener(v -> {
-            equipamientosSeleccionados.remove(texto);
-            renderizarEquipamientos();
-        });
-
-        chip.addView(textView);
-        chip.addView(icono);
-        return chip;
-    }
-
-    private void renderizarServicios() {
-        binding.layoutServicioDinamico.removeAllViews();
-        verificarServiciosVisibles();
-
-        for (String servicio : serviciosSeleccionados) {
-            LinearLayout chip = new LinearLayout(requireContext());
-            chip.setOrientation(LinearLayout.HORIZONTAL);
-            chip.setBackgroundResource(R.drawable.customedittext);
-            chip.setPadding(16, 12, 16, 12);
-            chip.setGravity(Gravity.CENTER_VERTICAL);
-            LinearLayout.LayoutParams chipParams = new LinearLayout.LayoutParams((int) (getResources().getDisplayMetrics().widthPixels * 0.55), ViewGroup.LayoutParams.WRAP_CONTENT);
-            chipParams.setMargins(0, 8, 0, 0);
-            chip.setLayoutParams(chipParams);
-
-            TextView textView = new TextView(requireContext());
-            textView.setText(servicio);
-            textView.setTextSize(16);
-            textView.setTextColor(getResources().getColor(android.R.color.black));
-            LinearLayout.LayoutParams tvParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-            textView.setLayoutParams(tvParams);
-
-            ImageView icono = new ImageView(requireContext());
-            icono.setImageResource(R.drawable.ic_delete);
-            icono.setColorFilter(getResources().getColor(android.R.color.holo_red_dark));
-            LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(40, 40);
-            iconParams.setMargins(16, 0, 0, 0);
-            icono.setLayoutParams(iconParams);
-
-            icono.setOnClickListener(v -> {
-                serviciosSeleccionados.remove(servicio);
-                renderizarServicios();
-            });
-
-            chip.addView(textView);
-            chip.addView(icono);
-            binding.layoutServicioDinamico.addView(chip);
-        }
-    }
-
-    private void verificarEquipamientosVisibles() {
-        binding.textEquipamientoVacio.setVisibility(equipamientosSeleccionados.isEmpty() ? View.VISIBLE : View.GONE);
-    }
-
-    private void verificarServiciosVisibles() {
-        binding.textServicioVacio.setVisibility(serviciosSeleccionados.isEmpty() ? View.VISIBLE : View.GONE);
-    }
-
-    private void setupAgregarEquipamientoButton() {
-        binding.btnAgregarEquipamiento.setOnClickListener(v -> mostrarDialogoAgregarEquipamiento());
-    }
-
-    private void mostrarDialogoAgregarEquipamiento() {
-        DialogAgregarEquipamientoBinding dialogBinding = DialogAgregarEquipamientoBinding.inflate(getLayoutInflater());
-
-        AlertDialog dialog = new AlertDialog.Builder(requireContext())
-                .setTitle("Agregar Equipamiento")
-                .setView(dialogBinding.getRoot())
-                .setPositiveButton("AGREGAR", (dialogInterface, i) -> {
-                    String nuevoEquipamiento = dialogBinding.editEquipamiento.getText().toString().trim();
-                    nuevoEquipamiento = nuevoEquipamiento.substring(0, 1).toUpperCase() + nuevoEquipamiento.substring(1).toLowerCase();
-
-                    if (!nuevoEquipamiento.isEmpty()) {
-                        if (!equipamientosSeleccionados.contains(nuevoEquipamiento)) {
-                            equipamientosSeleccionados.add(nuevoEquipamiento);
-                            renderizarEquipamientos();
-                        } else {
-                            Toast.makeText(requireContext(), "Este equipamiento ya está agregado", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(requireContext(), "Por favor ingrese un nombre válido", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton("CANCELAR", null)
-                .create();
-
-        dialog.show();
-
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setGravity(Gravity.CENTER);
-            dialog.getWindow().setLayout(
-                    (int) (getResources().getDisplayMetrics().widthPixels * 0.85),
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-        }
     }
 
     ////////////////////////Para lanzar la calería, cámara o archivos////////////////////////////
@@ -890,7 +595,6 @@ public class EditarHabitacionfragment extends Fragment {
             }
         }
     }
-
 
     /////////Lógica para Agregar, eliminar y mostrar (previsualizar) las fotos/////////////////////
 
@@ -1424,4 +1128,10 @@ public class EditarHabitacionfragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
+
+
+
+
 }
