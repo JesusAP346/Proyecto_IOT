@@ -230,25 +230,6 @@ public class BusquedaFragment extends Fragment{
             dialog.show(getParentFragmentManager(), "HuespedesBottomSheet");
         });
 
-        RecyclerView recycler = view.findViewById(R.id.recyclerRecientes);
-        recycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-
-        List<RecienteItem> recientes = new ArrayList<>();
-        recientes.add(new RecienteItem("Hotel a seleccionar 1", "Bellavista", "18 abr. - 19 abr.", R.drawable.hotel1));
-        recientes.add(new RecienteItem("Hotel a seleccionar 2", "San Miguel", "18 abr. - 19 abr.", R.drawable.hotel2));
-
-        RecientesAdapter adapter = new RecientesAdapter(recientes);
-        recycler.setAdapter(adapter);
-
-        TextView txtFavoritos = view.findViewById(R.id.txtFavoritos);
-        txtFavoritos.setOnClickListener(v -> {
-            ClienteFavoritosFragment favoritosFragment = new ClienteFavoritosFragment();
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container_busqueda, favoritosFragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
 
         btnBuscar.setOnClickListener(v -> {
             if (validarFormularioCompleto()) {
