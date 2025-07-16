@@ -15,11 +15,22 @@ import androidx.fragment.app.Fragment;
 import com.example.proyecto_iot.MainActivity;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.modoTaxistaFormulario.RegistroTaxistaActivity;
+import com.example.proyecto_iot.dtos.Usuario;
 import com.example.proyecto_iot.login.LoginActivity;
 import com.example.proyecto_iot.taxista.perfil.InformacionPersonalActivity;
 import com.example.proyecto_iot.taxista.perfil.PerfilTaxistaActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
+
+
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.example.proyecto_iot.dtos.Usuario;
+import com.squareup.picasso.Picasso;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.ListenerRegistration;
+
 
 public class PerfilFragmentC extends Fragment {
 
@@ -27,6 +38,13 @@ public class PerfilFragmentC extends Fragment {
     private Button btnCerrarSesion;
     private FirebaseAuth auth;
     private LinearLayout cardPerfil;
+
+    private ImageView ivFotoPerfil;
+    private TextView tvNombrePerfil;
+    private ListenerRegistration listenerRegistration;
+    private FirebaseFirestore db;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,8 +56,14 @@ public class PerfilFragmentC extends Fragment {
 
         // Inicializar botones
         btnModoCliente = view.findViewById(R.id.btnModoCliente);
-        btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion);
+//        btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion);
         cardPerfil = view.findViewById(R.id.cardPerfil);
+
+
+        ivFotoPerfil = view.findViewById(R.id.ivFotoPerfil);
+        tvNombrePerfil = view.findViewById(R.id.tvNombrePerfil);
+        db = FirebaseFirestore.getInstance();
+
 
         // Listener para cambiar a modo taxista
         btnModoCliente.setOnClickListener(v -> {
@@ -82,23 +106,23 @@ public class PerfilFragmentC extends Fragment {
             startActivity(intent);
         });
 
-        // Listener para cerrar sesión
-        btnCerrarSesion.setOnClickListener(v -> {
-            cerrarSesion();
-        });
+//        // Listener para cerrar sesión
+//        btnCerrarSesion.setOnClickListener(v -> {
+//            cerrarSesion();
+//        });
 
         // Listeners para otras opciones
         view.findViewById(R.id.informacionPersonal).setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Abrir información personal", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getContext(), InfoPersonal.class);
+            Intent intent = new Intent(getContext(), EditarPerfilClienteActivity.class);
             startActivity(intent);
         });
 
         view.findViewById(R.id.seguridadPersonal).setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Abrir seguridad", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getContext(), SeguridadActivity2.class);
+            Intent intent = new Intent(getContext(), InicioSesionActivity.class);
             startActivity(intent);
         });
+
+        escucharDatosUsuarioEnTiempoReal();
 
         return view;
     }
@@ -116,4 +140,53 @@ public class PerfilFragmentC extends Fragment {
             getActivity().finish();
         }
     }
+
+    private void escucharDatosUsuarioEnTiempoReal() {
+        String uid = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+
+        if (uid == null) {
+            return;
+        }
+
+        DocumentReference docRef = db.collection("usuarios").document(uid);
+
+        listenerRegistration = docRef.addSnapshotListener((documentSnapshot, e) -> {
+            if (e != null) {
+                return;
+            }
+
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                Usuario usuario = documentSnapshot.toObject(Usuario.class);
+                if (usuario != null) {
+                    actualizarCardPerfil(usuario);
+                }
+            }
+        });
+    }
+
+    private void actualizarCardPerfil(Usuario usuario) {
+        String nombreCompleto = "";
+        if (usuario.getNombres() != null) nombreCompleto += usuario.getNombres();
+        if (usuario.getApellidos() != null) nombreCompleto += " " + usuario.getApellidos();
+
+        tvNombrePerfil.setText(nombreCompleto.trim());
+
+        if (usuario.getUrlFotoPerfil() != null && !usuario.getUrlFotoPerfil().isEmpty()) {
+            Picasso.get()
+                    .load(usuario.getUrlFotoPerfil())
+                    .placeholder(R.drawable.ic_generic_user)
+                    .into(ivFotoPerfil);
+        } else {
+            ivFotoPerfil.setImageResource(R.drawable.ic_generic_user);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (listenerRegistration != null) {
+            listenerRegistration.remove();
+        }
+    }
+
 }

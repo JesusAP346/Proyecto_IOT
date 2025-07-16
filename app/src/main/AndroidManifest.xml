@@ -26,6 +26,30 @@
         android:theme="@style/Theme.PROYECTO_IOT"
         tools:targetApi="31">
         <activity
+            android:name=".cliente.InicioSesionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".cliente.RegisterActivityCambiarContraCliente"
+            android:exported="false" />
+        <activity
+            android:name=".cliente.RegisterFotoPerfilClienteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".cliente.RegisterActivityDniCliente"
+            android:exported="false" />
+        <activity
+            android:name=".cliente.RegisterActivityLocalidadCliente"
+            android:exported="false" />
+        <activity
+            android:name=".cliente.RegisterActivityNumeroCliente"
+            android:exported="false" />
+        <activity
+            android:name=".cliente.RegisterActivityNombresCliente"
+            android:exported="false" />
+        <activity
+            android:name=".cliente.EditarPerfilClienteActivity"
+            android:exported="false" />
+        <activity
             android:name=".cliente.PerfilClienteActivity"
             android:exported="false" />
         <activity

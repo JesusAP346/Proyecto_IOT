@@ -62,11 +62,12 @@
             android:padding="8dp">
 
             <TextView
+                android:id="@+id/tvNombrePerfil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Roberto Tafur"
-                android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -109,9 +110,9 @@
 
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Información personal"
+            android:layout_weight="1"
+            android:text="Editar información personal"
             android:textSize="16sp" />
 
         <ImageView
@@ -175,17 +176,6 @@
             android:layout_marginBottom="12dp"
             android:backgroundTint="#F4A261"
             android:text="Modo taxista"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:padding="12dp" />
-
-        <Button
-            android:id="@+id/btnCerrarSesion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:backgroundTint="#E74C3C"
-            android:text="Cerrar Sesión"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:padding="12dp" />
