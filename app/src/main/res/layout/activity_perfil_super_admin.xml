@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:backgroundTint="#E7DACF"
     android:padding="24dp"
     tools:background="#E7DACF">
 
@@ -314,23 +315,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutItems">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnEditarPerfil"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="148dp"
+            android:layout_height="60dp"
             android:layout_marginEnd="8dp"
+            android:backgroundTint="#F0C47C"
+            android:fontFamily="@font/nunito_black"
             android:text="Editar perfil"
-            app:iconPadding="8dp"
-            tools:backgroundTint="#F0C47C" />
+            android:textColor="@color/background_gradient"
+            app:cornerRadius="20dp" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnCerrarSesion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="148dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#5D0E14"
+            android:fontFamily="@font/nunito_black"
             android:text="Cerrar sesión"
-            android:textColor="@color/white"
-            app:backgroundTint="#5D0E14"
-            app:iconTint="@color/white" />
+            android:textColor="@android:color/white"
+            app:cornerRadius="20dp" />
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

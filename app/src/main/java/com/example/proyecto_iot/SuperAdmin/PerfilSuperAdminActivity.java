@@ -58,6 +58,11 @@ public class PerfilSuperAdminActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        btnEditarPerfil.setOnClickListener(v -> {
+            Intent intent = new Intent(PerfilSuperAdminActivity.this, EditarPerfilSuperAdminActivity.class);
+            startActivity(intent);
+        });
+
         // Cargar datos del usuario actual
         cargarDatosPerfil();
     }

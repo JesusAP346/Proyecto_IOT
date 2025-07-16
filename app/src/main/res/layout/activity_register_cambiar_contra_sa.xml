@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#A28858"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F0E5DC"
+        android:padding="24dp">
+
+        <!-- Logo -->
+        <ImageView
+            android:id="@+id/imageViewLogo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="24dp"
+            android:contentDescription="Logo"
+            app:srcCompat="@drawable/hotelevago_foreground"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/txtTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cambiar Contraseña"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:fontFamily="@font/nunito_black"
+            app:layout_constraintTop_toBottomOf="@id/imageViewLogo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Campo: Contraseña actual -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutPasswordActual"
+            style="@style/CustomTextInputRegister"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:layout_constraintTop_toBottomOf="@id/txtTitulo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editPasswordActual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_form_superadmin"
+                android:hint="Contraseña actual"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:textColorHint="#FFFFFF"
+                android:textStyle="bold"
+                android:fontFamily="@font/nunito_semibold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo: Nueva contraseña -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutPasswordNueva"
+            style="@style/CustomTextInputRegister"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:layout_constraintTop_toBottomOf="@id/layoutPasswordActual"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editPasswordNueva"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_form_superadmin"
+                android:hint="Nueva contraseña"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:textColorHint="#FFFFFF"
+                android:textStyle="bold"
+                android:fontFamily="@font/nunito_semibold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo: Confirmar nueva contraseña -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutPasswordConfirmar"
+            style="@style/CustomTextInputRegister"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:layout_constraintTop_toBottomOf="@id/layoutPasswordNueva"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editPasswordConfirmar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_form_superadmin"
+                android:hint="Confirmar nueva contraseña"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:textColorHint="#FFFFFF"
+                android:textStyle="bold"
+                android:fontFamily="@font/nunito_semibold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botones Guardar / Cancelar -->
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@id/layoutPasswordConfirmar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/btnGuardar"
+                android:layout_width="148dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#F0C47C"
+                android:fontFamily="@font/nunito_black"
+                android:text="Guardar"
+                android:textColor="@color/background_gradient"
+                app:cornerRadius="20dp" />
+
+            <Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="148dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="#5D0E14"
+                android:fontFamily="@font/nunito_black"
+                android:text="Cancelar"
+                android:textColor="@android:color/white"
+                app:cornerRadius="20dp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
