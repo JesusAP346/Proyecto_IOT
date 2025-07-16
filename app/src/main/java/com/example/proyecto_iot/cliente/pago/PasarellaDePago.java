@@ -138,6 +138,11 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
     }
 
     private void guardarReservaEnFirebase(Tarjeta tarjetaSeleccionada) {
+
+        String documentId = db.collection("reservas").document().getId();
+
+        // Setear el ID en el objeto reserva
+        reserva.setIdReserva(documentId);
         // Guardar la reserva en Firestore
         db.collection("reservas")
                 .add(reserva)
