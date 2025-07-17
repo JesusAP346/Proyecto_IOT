@@ -28,7 +28,6 @@ public class EditarPerfilSuperAdminActivity extends AppCompatActivity {
         itemLocalidad = findViewById(R.id.itemCiudad);
         itemNumero = findViewById(R.id.itemTelefono);
         itemFoto = findViewById(R.id.ivEditarFotoPerfil); // IMPORTANTE: debes asegurarte que esta id corresponda a la opción de editar foto
-        itemContrasena=findViewById(R.id.itemContrasena);
         btnCancelar = findViewById(R.id.btnCancelar);
         btnBack = findViewById(R.id.btnBack);
 
@@ -61,11 +60,7 @@ public class EditarPerfilSuperAdminActivity extends AppCompatActivity {
             Intent intent = new Intent(EditarPerfilSuperAdminActivity.this, RegisterFotoPerfilSAActivity.class);
             startActivity(intent);
         });
-        // Listener para editar contraseña
-        itemContrasena.setOnClickListener(v -> {
-            Intent intent = new Intent(EditarPerfilSuperAdminActivity.this, RegisterActivityCambiarContraSA.class);
-            startActivity(intent);
-        });
+
         // Listener para cancelar
         btnCancelar.setOnClickListener(v -> finish());
         // Listener para la flechita superior izquierda
