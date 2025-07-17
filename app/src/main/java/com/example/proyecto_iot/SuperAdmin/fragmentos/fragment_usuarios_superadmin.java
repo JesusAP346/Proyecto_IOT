@@ -91,7 +91,8 @@ public class fragment_usuarios_superadmin extends Fragment {
     }
 
     private void cargarUsuariosDesdeFirestore() {
-        usuariosRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        usuariosRef.whereEqualTo("idRol", "Cliente")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
