@@ -24,6 +24,7 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,15 +38,22 @@ import com.example.proyecto_iot.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.Timestamp;
 
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ChatBottomSheet extends BottomSheetDialogFragment {
 
@@ -63,12 +71,13 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
     private String idAdministrador;
     private String idUsuarioActual;
     private PopupWindow emojiPopup;
+    private String chatId;
+    private String nombreAdministrador = "Administrador del hotel";
 
-    // SharedPreferences para persistencia
-    private static final String PREF_NAME = "chat_messages";
-    private static final String KEY_MESSAGES = "messages_list";
-    private SharedPreferences sharedPreferences;
-    private Gson gson;
+    // Firestore
+    private FirebaseFirestore db;
+    private ListenerRegistration messagesListener;
+    private ListenerRegistration adminStatusListener;
 
     // Request codes para intents
     private static final int REQUEST_PICK_FILE = 100;
@@ -94,17 +103,20 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_sheet_chat, container, false);
 
-        initStorage();
+        // Inicializar Firestore
+        db = FirebaseFirestore.getInstance();
+
         initViews(view);
-        loadMessages();
+        initializeChat();
         setupRecyclerView();
         setupListeners();
 
+        return view;
+    }
 
+    private void initializeChat() {
         if (getArguments() != null) {
             idAdministrador = getArguments().getString("idAdministrador");
-
-            // Log para verificar el ID del administrador
             Log.d("ChatBottomSheet", "ID Administrador: " + idAdministrador);
 
             // Obtener ID del usuario actual
@@ -113,18 +125,193 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
                 Log.d("ChatBottomSheet", "ID Usuario Actual: " + idUsuarioActual);
             } else {
                 Log.e("ChatBottomSheet", "Usuario no autenticado");
+                return;
             }
 
-            // Log adicional para verificar que ambos IDs están disponibles
-            Log.d("ChatBottomSheet", "¿Ambos IDs disponibles? " +
-                    (idAdministrador != null && idUsuarioActual != null));
+            // Generar ID único para el chat
+            chatId = generateChatId(idUsuarioActual, idAdministrador);
+            Log.d("ChatBottomSheet", "Chat ID: " + chatId);
 
+            // Obtener información del administrador
+            obtenerInfoAdministrador();
+
+            // Inicializar el chat en Firestore
+            inicializarChatEnFirestore();
         } else {
             Log.e("ChatBottomSheet", "No se recibieron argumentos");
         }
+    }
 
+    private String generateChatId(String userId, String adminId) {
+        // Generar ID único combinando los dos IDs de forma consistente
+        return userId.compareTo(adminId) < 0 ? userId + "_" + adminId : adminId + "_" + userId;
+    }
 
-        return view;
+    private void obtenerInfoAdministrador() {
+        db.collection("usuarios")
+                .document(idAdministrador)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String nombre = documentSnapshot.getString("nombre");
+                        if (nombre != null && !nombre.isEmpty()) {
+                            nombreAdministrador = nombre;
+                        }
+                        Log.d("ChatBottomSheet", "Nombre administrador: " + nombreAdministrador);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ChatBottomSheet", "Error obteniendo info del administrador", e);
+                });
+    }
+
+    private void inicializarChatEnFirestore() {
+        // Verificar si el chat ya existe
+        db.collection("chats")
+                .document(chatId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        // Crear nuevo chat
+                        Map<String, Object> chatData = new HashMap<>();
+                        chatData.put("userId", idUsuarioActual);
+                        chatData.put("adminId", idAdministrador);
+                        chatData.put("createdAt", Timestamp.now());
+                        chatData.put("lastMessage", "");
+                        chatData.put("lastMessageTime", Timestamp.now());
+                        chatData.put("isActive", true);
+
+                        db.collection("chats")
+                                .document(chatId)
+                                .set(chatData)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("ChatBottomSheet", "Chat creado exitosamente");
+                                    setupMessageListener();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("ChatBottomSheet", "Error creando chat", e);
+                                });
+                    } else {
+                        Log.d("ChatBottomSheet", "Chat ya existe");
+                        setupMessageListener();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ChatBottomSheet", "Error verificando chat", e);
+                });
+    }
+
+    private void setupMessageListener() {
+        // Listener para mensajes en tiempo real
+        messagesListener = db.collection("chats")
+                .document(chatId)
+                .collection("messages")
+                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.e("ChatBottomSheet", "Error escuchando mensajes", e);
+                            return;
+                        }
+
+                        if (snapshots != null) {
+                            mensajes.clear();
+                            for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                                ChatMessage message = documentToMessage(doc);
+                                if (message != null) {
+                                    mensajes.add(message);
+                                }
+                            }
+
+                            if (chatAdapter != null) {
+                                chatAdapter.notifyDataSetChanged();
+                                scrollToBottom();
+                            }
+                        }
+                    }
+                });
+
+        // Listener para estado del administrador
+        setupAdminStatusListener();
+    }
+
+    private void setupAdminStatusListener() {
+        adminStatusListener = db.collection("usuarios")
+                .document(idAdministrador)
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if (e != null) {
+                        Log.e("ChatBottomSheet", "Error escuchando estado del admin", e);
+                        return;
+                    }
+
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        Boolean isOnline = documentSnapshot.getBoolean("isOnline");
+                        Timestamp lastSeen = documentSnapshot.getTimestamp("lastSeen");
+
+                        if (isOnline != null && isOnline) {
+                            updateEstado("En línea");
+                        } else if (lastSeen != null) {
+                            updateEstado("Últ. vez " + formatLastSeen(lastSeen));
+                        } else {
+                            updateEstado("Desconectado");
+                        }
+                    }
+                });
+    }
+
+    private String formatLastSeen(Timestamp timestamp) {
+        Date date = timestamp.toDate();
+        Date now = new Date();
+        long diff = now.getTime() - date.getTime();
+
+        if (diff < 60000) { // Menos de 1 minuto
+            return "hace un momento";
+        } else if (diff < 3600000) { // Menos de 1 hora
+            return "hace " + (diff / 60000) + " min";
+        } else if (diff < 86400000) { // Menos de 24 horas
+            return "hace " + (diff / 3600000) + " h";
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            return sdf.format(date);
+        }
+    }
+
+    private ChatMessage documentToMessage(DocumentSnapshot doc) {
+        try {
+            String texto = doc.getString("text");
+            String senderId = doc.getString("senderId");
+            Timestamp timestamp = doc.getTimestamp("timestamp");
+            String type = doc.getString("type");
+
+            if (texto == null || senderId == null || timestamp == null) {
+                return null;
+            }
+
+            boolean isEnviado = senderId.equals(idUsuarioActual);
+            String hora = formatTime(timestamp);
+
+            // Determinar estado del mensaje
+            ChatMessage.MessageStatus status = ChatMessage.MessageStatus.DELIVERED;
+            if (isEnviado) {
+                Boolean isRead = doc.getBoolean("isRead");
+                if (isRead != null && isRead) {
+                    status = ChatMessage.MessageStatus.READ;
+                } else {
+                    status = ChatMessage.MessageStatus.SENT;
+                }
+            }
+
+            return new ChatMessage(texto, hora, isEnviado, status);
+        } catch (Exception e) {
+            Log.e("ChatBottomSheet", "Error convirtiendo documento a mensaje", e);
+            return null;
+        }
+    }
+
+    private String formatTime(Timestamp timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return sdf.format(timestamp.toDate());
     }
 
     @Override
@@ -145,18 +332,6 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
                 requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1001);
             }
         }
-
-
-        updateEstado("En línea");
-
-        recyclerViewMensajes.post(() -> {
-            scrollToBottom();
-        });
-    }
-
-    private void initStorage() {
-        sharedPreferences = getContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        gson = new Gson();
     }
 
     private void initViews(View view) {
@@ -167,45 +342,18 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
         btnCerrarChat = view.findViewById(R.id.btnCerrarChat);
         recyclerViewMensajes = view.findViewById(R.id.recyclerViewMensajes);
         tvEstado = view.findViewById(R.id.tvEstado);
-    }
 
-    private void loadMessages() {
-        String messagesJson = sharedPreferences.getString(KEY_MESSAGES, null);
-
-        if (messagesJson != null) {
-            Type type = new TypeToken<List<ChatMessage>>(){}.getType();
-            mensajes = gson.fromJson(messagesJson, type);
-
-            if (mensajes == null) {
-                mensajes = new ArrayList<>();
-            }
-        } else {
-            mensajes = new ArrayList<>();
-            agregarMensajeSoporte("¡Hola! ¿En qué puedo ayudarte hoy?");
-        }
-    }
-
-    private void saveMessages() {
-        String messagesJson = gson.toJson(mensajes);
-        sharedPreferences.edit()
-                .putString(KEY_MESSAGES, messagesJson)
-                .apply();
+        mensajes = new ArrayList<>();
     }
 
     private void setupRecyclerView() {
         chatAdapter = new ChatAdapter(mensajes);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(false); // Asegura el orden correcto
+        layoutManager.setReverseLayout(false);
 
         recyclerViewMensajes.setLayoutManager(layoutManager);
         recyclerViewMensajes.setAdapter(chatAdapter);
-
-        if (!mensajes.isEmpty()) {
-            recyclerViewMensajes.post(() -> {
-                recyclerViewMensajes.scrollToPosition(mensajes.size() - 1);
-            });
-        }
     }
 
     private void scrollToBottom() {
@@ -256,85 +404,47 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void enviarMensaje(String texto) {
-        ChatMessage mensaje = new ChatMessage(
-                texto,
-                getCurrentTime(),
-                true,
-                ChatMessage.MessageStatus.SENT
-        );
+        if (texto.trim().isEmpty()) return;
 
-        mensajes.add(mensaje);
-        chatAdapter.notifyItemInserted(mensajes.size() - 1);
+        // Crear mensaje en Firestore
+        Map<String, Object> messageData = new HashMap<>();
+        messageData.put("text", texto);
+        messageData.put("senderId", idUsuarioActual);
+        messageData.put("receiverId", idAdministrador);
+        messageData.put("timestamp", Timestamp.now());
+        messageData.put("type", "text");
+        messageData.put("isRead", false);
 
-        // Scroll inmediato y suave 7u7
-        scrollToBottom();
+        db.collection("chats")
+                .document(chatId)
+                .collection("messages")
+                .add(messageData)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("ChatBottomSheet", "Mensaje enviado: " + documentReference.getId());
 
-        saveMessages();
-        etMensaje.setText("");
+                    // Actualizar último mensaje del chat
+                    actualizarUltimoMensaje(texto);
 
-        if (texto.trim().equalsIgnoreCase("HOTEL")) {
-            // Responder automáticamente después de un pequeño delay
-            recyclerViewMensajes.postDelayed(() -> {
-                responderMensajeHotel();
-            }, 1000);
-        }
+                    etMensaje.setText("");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ChatBottomSheet", "Error enviando mensaje", e);
+                    Toast.makeText(getContext(), "Error enviando mensaje", Toast.LENGTH_SHORT).show();
+                });
     }
 
-    private void mostrarNotificacion(String mensaje, String texto) {
-        Context context = requireContext();
+    private void actualizarUltimoMensaje(String texto) {
+        Map<String, Object> updateData = new HashMap<>();
+        updateData.put("lastMessage", texto);
+        updateData.put("lastMessageTime", Timestamp.now());
 
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        String channelId = "chat_channel";
-        String channelName = "Chat Notifications";
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    channelId,
-                    channelName,
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.drawable.ic_chat)
-                .setContentTitle("Nuevo mensaje")
-                .setContentText(mensaje)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
-
-        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        db.collection("chats")
+                .document(chatId)
+                .update(updateData)
+                .addOnFailureListener(e -> {
+                    Log.e("ChatBottomSheet", "Error actualizando último mensaje", e);
+                });
     }
-
-
-
-    private void responderMensajeHotel() {
-        // Agregar mensaje de respuesta para cierta palabra clave
-        agregarMensajeSoporte("MENSAJE DE PRUEBA DE NOTIFICACIÓN");
-
-    }
-
-    private void agregarMensajeSoporte(String texto) {
-        ChatMessage mensaje = new ChatMessage(
-                texto,
-                getCurrentTime(),
-                false,
-                ChatMessage.MessageStatus.DELIVERED
-        );
-
-        mensajes.add(mensaje);
-        saveMessages();
-
-        if (chatAdapter != null) {
-            chatAdapter.notifyItemInserted(mensajes.size() - 1);
-            scrollToBottom(); // Usar método helper
-        }
-
-        mostrarNotificacion(texto, texto);
-    }
-
 
     private void toggleRecording() {
         if (!isRecording) {
@@ -347,6 +457,7 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
     private void startRecording() {
         isRecording = true;
         btnEnviarMicrofono.setImageResource(R.drawable.ic_send);
+        updateEstado("Grabando...");
     }
 
     private void stopRecording() {
@@ -358,18 +469,26 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void enviarMensajeAudio() {
-        ChatMessage mensaje = new ChatMessage(
-                "🎵 Mensaje de audio",
-                getCurrentTime(),
-                true,
-                ChatMessage.MessageStatus.SENT
-        );
+        // Crear mensaje de audio en Firestore
+        Map<String, Object> messageData = new HashMap<>();
+        messageData.put("text", "🎵 Mensaje de audio");
+        messageData.put("senderId", idUsuarioActual);
+        messageData.put("receiverId", idAdministrador);
+        messageData.put("timestamp", Timestamp.now());
+        messageData.put("type", "audio");
+        messageData.put("isRead", false);
 
-        mensajes.add(mensaje);
-        chatAdapter.notifyItemInserted(mensajes.size() - 1);
-        scrollToBottom();
-
-        saveMessages();
+        db.collection("chats")
+                .document(chatId)
+                .collection("messages")
+                .add(messageData)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("ChatBottomSheet", "Mensaje de audio enviado");
+                    actualizarUltimoMensaje("🎵 Mensaje de audio");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ChatBottomSheet", "Error enviando mensaje de audio", e);
+                });
     }
 
     private void mostrarOpcionesAdjuntar() {
@@ -419,25 +538,30 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
 
         if (resultCode == Activity.RESULT_OK) {
             String mensajeArchivo = "";
+            String tipoArchivo = "";
 
             switch (requestCode) {
                 case REQUEST_CAMERA:
                     mensajeArchivo = "📷 Foto de cámara";
+                    tipoArchivo = "image";
                     break;
                 case REQUEST_PICK_IMAGE:
                     mensajeArchivo = "🖼️ Imagen de galería";
+                    tipoArchivo = "image";
                     break;
                 case REQUEST_PICK_FILE:
                     if (data != null && data.getData() != null) {
                         String fileName = getFileName(data.getData());
                         mensajeArchivo = "📎 " + (fileName != null ? fileName : "Archivo adjunto");
+                        tipoArchivo = "file";
                     } else {
                         mensajeArchivo = "📎 Archivo adjunto";
+                        tipoArchivo = "file";
                     }
                     break;
             }
 
-            enviarMensajeArchivo(mensajeArchivo);
+            enviarMensajeArchivo(mensajeArchivo, tipoArchivo);
         }
     }
 
@@ -463,19 +587,26 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
         return result;
     }
 
-    private void enviarMensajeArchivo(String textoArchivo) {
-        ChatMessage mensaje = new ChatMessage(
-                textoArchivo,
-                getCurrentTime(),
-                true,
-                ChatMessage.MessageStatus.SENT
-        );
+    private void enviarMensajeArchivo(String textoArchivo, String tipoArchivo) {
+        Map<String, Object> messageData = new HashMap<>();
+        messageData.put("text", textoArchivo);
+        messageData.put("senderId", idUsuarioActual);
+        messageData.put("receiverId", idAdministrador);
+        messageData.put("timestamp", Timestamp.now());
+        messageData.put("type", tipoArchivo);
+        messageData.put("isRead", false);
 
-        mensajes.add(mensaje);
-        chatAdapter.notifyItemInserted(mensajes.size() - 1);
-        scrollToBottom(); // Usar método helper
-
-        saveMessages();
+        db.collection("chats")
+                .document(chatId)
+                .collection("messages")
+                .add(messageData)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("ChatBottomSheet", "Archivo enviado");
+                    actualizarUltimoMensaje(textoArchivo);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ChatBottomSheet", "Error enviando archivo", e);
+                });
     }
 
     private void mostrarSelectorEmoji() {
@@ -536,20 +667,34 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
-    private String getCurrentTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        return sdf.format(new Date());
+    public void marcarMensajesComoLeidos() {
+        db.collection("chats")
+                .document(chatId)
+                .collection("messages")
+                .whereEqualTo("receiverId", idUsuarioActual)
+                .whereEqualTo("isRead", false)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        doc.getReference().update("isRead", true);
+                    }
+                });
     }
 
-    public void limpiarChat() {
-        mensajes.clear();
-        chatAdapter.notifyDataSetChanged();
-        saveMessages();
-        agregarMensajeSoporte("¡Hola! ¿En qué puedo ayudarte hoy?");
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-        recyclerViewMensajes.post(() -> {
-            scrollToBottom();
-        });
+        // Limpiar listeners
+        if (messagesListener != null) {
+            messagesListener.remove();
+        }
+        if (adminStatusListener != null) {
+            adminStatusListener.remove();
+        }
+
+        // Marcar mensajes como leídos al cerrar
+        marcarMensajesComoLeidos();
     }
 
     public static class ChatMessage {
