@@ -29,6 +29,9 @@
             android:name=".SuperAdmin.InicioSesionActivitySuperAdmin"
             android:exported="false" />
         <activity
+            android:name=".cliente.chat.ListaChatsActivity"
+            android:exported="false" />
+        <activity
             android:name=".SuperAdmin.ActivityPerfilSuperAdmin"
             android:exported="false" />
         <activity
