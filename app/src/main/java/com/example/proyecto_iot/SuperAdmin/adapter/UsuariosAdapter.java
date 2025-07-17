@@ -72,6 +72,8 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
             TextView tvNombre = sheetView.findViewById(R.id.tvNombreAdmin);
             TextView tvNumero = sheetView.findViewById(R.id.tvNumeroAdmin);
             TextView btnEliminar = sheetView.findViewById(R.id.btnEliminar);
+            TextView btnEditar = sheetView.findViewById(R.id.btnEditar);
+            TextView btnActivar = sheetView.findViewById(R.id.btnActivar);
 
             tvNombre.setText(usuario.getNombres() + " " + usuario.getApellidos());
             tvNumero.setText(usuario.getNumCelular());
@@ -81,6 +83,16 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
             } else {
                 ivFoto.setImageResource(R.drawable.ic_generic_user);
             }
+
+            btnEditar.setOnClickListener(view -> {
+                dialog.dismiss();
+                FragmentPerfilUsuariosSuperadmin fragment = FragmentPerfilUsuariosSuperadmin.newInstance(usuario);
+                ((AppCompatActivity) v.getContext()).getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            });
 
             btnEliminar.setOnClickListener(view -> {
                 dialog.dismiss();
@@ -106,9 +118,25 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
                         .show();
             });
 
+            btnActivar.setOnClickListener(view -> {
+                dialog.dismiss();
+                boolean nuevoEstado = !usuario.isEstadoCuenta();
+                FirebaseFirestore.getInstance().collection("usuarios")
+                        .document(usuario.getId())
+                        .update("estadoCuenta", nuevoEstado)
+                        .addOnSuccessListener(aVoid -> {
+                            String msg = nuevoEstado ? "Usuario activado." : "Usuario desactivado.";
+                            Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(v.getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+            });
+
             dialog.setContentView(sheetView);
             dialog.show();
         });
+
     }
 
     @Override
