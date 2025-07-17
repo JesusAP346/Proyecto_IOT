@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,7 +13,9 @@ import android.view.ViewGroup;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
+import com.example.proyecto_iot.administradorHotel.chat.ListaChatAdminActivity;
 import com.example.proyecto_iot.cliente.NotificacionesFragment;
+import com.example.proyecto_iot.cliente.chat.ListaChatsActivity;
 import com.example.proyecto_iot.databinding.FragmentHomeBinding;
 /**
  * A simple {@link Fragment} subclass.
@@ -83,6 +86,11 @@ public class HomeFragment extends Fragment {
                     .replace(R.id.frame_layout, adminNotificacionesFragment)
                     .addToBackStack(null)
                     .commit();
+        });
+
+        binding.iconoChat.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), ListaChatAdminActivity.class);
+            startActivity(intent);
         });
 
         binding.btnHabitaciones.setOnClickListener(v -> {

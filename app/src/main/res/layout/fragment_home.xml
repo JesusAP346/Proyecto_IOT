@@ -27,6 +27,16 @@
                 android:textStyle="bold"
                 android:paddingBottom="4dp" />
 
+            <ImageView
+                android:id="@+id/iconoChat"
+                android:layout_width="38dp"
+                android:layout_height="31dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="60dp"
+                android:src="@drawable/ic_chat"
+                android:contentDescription="Chat" />
+
             <!-- Campana con notificación -->
             <FrameLayout
                 android:id="@+id/notificacion_container"
