@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.proyecto_iot.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -58,6 +60,8 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
     private ChatAdapter chatAdapter;
     private List<ChatMessage> mensajes;
     private boolean isRecording = false;
+    private String idAdministrador;
+    private String idUsuarioActual;
     private PopupWindow emojiPopup;
 
     // SharedPreferences para persistencia
@@ -95,6 +99,30 @@ public class ChatBottomSheet extends BottomSheetDialogFragment {
         loadMessages();
         setupRecyclerView();
         setupListeners();
+
+
+        if (getArguments() != null) {
+            idAdministrador = getArguments().getString("idAdministrador");
+
+            // Log para verificar el ID del administrador
+            Log.d("ChatBottomSheet", "ID Administrador: " + idAdministrador);
+
+            // Obtener ID del usuario actual
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                idUsuarioActual = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                Log.d("ChatBottomSheet", "ID Usuario Actual: " + idUsuarioActual);
+            } else {
+                Log.e("ChatBottomSheet", "Usuario no autenticado");
+            }
+
+            // Log adicional para verificar que ambos IDs están disponibles
+            Log.d("ChatBottomSheet", "¿Ambos IDs disponibles? " +
+                    (idAdministrador != null && idUsuarioActual != null));
+
+        } else {
+            Log.e("ChatBottomSheet", "No se recibieron argumentos");
+        }
+
 
         return view;
     }

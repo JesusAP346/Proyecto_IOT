@@ -55,6 +55,8 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
     private List<ServicioAdicional> serviciosSeleccionados = new ArrayList<>();
     private FirebaseFirestore db;
 
+    private Hotel hotel;
+
     public DetalleHabitacionClienteFragment() {
         // Required empty public constructor
     }
@@ -78,6 +80,7 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
         if (getArguments() != null) {
             habitacion = (Habitacion2) getArguments().getSerializable(ARG_HABITACION);
             hotelId = getArguments().getString(ARG_HOTEL_ID);
+            cargarDatosHotel(hotelId);
             fechaInicioGlobal = getArguments().getString("fechaInicio");
             fechaFinGlobal = getArguments().getString("fechaFin");
             if (habitacion != null) {
@@ -494,9 +497,22 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
 
         FloatingActionButton fabChat = view.findViewById(R.id.fabChat);
         fabChat.setOnClickListener(v -> {
-            ChatBottomSheet chatBottomSheet = new ChatBottomSheet();
-            chatBottomSheet.show(getParentFragmentManager(), "ChatBottomSheet");
+            if (getArguments() != null && hotel != null) {
+                String hotelId = getArguments().getString(ARG_HOTEL_ID);
+
+                // Crear el Bundle con el ID del administrador
+                Bundle args = new Bundle();
+                args.putString("idAdministrador", hotel.getIdAdministrador());
+
+                Log.d("HOLAAAAAAA", "ID Administrador: " + hotel.getIdAdministrador());
+
+                // Crear el ChatBottomSheet y pasarle los argumentos
+                ChatBottomSheet chatBottomSheet = new ChatBottomSheet();
+                chatBottomSheet.setArguments(args);  // Esta línea faltaba
+                chatBottomSheet.show(getParentFragmentManager(), "ChatBottomSheet");
+            }
         });
+
         Button btnReservar = view.findViewById(R.id.btnReservar);
         btnReservar.setOnClickListener(v -> {
             procesarReserva();
@@ -578,5 +594,22 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
         Log.d("RESERVA", "Cantidad de noches: " + reserva.getCantNoches());
         Log.d("RESERVA", "Monto total: S/. " + reserva.getMonto());
         Log.d("RESERVA", "Servicios adicionales seleccionados: " + serviciosParaReserva.size());
+    }
+
+    private void cargarDatosHotel(String hotelId) {
+        db.collection("hoteles").document(hotelId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        hotel = documentSnapshot.toObject(Hotel.class);
+                        assert hotel != null;
+                        Log.d("DETALLE_HOTEL", "Hotel encontrado: " + hotel.getNombre());
+
+                    } else {
+                        Log.w("DETALLE_HOTEL", "No se encontró el hotel con ID: " + hotelId);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("DETALLE_HOTEL", "Error al obtener hotel", e);
+                });
     }
 }

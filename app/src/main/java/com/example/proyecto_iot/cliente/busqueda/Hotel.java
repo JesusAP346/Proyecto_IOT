@@ -6,6 +6,7 @@ import java.util.List;
 public class Hotel implements Serializable {
 
     private String id;
+    private String idAdministrador;
     private String nombre;
     private String ubicacion;
     private String precio;
@@ -19,6 +20,14 @@ public class Hotel implements Serializable {
 
     public String getFechaInicio() {
         return fechaInicio;
+    }
+
+    public String getIdAdministrador() {
+        return idAdministrador;
+    }
+
+    public void setIdAdministrador(String idAdministrador) {
+        this.idAdministrador = idAdministrador;
     }
 
     public void setFechaInicio(String fechaInicio) {

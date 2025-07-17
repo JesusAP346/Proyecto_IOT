@@ -110,10 +110,24 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
             requireActivity().getSupportFragmentManager().popBackStack();
         });
 
+
+
         FloatingActionButton fabChat = view.findViewById(R.id.fabChat);
         fabChat.setOnClickListener(v -> {
-            ChatBottomSheet chatBottomSheet = new ChatBottomSheet();
-            chatBottomSheet.show(getParentFragmentManager(), "ChatBottomSheet");
+            if (getArguments() != null && hotel != null) {
+                String hotelId = getArguments().getString(ARG_HOTEL_ID);
+
+                // Crear el Bundle con el ID del administrador
+                Bundle args = new Bundle();
+                args.putString("idAdministrador", hotel.getIdAdministrador());
+
+                Log.d("HOLAAAAAAA", "ID Administrador: " + hotel.getIdAdministrador());
+
+                // Crear el ChatBottomSheet y pasarle los argumentos
+                ChatBottomSheet chatBottomSheet = new ChatBottomSheet();
+                chatBottomSheet.setArguments(args);  // Esta línea faltaba
+                chatBottomSheet.show(getParentFragmentManager(), "ChatBottomSheet");
+            }
         });
 
         return view;
