@@ -1,170 +1,572 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@android:color/white">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Título -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:fontFamily="@font/nunito_black"
-            android:text="Perfil de Usuario"
-            android:textSize="34sp"
-            android:textStyle="bold" />
-
-        <!-- Foto -->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivFotoUsuario"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            android:layout_marginBottom="8dp"
-            android:elevation="4dp"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/CircleImageView" />
-
-        <!-- Nombre -->
-        <TextView
-            android:id="@+id/tvNombreUsuario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/nunito_black"
-            android:text="Carlos Tafur"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <!-- Tarjetas de estadísticas -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="16dp">
+            android:orientation="vertical">
 
+            <!-- FOTO DE PERFIL -->
+            <FrameLayout
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivFotoPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/circle_background"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_generic_user"
+                    app:shapeAppearanceOverlay="@style/CircleImageView" />
+            </FrameLayout>
+
+            <!-- SECCIÓN: Datos personales -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Datos personales"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:paddingVertical="8dp" />
+
+            <!-- Nombre completo -->
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="90dp"
-                android:orientation="vertical"
-                android:background="#FFE2B3"
-                android:padding="12dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
 
-                <TextView
-                    android:text="Total de viajes completados"
-                    android:textSize="13sp"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_person_placeholder" />
 
-                <TextView
-                    android:id="@+id/tvViajes"
-                    android:text="98 de 100"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/nunito_black"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvNombreCompleto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Juan Pérez"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nombre completo"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
 
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+
+            <!-- Estado de cuenta -->
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="90dp"
-                android:orientation="vertical"
-                android:background="#FFE2B3"
-                android:padding="12dp"
-                android:layout_marginStart="8dp"
-                android:gravity="center">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
 
-                <TextView
-                    android:text="Calificación de los conductores"
-                    android:textSize="13sp"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_shield" />
 
-                <TextView
-                    android:id="@+id/tvCalificacion"
-                    android:text="4.96"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/nunito_black"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvEstadoCuenta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Activo"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Estado de cuenta"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+            <!-- SECCIÓN: Identidad -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Información del hotel"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:paddingVertical="8dp" />
+            <!-- Número de habitaciones -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_bed" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvHabitaciones"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Número de habitaciones alquiladas"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+
+            <!-- SECCIÓN: Identidad -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Identidad"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:paddingVertical="8dp" />
+            <!-- Tipo de documento -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_dni" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTipoDocumento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DNI"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tipo de documento"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+
+            <!-- Número de documento -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_dni" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvNumeroDocumento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="71761570"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Número de documento"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- SECCIÓN: Fecha de nacimiento -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nacimiento"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:paddingVertical="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_calendar_days_solid" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvFechaNacimiento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10/05/2000"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha de nacimiento"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+
+            <!-- SECCIÓN: Lugar de origen -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lugar de origen"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:paddingVertical="8dp" />
+
+            <!-- Departamento -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_location" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvDepartamento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Amazonas"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Departamento"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+
+            <!-- Provincia -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_location" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvProvincia"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Chachapoyas"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Provincia"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+
+            <!-- Distrito -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_location" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvDistrito"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Distrito X"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Distrito"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+
+            <!-- SECCIÓN: Dirección -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dirección"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:paddingVertical="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_location" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvDireccion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Calle 123, Ciudad"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dirección"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+
+            <!-- SECCIÓN: Contacto -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Contacto"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:paddingVertical="8dp" />
+
+            <!-- Teléfono -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_menu_call" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTelefono"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="952 530 495"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Teléfono"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+
+            <!-- Correo electrónico -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_email" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvCorreo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="correo@ejemplo.com"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Correo electrónico"
+                        android:textColor="#777"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
+    </ScrollView>
 
-        <!-- Detalles -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Detalles"
-            android:textStyle="bold"
-            android:textSize="17sp"
-            android:fontFamily="@font/nunito_black"
-            android:layout_marginBottom="8dp"/>
-
-        <LinearLayout android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView android:id="@+id/tvDocumento"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✔ Documento de identidad: 7561701"
-                android:fontFamily="@font/nunito_semibold"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView android:id="@+id/tvCorreo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✔ Correo electrónico: correo@gmail.com"
-                android:fontFamily="@font/nunito_semibold"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView android:id="@+id/tvTelefono"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✔ Teléfono: 952530495"
-                android:fontFamily="@font/nunito_semibold"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView android:id="@+id/tvDireccion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✔ Dirección: Avenida Bolívar 2150"
-                android:fontFamily="@font/nunito_semibold"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView android:id="@+id/tvHabitaciones"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✔ Habitaciones registradas: 20"
-                android:fontFamily="@font/nunito_semibold"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView android:id="@+id/tvEstado"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✔ Estado de cuenta: activo"
-                android:fontFamily="@font/nunito_semibold"
-                android:layout_marginBottom="4dp"/>
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

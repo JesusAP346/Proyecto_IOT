@@ -11,32 +11,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.dtos.Usuario;
 import com.squareup.picasso.Picasso;
 
 public class FragmentPerfilUsuariosSuperadmin extends Fragment {
 
-    private String dni, nombre, numeroTelefono, imagenPerfil, correo, direccion, fechaNacimiento,
-            rol, estadoCuenta, nivelCompletado, calificacion;
-    private int habitacionesRegistradas;
+    private Usuario usuario;
 
     public FragmentPerfilUsuariosSuperadmin() {}
 
-    // Cambiado para aceptar UsuariosEntity (por campos)
-    public static FragmentPerfilUsuariosSuperadmin newInstance(com.example.proyecto_iot.SuperAdmin.database.UsuariosEntity usuario) {
+    public static FragmentPerfilUsuariosSuperadmin newInstance(Usuario usuario) {
         FragmentPerfilUsuariosSuperadmin fragment = new FragmentPerfilUsuariosSuperadmin();
         Bundle args = new Bundle();
-        args.putString("dni", usuario.dni);
-        args.putString("nombre", usuario.nombre);
-        args.putString("numeroTelefono", usuario.numeroTelefono);
-        args.putString("imagenPerfil", usuario.imagenPerfil);
-        args.putString("correo", usuario.correo);
-        args.putString("direccion", usuario.direccion);
-        args.putString("fechaNacimiento", usuario.fechaNacimiento);
-        args.putString("rol", usuario.rol);
-        args.putInt("habitacionesRegistradas", usuario.habitacionesRegistradas);
-        args.putString("estadoCuenta", usuario.estadoCuenta);
-        args.putString("nivelCompletado", usuario.nivelCompletado);
-        args.putString("calificacion", usuario.calificacion);
+        args.putSerializable("usuario", usuario);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,18 +32,7 @@ public class FragmentPerfilUsuariosSuperadmin extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            dni = getArguments().getString("dni");
-            nombre = getArguments().getString("nombre");
-            numeroTelefono = getArguments().getString("numeroTelefono");
-            imagenPerfil = getArguments().getString("imagenPerfil");
-            correo = getArguments().getString("correo");
-            direccion = getArguments().getString("direccion");
-            fechaNacimiento = getArguments().getString("fechaNacimiento");
-            rol = getArguments().getString("rol");
-            habitacionesRegistradas = getArguments().getInt("habitacionesRegistradas");
-            estadoCuenta = getArguments().getString("estadoCuenta");
-            nivelCompletado = getArguments().getString("nivelCompletado");
-            calificacion = getArguments().getString("calificacion");
+            usuario = (Usuario) getArguments().getSerializable("usuario");
         }
     }
 
@@ -68,26 +44,46 @@ public class FragmentPerfilUsuariosSuperadmin extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ImageView ivFoto = view.findViewById(R.id.ivFotoUsuario);
-        TextView tvNombre = view.findViewById(R.id.tvNombreUsuario);
-        TextView tvViajes = view.findViewById(R.id.tvViajes);
-        TextView tvCalificacion = view.findViewById(R.id.tvCalificacion);
-        TextView tvDocumento = view.findViewById(R.id.tvDocumento);
-        TextView tvCorreo = view.findViewById(R.id.tvCorreo);
-        TextView tvTelefono = view.findViewById(R.id.tvTelefono);
-        TextView tvDireccion = view.findViewById(R.id.tvDireccion);
+        ImageView ivFoto = view.findViewById(R.id.ivFotoPerfil);
+        TextView tvNombreCompleto = view.findViewById(R.id.tvNombreCompleto);
+        TextView tvEstadoCuenta = view.findViewById(R.id.tvEstadoCuenta);
         TextView tvHabitaciones = view.findViewById(R.id.tvHabitaciones);
-        TextView tvEstado = view.findViewById(R.id.tvEstado);
+        TextView tvTipoDocumento = view.findViewById(R.id.tvTipoDocumento);
+        TextView tvNumeroDocumento = view.findViewById(R.id.tvNumeroDocumento);
+        TextView tvFechaNacimiento = view.findViewById(R.id.tvFechaNacimiento);
+        TextView tvDepartamento = view.findViewById(R.id.tvDepartamento);
+        TextView tvProvincia = view.findViewById(R.id.tvProvincia);
+        TextView tvDistrito = view.findViewById(R.id.tvDistrito);
+        TextView tvDireccion = view.findViewById(R.id.tvDireccion);
+        TextView tvTelefono = view.findViewById(R.id.tvTelefono);
+        TextView tvCorreo = view.findViewById(R.id.tvCorreo);
 
-        Picasso.get().load(imagenPerfil).into(ivFoto);
-        tvNombre.setText(nombre);
-        tvViajes.setText(nivelCompletado); // usando campo `nivelCompletado` como "viajes"
-        tvCalificacion.setText(calificacion);
-        tvDocumento.setText("✔ Documento de identidad: " + dni);
-        tvCorreo.setText("✔ Correo electrónico: " + correo);
-        tvTelefono.setText("✔ Teléfono: " + numeroTelefono);
-        tvDireccion.setText("✔ Dirección: " + direccion);
-        tvHabitaciones.setText("✔ Habitaciones registradas: " + habitacionesRegistradas);
-        tvEstado.setText("✔ Estado de cuenta: " + estadoCuenta);
+        if (usuario != null) {
+            String nombreCompleto = (usuario.getNombres() != null ? usuario.getNombres() : "") +
+                    " " +
+                    (usuario.getApellidos() != null ? usuario.getApellidos() : "");
+
+            tvNombreCompleto.setText(nombreCompleto);
+            tvEstadoCuenta.setText(usuario.isEstadoCuenta() ? "Activo" : "Inactivo");
+            tvHabitaciones.setText(usuario.getIdHotel() != null ? usuario.getIdHotel() : "0"); // O usa el campo correcto si es un número
+
+            tvTipoDocumento.setText(usuario.getTipoDocumento() != null ? usuario.getTipoDocumento() : "");
+            tvNumeroDocumento.setText(usuario.getNumDocumento() != null ? usuario.getNumDocumento() : "");
+            tvFechaNacimiento.setText(usuario.getFechaNacimiento() != null ? usuario.getFechaNacimiento() : "");
+
+            tvDepartamento.setText(usuario.getDepartamento() != null ? usuario.getDepartamento() : "");
+            tvProvincia.setText(usuario.getProvincia() != null ? usuario.getProvincia() : "");
+            tvDistrito.setText(usuario.getDistrito() != null ? usuario.getDistrito() : "");
+            tvDireccion.setText(usuario.getDireccion() != null ? usuario.getDireccion() : "");
+
+            tvTelefono.setText(usuario.getNumCelular() != null ? usuario.getNumCelular() : "");
+            tvCorreo.setText(usuario.getEmail() != null ? usuario.getEmail() : "");
+
+            if (usuario.getUrlFotoPerfil() != null && !usuario.getUrlFotoPerfil().isEmpty()) {
+                Picasso.get().load(usuario.getUrlFotoPerfil()).into(ivFoto);
+            } else {
+                ivFoto.setImageResource(R.drawable.ic_generic_user);
+            }
+        }
     }
 }
