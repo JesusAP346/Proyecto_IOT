@@ -1,6 +1,7 @@
 package com.example.proyecto_iot.cliente.busqueda;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.core.util.Pair;
@@ -18,11 +19,13 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.proyecto_iot.BuildConfig;
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.cliente.chat.ListaChatsActivity;
 import com.example.proyecto_iot.login.UsuarioClienteViewModel;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
@@ -123,6 +126,13 @@ public class BusquedaFragment extends Fragment{
         txtHuespedes = view.findViewById(R.id.txtHuespedes);
         btnBuscar = view.findViewById(R.id.btnBuscar);
         etDestino = view.findViewById(R.id.etDestino);
+
+        ImageButton btnChat = view.findViewById(R.id.btnChat);
+
+        btnChat.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ListaChatsActivity.class);
+            startActivity(intent);
+        });
 
         // Inicializar botón como deshabilitado
         btnBuscar.setEnabled(false);

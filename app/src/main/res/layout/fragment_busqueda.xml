@@ -6,16 +6,56 @@
     android:layout_height="match_parent"
     tools:context=".cliente.busqueda.BusquedaFragment">
 
+    <!-- Header con logo, nombre de la app y botón de chat -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Nombre de la app -->
+        <TextView
+            android:id="@+id/txtAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HotelVGO"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Botón de chat -->
+        <ImageButton
+            android:id="@+id/btnChat"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_chat2"
+            android:contentDescription="Chat"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Logo centrado (movido hacia abajo) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="347dp"
-        android:layout_height="105dp"
-        android:layout_marginTop="24dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/rounded_background_logo_busqueda"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerLayout"
         tools:context=".cliente.busqueda.BusquedaFragment">
 
         <ImageView
@@ -25,7 +65,8 @@
             android:src="@drawable/discord_logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
@@ -38,7 +79,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtBuscar" />
 
-
     <TextView
         android:id="@+id/txtBuscar"
         android:layout_width="wrap_content"
@@ -50,7 +90,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
-
 
     <TextView
         android:id="@+id/textView8"
@@ -96,7 +135,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- CardView del formulario de búsqueda AGRANDADO -->
+            <!-- CardView del formulario de búsqueda REDUCIDO -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
@@ -110,22 +149,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="32dp">
+                    android:padding="24dp">
 
                     <!-- Destino -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="6dp"
                         android:text="Destino"
                         android:textColor="#808080"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilDestino"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="24dp"
+                        android:layout_marginBottom="20dp"
                         app:boxStrokeWidth="0dp"
                         app:boxStrokeWidthFocused="0dp"
                         app:hintEnabled="false">
@@ -137,8 +176,8 @@
                             android:background="@android:color/transparent"
                             android:hint="¿A dónde vamos?"
                             android:inputType="text"
-                            android:padding="12dp"
-                            android:textSize="18sp"
+                            android:padding="10dp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -146,14 +185,14 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginVertical="20dp"
+                        android:layout_marginVertical="16dp"
                         android:background="#D0D0D0" />
 
                     <!-- Fechas y huéspedes en 2 columnas -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="32dp"
+                        android:layout_marginBottom="24dp"
                         android:orientation="horizontal"
                         android:weightSum="2">
 
@@ -168,19 +207,19 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
+                                android:layout_marginBottom="6dp"
                                 android:text="Fecha de entrada/salida"
                                 android:textColor="#808080"
-                                android:textSize="14sp" />
+                                android:textSize="12sp" />
 
                             <TextView
                                 android:id="@+id/txtFechas"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:padding="12dp"
+                                android:padding="10dp"
                                 android:text="Seleccionar fechas"
                                 android:textColor="#808080"
-                                android:textSize="16sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -202,19 +241,19 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
+                                android:layout_marginBottom="6dp"
                                 android:text="Huéspedes y habitaciones"
                                 android:textColor="#808080"
-                                android:textSize="14sp" />
+                                android:textSize="12sp" />
 
                             <TextView
                                 android:id="@+id/txtHuespedes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:padding="12dp"
+                                android:padding="10dp"
                                 android:text="Seleccionar huéspedes"
                                 android:textColor="#808080"
-                                android:textSize="16sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
@@ -223,18 +262,17 @@
                     <Button
                         android:id="@+id/btnBuscar"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="48dp"
                         android:layout_gravity="center"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:backgroundTint="#FFA500"
                         android:text="Buscar"
                         android:textColor="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         app:cornerRadius="12dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
