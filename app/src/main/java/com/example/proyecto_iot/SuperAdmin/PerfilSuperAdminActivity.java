@@ -1,6 +1,5 @@
 package com.example.proyecto_iot.SuperAdmin;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,95 +9,103 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.dtos.Usuario;
-import com.example.proyecto_iot.login.LoginActivity;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.squareup.picasso.Picasso;
 
 public class PerfilSuperAdminActivity extends AppCompatActivity {
 
-    private TextView tvNombreCompleto, tvCorreo, gmail, numero, ciudadNatal,dni;
-    private ImageView btnBack, ivFotoPerfil;
-    private MaterialButton btnEditarPerfil, btnCerrarSesion;
-
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
+    private ListenerRegistration listenerRegistration;
+
+    private ImageView btnBack, ivFotoPerfil;
+    private TextView tvNombreCompleto, tvTipoDocumento, tvNumeroDocumento, tvFechaNacimiento,
+            tvDepartamento, tvProvincia, tvDistrito, tvDireccion, tvTelefono, tvCorreo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil_super_admin);
 
-        // Inicializar Firebase
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
-        // Vincular vistas
-        tvNombreCompleto = findViewById(R.id.tvNombreCompleto);
-        tvCorreo = findViewById(R.id.tvCorreo);
-        gmail=findViewById(R.id.gmail);
-        numero=findViewById(R.id.numero);
-        dni=findViewById(R.id.dni);
-        ciudadNatal=findViewById(R.id.ciudadNatal);
-
         btnBack = findViewById(R.id.btnBack);
         ivFotoPerfil = findViewById(R.id.ivFotoPerfil);
-        btnEditarPerfil = findViewById(R.id.btnEditarPerfil);
-        btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        tvNombreCompleto = findViewById(R.id.tvNombreCompleto);
+        tvTipoDocumento = findViewById(R.id.tvTipoDocumento);
+        tvNumeroDocumento = findViewById(R.id.tvNumeroDocumento);
+        tvFechaNacimiento = findViewById(R.id.tvFechaNacimiento);
+        tvDepartamento = findViewById(R.id.tvDepartamento);
+        tvProvincia = findViewById(R.id.tvProvincia);
+        tvDistrito = findViewById(R.id.tvDistrito);
+        tvDireccion = findViewById(R.id.tvDireccion);
+        tvTelefono = findViewById(R.id.tvTelefono);
+        tvCorreo = findViewById(R.id.tvCorreo);
 
-        // Acción botón atrás
         btnBack.setOnClickListener(v -> finish());
 
-        // Acción cerrar sesión
-        btnCerrarSesion.setOnClickListener(v -> {
-            auth.signOut();
-            Intent intent = new Intent(PerfilSuperAdminActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        });
-
-        btnEditarPerfil.setOnClickListener(v -> {
-            Intent intent = new Intent(PerfilSuperAdminActivity.this, EditarPerfilSuperAdminActivity.class);
-            startActivity(intent);
-        });
-
-        // Cargar datos del usuario actual
-        cargarDatosPerfil();
+        escucharDatosUsuarioEnTiempoReal();
     }
 
-    private void cargarDatosPerfil() {
-        String uid = auth.getCurrentUser().getUid();
+    private void escucharDatosUsuarioEnTiempoReal() {
+        String uid = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
 
-        firestore.collection("usuarios").document(uid)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Usuario usuario = documentSnapshot.toObject(Usuario.class);
-                        if (usuario != null) {
-                            String nombre = (usuario.getNombres() != null) ? usuario.getNombres() : "";
-                            String apellido = (usuario.getApellidos() != null) ? usuario.getApellidos() : "";
-                            tvNombreCompleto.setText(nombre + " " + apellido);
-                            tvCorreo.setText(usuario.getEmail());
-                            gmail.setText(usuario.getEmail());
-                            numero.setText(usuario.getNumCelular());
-                            dni.setText(usuario.getNumDocumento());
-                            ciudadNatal.setText(usuario.getDistrito() + " " +usuario.getProvincia() + " " + usuario.getDepartamento()   );
-                            // ✅ Cargar imagen con Picasso si la URL no está vacía
-                            if (usuario.getUrlFotoPerfil() != null && !usuario.getUrlFotoPerfil().isEmpty()) {
-                                Picasso.get()
-                                        .load(usuario.getUrlFotoPerfil())
-                                        .placeholder(R.drawable.ic_generic_user) // imagen mientras carga
-                                        .into(ivFotoPerfil);
-                            }
-                        }
-                    } else {
-                        Toast.makeText(this, "Usuario no encontrado", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error al cargar perfil", Toast.LENGTH_SHORT).show();
-                });
+        if (uid == null) {
+            Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DocumentReference docRef = firestore.collection("usuarios").document(uid);
+        listenerRegistration = docRef.addSnapshotListener((documentSnapshot, e) -> {
+            if (e != null) {
+                Toast.makeText(this, "Error al obtener datos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                Usuario usuario = documentSnapshot.toObject(Usuario.class);
+                if (usuario != null) {
+                    actualizarVista(usuario);
+                }
+            }
+        });
     }
 
+    private void actualizarVista(Usuario usuario) {
+        String nombreCompleto = (usuario.getNombres() != null ? usuario.getNombres() : "") +
+                (usuario.getApellidos() != null ? " " + usuario.getApellidos() : "");
+        tvNombreCompleto.setText(nombreCompleto.trim());
+
+        tvTipoDocumento.setText(usuario.getTipoDocumento() != null ? usuario.getTipoDocumento() : "");
+        tvNumeroDocumento.setText(usuario.getNumDocumento() != null ? usuario.getNumDocumento() : "");
+        tvFechaNacimiento.setText(usuario.getFechaNacimiento() != null ? usuario.getFechaNacimiento() : "");
+
+        tvDepartamento.setText(usuario.getDepartamento() != null ? usuario.getDepartamento() : "");
+        tvProvincia.setText(usuario.getProvincia() != null ? usuario.getProvincia() : "");
+        tvDistrito.setText(usuario.getDistrito() != null ? usuario.getDistrito() : "");
+        tvDireccion.setText(usuario.getDireccion() != null ? usuario.getDireccion() : "");
+        tvTelefono.setText(usuario.getNumCelular() != null ? usuario.getNumCelular() : "");
+        tvCorreo.setText(usuario.getEmail() != null ? usuario.getEmail() : "");
+
+        if (usuario.getUrlFotoPerfil() != null && !usuario.getUrlFotoPerfil().isEmpty()) {
+            Picasso.get()
+                    .load(usuario.getUrlFotoPerfil())
+                    .placeholder(R.drawable.ic_generic_user)
+                    .into(ivFotoPerfil);
+        } else {
+            ivFotoPerfil.setImageResource(R.drawable.ic_generic_user);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (listenerRegistration != null) {
+            listenerRegistration.remove();
+        }
+    }
 }

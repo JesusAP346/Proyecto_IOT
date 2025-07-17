@@ -76,7 +76,7 @@ public class PagPrincipalSuperAdmin extends AppCompatActivity {
         });
 
         binding.btnPerfil.setOnClickListener(v -> {
-            Intent intent = new Intent(PagPrincipalSuperAdmin.this, PerfilSuperAdminActivity.class);
+            Intent intent = new Intent(PagPrincipalSuperAdmin.this, ActivityPerfilSuperAdmin.class);
             startActivity(intent);
         });
 

@@ -190,30 +190,6 @@
                 android:layout_height="1dp"
                 android:background="#E0E0E0" />
 
-            <LinearLayout
-                android:id="@+id/itemContrasena"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingVertical="12dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_lock" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:text="Cambiar contraseña"
-                    android:textColor="#000"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
