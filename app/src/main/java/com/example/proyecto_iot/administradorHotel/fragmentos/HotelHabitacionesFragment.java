@@ -36,6 +36,7 @@ public class HotelHabitacionesFragment extends Fragment {
     private HabitacionAdapter adapter;
     private List<HabitacionHotel> listaHabitaciones = new ArrayList<>();
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHotelHabitacionesBinding.inflate(inflater, container, false);

@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.entity.Reserva;
+import com.example.proyecto_iot.administradorHotel.entity.ReservaCompletaHotel;
 import com.example.proyecto_iot.administradorHotel.fragmentos.DetalleHuespedFragment;
 import com.example.proyecto_iot.administradorHotel.fragmentos.HomeFragment;
 import com.example.proyecto_iot.administradorHotel.fragmentos.HotelFragment;
@@ -59,21 +60,16 @@ public class PagPrincipalAdmin extends AppCompatActivity {
         });
 
 
-        // ✅ A. ¿Viene desde notificación?
-        if (getIntent() != null && getIntent().hasExtra("reservaNombre")) {
-            String nombre = getIntent().getStringExtra("reservaNombre");
-            boolean simulado = getIntent().getBooleanExtra("simulado", false);
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("reservaCompleta")) {
+            ReservaCompletaHotel reservaCompleta = (ReservaCompletaHotel) intent.getSerializableExtra("reservaCompleta");
 
-            Reserva reserva = buscarReservaPorNombre(nombre);
-            if (reserva != null) {
-                // 🟣 Marca pestaña RESERVAS (esto lo hace visible seleccionado)
+            if (reservaCompleta != null) {
                 binding.bottomNavigationView.setSelectedItemId(R.id.reservas);
 
-                // 🟣 Carga directamente el fragmento correspondiente
-                Fragment detalleFragment = new DetalleHuespedFragment();
+                DetalleHuespedFragment detalleFragment = new DetalleHuespedFragment();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("reserva", reserva);
-                bundle.putBoolean("simulado", simulado);
+                bundle.putSerializable("reservaCompleta", reservaCompleta);
                 detalleFragment.setArguments(bundle);
 
                 getSupportFragmentManager().beginTransaction()
@@ -82,9 +78,9 @@ public class PagPrincipalAdmin extends AppCompatActivity {
                         .commit();
             }
         } else {
-            // 🟣 Si no viene de notificación, carga Home por defecto
             replaceFragment(new HomeFragment());
         }
+
     }
 
 

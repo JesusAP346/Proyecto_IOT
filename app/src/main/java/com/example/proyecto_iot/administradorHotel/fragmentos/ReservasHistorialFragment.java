@@ -23,6 +23,7 @@ public class ReservasHistorialFragment extends Fragment {
         // Constructor vacío requerido
     }
 
+
     public static ReservasHistorialFragment newInstance(String param1, String param2) {
         ReservasHistorialFragment fragment = new ReservasHistorialFragment();
         Bundle args = new Bundle();

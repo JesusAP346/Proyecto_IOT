@@ -5,7 +5,9 @@ import java.io.Serializable;
 public class ServicioAdicionalReserva implements Serializable {
     private String idServicioAdicional;
     private int cantDias;
-
+    public ServicioAdicionalReserva() {
+        // Constructor vacío necesario para Firebase
+    }
     public ServicioAdicionalReserva(String idServicioAdicional, int cantDias) {
         this.idServicioAdicional = idServicioAdicional;
         this.cantDias = cantDias;

@@ -1,32 +1,31 @@
 package com.example.proyecto_iot.administradorHotel.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.administradorHotel.dto.ReservaDto;
-import com.example.proyecto_iot.administradorHotel.entity.Reserva;
-import com.example.proyecto_iot.administradorHotel.fragmentos.DetalleHuespedFragment;
+import com.example.proyecto_iot.administradorHotel.entity.ReservaCompletaHotel;
 import com.example.proyecto_iot.databinding.ItemReservaAdminBinding;
 
 import java.util.List;
 
 public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ReservaViewHolder> {
 
-    private final List<ReservaDto> dtoList;
-    private final List<Reserva> fullList;
-    private final Context context;
+    public interface OnItemClickListener {
+        void onVerDetallesClick(ReservaCompletaHotel reservaCompleta);
+    }
 
-    public ReservaAdapter(List<ReservaDto> dtoList, List<Reserva> fullList, Context context) {
-        this.dtoList = dtoList;
-        this.fullList = fullList;
+    private final List<ReservaCompletaHotel> listaReservasCompletas;
+    private final Context context;
+    private final OnItemClickListener listener;
+
+    public ReservaAdapter(List<ReservaCompletaHotel> listaReservasCompletas, Context context, OnItemClickListener listener) {
+        this.listaReservasCompletas = listaReservasCompletas;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -39,32 +38,29 @@ public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ReservaV
 
     @Override
     public void onBindViewHolder(@NonNull ReservaViewHolder holder, int position) {
-        ReservaDto dto = dtoList.get(position);
-        Reserva reserva = fullList.get(position);
+        ReservaCompletaHotel reservaCompleta = listaReservasCompletas.get(position);
 
-        holder.binding.nombreHuesped.setText(dto.getNombre());
-        holder.binding.tipoHabitacion.setText(dto.getTipo());
-        holder.binding.checkin.setText(dto.getCheckIn());
-        holder.binding.checkout.setText(dto.getCheckOut());
+        String[] nombres = reservaCompleta.getUsuario().getNombres().split(" ");
+        String[] apellidos = reservaCompleta.getUsuario().getApellidos().split(" ");
+        String nombreHuesped = nombres[0] + " " + apellidos[0];
+
+        String tipoHabitacion = reservaCompleta.getHabitacion().getTipo();
+        String fechaEntrada = reservaCompleta.getReserva().getFechaEntrada();
+        String fechaSalida = reservaCompleta.getReserva().getFechaSalida();
+
+        holder.binding.nombreHuesped.setText(nombreHuesped);
+        holder.binding.tipoHabitacion.setText(tipoHabitacion);
+        holder.binding.checkin.setText(fechaEntrada);
+        holder.binding.checkout.setText(fechaSalida);
 
         holder.binding.btnVerDetalles.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("reserva", reserva);
-
-            DetalleHuespedFragment fragment = new DetalleHuespedFragment();
-            fragment.setArguments(bundle);
-
-            ((FragmentActivity) context).getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_layout, fragment)
-                    .addToBackStack(null)
-                    .commit();
+            listener.onVerDetallesClick(reservaCompleta);
         });
     }
 
     @Override
     public int getItemCount() {
-        return dtoList.size();
+        return listaReservasCompletas.size();
     }
 
     public static class ReservaViewHolder extends RecyclerView.ViewHolder {

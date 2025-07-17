@@ -1,16 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragmentReservasTodas"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF"
-    android:padding="16dp">
+    android:background="@color/background_gradient">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerReservas"
+    <!-- Contenedor principal con RelativeLayout -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:layout_weight="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <!-- RecyclerView con margen inferior para que no lo tape el FAB -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerReservasTodas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="0dp"
+            android:clipToPadding="false"
+            android:scrollbars="none" />
+
+        <!-- Mensaje cuando no hay habitaciones -->
+        <LinearLayout
+            android:id="@+id/layoutMensajeVacio"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No tiene reservas activas"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp" />
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:src="@drawable/icono_calendariochevere"
+                android:scaleType="centerInside"
+                android:layout_marginTop="24dp" />
+        </LinearLayout>
+        <!-- FAB flotante abajo a la derecha -->
+
+    </RelativeLayout>
 </LinearLayout>

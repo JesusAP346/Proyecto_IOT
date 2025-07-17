@@ -57,6 +57,7 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Ha
         });
     }
 
+
     @Override
     public int getItemCount() {
         return listaHabitaciones.size();

@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FDFDFD"
-    android:padding="16dp">
+    android:background="@color/background_gradient"
+    android:padding="16dp"
+    android:scrollbars="none">
 
     <LinearLayout
         android:id="@+id/mainLayout"
@@ -50,322 +51,161 @@
                 android:src="@drawable/ic_chat" />
         </LinearLayout>
 
-
-
-
-        <!-- CARD: Datos del huésped -->
+        <!-- INFORMACIÓN DEL HUÉSPED -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            app:cardCornerRadius="12dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="0dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp">
-
-                <!-- Imagen de perfil -->
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/icono_perfil"
-                    android:layout_marginStart="0dp"
-                    android:layout_gravity="center_vertical" />
-
-                <!-- Contenedor vertical: Título + GridLayout -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="8dp">
-
-                    <!-- Subtítulo -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Datos del huésped"
-                        android:textStyle="bold"
-                        android:textSize="16sp"
-                        android:textColor="#000000"
-                        android:layout_marginBottom="4dp" />
-
-                    <!-- Grid con los datos -->
-                    <GridLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:columnCount="2"
-                        android:alignmentMode="alignMargins"
-                        android:columnOrderPreserved="false"
-                        android:rowOrderPreserved="false">
-
-                        <!-- Nombre -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Nombre:"
-                            android:textStyle="bold"
-                            android:textSize="13sp"
-                            android:textColor="#888888" />
-
-                        <TextView
-                            android:id="@+id/textNombre"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:minWidth="0dp"
-                            android:paddingStart="6dp"
-                            android:text="Jesús André Espinoza Gonzales"
-                            android:textSize="15sp"
-                            android:textColor="#000000"
-                            android:maxLines="2"
-                            android:ellipsize="none"
-                            android:lineSpacingExtra="0dp" />
-
-                        <!-- DNI -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="DNI:"
-                            android:textStyle="bold"
-                            android:textSize="13sp"
-                            android:textColor="#888888" />
-
-                        <TextView
-                            android:id="@+id/textDni"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:minWidth="0dp"
-                            android:paddingStart="6dp"
-                            android:text="7654433"
-                            android:textSize="15sp"
-                            android:textColor="#000000"
-                            android:lineSpacingExtra="4dp" />
-
-                        <!-- Correo -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Correo:"
-                            android:textStyle="bold"
-                            android:textSize="13sp"
-                            android:textColor="#888888" />
-
-                        <TextView
-                            android:id="@+id/textCorreo"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:minWidth="0dp"
-                            android:paddingStart="6dp"
-                            android:text="jesus.gonzales@gmail.com"
-                            android:textSize="15sp"
-                            android:textColor="#000000"
-                            android:maxLines="3"
-                            android:ellipsize="none"
-                            android:lineSpacingExtra="4dp" />
-
-                        <!-- Teléfono -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Teléfono:"
-                            android:textStyle="bold"
-                            android:textSize="13sp"
-                            android:textColor="#888888" />
-
-                        <TextView
-                            android:id="@+id/textTelefono"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:minWidth="0dp"
-                            android:paddingStart="6dp"
-                            android:text="947874842"
-                            android:textSize="15sp"
-                            android:textColor="#000000"
-                            android:maxLines="3"
-                            android:ellipsize="none"
-                            android:lineSpacingExtra="4dp" />
-                    </GridLayout>
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-
-
-
-
-
-
-        <!-- CARD: Detalles de la habitación -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            app:cardElevation="4dp"
-            app:cardCornerRadius="12dp">
+            android:layout_marginHorizontal="2dp"
+            android:background="@android:color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:paddingStart="0dp"
-                android:paddingEnd="12dp">
+                android:padding="20dp">
 
-                <!-- DETALLES DE HABITACIÓN -->
+                <!-- Contenedor horizontal con info + foto -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/icono_habitacion"
-                        android:layout_gravity="center_vertical" />
-
+                    <!-- Información de contacto -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="8dp">
+                        android:orientation="vertical">
 
-                        <!-- Título -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Detalles de la habitación"
+                            android:text="Información del Huésped"
+                            android:textColor="@color/gray_600"
+                            android:textSize="12sp"
                             android:textStyle="bold"
-                            android:textSize="16sp"
-                            android:textColor="#000000"
-                            android:layout_marginBottom="4dp" />
+                            android:layout_marginBottom="12dp" />
 
-                        <!-- Grid-style detalles -->
                         <GridLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:columnCount="2"
                             android:alignmentMode="alignMargins"
-                            android:columnOrderPreserved="false"
                             android:rowOrderPreserved="false">
 
+                            <!-- Nombre -->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Habitación:"
+                                android:text="Nombre:"
+                                android:textColor="@color/gray_700"
+                                android:textSize="14sp"
                                 android:textStyle="bold"
-                                android:textSize="13sp"
-                                android:textColor="#888888" />
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp" />
 
                             <TextView
-                                android:id="@+id/textTipoHabitacion"
+                                android:id="@+id/text_nombre"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_columnWeight="1"
-                                android:paddingStart="6dp"
-                                android:text="Stándar"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
+                                android:text="Juan Pérez García"
+                                android:textColor="@color/gray_800"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="8dp" />
 
+                            <!-- DNI -->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Capacidad:"
+                                android:text="DNI:"
+                                android:textColor="@color/gray_700"
+                                android:textSize="14sp"
                                 android:textStyle="bold"
-                                android:textSize="13sp"
-                                android:textColor="#888888" />
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp" />
 
                             <TextView
-                                android:id="@+id/textCapacidad"
+                                android:id="@+id/text_dni"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_columnWeight="1"
-                                android:paddingStart="6dp"
-                                android:text="2 adultos"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
+                                android:text="12345678"
+                                android:textColor="@color/gray_800"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="8dp" />
 
+                            <!-- Teléfono -->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Tamaño en m²:"
+                                android:text="Teléfono:"
+                                android:textColor="@color/gray_700"
+                                android:textSize="14sp"
                                 android:textStyle="bold"
-                                android:textSize="13sp"
-                                android:textColor="#888888" />
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp" />
 
                             <TextView
-                                android:id="@+id/textTamano"
+                                android:id="@+id/text_telefono"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_columnWeight="1"
-                                android:paddingStart="6dp"
-                                android:text="30"
-                                android:textSize="15sp"
-                                android:textColor="#000000" />
+                                android:text="+51 987 654 321"
+                                android:textColor="@color/gray_800"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="8dp" />
                         </GridLayout>
+                    </LinearLayout>
+
+                    <!-- Foto de perfil -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/img_perfil_huesped"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/ic_person"
+                            android:background="@drawable/circle_background"
+                            android:scaleType="centerCrop" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- EQUIPAMIENTO -->
+                <!-- CORREO FUERA, DEBAJO, ALINEADO COMO LOS DEMÁS -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="-2dp">
 
-                    <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/icono_equipamiento"
-                        android:layout_gravity="center_vertical" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Correo:"
+                        android:textColor="@color/gray_700"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="8dp" />
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/text_correo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="8dp">
-
-                        <TextView
-                            android:id="@+id/text_equipamiento"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Equipamiento"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
-                            android:textColor="#000000"
-                            android:layout_marginBottom="2dp" />
-
-
-                        <!-- Distribución en 2 columnas dinámica -->
-                        <GridLayout
-                            android:id="@+id/grid_equipamiento"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:columnCount="2"
-                            android:alignmentMode="alignMargins"
-                            android:columnOrderPreserved="false"
-                            android:rowOrderPreserved="false" />
-
-                    </LinearLayout>
+                        android:text="juan.perez@email.com"
+                        android:textColor="@color/gray_800"
+                        android:textSize="14sp"
+                        android:maxLines="3"
+                        android:layout_marginLeft="12dp"
+                        android:breakStrategy="simple" />
                 </LinearLayout>
 
 
@@ -375,141 +215,441 @@
 
 
 
-
-
-
-
-        <!-- CARD: Servicios adicionales -->
+        <!-- INFORMACIÓN DE HABITACIÓN (EXPANDIBLE) -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            app:cardCornerRadius="12dp">
+            android:layout_marginHorizontal="2dp"
+            android:background="@android:color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="4dp">
+
+                <!-- HEADER CLICKEABLE -->
+                <LinearLayout
+                    android:id="@+id/header_habitacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_habitacion"
+                        app:tint="#6F6F6F"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="44dp"
+                        android:layout_gravity="center_vertical" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Información de Habitación"
+                            android:textColor="@color/gray_600"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Vista resumida siempre visible - AHORA EN GRID -->
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="2"
+                            android:alignmentMode="alignMargins"
+                            android:rowOrderPreserved="false">
+
+                            <!-- Tipo -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tipo:"
+                                android:textColor="@color/gray_700"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="4dp"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:id="@+id/text_tipo_habitacion"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:text="Suite Deluxe"
+                                android:textColor="@color/gray_800"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="4dp" />
+
+                            <!-- Capacidad -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Capacidad:"
+                                android:textColor="@color/gray_700"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="4dp"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:id="@+id/text_capacidad"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:text="2 Adultos, 1 Niño"
+                                android:textColor="@color/gray_800"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="4dp" />
+
+                            <!-- Precio -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Precio:"
+                                android:textColor="@color/gray_700"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="4dp"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:id="@+id/text_precio"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:text="$250.00 por noche"
+                                android:textColor="@color/gray_800"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="4dp" />
+
+                            <!-- Tamaño -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tamaño:"
+                                android:textColor="@color/gray_700"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="4dp"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:id="@+id/text_tamano"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:text="455 m"
+                                android:textColor="@color/gray_800"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="4dp" />
+                        </GridLayout>
+
+                    </LinearLayout>
+
+
+                    <!-- Icono de expansión -->
+                    <ImageView
+                        android:id="@+id/icon_expand"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_expandir"
+                        app:tint="#6F6F6F"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+
+                <!-- CONTENIDO EXPANDIBLE -->
+                <LinearLayout
+                    android:id="@+id/content_expandible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginTop="16dp"
+                    android:padding="10dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray_200"
+                        android:layout_marginBottom="16dp" />
+                    <!-- SECCIÓN EQUIPAMIENTO -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_equipamiento"
+                            app:tint="#6F6F6F"
+                            android:layout_marginEnd="12dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Equipamiento"
+                                android:textColor="@color/gray_600"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="8dp" />
+
+                            <GridLayout
+                                android:id="@+id/grid_equipamiento"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:columnCount="2" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray_200"
+                        android:layout_marginBottom="16dp" />
+                    <!-- SECCIÓN SERVICIOS INCLUIDOS -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_servicio"
+                            app:tint="#6F6F6F"
+                            android:layout_marginEnd="12dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Servicios Incluidos"
+                                android:textColor="@color/gray_600"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="8dp" />
+
+                            <LinearLayout
+                                android:id="@+id/layout_servicios_dinamicos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray_200"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- SECCIÓN FOTOS EN CARRUSEL -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_camera_admin"
+                                app:tint="#6F6F6F"
+                                android:layout_marginEnd="12dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Fotos añadidas"
+                                android:textColor="@color/gray_600"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <org.imaginativeworld.whynotimagecarousel.ImageCarousel
+                            android:id="@+id/carrusel_imagenes"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginTop="4dp"
+                            app:showIndicator="true" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- FECHAS DE CHECK-IN Y CHECK-OUT -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:layout_marginHorizontal="2dp"
+            android:background="@android:color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:paddingStart="0dp"
-                android:paddingEnd="12dp">
+                android:padding="20dp">
 
-                <!-- Icono alineado a la izquierda -->
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:src="@drawable/icono_servicio"
-                    android:scaleType="centerCrop"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginEnd="0dp" />
-
-
-                <!-- Contenido textual alineado -->
+                <!-- Check-in -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_marginStart="8dp">
+                    android:gravity="center"
+                    android:background="@drawable/rounded_background_light"
+                    android:padding="16dp"
+                    android:layout_marginEnd="8dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_login"
+                        app:tint="#207EFA"
+                        android:layout_marginBottom="8dp" />
 
                     <TextView
-                        android:id="@+id/textServiciosAdicionales"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Servicios adicionales"
+                        android:text="Check-in"
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp"
                         android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/checkin_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="24/4/2025"
+                        android:textColor="@color/gray_800"
                         android:textSize="16sp"
-                        android:textColor="#000000"
+                        android:textStyle="bold"
                         android:layout_marginBottom="2dp" />
 
-                    <!-- Aquí van los ítems dinámicos -->
-                    <LinearLayout
-                        android:id="@+id/layout_servicios_dinamicos"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginTop="4dp" />
+                        android:text="15:00"
+                        android:textColor="@color/gray_600"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
+                <!-- Check-out -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/rounded_background_light"
+                    android:padding="16dp"
+                    android:layout_marginStart="8dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_logout"
+                        app:tint="#FF6B6B"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Check-out"
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/checkout_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="26/4/2025"
+                        android:textColor="@color/gray_800"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="2dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12:00"
+                        android:textColor="@color/gray_600"
+                        android:textSize="14sp" />
+                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
 
-        <!-- Check-in y Check-out en una sola fila -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="4dp">
 
-            <!-- Check-in -->
-            <TextView
-                android:id="@+id/checkin_text"
-                android:layout_width="0dp"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_checkout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Check-in\n24/4/2025"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:layout_marginEnd="4dp" />
-
-            <!-- Check-out -->
-            <TextView
-                android:id="@+id/checkout_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Check-out\n26/4/2025"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:layout_marginStart="4dp" />
+                android:text="Realizar Check-out"
+                android:textColor="@android:color/black"
+                android:backgroundTint="#EEEEEE"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/ic_logout"
+                app:iconTint="@android:color/black"
+                app:iconGravity="textStart"
+                app:iconPadding="12dp"
+                app:strokeWidth="0dp"
+                style="@style/Widget.MaterialComponents.Button" />
         </LinearLayout>
 
 
-        <!-- Botón de check-out (mitad del ancho y centrado) -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_simular_checkout"
-            android:layout_width="wrap_content"
-            android:layout_height="54dp"
-            android:minHeight="60dp"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="8dp"
-            android:layout_gravity="center_horizontal"
-            android:text="Simular Check-out"
-            android:textSize="15sp"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="12dp"
-            app:cornerRadius="12dp"
-            app:strokeColor="#2C5928"
-            app:strokeWidth="1dp"
-            app:backgroundTint="#CEFAC3" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_checkout"
-            android:layout_width="wrap_content"
-            android:layout_height="54dp"
-            android:minHeight="60dp"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="8dp"
-            android:layout_gravity="center_horizontal"
-            android:text="Realizar Check-out"
-            android:textSize="15sp"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="12dp"
-            app:cornerRadius="12dp"
-            app:strokeColor="#772f1a"
-            app:strokeWidth="1dp"
-            app:backgroundTint="#FACEC6" />
+
     </LinearLayout>
 </ScrollView>

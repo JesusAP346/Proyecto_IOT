@@ -2,17 +2,13 @@ package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 
+import android.Manifest;
+import android.content.Intent;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,15 +17,34 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
-import com.example.proyecto_iot.administradorHotel.entity.Reserva;
+import com.example.proyecto_iot.administradorHotel.entity.HabitacionHotel;
+import com.example.proyecto_iot.administradorHotel.entity.ReservaCompletaHotel;
+import com.example.proyecto_iot.administradorHotel.entity.CircleTransform;
 import com.example.proyecto_iot.databinding.FragmentDetalleHuespedBinding;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
+
+import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetalleHuespedFragment extends Fragment {
 
     private FragmentDetalleHuespedBinding binding;
-    private Reserva reserva;
+    private ReservaCompletaHotel reservaCompleta;
+    private String idReserva = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,135 +56,171 @@ public class DetalleHuespedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getArguments() != null && getArguments().containsKey("reserva")) {
-            reserva = (Reserva) getArguments().getSerializable("reserva");
-            if (reserva != null) {
-                mostrarDatosReserva();
-            }
+        reservaCompleta = (ReservaCompletaHotel) getArguments().getSerializable("reservaCompleta");
+        if (reservaCompleta == null) return;
+
+        idReserva = reservaCompleta.getReserva().getIdReserva(); // Asegúrate que tienes este campo
+
+        mostrarDatosHuesped();
+        mostrarDatosHabitacion();
+        mostrarFechas();
+        escucharCambiosEstado(idReserva); // 🔁 Escucha en tiempo real
+        configurarBotones();
+    }
+
+    private void mostrarDatosHuesped() {
+        String nombreCompleto = reservaCompleta.getUsuario().getNombres().split(" ")[0] + " " +
+                reservaCompleta.getUsuario().getApellidos().split(" ")[0];
+
+        binding.textNombre.setText(nombreCompleto);
+        binding.textDni.setText(reservaCompleta.getUsuario().getNumDocumento());
+        binding.textCorreo.setText(reservaCompleta.getUsuario().getEmail());
+        binding.textTelefono.setText(reservaCompleta.getUsuario().getNumCelular());
+
+        if (reservaCompleta.getUsuario().getUrlFotoPerfil() != null &&
+                !reservaCompleta.getUsuario().getUrlFotoPerfil().isEmpty()) {
+            Picasso.get()
+                    .load(reservaCompleta.getUsuario().getUrlFotoPerfil())
+                    .placeholder(R.drawable.ic_person)
+                    .transform(new CircleTransform())
+                    .into(binding.imgPerfilHuesped);
         }
+    }
 
-        boolean simulado = getArguments() != null && getArguments().getBoolean("simulado", false);
+    private void mostrarDatosHabitacion() {
+        HabitacionHotel habitacion = reservaCompleta.getHabitacion();
+        binding.textTipoHabitacion.setText(habitacion.getTipo());
+        binding.textCapacidad.setText(habitacion.getCapacidadAdultos() + " Adultos, " + habitacion.getCapacidadNinos() + " Niño(s)");
+        binding.textPrecio.setText("S/ " + String.format("%.2f", habitacion.getPrecioPorNoche()));
+        binding.textTamano.setText(habitacion.getTamanho() + " m²");
 
-        // ✅ Deshabilitar por defecto
-        binding.btnCheckout.setEnabled(false);
-        binding.btnCheckout.setAlpha(0.5f);
+        mostrarEquipamiento(binding.gridEquipamiento, habitacion.getEquipamiento());
+        mostrarServicios(binding.layoutServiciosDinamicos, habitacion.getServicio());
+        mostrarCarrusel(habitacion.getFotosUrls());
+    }
 
-        if (simulado) {
-            habilitarCheckout();
-        }
+    private void mostrarFechas() {
+        binding.checkinText.setText(reservaCompleta.getReserva().getFechaEntrada());
+        binding.checkoutText.setText(reservaCompleta.getReserva().getFechaSalida());
+    }
 
+    private void configurarBotones() {
         binding.backdetallehuesped.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
 
-        // ✅ Listener siempre preparado, pero sólo funcional si está habilitado
-        binding.btnCheckout.setOnClickListener(v -> {
-            if (binding.btnCheckout.isEnabled()) {
-                CheckoutFragment checkoutFragment = new CheckoutFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("reserva", reserva);
-                checkoutFragment.setArguments(bundle);
-
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout, checkoutFragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
+        binding.headerHabitacion.setOnClickListener(v -> {
+            int visibility = binding.contentExpandible.getVisibility();
+            binding.contentExpandible.setVisibility(visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
+            binding.iconExpand.setRotation(visibility == View.VISIBLE ? 0 : 180);
         });
 
-        binding.btnSimularCheckout.setOnClickListener(v -> {
-            // ✅ Simula notificación
-            habilitarCheckout();
-            simularNotificacionCheckOut();
-        });
+        // Desactivado por defecto
+        binding.btnCheckout.setEnabled(false);
+        binding.btnCheckout.setAlpha(0.5f);
     }
 
-    private void simularNotificacionCheckOut() {
-        Intent intent = new Intent(requireContext(), PagPrincipalAdmin.class);
-        intent.putExtra("reservaNombre", reserva.getNombreCompleto());
-        intent.putExtra("simulado", true);
+    private void escucharCambiosEstado(String idReserva) {
+        final String[] estadoAnterior = {""}; // lo usamos como mutable
+
+        FirebaseFirestore.getInstance()
+                .collection("reservas")
+                .document(idReserva)
+                .addSnapshotListener((snapshot, error) -> {
+                    if (error != null || snapshot == null || !snapshot.exists()) return;
+
+                    String nuevoEstado = snapshot.getString("estado");
+
+                    if (nuevoEstado == null) return;
+
+                    if (!"Checkout".equalsIgnoreCase(estadoAnterior[0]) &&
+                            "Checkout".equalsIgnoreCase(nuevoEstado)) {
+
+                        binding.btnCheckout.setEnabled(true);
+                        binding.btnCheckout.setAlpha(1f);
+
+                        enviarNotificacionCheckout(requireContext(), reservaCompleta);
+
+                    }
+
+                    // Actualiza el estado anterior
+                    estadoAnterior[0] = nuevoEstado;
+                });
+    }
+
+
+
+    private void enviarNotificacionCheckout(Context context, ReservaCompletaHotel reservaCompleta) {
+        Intent intent = new Intent(context, PagPrincipalAdmin.class);
+        intent.putExtra("reservaCompleta", reservaCompleta);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
-                requireContext(),
+                context,
                 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), "importanteDefault")
-                .setSmallIcon(R.drawable.icono_checkout) // tu ícono válido
-                .setContentTitle("⚠️ Alerta de Check-Out")
-                .setContentText("El huésped " + reserva.getNombreCompleto() + " ha solicitado su check-out.")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "importanteDefault")
+                .setSmallIcon(R.drawable.icono_checkout)
+                .setContentTitle("Solicitud de Check-out")
+                .setContentText("El huésped " + reservaCompleta.getUsuario().getNombres() + " ha solicitado su check-out.")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
-        NotificationManagerCompat manager = NotificationManagerCompat.from(requireContext());
-        if (ActivityCompat.checkSelfPermission(requireContext(), POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            manager.notify((int) System.currentTimeMillis(), builder.build());
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            notificationManager.notify((int) System.currentTimeMillis(), builder.build());
         }
     }
 
 
+    private void mostrarEquipamiento(GridLayout contenedor, List<String> items) {
+        contenedor.removeAllViews();
+        Context context = getContext();
+        int padding = 12;
 
-
-
-    private void habilitarCheckout() {
-        binding.btnCheckout.setEnabled(true);
-        binding.btnCheckout.setAlpha(1f);
-    }
-
-
-
-    private void mostrarDatosReserva() {
-        // Datos huésped
-        binding.textNombre.setText(reserva.getNombreCompleto());
-        binding.textDni.setText(reserva.getDni());
-        binding.textCorreo.setText(reserva.getCorreo());
-        binding.textTelefono.setText(reserva.getTelefono());
-
-        // Detalles habitación
-        binding.textTipoHabitacion.setText(reserva.getTipoHabitacion());
-        binding.textCapacidad.setText(reserva.getCapacidad());
-        binding.textTamano.setText(reserva.getTamanioM2() + "");
-
-        // Check-in / Check-out
-        binding.checkinText.setText("Check-in\n" + reserva.getCheckIn());
-        binding.checkoutText.setText("Check-out\n" + reserva.getCheckOut());
-
-        // Equipamientos (dinámico, en GridLayout de 2 columnas)
-        binding.gridEquipamiento.removeAllViews();
-        GridLayout grid = binding.gridEquipamiento;
-        grid.setColumnCount(2);
-
-        for (int i = 0; i < reserva.getEquipamientos().size(); i++) {
-            String item = reserva.getEquipamientos().get(i);
-
-            TextView textView = new TextView(requireContext());
-            textView.setText(item);
-            textView.setTextColor(getResources().getColor(android.R.color.black));
-            textView.setTextSize(15);
-
+        for (String item : items) {
+            TextView tv = new TextView(context);
+            tv.setText("\u2022 " + item);
+            tv.setTextSize(14);
+            tv.setTextColor(getResources().getColor(android.R.color.black));
+            tv.setPadding(padding, padding, padding, padding);
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.rowSpec = GridLayout.spec(i / 2);
-            params.columnSpec = GridLayout.spec(i % 2, 1f); // ocupa mitad exacta
-            params.width = 0; // necesario para que columnSpec 1f funcione
-            params.setMargins(0, 8, 0, 8);
-
-            textView.setLayoutParams(params);
-            grid.addView(textView);
+            params.setMargins(8, 8, 8, 8);
+            tv.setLayoutParams(params);
+            contenedor.addView(tv);
         }
+    }
 
+    private void mostrarServicios(LinearLayout contenedor, List<String> servicios) {
+        contenedor.removeAllViews();
+        for (String servicio : servicios) {
+            TextView tv = new TextView(getContext());
+            tv.setText("\u2022 " + servicio);
+            tv.setTextSize(14);
+            tv.setTextColor(getResources().getColor(android.R.color.black));
+            tv.setPadding(0, 6, 0, 6);
+            contenedor.addView(tv);
+        }
+    }
 
+    private void mostrarCarrusel(List<String> urls) {
+        ImageCarousel carrusel = binding.carruselImagenes;
 
-        // Servicios adicionales (uno debajo del otro en LinearLayout)
-        binding.layoutServiciosDinamicos.removeAllViews();
-        for (String servicio : reserva.getServiciosAdicionales()) {
-            TextView textView = new TextView(requireContext());
-            textView.setText(servicio);
-            textView.setTextColor(getResources().getColor(android.R.color.black));
-            textView.setTextSize(15);
-            textView.setPadding(0, 4, 0, 4);
-            binding.layoutServiciosDinamicos.addView(textView);
+        if (urls != null && !urls.isEmpty()) {
+            List<CarouselItem> items = new ArrayList<>();
+            for (String url : urls) {
+                items.add(new CarouselItem(url));
+            }
+            carrusel.setCarouselType(CarouselType.BLOCK);
+            carrusel.setAutoPlay(true);
+            carrusel.setData(items);
+        } else {
+            carrusel.setVisibility(View.GONE);
         }
     }
 
