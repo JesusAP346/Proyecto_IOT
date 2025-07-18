@@ -30,6 +30,7 @@
             android:exported="false" />
         <activity
             android:name=".administradorHotel.chat.ChatActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".administradorHotel.chat.ListaChatAdminActivity"

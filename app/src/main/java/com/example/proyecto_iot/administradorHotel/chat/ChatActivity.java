@@ -3,7 +3,10 @@ package com.example.proyecto_iot.administradorHotel.chat;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -45,6 +48,7 @@ public class ChatActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView tvEmptyChat;
     private Toolbar toolbar;
+    private View messagesContainer;
 
     private FirebaseFirestore db;
     private FirebaseAuth auth;
@@ -54,6 +58,8 @@ public class ChatActivity extends AppCompatActivity {
     private String userId;
     private String currentAdminId;
     private String userName;
+
+    private ViewTreeObserver.OnGlobalLayoutListener keyboardLayoutListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,7 @@ public class ChatActivity extends AppCompatActivity {
         setupRecyclerView();
         setupToolbar();
         setupSendButton();
+        setupKeyboardListener();
         loadUserName();
         loadMessages();
     }
@@ -94,6 +101,7 @@ public class ChatActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         tvEmptyChat = findViewById(R.id.tv_empty_chat);
         toolbar = findViewById(R.id.toolbar);
+        messagesContainer = findViewById(R.id.messages_container);
     }
 
     private void initializeFirebase() {
@@ -118,6 +126,9 @@ public class ChatActivity extends AppCompatActivity {
 
         recyclerViewMessages.setLayoutManager(layoutManager);
         recyclerViewMessages.setAdapter(messageAdapter);
+
+        // Permitir que el RecyclerView se ajuste al contenido
+        recyclerViewMessages.setHasFixedSize(false);
     }
 
     private void setupToolbar() {
@@ -130,6 +141,56 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setupSendButton() {
         btnSend.setOnClickListener(v -> sendMessage());
+
+        // Configurar el EditText para enviar con Enter
+        etMessage.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND ||
+                    (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)) {
+                sendMessage();
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void setupKeyboardListener() {
+        final View rootView = findViewById(R.id.main);
+        keyboardLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            private int initialHeight = -1;
+            private boolean wasKeyboardOpen = false;
+
+            @Override
+            public void onGlobalLayout() {
+                if (initialHeight == -1) {
+                    initialHeight = rootView.getHeight();
+                }
+
+                int currentHeight = rootView.getHeight();
+                int heightDiff = initialHeight - currentHeight;
+
+                // Si la diferencia es mayor a 200px, asumimos que el teclado está abierto
+                boolean isKeyboardOpen = heightDiff > 200;
+
+                if (isKeyboardOpen != wasKeyboardOpen) {
+                    wasKeyboardOpen = isKeyboardOpen;
+
+                    if (isKeyboardOpen) {
+                        // Teclado abierto - hacer scroll al último mensaje
+                        scrollToBottom();
+                    }
+                }
+            }
+        };
+
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+    }
+
+    private void scrollToBottom() {
+        if (messageList != null && !messageList.isEmpty()) {
+            recyclerViewMessages.post(() -> {
+                recyclerViewMessages.smoothScrollToPosition(messageList.size() - 1);
+            });
+        }
     }
 
     private void loadUserName() {
@@ -199,7 +260,7 @@ public class ChatActivity extends AppCompatActivity {
                             recyclerViewMessages.setVisibility(View.VISIBLE);
 
                             // Scroll al último mensaje
-                            recyclerViewMessages.scrollToPosition(messageList.size() - 1);
+                            scrollToBottom();
                         }
 
                         // Marcar mensajes como leídos
@@ -227,6 +288,9 @@ public class ChatActivity extends AppCompatActivity {
         messageData.put("type", "text");
         messageData.put("isRead", false);
 
+        // Limpiar el campo de texto inmediatamente
+        etMessage.setText("");
+
         // Guardar el mensaje en Firestore
         db.collection("chats")
                 .document(chatId)
@@ -238,12 +302,14 @@ public class ChatActivity extends AppCompatActivity {
                     // Actualizar el último mensaje del chat
                     updateLastMessage(messageText);
 
-                    // Limpiar el campo de texto
-                    etMessage.setText("");
+                    // Hacer scroll al último mensaje
+                    scrollToBottom();
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error al enviar mensaje", e);
                     Toast.makeText(this, "Error al enviar mensaje", Toast.LENGTH_SHORT).show();
+                    // Restaurar el texto si hay error
+                    etMessage.setText(messageText);
                 });
     }
 
@@ -296,6 +362,14 @@ public class ChatActivity extends AppCompatActivity {
         super.onDestroy();
         if (messageListener != null) {
             messageListener.remove();
+        }
+
+        // Remover el listener del teclado
+        if (keyboardLayoutListener != null) {
+            View rootView = findViewById(R.id.main);
+            if (rootView != null) {
+                rootView.getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
+            }
         }
     }
 
