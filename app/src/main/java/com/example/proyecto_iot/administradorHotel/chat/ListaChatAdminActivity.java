@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.administradorHotel.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -153,15 +154,13 @@ public class ListaChatAdminActivity extends AppCompatActivity implements ChatAda
 
     @Override
     public void onChatClick(Chat chat) {
-        // Por ahora solo mostramos un Toast con la información del chat
-        Toast.makeText(this, "Chat seleccionado: " + chat.getUserId(), Toast.LENGTH_SHORT).show();
+
         Log.d(TAG, "Chat clickeado - ID: " + chat.getChatId() + ", Usuario: " + chat.getUserId());
 
-        // Aquí podrías abrir la actividad de chat individual
-        // Intent intent = new Intent(this, ChatActivity.class);
-        // intent.putExtra("chatId", chat.getChatId());
-        // intent.putExtra("userId", chat.getUserId());
-        // startActivity(intent);
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("chatId", chat.getChatId());
+        intent.putExtra("userId", chat.getUserId());
+        startActivity(intent);
     }
 
     @Override
