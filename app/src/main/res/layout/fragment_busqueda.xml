@@ -31,12 +31,12 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <!-- Botón de chat -->
-        <ImageButton
+        <ImageView
             android:id="@+id/btnChat"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_chat2"
+            android:src="@drawable/ic_chat"
             android:contentDescription="Chat"
             android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"

@@ -20,6 +20,7 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -128,7 +129,7 @@ public class BusquedaFragment extends Fragment{
         btnBuscar = view.findViewById(R.id.btnBuscar);
         etDestino = view.findViewById(R.id.etDestino);
 
-        ImageButton btnChat = view.findViewById(R.id.btnChat);
+        ImageView btnChat = view.findViewById(R.id.btnChat);
 
         btnChat.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ListaChatClienteActivity.class);

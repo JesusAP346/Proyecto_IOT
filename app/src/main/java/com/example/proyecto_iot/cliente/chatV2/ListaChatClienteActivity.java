@@ -158,7 +158,7 @@ public class ListaChatClienteActivity extends AppCompatActivity implements ChatC
     public void onChatClick(Chat chat) {
         Log.d(TAG, "Chat clickeado - ID: " + chat.getChatId() + ", Admin: " + chat.getAdminId());
 
-        Intent intent = new Intent(this, ChatActivity.class);
+        Intent intent = new Intent(this, ChatClienteActivity.class);
         intent.putExtra("chatId", chat.getChatId());
         intent.putExtra("adminId", chat.getAdminId());
         startActivity(intent);
