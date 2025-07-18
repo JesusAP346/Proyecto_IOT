@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.proyecto_iot.BuildConfig;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.chat.ListaChatsActivity;
+import com.example.proyecto_iot.cliente.chatV2.ListaChatClienteActivity;
 import com.example.proyecto_iot.login.UsuarioClienteViewModel;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
@@ -130,7 +131,7 @@ public class BusquedaFragment extends Fragment{
         ImageButton btnChat = view.findViewById(R.id.btnChat);
 
         btnChat.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ListaChatsActivity.class);
+            Intent intent = new Intent(getActivity(), ListaChatClienteActivity.class);
             startActivity(intent);
         });
 
