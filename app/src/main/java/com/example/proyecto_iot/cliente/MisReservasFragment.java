@@ -96,13 +96,15 @@ public class MisReservasFragment extends Fragment {
                                     int imagen = R.drawable.hotel1; // temporal (puedes cargar desde URL si lo necesitas)
 
                                     listaReservas.add(new Reserva(
+
                                             nombreHotel,
                                             ubicacion,
                                             estado,
                                             imagen,
                                             entrada,
                                             salida,
-                                            "S/." + monto
+                                            "S/." + monto,
+                                            doc.getId()
                                     ));
                                     adapter.notifyDataSetChanged();
                                 });

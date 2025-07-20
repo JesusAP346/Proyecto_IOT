@@ -9,8 +9,12 @@ public class Reserva {
     private String fechaEntrada;
     private String fechaSalida;
     private String monto;
+    private String id;
 
-    /*
+    public String getId() {
+        return id;
+    }
+/*
     public Reserva(String nombreHotel, String ubicacion, String estado, int imagen) {
         this.nombreHotel = nombreHotel;
         this.ubicacion = ubicacion;
@@ -18,7 +22,7 @@ public class Reserva {
         this.imagen = imagen;
     }*/
 
-    public Reserva(String nombreHotel, String ubicacion, String estado, int imagen, String fechaEntrada, String fechaSalida, String monto) {
+    public Reserva(String nombreHotel, String ubicacion, String estado, int imagen, String fechaEntrada, String fechaSalida, String monto, String id) {
         this.nombreHotel = nombreHotel;
         this.ubicacion = ubicacion;
         this.estado = estado;
@@ -26,6 +30,7 @@ public class Reserva {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.monto = monto;
+        this.id = id;
     }
 
     public String getNombreHotel() {

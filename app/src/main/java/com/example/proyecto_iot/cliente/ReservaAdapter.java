@@ -50,6 +50,8 @@ public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ReservaV
             intent.putExtra("salida", reserva.getFechaSalida());
             intent.putExtra("monto", reserva.getMonto());
             intent.putExtra("imagen", reserva.getImagen());
+            intent.putExtra("idReserva", reserva.getId()); // ✅ PASAR EL ID
+
             holder.itemView.getContext().startActivity(intent);
         });
 
