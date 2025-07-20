@@ -22,6 +22,10 @@ import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 import com.example.proyecto_iot.cliente.busqueda.Reserva;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter.OnTarjetaSelectedListener {
@@ -62,7 +66,39 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
 
             textMontoTotal.setText(montoStr);
             textCantNoches.setText(nochesStr);
+
+            // Validar la fecha de entrada
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                Date fechaEntrada = sdf.parse(reserva.getFechaEntrada());
+
+                Calendar calEntrada = Calendar.getInstance();
+                calEntrada.setTime(fechaEntrada);
+
+                Calendar calActual = Calendar.getInstance();
+
+                // Eliminar la hora de ambos para comparar solo fechas
+                calEntrada.set(Calendar.HOUR_OF_DAY, 0);
+                calEntrada.set(Calendar.MINUTE, 0);
+                calEntrada.set(Calendar.SECOND, 0);
+                calEntrada.set(Calendar.MILLISECOND, 0);
+
+                calActual.set(Calendar.HOUR_OF_DAY, 0);
+                calActual.set(Calendar.MINUTE, 0);
+                calActual.set(Calendar.SECOND, 0);
+                calActual.set(Calendar.MILLISECOND, 0);
+
+                if (calEntrada.equals(calActual)) {
+                    reserva.setEstado("ACTIVO");
+                } else if (calEntrada.after(calActual)) {
+                    reserva.setEstado("PENDIENTE");
+                }
+
+            } catch (ParseException e) {
+                Log.e(TAG, "Error al parsear la fecha de entrada", e);
+            }
         }
+
 
 
         if (reserva == null) {
