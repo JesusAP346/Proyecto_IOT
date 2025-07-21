@@ -52,7 +52,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         db = FirebaseFirestore.getInstance();
 
-        binding.btnBack.setOnClickListener(v -> finish());
+        binding.btnBack.setOnClickListener(v -> {
+            setResult(RESULT_OK); // ✅ Notificamos al fragment que se actualice
+            finish();
+        });
 
         // Datos recibidos
         String nombre = getIntent().getStringExtra("nombre");

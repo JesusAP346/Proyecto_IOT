@@ -27,7 +27,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/roberto"
+                android:src="@drawable/icono_perfil"
                 android:layout_marginEnd="12dp"
                 android:background="@drawable/circle_background"
                 android:clipToOutline="true" />

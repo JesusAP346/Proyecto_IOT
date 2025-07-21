@@ -29,15 +29,22 @@ public class SolicitudesFragment extends Fragment {
     public SolicitudesFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSolicitudesBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
-
         binding.carouselRecyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
         );
+        cargarHotelesDesdeFirestore();
+        return binding.getRoot();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        cargarHotelesDesdeFirestore(); // 🔄 Se actualiza al volver desde MapsActivity
+    }
+
+    private void cargarHotelesDesdeFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("hoteles")
@@ -75,20 +82,14 @@ public class SolicitudesFragment extends Fragment {
                                         cargarAdapter(itemList);
                                     }
                                 })
-                                .addOnFailureListener(e -> {
-                                    e.printStackTrace();
-                                });
+                                .addOnFailureListener(Throwable::printStackTrace);
                     }
                 })
-                .addOnFailureListener(e -> e.printStackTrace());
-
-        return view;
+                .addOnFailureListener(Throwable::printStackTrace);
     }
 
     private void cargarAdapter(List<CarouselItemModel> itemList) {
-        if (!isAdded() || binding == null) {
-            return;
-        }
+        if (!isAdded() || binding == null) return;
 
         CarouselAdapter adapter = new CarouselAdapter(itemList, item -> {
             SolicitudesHotelFragment fragment = new SolicitudesHotelFragment();
@@ -119,27 +120,18 @@ public class SolicitudesFragment extends Fragment {
         binding = null;
     }
 
-    // Métodos auxiliares
-
     private static final String FILE_NAME = "hoteles.json";
 
     private List<CarouselItemDTO> leerHotelesDesdeJson() {
         List<CarouselItemDTO> lista = new ArrayList<>();
-
         try (FileInputStream fis = requireContext().openFileInput(FILE_NAME);
              InputStreamReader isr = new InputStreamReader(fis);
              BufferedReader br = new BufferedReader(isr)) {
-
             StringBuilder sb = new StringBuilder();
             String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-            String json = sb.toString();
+            while ((line = br.readLine()) != null) sb.append(line);
             Type listType = new TypeToken<List<CarouselItemDTO>>() {}.getType();
-            lista = new Gson().fromJson(json, listType);
-
+            lista = new Gson().fromJson(sb.toString(), listType);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,7 +141,6 @@ public class SolicitudesFragment extends Fragment {
     private void guardarHotelesEnJson(List<CarouselItemDTO> lista) {
         Gson gson = new Gson();
         String json = gson.toJson(lista);
-
         try (FileOutputStream fos = requireContext().openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
              FileWriter writer = new FileWriter(fos.getFD())) {
             writer.write(json);

@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,6 +32,7 @@ import java.util.List;
 
 public class SolicitudesHotelFragment extends Fragment {
 
+    private ActivityResultLauncher<Intent> launcherMaps;
     private FragmentSolicitudesHotelBinding binding;
     private String nombreHotel = "Hotel Paraíso";
 
@@ -40,11 +43,31 @@ public class SolicitudesHotelFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        launcherMaps = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == requireActivity().RESULT_OK) {
+                        cargarSolicitudes();
+                    }
+                }
+        );
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSolicitudesHotelBinding.inflate(inflater, container, false);
         binding.nombreHotel.setText("Hotel: " + nombreHotel);
         binding.recyclerSolicitudes.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        cargarSolicitudes();
+
+        return binding.getRoot();
+    }
+
+    private void cargarSolicitudes() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("servicios_taxi")
@@ -72,7 +95,7 @@ public class SolicitudesHotelFragment extends Fragment {
                                 .addOnSuccessListener(userDoc -> {
                                     String urlFoto = userDoc.getString("urlFotoPerfil");
                                     if (urlFoto == null || urlFoto.isEmpty()) {
-                                        urlFoto = "drawable://usuario_10";
+                                        urlFoto = "drawable://icono_perfil";
                                     }
 
                                     Solicitud item = new Solicitud(
@@ -90,7 +113,6 @@ public class SolicitudesHotelFragment extends Fragment {
                                             return;
                                         }
 
-                                        // Actualiza el estado solo si está pendiente
                                         if ("pendiente".equals(selected.estado)) {
                                             db.collection("servicios_taxi")
                                                     .document(selected.idDocumento)
@@ -111,8 +133,6 @@ public class SolicitudesHotelFragment extends Fragment {
                     }
                 })
                 .addOnFailureListener(e -> Log.e("Firestore", "Error al obtener solicitudes", e));
-
-        return binding.getRoot();
     }
 
     private void abrirMapa(Solicitud solicitud) {
@@ -125,7 +145,7 @@ public class SolicitudesHotelFragment extends Fragment {
         intent.putExtra("latDestino", solicitud.latDestino);
         intent.putExtra("lngDestino", solicitud.lngDestino);
         intent.putExtra("idServicio", solicitud.idDocumento);
-        startActivity(intent);
+        launcherMaps.launch(intent);
     }
 
     @Override
