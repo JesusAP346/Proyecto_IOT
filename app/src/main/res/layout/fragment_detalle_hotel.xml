@@ -141,6 +141,19 @@
                             android:textColor="@color/gray"
                             android:visibility="visible"
                             android:layout_gravity="center_vertical" />
+                        <Button
+                            android:id="@+id/btnVerOpiniones"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="12dp"
+                            android:text="Ver opiniones"
+                            android:textSize="11sp"
+                            android:textColor="#FFFFFF"
+                            android:background="@drawable/bg_button_rounded"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:layout_gravity="center_vertical"
+                            style="?android:attr/borderlessButtonStyle" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -213,27 +226,7 @@
                     android:layout_marginBottom="16dp"
                     android:nestedScrollingEnabled="false" />
 
-                <!-- Contacto -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="CONTACTO"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="8dp" />
 
-                <TextView
-                    android:id="@+id/textTelefono"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Teléfono: +51(1)2131001" />
-
-                <TextView
-                    android:id="@+id/textEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Correo: lospinoshotel@gmail.com" />
             </LinearLayout>
         </ScrollView>
 

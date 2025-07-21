@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.cliente.busqueda;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,6 +56,8 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
     private RecyclerView recyclerServicios;
     private List<Servicio> listaServicios;
     private ServicioAdapter servicioAdapter;
+
+    private Button btnVerOpiniones;
 
     public DetalleHotelFragment() {
         // Constructor vacío requerido
@@ -164,6 +168,13 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
             }
         });
         recyclerServicios.setAdapter(servicioAdapter);
+        btnVerOpiniones = view.findViewById(R.id.btnVerOpiniones);
+        btnVerOpiniones.setOnClickListener(v -> {
+            if (getArguments() != null) {
+                String hotelId = getArguments().getString(ARG_HOTEL_ID);
+                abrirValoraciones(hotelId);
+            }
+        });
     }
 
     private void mostrarFotosServicio(Servicio servicio) {
@@ -538,5 +549,12 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
         HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, this, hotelId, fechaInicioGlobal, fechaFinGlobal);
         recyclerHabitaciones.setAdapter(adapter);
+    }
+
+    private void abrirValoraciones(String hotelId) {
+        Intent intent = new Intent(getContext(), ValoracionesActivity.class);
+        intent.putExtra("hotelId", hotelId);
+        intent.putExtra("nombreHotel", hotel != null ? hotel.getNombre() : "Hotel");
+        startActivity(intent);
     }
 }
