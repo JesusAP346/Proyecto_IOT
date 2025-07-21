@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -39,16 +40,22 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
         EditText pregunta1 = findViewById(R.id.pregunta1);
         EditText pregunta2 = findViewById(R.id.pregunta2);
         EditText observaciones = findViewById(R.id.observaciones);
+        RatingBar ratingBar = findViewById(R.id.ratingBar);
+
+
         Button btnEnviar = findViewById(R.id.btnEnviar);
 
         btnEnviar.setOnClickListener(v -> {
             String p1 = pregunta1.getText().toString().trim();
             String p2 = pregunta2.getText().toString().trim();
             String obs = observaciones.getText().toString().trim();
+            float estrellas = ratingBar.getRating();
+            int estrellasInt = Math.round(estrellas);  // si prefieres guardarlo como int
 
-            if (p1.isEmpty() || p2.isEmpty() || obs.isEmpty()) {
+
+            if (p1.isEmpty() || p2.isEmpty() || obs.isEmpty() || estrellasInt == 0) {
                 new AlertDialog.Builder(FormularioCheckoutActivity.this)
-                        .setTitle("Por favor, llene todos los campos")
+                        .setTitle("Por favor, complete todos los campos y la valoración")
                         .setPositiveButton("OK", null)
                         .show();
             }
@@ -84,6 +91,7 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
                 editor.putString(nombreHotel + "_p1", p1);
                 editor.putString(nombreHotel + "_p2", p2);
                 editor.putString(nombreHotel + "_obs", obs);
+                editor.putInt(nombreHotel + "_estrellas", estrellasInt);
                 editor.apply();
 
                 // 🔔 Notificación en Firestore
