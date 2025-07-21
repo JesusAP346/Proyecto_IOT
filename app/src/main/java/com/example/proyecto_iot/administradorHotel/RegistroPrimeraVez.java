@@ -879,6 +879,9 @@ public class RegistroPrimeraVez extends AppCompatActivity {
             return;
         }
 
+        // Obtener el monto mínimo desde el campo (ya validado previamente)
+        double montoMinimoTaxi = Double.parseDouble(binding.inputMontoMinimoTaxi.getText().toString().trim());
+
         // Estado de guardado
         guardandoServicio = true;
         binding.btnRegistrarHotel.setEnabled(false);
@@ -886,45 +889,45 @@ public class RegistroPrimeraVez extends AppCompatActivity {
         binding.btnRegistrarHotel.setText("Guardando...");
 
         subirTodasLasImagenes(
-                // OnSuccess - todas las imágenes subidas
                 urlsImagenes -> {
                     String idAdministrador = (currentUser != null) ? currentUser.getUid() : "desconocido";
 
-                    // Crear objeto Hotel con imágenes subidas
-                    Hotel hotel = new Hotel(nombre, direccion, referencias, urlsImagenes, idAdministrador,latitudHotel,longitudHotel);
+                    // Crear objeto hotel
+                    Hotel hotel = new Hotel(nombre, direccion, referencias, urlsImagenes, idAdministrador, latitudHotel, longitudHotel);
 
-                    runOnUiThread(() -> {
-                        binding.btnRegistrarHotel.setText("Guardando servicio...");
-                    });
-
-
-
+                    runOnUiThread(() -> binding.btnRegistrarHotel.setText("Guardando servicio..."));
 
                     db.collection("hoteles")
                             .add(hotel)
                             .addOnSuccessListener(documentReference -> {
                                 String idGenerado = documentReference.getId();
 
-                                // Guardar ese ID dentro del mismo documento (campo 'id')
-                                documentReference.update("id", idGenerado)
+                                // Guardar ID y monto mínimo en el mismo documento
+                                Map<String, Object> datosExtra = new HashMap<>();
+                                datosExtra.put("id", idGenerado);
+                                datosExtra.put("montoMinimoTaxi", montoMinimoTaxi);
+
+                                documentReference.update(datosExtra)
                                         .addOnSuccessListener(unused -> {
 
-                                            // 🔥 NUEVO: guardar también el idHotel en el usuario
+                                            // Actualizar también al usuario con el id del hotel
                                             db.collection("usuarios")
                                                     .document(idAdministrador)
                                                     .update("idHotel", idGenerado)
                                                     .addOnSuccessListener(userUpdateSuccess -> {
-                                                        // Guardar lat/lng si están definidos
+
+                                                        // Guardar lat/lng si está disponible
                                                         if (latitudHotel != 0.0 && longitudHotel != 0.0) {
                                                             Map<String, Object> ubicacionMap = new HashMap<>();
                                                             ubicacionMap.put("ubicacionLat", latitudHotel);
                                                             ubicacionMap.put("ubicacionLng", longitudHotel);
 
-                                                            db.collection("usuarios").document(idAdministrador).update(ubicacionMap)
+                                                            db.collection("usuarios")
+                                                                    .document(idAdministrador)
+                                                                    .update(ubicacionMap)
                                                                     .addOnSuccessListener(unused2 -> Log.d("Firestore", "Ubicación registrada"))
                                                                     .addOnFailureListener(e -> Log.e("Firestore", "Error al guardar ubicación", e));
                                                         }
-
 
                                                         Toast.makeText(this, "Hotel registrado correctamente", Toast.LENGTH_SHORT).show();
 
@@ -935,7 +938,7 @@ public class RegistroPrimeraVez extends AppCompatActivity {
 
                                                         limpiarImagenesTemporales();
 
-                                                        // Ir a pantalla principal del admin
+                                                        // Ir a la pantalla principal
                                                         Intent intent = new Intent(this, PagPrincipalAdmin.class);
                                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                         startActivity(intent);
@@ -948,10 +951,9 @@ public class RegistroPrimeraVez extends AppCompatActivity {
 
                                         })
                                         .addOnFailureListener(e -> {
-                                            Toast.makeText(this, "Error al guardar ID del hotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(this, "Error al guardar datos extra: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                             finish();
                                         });
-
                             })
                             .addOnFailureListener(e -> {
                                 Toast.makeText(this, "Error al guardar el hotel: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -961,14 +963,11 @@ public class RegistroPrimeraVez extends AppCompatActivity {
                                 binding.progressBarGuardar.setVisibility(View.GONE);
                                 binding.btnRegistrarHotel.setText("Registrar hotel");
 
-                                Intent intent = new Intent(this, RegistroPrimeraVez.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                                startActivity(new Intent(this, RegistroPrimeraVez.class)
+                                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
                                 finish();
                             });
                 },
-
-                // OnError - error subiendo imágenes
                 error -> {
                     Toast.makeText(this, "Error subiendo imágenes: " + error, Toast.LENGTH_SHORT).show();
 
@@ -977,13 +976,13 @@ public class RegistroPrimeraVez extends AppCompatActivity {
                     binding.progressBarGuardar.setVisibility(View.GONE);
                     binding.btnRegistrarHotel.setText("Registrar hotel");
 
-                    Intent intent = new Intent(this, RegistroPrimeraVez.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    startActivity(new Intent(this, RegistroPrimeraVez.class)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
                     finish();
                 }
         );
     }
+
 
 
     private boolean validarCampos() {
@@ -994,6 +993,7 @@ public class RegistroPrimeraVez extends AppCompatActivity {
         binding.errorTipoDireccion.setVisibility(View.GONE);
         binding.errorTipoReferencia.setVisibility(View.GONE);
         binding.errorTipoFotos.setVisibility(View.GONE);
+        binding.errorTipoMontoMinimo.setVisibility(View.GONE); // <- limpieza para el nuevo campo
 
         // Validar nombre
         String nombre = binding.inputNombre.getText().toString().trim();
@@ -1041,8 +1041,30 @@ public class RegistroPrimeraVez extends AppCompatActivity {
             esValido = false;
         }
 
+        // Validar monto mínimo taxi
+        String montoMinimoStr = binding.inputMontoMinimoTaxi.getText().toString().trim();
+        if (montoMinimoStr.isEmpty()) {
+            binding.errorTipoMontoMinimo.setText("Por favor, ingrese un monto mínimo para el servicio de taxi");
+            binding.errorTipoMontoMinimo.setVisibility(View.VISIBLE);
+            esValido = false;
+        } else {
+            try {
+                double monto = Double.parseDouble(montoMinimoStr);
+                if (monto <= 0) {
+                    binding.errorTipoMontoMinimo.setText("El monto debe ser mayor a 0");
+                    binding.errorTipoMontoMinimo.setVisibility(View.VISIBLE);
+                    esValido = false;
+                }
+            } catch (NumberFormatException e) {
+                binding.errorTipoMontoMinimo.setText("Ingrese un monto válido");
+                binding.errorTipoMontoMinimo.setVisibility(View.VISIBLE);
+                esValido = false;
+            }
+        }
+
         return esValido;
     }
+
 
     private void mostrarError(TextView errorView, String mensaje) {
         errorView.setText(mensaje);

@@ -319,7 +319,17 @@
                         android:padding="8dp"
                         android:textSize="17sp" />
 
-
+                    <TextView
+                        android:id="@+id/errorTipoMontoMinimo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginStart="8dp"
+                        android:drawableStart="@drawable/ic_warning_admin"
+                        android:drawablePadding="8dp"
+                        android:textColor="#D32F2F"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
 
                     <TextView
                         android:layout_width="match_parent"
