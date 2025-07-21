@@ -16,6 +16,35 @@ public class ReservaHotel implements Serializable {
     private String monto;
     private List<ServicioAdicionalReserva> serviciosAdicionales;
 
+    private Boolean servicioTaxiHabilitado;
+
+    public Boolean getServicioTaxiHabilitado() {
+        return servicioTaxiHabilitado;
+    }
+
+    public void setServicioTaxiHabilitado(Boolean servicioTaxiHabilitado) {
+        this.servicioTaxiHabilitado = servicioTaxiHabilitado;
+    }
+
+    private DatosCheckout datosCheckout;
+    private DatosPago datosPago;
+
+    public DatosCheckout getDatosCheckout() {
+        return datosCheckout;
+    }
+
+    public void setDatosCheckout(DatosCheckout datosCheckout) {
+        this.datosCheckout = datosCheckout;
+    }
+
+    public DatosPago getDatosPago() {
+        return datosPago;
+    }
+
+    public void setDatosPago(DatosPago datosPago) {
+        this.datosPago = datosPago;
+    }
+
     public ReservaHotel() {}
 
     public String getIdReserva() {

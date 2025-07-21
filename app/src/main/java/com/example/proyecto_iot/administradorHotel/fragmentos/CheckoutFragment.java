@@ -1,12 +1,14 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import androidx.annotation.NonNull;
@@ -14,93 +16,197 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.administradorHotel.entity.Reserva;
+import com.example.proyecto_iot.administradorHotel.entity.DatosPago;
+import com.example.proyecto_iot.administradorHotel.entity.EstadoReservaUI;
+import com.example.proyecto_iot.administradorHotel.entity.HabitacionHotel;
+import com.example.proyecto_iot.administradorHotel.entity.ItemCosto;
+import com.example.proyecto_iot.administradorHotel.entity.ReservaCompletaHotel;
+import com.example.proyecto_iot.administradorHotel.entity.ReservaHotel;
+import com.example.proyecto_iot.administradorHotel.entity.ServicioAdicionalNombrePrecio;
+import com.example.proyecto_iot.cliente.busqueda.ServicioAdicionalReserva;
 import com.example.proyecto_iot.databinding.FragmentCheckoutBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.*;
 
 public class CheckoutFragment extends Fragment {
 
     private FragmentCheckoutBinding binding;
-    private Reserva reserva;
+    private ReservaCompletaHotel reservaCompleta;
 
     private final List<ItemCosto> consumoList = new ArrayList<>();
     private final List<ItemCosto> cargosList = new ArrayList<>();
     private final List<ItemCosto> serviciosExtraList = new ArrayList<>();
 
-    private final Map<String, Double> mapaPreciosServicios = new HashMap<String, Double>() {{
-        put("WiFi", 15.0);
-        put("Desayuno", 20.0);
-        put("Spa", 45.0);
-        put("Lavandería", 25.0);
-        put("Gimnasio", 30.0);
-        put("Trampa", 150.0);
-    }};
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCheckoutBinding.inflate(inflater, container, false);
-        reserva = (Reserva) getArguments().getSerializable("reserva");
+        reservaCompleta = (ReservaCompletaHotel) getArguments().getSerializable("reservaCompleta");
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setupSpinnerServicios();
 
-        if (reserva != null) {
-            binding.textNombreHabitacion.setText(reserva.getTipoHabitacion());
-            binding.textPrecioHabitacion.setText(String.format("S/. %.2f", reserva.getCostoReserva()));
-            binding.textCheckin.setText("( " + reserva.getCheckIn() + " - ");
-            binding.textCheckout.setText(reserva.getCheckOut() + " )");
+        if (reservaCompleta != null) {
+            HabitacionHotel habitacion = reservaCompleta.getHabitacion();
+            binding.textNombreHabitacion.setText(habitacion.getTipo());
+            int cantNoches = reservaCompleta.getReserva().getCantNoches();
+            binding.textCantNoches.setText("(por " + cantNoches + " noche" + (cantNoches > 1 ? "s" : "") + ")");
+
+            double precioPorNoche = habitacion.getPrecioPorNoche();
+            double precioPorNocheXdias = precioPorNoche * cantNoches;
+
+            binding.textPrecioHabitacion.setText(String.format("S/. %.2f", precioPorNocheXdias));
+            binding.textCheckin.setText("( " + reservaCompleta.getReserva().getFechaEntrada() + " - ");
+            binding.textCheckout.setText(reservaCompleta.getReserva().getFechaSalida() + " )");
+
             actualizarResumen();
         }
 
         binding.btnAgregarConsumo.setOnClickListener(v -> showDialog("Agregar Consumo", consumoList));
         binding.btnAgregarCargos.setOnClickListener(v -> showDialog("Agregar Cargo", cargosList));
 
-        binding.editNochesExtras.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) actualizarResumen();
+        binding.editNochesExtras.setOnEditorActionListener((v, actionId, event) -> {
+            actualizarResumen();
+            ocultarTecladoYQuitarFoco(binding.editNochesExtras);
+            return true;
         });
 
-        binding.spinnerServicios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String servicio = parent.getItemAtPosition(position).toString();
-                if (!servicio.equals("Seleccionar servicio")) {
-                    // No agregar si ya fue seleccionado
-                    boolean yaExiste = false;
-                    for (ItemCosto item : serviciosExtraList) {
-                        if (item.nombre.equals(servicio)) {
-                            yaExiste = true;
-                            break;
-                        }
-                    }
-
-                    if (!yaExiste) {
-                        double precio = mapaPreciosServicios.getOrDefault(servicio, 0.0);
-                        serviciosExtraList.add(new ItemCosto(servicio, precio));
-                        actualizarResumen();
-                    }
-
-                    parent.setSelection(0);
-                }
-
+        binding.getRoot().setOnTouchListener((v, event) -> {
+            if (binding.editNochesExtras.isFocused()) {
+                ocultarTecladoYQuitarFoco(binding.editNochesExtras);
+                actualizarResumen();
             }
-
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
+            return false;
         });
 
+        mostrarServiciosAdicionalesDesdeReserva();
+
+        // Datos de tarjeta (metodo de pago)
+        mostrarDatosTarjeta();
         binding.btnProcesarPago.setOnClickListener(v -> mostrarDialogoConfirmacionPago());
 
         binding.backdetallecheckout.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
-        binding.btnIrServicioTaxi.setOnClickListener(v -> {
-            Fragment f = new ServicioTaxiFragment();
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame_layout, f)
-                    .addToBackStack(null)
-                    .commit();
-        });
+    }
+
+    private void mostrarDatosTarjeta() {
+        DatosPago pago = reservaCompleta.getReserva().getDatosPago();
+        if (pago != null) {
+            binding.textMarcaSimple.setText(pago.getMarca());
+            binding.textUltimosDigitos.setText(" " + pago.getNumeroTarjetaEnmascarado());
+            binding.textTitularSimple.setText(pago.getTitular());
+        }
+    }
+    private void ocultarTecladoYQuitarFoco(View view) {
+        view.clearFocus();
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+    private void mostrarServiciosAdicionalesDesdeReserva() {
+        binding.layoutServiciosDinamicos.removeAllViews();
+
+        List<ServicioAdicionalNombrePrecio> servicios = reservaCompleta.getServiciosAdicionalesInfo();
+
+        if (servicios == null || servicios.isEmpty()) {
+            binding.textSinServicios.setText("Sin servicios extra agregados");
+            binding.textSinServicios.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        binding.textSinServicios.setVisibility(View.GONE);
+
+        for (ServicioAdicionalNombrePrecio s : servicios) {
+            agregarFilaServicio(s.getNombre(), s.getPrecio());
+        }
+    }
+
+    private void agregarFilaServicio(String nombre, double precio) {
+        LinearLayout fila = new LinearLayout(requireContext());
+        fila.setOrientation(LinearLayout.HORIZONTAL);
+        fila.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout.LayoutParams filaParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        filaParams.setMargins(16, 8, 16, 8);
+        fila.setLayoutParams(filaParams);
+
+        TextView tvNombre = new TextView(requireContext());
+        tvNombre.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        tvNombre.setText(nombre);
+        tvNombre.setTextSize(14);
+        tvNombre.setTextColor(getResources().getColor(android.R.color.black));
+
+        TextView tvPrecio = new TextView(requireContext());
+        tvPrecio.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        tvPrecio.setText(String.format("S/. %.2f", precio));
+        tvPrecio.setTextSize(14);
+        tvPrecio.setTextColor(getResources().getColor(android.R.color.black));
+
+        fila.addView(tvNombre);
+        fila.addView(tvPrecio);
+
+        binding.layoutServiciosDinamicos.addView(fila);
+
+        View separador = new View(requireContext());
+        LinearLayout.LayoutParams sepParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 2);
+        sepParams.setMargins(16, 0, 16, 8);
+        separador.setLayoutParams(sepParams);
+        separador.setBackgroundColor(android.graphics.Color.parseColor("#CCCCCC"));
+
+        binding.layoutServiciosDinamicos.addView(separador);
+    }
+
+
+    private void actualizarResumen() {
+        if (reservaCompleta == null) return;
+
+        double precioPorNoche = reservaCompleta.getHabitacion().getPrecioPorNoche();
+        double costoTotalReserva = precioPorNoche * reservaCompleta.getReserva().getCantNoches();
+
+        int nochesExtras = 0;
+        try {
+            String texto = binding.editNochesExtras.getText().toString().trim();
+            nochesExtras = texto.isEmpty() ? 0 : Integer.parseInt(texto);
+        } catch (NumberFormatException ignored) {}
+
+        double precioNochesExtras = nochesExtras * precioPorNoche;
+        binding.textPrecioNocheExtra.setText(String.format("S/. %.2f", precioNochesExtras));
+
+        binding.layoutCostosDinamicos.removeAllViews();
+        binding.layoutCargosDinamicos.removeAllViews();
+
+
+        double totalSinIGV = costoTotalReserva + precioNochesExtras;
+        // Sumar precio de servicios adicionales que vienen desde reservaCompleta
+        List<ServicioAdicionalNombrePrecio> servicios = reservaCompleta.getServiciosAdicionalesInfo();
+        if (servicios != null) {
+            for (ServicioAdicionalNombrePrecio s : servicios) {
+                totalSinIGV += s.getPrecio();
+            }
+        }
+        totalSinIGV += pintarItems(binding.layoutCostosDinamicos, consumoList, consumoList, binding.textSinConsumo);
+        totalSinIGV += pintarItems(binding.layoutCargosDinamicos, cargosList, cargosList, binding.textSinCargos);
+        for (ItemCosto s : serviciosExtraList) {
+            totalSinIGV += s.getPrecio(); // si es que en el futuro agregas más servicios manualmente
+        }
+
+        double igv = totalSinIGV * 0.18 / 1.18;
+        double sinIGV = totalSinIGV - igv;
+
+        binding.textCobroSinIgv.setText(String.format("S/. %.2f", sinIGV));
+        binding.textIgv.setText(String.format("S/. %.2f", igv));
+        binding.textPagoTotal.setText(String.format("S/. %.2f", totalSinIGV));
     }
 
     private void showDialog(String titulo, List<ItemCosto> destino) {
@@ -127,132 +233,51 @@ public class CheckoutFragment extends Fragment {
                 .show();
     }
 
-    private void setupSpinnerServicios() {
-        List<String> todosLosServicios = new ArrayList<>(mapaPreciosServicios.keySet());
-        List<String> serviciosIncluidos = reserva != null ? reserva.getServiciosAdicionales() : new ArrayList<>();
 
-        List<String> filtrados = new ArrayList<>();
-        filtrados.add("Seleccionar servicio"); // opción inicial
-
-        for (String servicio : todosLosServicios) {
-            if (!serviciosIncluidos.contains(servicio)) {
-                filtrados.add(servicio);
-            }
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_small, filtrados);
-        binding.spinnerServicios.setAdapter(adapter);
+    private void mostrarDialogoConfirmacionPago() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Confirmación de Pago")
+                .setMessage("¿Deseas confirmar el pago?")
+                .setPositiveButton("Confirmar", (dialog, which) -> simularProcesamientoDePago())
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
+    private void simularProcesamientoDePago() {
+        AlertDialog loadingDialog = new AlertDialog.Builder(getContext())
+                .setTitle("Procesando")
+                .setMessage("Espere un momento...")
+                .setCancelable(false)
+                .create();
 
+        loadingDialog.show();
 
-    private void actualizarResumen() {
-        if (reserva == null) return;
+        new android.os.Handler().postDelayed(() -> {
+            loadingDialog.dismiss();
+            boolean pagoExitoso = Math.random() < 0.9;
 
-        double costoTotalReserva = reserva.getCostoReserva();
-        double precioPorNoche = 0;
-
-        try {
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            Date checkInDate = sdf.parse(reserva.getCheckIn());
-            Date checkOutDate = sdf.parse(reserva.getCheckOut());
-
-            if (checkInDate != null && checkOutDate != null) {
-                long diffMillis = checkOutDate.getTime() - checkInDate.getTime();
-                int diasHospedaje = (int) (diffMillis / (1000 * 60 * 60 * 24));
-                if (diasHospedaje > 0) {
-                    precioPorNoche = costoTotalReserva / diasHospedaje;
-                }
+            if (pagoExitoso) {
+                guardarCheckoutEnFirestore();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        int nochesExtras = 0;
-        try {
-            String texto = binding.editNochesExtras.getText().toString().trim();
-            nochesExtras = texto.isEmpty() ? 0 : Integer.parseInt(texto);
-        } catch (NumberFormatException ignored) {}
-
-        double precioNochesExtras = nochesExtras * precioPorNoche;
-        binding.textPrecioNocheExtra.setText(String.format("S/. %.2f", precioNochesExtras));
-
-        // 🔁 LIMPIAR layouts antes de volver a pintar
-        binding.layoutCostosDinamicos.removeAllViews();
-        binding.layoutCargosDinamicos.removeAllViews();
-        binding.layoutServiciosDinamicos.removeAllViews();
-
-        // Suma todo
-        double totalSinIGV = 0;
-        totalSinIGV += costoTotalReserva + precioNochesExtras;
-
-        totalSinIGV += pintarItems(binding.layoutCostosDinamicos, consumoList, consumoList, binding.textSinConsumo);
-        totalSinIGV += pintarItems(binding.layoutCargosDinamicos, cargosList, cargosList, binding.textSinCargos);
-        totalSinIGV += pintarItems(binding.layoutServiciosDinamicos, serviciosExtraList, serviciosExtraList, binding.textSinServicios);
-
-        double totalFinal = totalSinIGV; // Este es el total que ya incluye el IGV
-
-        double igv = totalFinal * 0.18 / 1.18;
-        double sinIGV = totalFinal - igv;
-
-        binding.textCobroSinIgv.setText(String.format("S/. %.2f", sinIGV));
-        binding.textIgv.setText(String.format("S/. %.2f", igv));
-        binding.textPagoTotal.setText(String.format("S/. %.2f", totalFinal));
-    }
-
-
-    private View crearLineaResumen(String label, double valor) {
-        LinearLayout fila = new LinearLayout(requireContext());
-        fila.setOrientation(LinearLayout.HORIZONTAL);
-        fila.setGravity(Gravity.CENTER_VERTICAL);
-        LinearLayout.LayoutParams filaParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        filaParams.setMargins(16, 8, 16, 8);
-        fila.setLayoutParams(filaParams);
-
-        TextView tvLabel = new TextView(requireContext());
-        tvLabel.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        tvLabel.setText(label);
-        tvLabel.setTextSize(14);
-        tvLabel.setTextColor(getResources().getColor(android.R.color.black));
-        if (label.equals("Pago total")) {
-            tvLabel.setTypeface(null, android.graphics.Typeface.BOLD);
-        }
-
-        TextView tvValor = new TextView(requireContext());
-        tvValor.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        tvValor.setText(String.format("S/. %.2f", valor));
-        tvValor.setTextSize(14);
-        tvValor.setTextColor(getResources().getColor(android.R.color.black));
-        if (label.equals("Pago total")) {
-            tvValor.setTypeface(null, android.graphics.Typeface.BOLD);
-        }
-
-        fila.addView(tvLabel);
-        fila.addView(tvValor);
-
-        return fila;
+            new AlertDialog.Builder(getContext())
+                    .setTitle(pagoExitoso ? "✅ Pago Exitoso" : "❌ Error en el Pago")
+                    .setMessage(pagoExitoso ? "El pago se procesó correctamente." : "Hubo un error al procesar el pago.")
+                    .setPositiveButton("OK", null)
+                    .show();
+        }, 2000);
     }
 
     private double pintarItems(LinearLayout layout, List<ItemCosto> lista, List<ItemCosto> listaEditable, TextView mensajeVacio) {
         double total = 0;
-
         if (mensajeVacio != null) {
             mensajeVacio.setVisibility(lista.isEmpty() ? View.VISIBLE : View.GONE);
         }
-
         for (ItemCosto item : lista) {
             View fila = crearFilaCosto(item, listaEditable);
             layout.addView(fila);
-
-            total += item.precio;
+            total += item.getPrecio();
         }
-
         return total;
     }
 
@@ -287,12 +312,12 @@ public class CheckoutFragment extends Fragment {
                 actualizarResumen();
             });
         } else {
-            icono.setVisibility(View.GONE); // No editable
+            icono.setVisibility(View.GONE);
         }
 
         TextView tvNombre = new TextView(requireContext());
         tvNombre.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        tvNombre.setText(item.nombre);
+        tvNombre.setText(item.getNombre());
         tvNombre.setTextSize(14);
         tvNombre.setTextColor(getResources().getColor(android.R.color.black));
 
@@ -301,7 +326,7 @@ public class CheckoutFragment extends Fragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
-        tvCosto.setText(String.format("S/. %.2f", item.precio));
+        tvCosto.setText(String.format("S/. %.2f", item.getPrecio()));
         tvCosto.setTextSize(14);
         tvCosto.setTextColor(getResources().getColor(android.R.color.black));
 
@@ -309,91 +334,133 @@ public class CheckoutFragment extends Fragment {
         fila.addView(tvNombre);
         fila.addView(tvCosto);
 
-        // Agrega la fila
         contenedor.addView(fila);
 
-        // 🔻 Separador DENTRO del contenedor (mejorado con grosor + margen inferior)
         View separador = new View(requireContext());
         LinearLayout.LayoutParams sepParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                2 // 👈 grosor: 1dp
+                2
         );
-        sepParams.setMargins(16, 0, 16, 8); // 👈 margen inferior más notorio
+        sepParams.setMargins(16, 0, 16, 8);
         separador.setLayoutParams(sepParams);
-        separador.setBackgroundColor(android.graphics.Color.parseColor("#CCCCCC")); // gris claro
+        separador.setBackgroundColor(android.graphics.Color.parseColor("#CCCCCC"));
 
         contenedor.addView(separador);
 
         return contenedor;
     }
 
+    // Agrega este metodo al final de tu clase CheckoutFragment
+    private void guardarCheckoutEnFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private View crearSeparador() {
-        View line = new View(requireContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                1
-        );
-        params.setMargins(16, 0, 16, 0);
-        line.setLayoutParams(params);
-        line.setBackgroundColor(android.graphics.Color.parseColor("#CCCCCC"));
-        return line;
-    }
+        if (reservaCompleta == null) return;
 
-    private void actualizarTextoEnLinea(ViewGroup layout, String label, String valor) {
-        for (int i = 0; i < layout.getChildCount(); i++) {
-            View v = layout.getChildAt(i);
-            if (v instanceof LinearLayout) {
-                LinearLayout row = (LinearLayout) v;
-                if (row.getChildCount() == 2 && row.getChildAt(0) instanceof TextView) {
-                    TextView tv = (TextView) row.getChildAt(0);
-                    if (tv.getText().toString().equals(label)) {
-                        TextView tvValor = (TextView) row.getChildAt(1);
-                        tvValor.setText(valor);
-                        break;
-                    }
-                }
-            }
+        Map<String, Object> datos = new HashMap<>();
+
+        HabitacionHotel hab = reservaCompleta.getHabitacion();
+        datos.put("tipoHabitacion", hab.getTipo());
+        datos.put("precioPorNoche", hab.getPrecioPorNoche());
+        datos.put("cantNoches", reservaCompleta.getReserva().getCantNoches());
+        datos.put("precioHabitacionPorNNoches", hab.getPrecioPorNoche() * reservaCompleta.getReserva().getCantNoches());
+        datos.put("fechaCheckIn", reservaCompleta.getReserva().getFechaEntrada());
+        datos.put("fechaCheckOut", reservaCompleta.getReserva().getFechaSalida());
+
+        // Noches extra
+        int nochesExtra = 0;
+        try {
+            String texto = binding.editNochesExtras.getText().toString().trim();
+            nochesExtra = texto.isEmpty() ? 0 : Integer.parseInt(texto);
+        } catch (NumberFormatException ignored) {}
+        datos.put("nochesExtra", nochesExtra);
+        datos.put("precioNochesExtra", nochesExtra * hab.getPrecioPorNoche());
+
+        // Servicios adicionales
+        List<Map<String, Object>> serviciosMap = new ArrayList<>();
+        for (ServicioAdicionalNombrePrecio s : reservaCompleta.getServiciosAdicionalesInfo()) {
+            Map<String, Object> m = new HashMap<>();
+            m.put("nombre", s.getNombre());
+            m.put("precio", s.getPrecio());
+            serviciosMap.add(m);
         }
-    }
+        datos.put("serviciosAdicionales", serviciosMap);
 
-    static class ItemCosto {
-        String nombre;
-        double precio;
-        ItemCosto(String nombre, double precio) {
-            this.nombre = nombre;
-            this.precio = precio;
+        // Consumos
+        List<Map<String, Object>> consumoMap = new ArrayList<>();
+        for (ItemCosto item : consumoList) {
+            Map<String, Object> m = new HashMap<>();
+            m.put("nombre", item.getNombre());
+            m.put("precio", item.getPrecio());
+            consumoMap.add(m);
         }
+        datos.put("consumos", consumoMap);
+
+        // Cargos
+        List<Map<String, Object>> cargosMap = new ArrayList<>();
+        for (ItemCosto item : cargosList) {
+            Map<String, Object> m = new HashMap<>();
+            m.put("nombre", item.getNombre());
+            m.put("precio", item.getPrecio());
+            cargosMap.add(m);
+        }
+        datos.put("cargos", cargosMap);
+
+        // Subtotal, IGV y total
+        double subtotal = 0;
+        subtotal += hab.getPrecioPorNoche() * reservaCompleta.getReserva().getCantNoches();
+        subtotal += nochesExtra * hab.getPrecioPorNoche();
+        for (ServicioAdicionalNombrePrecio s : reservaCompleta.getServiciosAdicionalesInfo()) subtotal += s.getPrecio();
+        for (ItemCosto item : consumoList) subtotal += item.getPrecio();
+        for (ItemCosto item : cargosList) subtotal += item.getPrecio();
+
+        double igv = subtotal * 0.18 / 1.18;
+        double sinIgv = subtotal - igv;
+
+        datos.put("subtotalSinIGV", sinIgv);
+        datos.put("igv", igv);
+        datos.put("total", subtotal);
+        datos.put("timestamp", new Date());
+        String idReserva = reservaCompleta.getReserva().getIdReserva();
+
+        db.collection("reservas")
+                .document(idReserva)
+                .update("datosCheckout", datos)
+                .addOnSuccessListener(aVoid -> {
+                    // Ahora actualiza también el estado
+                    db.collection("reservas")
+                            .document(idReserva)
+                            .update("estado", "FINALIZADO")
+                            .addOnSuccessListener(unused -> {
+
+                                // Luego de guardar todo, volver a obtener los datos actualizados
+                                db.collection("reservas")
+                                        .document(idReserva)
+                                        .get()
+                                        .addOnSuccessListener(documentSnapshot -> {
+                                            ReservaHotel reservaActualizada = documentSnapshot.toObject(ReservaHotel.class);
+                                            if (reservaActualizada != null) {
+                                                reservaActualizada.setIdReserva(idReserva);
+                                                reservaCompleta.setReserva(reservaActualizada); // actualizar reserva interna
+
+                                                CheckoutHistorialFragment fragment = new CheckoutHistorialFragment();
+                                                Bundle bundle = new Bundle();
+                                                bundle.putSerializable("reservaCompleta", reservaCompleta);
+                                                fragment.setArguments(bundle);
+
+                                                requireActivity().getSupportFragmentManager()
+                                                        .beginTransaction()
+                                                        .replace(R.id.frame_layout, fragment)
+                                                        .addToBackStack(null)
+                                                        .commit();
+                                            }
+                                        });
+                            });
+                })
+
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al guardar: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void mostrarDialogoConfirmacionPago() {
-        new AlertDialog.Builder(getContext())
-                .setTitle("Confirmación de Pago")
-                .setMessage("¿Deseas confirmar el pago?")
-                .setPositiveButton("Confirmar", (dialog, which) -> simularProcesamientoDePago())
-                .setNegativeButton("Cancelar", null)
-                .show();
-    }
 
-    private void simularProcesamientoDePago() {
-        AlertDialog loadingDialog = new AlertDialog.Builder(getContext())
-                .setTitle("Procesando")
-                .setMessage("Espere un momento...")
-                .setCancelable(false)
-                .create();
-
-        loadingDialog.show();
-
-        new android.os.Handler().postDelayed(() -> {
-            loadingDialog.dismiss();
-            boolean pagoExitoso = Math.random() < 0.9;
-            new AlertDialog.Builder(getContext())
-                    .setTitle(pagoExitoso ? "✅ Pago Exitoso" : "❌ Error en el Pago")
-                    .setMessage(pagoExitoso ? "El pago se procesó correctamente." : "Hubo un error al procesar el pago.")
-                    .setPositiveButton("OK", null)
-                    .show();
-        }, 2000);
-    }
 
     @Override
     public void onDestroyView() {

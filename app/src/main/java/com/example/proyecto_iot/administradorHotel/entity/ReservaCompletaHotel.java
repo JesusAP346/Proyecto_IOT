@@ -1,8 +1,10 @@
 package com.example.proyecto_iot.administradorHotel.entity;
 
+import com.example.proyecto_iot.cliente.busqueda.ServicioAdicionalReserva;
 import com.example.proyecto_iot.dtos.Usuario;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ReservaCompletaHotel implements Serializable {
 
@@ -11,8 +13,18 @@ public class ReservaCompletaHotel implements Serializable {
 
     private HabitacionHotel habitacion;
 
-    public ReservaCompletaHotel() {}
 
+    private List<ServicioAdicionalNombrePrecio> serviciosAdicionalesInfo;
+
+    public List<ServicioAdicionalNombrePrecio> getServiciosAdicionalesInfo() {
+        return serviciosAdicionalesInfo;
+    }
+
+    public void setServiciosAdicionalesInfo(List<ServicioAdicionalNombrePrecio> serviciosAdicionalesInfo) {
+        this.serviciosAdicionalesInfo = serviciosAdicionalesInfo;
+    }
+
+    public ReservaCompletaHotel() {}
     public ReservaCompletaHotel(ReservaHotel reserva, Usuario usuario, HabitacionHotel habitacion) {
         this.reserva = reserva;
         this.usuario = usuario;

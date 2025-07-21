@@ -12,11 +12,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.proyecto_iot.administradorHotel.entity.ServicioAdicionalNombrePrecio;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.adapter.ReservaAdapter;
 import com.example.proyecto_iot.administradorHotel.entity.HabitacionHotel;
 import com.example.proyecto_iot.administradorHotel.entity.ReservaCompletaHotel;
 import com.example.proyecto_iot.administradorHotel.entity.ReservaHotel;
+import com.example.proyecto_iot.cliente.busqueda.ServicioAdicionalReserva;
 import com.example.proyecto_iot.dtos.Usuario;
 import com.example.proyecto_iot.databinding.FragmentReservasTodasBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -91,7 +93,7 @@ public class ReservasTodasFragment extends Fragment {
 
                     db.collection("reservas")
                             .whereEqualTo("idHotel", idHotel)
-                            .whereIn("estado", Arrays.asList("Activo", "Checkout"))
+                            .whereIn("estado", Arrays.asList("Activo", "CHECKOUT"))
                             .get()
                             .addOnSuccessListener(reservaSnapshot -> {
                                 if (!isAdded() || binding == null) return;
@@ -124,11 +126,45 @@ public class ReservasTodasFragment extends Fragment {
                                                             HabitacionHotel habitacion = habDoc.toObject(HabitacionHotel.class);
                                                             if (habitacion == null) return;
 
-                                                            ReservaCompletaHotel reservaCompleta =
-                                                                    new ReservaCompletaHotel(reserva, usuario, habitacion);
-                                                            listaReservasCompletas.add(reservaCompleta);
-                                                            adapter.notifyDataSetChanged();
-                                                            mostrarReservas();
+                                                            // Paso 1: Crear objeto y agregar lo básico
+                                                            ReservaCompletaHotel reservaCompleta = new ReservaCompletaHotel(reserva, usuario, habitacion);
+
+                                                            // Paso 2: Cargar servicios adicionales si existen
+                                                            List<ServicioAdicionalNombrePrecio> serviciosAdicionalesInfo = new ArrayList<>();
+                                                            List<ServicioAdicionalReserva> serviciosAdicionales = reserva.getServiciosAdicionales();
+
+                                                            if (serviciosAdicionales == null || serviciosAdicionales.isEmpty()) {
+                                                                reservaCompleta.setServiciosAdicionalesInfo(serviciosAdicionalesInfo);
+                                                                listaReservasCompletas.add(reservaCompleta);
+                                                                adapter.notifyDataSetChanged();
+                                                                mostrarReservas();
+                                                            } else {
+                                                                // Paso 3: Obtener servicios de Firestore y mapearlos
+                                                                for (ServicioAdicionalReserva s : serviciosAdicionales) {
+                                                                    db.collection("hoteles").document(idHotel)
+                                                                            .collection("servicios").document(s.getIdServicioAdicional())
+                                                                            .get()
+                                                                            .addOnSuccessListener(servicioDoc -> {
+                                                                                if (servicioDoc.exists()) {
+                                                                                    String nombre = servicioDoc.getString("nombre");
+                                                                                    Double precioUnitario = servicioDoc.getDouble("precio");
+                                                                                    if (nombre != null && precioUnitario != null) {
+                                                                                        double total = precioUnitario * s.getCantDias();
+                                                                                        serviciosAdicionalesInfo.add(new ServicioAdicionalNombrePrecio(nombre, total));
+                                                                                    }
+                                                                                }
+
+                                                                                // Cuando ya se completó todo, se guarda y actualiza
+                                                                                if (serviciosAdicionalesInfo.size() == serviciosAdicionales.size()) {
+                                                                                    reservaCompleta.setServiciosAdicionalesInfo(serviciosAdicionalesInfo);
+                                                                                    listaReservasCompletas.add(reservaCompleta);
+                                                                                    adapter.notifyDataSetChanged();
+                                                                                    mostrarReservas();
+                                                                                }
+                                                                            });
+                                                                }
+                                                            }
+
                                                         });
                                             });
                                 }
@@ -147,6 +183,7 @@ public class ReservasTodasFragment extends Fragment {
                     mostrarMensajeSinReservas();
                 });
     }
+
 
     private void mostrarReservas() {
         if (binding != null) {

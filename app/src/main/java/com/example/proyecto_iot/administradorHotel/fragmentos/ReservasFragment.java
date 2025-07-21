@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.administradorHotel.EstadoReservaUI;
+import com.example.proyecto_iot.administradorHotel.entity.EstadoReservaUI;
 import com.example.proyecto_iot.databinding.FragmentReservasBinding;
 import com.google.android.material.button.MaterialButton;
 
@@ -63,7 +63,7 @@ public class ReservasFragment extends Fragment {
         binding.btnFinalizadas.setOnClickListener(v -> {
             loadChildFragment(new ReservasHistorialFragment());
             updateSelectedButton(binding.btnFinalizadas);
-            EstadoReservaUI.seccionSeleccionada = "historial";
+            EstadoReservaUI.seccionSeleccionada = "finalizadas";
         });
 
         binding.btnEnCurso.setOnClickListener(v -> {
@@ -93,8 +93,27 @@ public class ReservasFragment extends Fragment {
         switch (seccion) {
             case "finalizadas":
                 updateSelectedButton(binding.btnFinalizadas);
-                loadChildFragment(new ReservasHistorialFragment());
+
+                if (EstadoReservaUI.reservaFinalizadaCompleta != null) {
+                    DetalleReservaHistorialFragment fragment = new DetalleReservaHistorialFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("reservaCompleta", EstadoReservaUI.reservaFinalizadaCompleta);
+                    fragment.setArguments(bundle);
+
+                    getParentFragmentManager()  // Usamos el fragment manager del padre (no el hijo)
+                            .beginTransaction()
+                            .replace(R.id.frame_layout, fragment)
+                            .addToBackStack(null)
+                            .commit();
+
+                    EstadoReservaUI.reservaFinalizadaId = null;
+                    EstadoReservaUI.reservaFinalizadaCompleta = null;
+                } else {
+                    loadChildFragment(new ReservasHistorialFragment());
+                }
+
                 break;
+
             case "futuras":
                 updateSelectedButton(binding.btnFuturas);
                 loadChildFragment(new ReservasPendientesFragment());
