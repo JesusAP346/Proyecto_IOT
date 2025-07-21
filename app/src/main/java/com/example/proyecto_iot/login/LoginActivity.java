@@ -260,18 +260,21 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         } else if ("Administrador".equals(rol)) {
             String idUsuario = documentSnapshot.getId();
-            String idHotel = documentSnapshot.getString("idHotel");
+            Object idHotelObj = documentSnapshot.get("idHotel");
 
-            if (idHotel == null || idHotel.isEmpty()) {
+            if (idHotelObj == null || String.valueOf(idHotelObj).trim().isEmpty()) {
+                // No tiene hotel -> ir al registro
                 Intent intent = new Intent(LoginActivity.this, RegistroPrimeraVez.class);
                 intent.putExtra("idUsuario", idUsuario);
                 startActivity(intent);
             } else {
+                // Tiene hotel -> flujo normal
                 Intent intent = new Intent(LoginActivity.this, PagPrincipalAdmin.class);
                 intent.putExtra("idUsuario", idUsuario);
-                intent.putExtra("idHotel", idHotel);
+                intent.putExtra("idHotel", String.valueOf(idHotelObj));
                 startActivity(intent);
             }
+
             finish();
         } else if ("Taxista".equals(rol)) {
             String idUsuario = documentSnapshot.getId();
