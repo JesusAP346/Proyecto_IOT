@@ -29,10 +29,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <SearchView
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/buscarSolicitud"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -44,31 +45,110 @@
         app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardView2"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewDescripcion"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardBackgroundColor="#F1F3F8"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardView2">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:padding="12dp">
 
+
+            <!-- Texto descriptivo -->
             <TextView
                 android:id="@+id/textView16"
-                android:layout_width="250dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fallbackLineSpacing="false"
                 android:fontFamily="@font/nunito_semibold"
                 android:justificationMode="inter_word"
                 android:lineSpacingExtra="-8sp"
-                android:text="Como Super Amin es capaz de observar y gestionar las eventualidades que ocurren en el sistema"
+                android:text="Supervisión y control de eventualidades del sistema."
                 android:textSize="19sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.136" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Botón Imprimir historial -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnImprimirHistorial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Imprimir historial"
+                app:cornerRadius="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textView16" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollFiltros"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardViewDescripcion">
+
+        <LinearLayout
+            android:id="@+id/layoutFiltros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Selector de tipo de log -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTipoLog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Tipo Log"
+                app:cornerRadius="50dp" />
+
+            <!-- Filtro por rol -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRolLog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Rol"
+                app:cornerRadius="50dp" />
+
+            <!-- Filtro por fecha -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFechaLog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Fecha"
+                app:cornerRadius="50dp" />
+
+            <!-- Limpiar filtros -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLimpiarFiltros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Limpiar"
+                app:cornerRadius="50dp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <!-- RecyclerView directamente en el ConstraintLayout -->
     <androidx.recyclerview.widget.RecyclerView
@@ -80,5 +160,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3" />
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollFiltros" />
 </androidx.constraintlayout.widget.ConstraintLayout>
