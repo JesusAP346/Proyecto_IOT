@@ -175,23 +175,21 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
 
     private void guardarReservaEnFirebase(Tarjeta tarjetaSeleccionada) {
 
-        String documentId = db.collection("reservas").document().getId();
-
-        // Setear el ID en el objeto reserva
-        reserva.setIdReserva(documentId);
         // Guardar la reserva en Firestore
+        String documentId = db.collection("reservas").document().getId();
+        reserva.setIdReserva(documentId);
+
         db.collection("reservas")
-                .add(reserva)
-                .addOnSuccessListener(documentReference -> {
-                    Log.d(TAG, "Reserva guardada exitosamente en Firestore con ID: " + documentReference.getId());
+                .document(documentId)
+                .set(reserva)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Reserva guardada exitosamente en Firestore con ID: " + documentId);
 
                     // Mostrar notificación de pago exitoso
                     mostrarNotificacionPagoExitoso(tarjetaSeleccionada);
 
-                    // Mostrar mensaje temporal
                     Toast.makeText(this, "Reserva procesada exitosamente", Toast.LENGTH_SHORT).show();
 
-                    // Redirigir a ClienteBusquedaActivity
                     Intent intent = new Intent(this, ClienteBusquedaActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -201,10 +199,10 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
                     Log.e(TAG, "Error al guardar reserva en Firestore", e);
                     Toast.makeText(this, "Error al procesar el pago. Intenta nuevamente.", Toast.LENGTH_SHORT).show();
 
-                    // Restaurar estado del botón
                     btnPagar.setEnabled(true);
-                    btnPagar.setText("Pagar");
+                    btnPagar.setText("Reservar");
                 });
+
     }
 
     private void createNotificationChannel() {
