@@ -20,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.proyecto_iot.MainActivity;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.SuperAdmin.PagPrincipalSuperAdmin;
+import com.example.proyecto_iot.SuperAdmin.SuspensionActivity;
 import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
 import com.example.proyecto_iot.administradorHotel.RegistroPrimeraVez;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
@@ -238,6 +239,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void redirectUserByRole(com.google.firebase.firestore.DocumentSnapshot documentSnapshot) {
+        Boolean estadoCuenta = documentSnapshot.getBoolean("estadoCuenta");
+
+        if (estadoCuenta != null && !estadoCuenta) {
+            // Redirige a la pantalla de cuenta suspendida
+            Intent intent = new Intent(LoginActivity.this, SuspensionActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         String rol = documentSnapshot.getString("idRol");
 
         if ("Cliente".equalsIgnoreCase(rol)) {
@@ -276,6 +287,7 @@ public class LoginActivity extends AppCompatActivity {
             auth.signOut();
         }
     }
+
 
     private void showLoadingDialog() {
         progressDialog = new ProgressDialog(this);
