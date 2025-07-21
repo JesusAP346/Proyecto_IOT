@@ -51,6 +51,10 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
     private Hotel hotel;
     private TextView textTituloHotel;
 
+    private RecyclerView recyclerServicios;
+    private List<Servicio> listaServicios;
+    private ServicioAdapter servicioAdapter;
+
     public DetalleHotelFragment() {
         // Constructor vacío requerido
     }
@@ -149,9 +153,23 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         estrellas[4] = view.findViewById(R.id.star5Hotel);
 
         textValoracionHotel = view.findViewById(R.id.textValoracionHotel);
+
+        recyclerServicios = view.findViewById(R.id.recyclerServicios);
+        recyclerServicios.setLayoutManager(new LinearLayoutManager(getContext()));
+        listaServicios = new ArrayList<>();
+        servicioAdapter = new ServicioAdapter(getContext(), listaServicios, new ServicioAdapter.OnServicioClickListener() {
+            @Override
+            public void onVerFotosClick(Servicio servicio) {
+                mostrarFotosServicio(servicio);
+            }
+        });
+        recyclerServicios.setAdapter(servicioAdapter);
     }
 
-    // Nuevo método para cargar valoraciones del hotel
+    private void mostrarFotosServicio(Servicio servicio) {
+        FotosServicioDialog dialog = FotosServicioDialog.newInstance(servicio);
+        dialog.show(getParentFragmentManager(), "FotosServicioDialog");
+    }
     private void cargarValoracionesHotel(String hotelId) {
         db.collection("hoteles")
                 .document(hotelId)
@@ -263,6 +281,9 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                         if (hotel.getFotosHotelUrls() != null && !hotel.getFotosHotelUrls().isEmpty()) {
                             setupViewPagerWithIndicators(hotel.getFotosHotelUrls());
                         }
+
+                        // NUEVO: Cargar servicios del hotel
+                        cargarServicios(hotelId);
                     } else {
                         Log.w("DETALLE_HOTEL", "No se encontró el hotel con ID: " + hotelId);
                     }
@@ -271,6 +292,31 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                     Log.e("DETALLE_HOTEL", "Error al obtener hotel", e);
                 });
     }
+
+    private void cargarServicios(String hotelId) {
+        db.collection("hoteles")
+                .document(hotelId)
+                .collection("servicios")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    listaServicios.clear();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Servicio servicio = doc.toObject(Servicio.class);
+                        if (servicio != null) {
+                            servicio.setId(doc.getId());
+                            listaServicios.add(servicio);
+                        }
+                    }
+
+                    servicioAdapter.notifyDataSetChanged();
+                    Log.d("DETALLE_HOTEL", "Servicios cargados: " + listaServicios.size());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("DETALLE_HOTEL", "Error al cargar servicios", e);
+                });
+    }
+
 
     // Método para configurar ViewPager con indicadores
     private void setupViewPagerWithIndicators(List<String> imagenesUrls) {
