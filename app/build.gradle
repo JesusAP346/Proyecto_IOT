@@ -83,6 +83,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.maps.android:android-maps-utils:2.3.0'
 
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'

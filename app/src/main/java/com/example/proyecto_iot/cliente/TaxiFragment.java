@@ -67,7 +67,6 @@ public class TaxiFragment extends Fragment {
 
         db.collection("servicios_taxi")
                 .whereEqualTo("idCliente", idClienteActual)
-                //.orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     lista.clear();
@@ -78,7 +77,6 @@ public class TaxiFragment extends Fragment {
                         String idTaxista = doc.getString("idTaxista");
 
                         if (idTaxista == null || idTaxista.isEmpty()) {
-                            // Aún no se asigna taxista, puedes mostrar datos genéricos o ignorar
                             lista.add(new TaxiItem(
                                     "Sin asignar",
                                     "Pendiente",
@@ -86,12 +84,9 @@ public class TaxiFragment extends Fragment {
                                     R.drawable.roberto,
                                     false,
                                     doc.getId(),
-                                    0.0,  // latitud
-                                    0.0   // longitud
+                                    0.0, 0.0,
+                                    0.0, 0.0
                             ));
-
-
-
                             adapter.notifyDataSetChanged();
                             continue;
                         }
@@ -101,54 +96,38 @@ public class TaxiFragment extends Fragment {
                                 .addOnSuccessListener(taxistaDoc -> {
                                     String nombre = taxistaDoc.getString("nombres");
                                     String placa = taxistaDoc.getString("placaAuto");
-
-                                   // Double lat = taxistaDoc.getDouble("ubicacionLat");
-                                    //Double lng = taxistaDoc.getDouble("ubicacionLng");
-
                                     Double lat = doc.getDouble("latTaxista");
                                     Double lng = doc.getDouble("longTaxista");
+                                    String idServicio = doc.getId();
 
+                                    // Obtener ubicación del hotel (cliente)
+                                    db.collection("hoteles")
+                                            .whereEqualTo("nombre", nombreHotel)
+                                            .get()
+                                            .addOnSuccessListener(hotelDocs -> {
+                                                for (QueryDocumentSnapshot hotelDoc : hotelDocs) {
+                                                    Double latHotel = hotelDoc.getDouble("ubicacionLat");
+                                                    Double lngHotel = hotelDoc.getDouble("ubicacionLng");
 
-/*
-                                    lista.add(new TaxiItem(
-                                            placa != null ? placa : "Sin placa",
-                                            nombre != null ? nombre : "Sin nombre",
-                                            destino,
-                                            R.drawable.roberto,
-                                            "pendiente".equalsIgnoreCase(estado)
-                                    ));*/
-                                    String idServicio = doc.getId();  // ID de Firestore
-
-                                    /*
-                                    lista.add(new TaxiItem(
-                                            placa != null ? placa : "Sin placa",
-                                            nombre != null ? nombre : "Sin nombre",
-                                            destino,
-                                            R.drawable.roberto,
-                                            "pendiente".equalsIgnoreCase(estado),
-                                            idServicio
-                                    ));*/
-
-
-
-                                    boolean activa = "aceptado".equalsIgnoreCase(estado);  // ✅ Activar si ya fue aceptado
-                                    lista.add(new TaxiItem(
-                                            placa != null ? placa : "Sin placa",
-                                            nombre != null ? nombre : "Sin nombre",
-                                            destino,
-                                            R.drawable.roberto,
-                                            activa,
-                                            idServicio,
-                                            lat != null ? lat : 0,
-                                            lng != null ? lng : 0
-                                    ));
-
-
-
-
-
-
-                                    adapter.notifyDataSetChanged();
+                                                    boolean activa = "aceptado".equalsIgnoreCase(estado);
+                                                    lista.add(new TaxiItem(
+                                                            placa != null ? placa : "Sin placa",
+                                                            nombre != null ? nombre : "Sin nombre",
+                                                            destino,
+                                                            R.drawable.roberto,
+                                                            activa,
+                                                            idServicio,
+                                                            lat != null ? lat : 0,
+                                                            lng != null ? lng : 0,
+                                                            latHotel != null ? latHotel : 0,
+                                                            lngHotel != null ? lngHotel : 0
+                                                    ));
+                                                    adapter.notifyDataSetChanged();
+                                                }
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(getContext(), "Error al obtener ubicación del hotel", Toast.LENGTH_SHORT).show();
+                                            });
                                 });
                     }
                 })
