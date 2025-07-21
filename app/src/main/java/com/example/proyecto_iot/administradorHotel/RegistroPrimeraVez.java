@@ -37,6 +37,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.SplashActivity;
 import com.example.proyecto_iot.administradorHotel.entity.FotoItem;
 import com.example.proyecto_iot.administradorHotel.entity.Hotel;
 import com.example.proyecto_iot.administradorHotel.entity.ServicioHotel;
@@ -138,6 +139,13 @@ public class RegistroPrimeraVez extends AppCompatActivity {
             }
         });
 
+        binding.btnCerrarSesion.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(RegistroPrimeraVez.this, SplashActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     ///////////////////////TODO ESTO ES PA LAS FOTOS///////////////////////////////////7
