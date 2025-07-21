@@ -319,36 +319,103 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                         lista.add(habitacion);
                     }
 
-                    if (!lista.isEmpty()) {
-                        Habitacion masBarata = lista.get(0);
-                        double precioMinimo = masBarata.getPrecioPorNoche();
-
-                        for (Habitacion h : lista) {
-                            double precioActual = h.getPrecioPorNoche();
-                            if (precioActual < precioMinimo) {
-                                masBarata = h;
-                                precioMinimo = precioActual;
-                            }
-                        }
-
-                        // Limpiar etiquetas anteriores
-                        for (Habitacion h : lista) {
-                            h.setEtiqueta(null);
-                        }
-
-                        // Asignar etiqueta solo a la más barata
-                        masBarata.setEtiqueta("El precio más bajo");
-
-                        // Mover al inicio de la lista
-                        lista.remove(masBarata);
-                        lista.add(0, masBarata);
-                    }
-
-                    HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, this, hotelId, fechaInicioGlobal, fechaFinGlobal);
-                    recyclerHabitaciones.setAdapter(adapter);
+                    // Ahora filtrar habitaciones que no estén reservadas en las fechas globales
+                    filtrarHabitacionesDisponibles(lista, hotelId);
                 })
                 .addOnFailureListener(e -> {
                     Log.e("DETALLE_HOTEL", "Error al obtener habitaciones", e);
                 });
+    }
+
+    private void filtrarHabitacionesDisponibles(List<Habitacion> listaOriginal, String hotelId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Consultar todas las reservas
+        db.collection("reservas").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<String> habitacionesReservadas = new ArrayList<>();
+
+                    for (DocumentSnapshot reservaDoc : queryDocumentSnapshots) {
+                        String idHabitacion = reservaDoc.getString("idHabitacion");
+                        String fechaEntrada = reservaDoc.getString("fechaEntrada");
+                        String fechaSalida = reservaDoc.getString("fechaSalida");
+
+                        // Verificar si hay intersección de fechas
+                        if (idHabitacion != null && fechaEntrada != null && fechaSalida != null) {
+                            if (hayInterseccionFechas(fechaInicioGlobal, fechaFinGlobal, fechaEntrada, fechaSalida)) {
+                                habitacionesReservadas.add(idHabitacion);
+                            }
+                        }
+                    }
+
+                    // Filtrar la lista original removiendo habitaciones reservadas
+                    List<Habitacion> listaFiltrada = new ArrayList<>();
+                    for (Habitacion habitacion : listaOriginal) {
+                        if (!habitacionesReservadas.contains(habitacion.getId())) {
+                            listaFiltrada.add(habitacion);
+                        }
+                    }
+
+                    // Continuar con el procesamiento de la habitación más barata
+                    procesarListaFinal(listaFiltrada, hotelId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("DETALLE_HOTEL", "Error al obtener reservas", e);
+                    // En caso de error, usar la lista original
+                    procesarListaFinal(listaOriginal, hotelId);
+                });
+    }
+
+    private boolean hayInterseccionFechas(String inicioGlobal, String finGlobal, String inicioReserva, String finReserva) {
+        try {
+            // Asumiendo que las fechas están en formato "yyyy-MM-dd" o similar
+            // Puedes ajustar el formato según tu implementación
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+
+            java.util.Date inicioGlobalDate = sdf.parse(inicioGlobal);
+            java.util.Date finGlobalDate = sdf.parse(finGlobal);
+            java.util.Date inicioReservaDate = sdf.parse(inicioReserva);
+            java.util.Date finReservaDate = sdf.parse(finReserva);
+
+            // Hay intersección si:
+            // El inicio de la reserva es antes del fin global Y
+            // El fin de la reserva es después del inicio global
+            return inicioReservaDate.before(finGlobalDate) && finReservaDate.after(inicioGlobalDate);
+
+        } catch (java.text.ParseException e) {
+            Log.e("DETALLE_HOTEL", "Error al parsear fechas", e);
+            // En caso de error al parsear, asumir que hay conflicto para ser conservadores
+            return true;
+        }
+    }
+
+    private void procesarListaFinal(List<Habitacion> lista, String hotelId) {
+        if (!lista.isEmpty()) {
+            Habitacion masBarata = lista.get(0);
+            double precioMinimo = masBarata.getPrecioPorNoche();
+
+            for (Habitacion h : lista) {
+                double precioActual = h.getPrecioPorNoche();
+                if (precioActual < precioMinimo) {
+                    masBarata = h;
+                    precioMinimo = precioActual;
+                }
+            }
+
+            // Limpiar etiquetas anteriores
+            for (Habitacion h : lista) {
+                h.setEtiqueta(null);
+            }
+
+            // Asignar etiqueta solo a la más barata
+            masBarata.setEtiqueta("El precio más bajo");
+
+            // Mover al inicio de la lista
+            lista.remove(masBarata);
+            lista.add(0, masBarata);
+        }
+
+        HabitacionAdapter adapter = new HabitacionAdapter(getContext(), lista, this, hotelId, fechaInicioGlobal, fechaFinGlobal);
+        recyclerHabitaciones.setAdapter(adapter);
     }
 }

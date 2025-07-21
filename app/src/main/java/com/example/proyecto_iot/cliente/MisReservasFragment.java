@@ -82,6 +82,7 @@ public class MisReservasFragment extends Fragment {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     listaReservas.clear();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String idHabitacion = doc.getString("idHabitacion");
                         String idHotel = doc.getString("idHotel");
                         String estado = doc.getString("estado");
                         String entrada = doc.getString("fechaEntrada");
@@ -104,7 +105,10 @@ public class MisReservasFragment extends Fragment {
                                             entrada,
                                             salida,
                                             "S/." + monto,
-                                            doc.getId()
+                                            doc.getId(),
+                                            idHotel, idHabitacion
+
+
                                     ));
                                     adapter.notifyDataSetChanged();
                                 });
