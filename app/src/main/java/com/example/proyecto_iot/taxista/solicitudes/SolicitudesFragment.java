@@ -69,24 +69,58 @@ public class SolicitudesFragment extends Fragment {
                                 .addOnSuccessListener(solicitudesSnapshot -> {
                                     int cantidad = solicitudesSnapshot.size();
 
-                                    itemList.add(new CarouselItemModel(
-                                            resId,
-                                            nombre,
-                                            cantidad + " solicitudes",
-                                            location,
-                                            "★★★★☆",
-                                            urlPrimeraFoto
-                                    ));
+                                    // 🔍 Obtener las valoraciones para calcular promedio
+                                    db.collection("hoteles")
+                                            .document(idHotel)
+                                            .collection("valoraciones")
+                                            .get()
+                                            .addOnSuccessListener(valoracionesSnapshot -> {
+                                                int sumaEstrellas = 0;
+                                                int totalValoraciones = 0;
+                                                for (QueryDocumentSnapshot valoracion : valoracionesSnapshot) {
+                                                    Long estrellas = valoracion.getLong("estrellas");
+                                                    if (estrellas != null) {
+                                                        sumaEstrellas += estrellas;
+                                                        totalValoraciones++;
+                                                    }
+                                                }
 
-                                    if (isAdded() && binding != null && itemList.size() == totalHoteles) {
-                                        cargarAdapter(itemList);
-                                    }
+                                                float promedio = totalValoraciones > 0
+                                                        ? (float) sumaEstrellas / totalValoraciones
+                                                        : 0f;
+
+                                                String estrellasTexto = convertirPromedioAEstrellas(promedio);
+
+                                                itemList.add(new CarouselItemModel(
+                                                        resId,
+                                                        nombre,
+                                                        cantidad + " solicitudes",
+                                                        location,
+                                                        estrellasTexto,
+                                                        urlPrimeraFoto
+                                                ));
+
+                                                if (isAdded() && binding != null && itemList.size() == totalHoteles) {
+                                                    cargarAdapter(itemList);
+                                                }
+                                            })
+                                            .addOnFailureListener(Throwable::printStackTrace);
                                 })
                                 .addOnFailureListener(Throwable::printStackTrace);
                     }
                 })
                 .addOnFailureListener(Throwable::printStackTrace);
     }
+    private String convertirPromedioAEstrellas(float promedio) {
+        int estrellasLlenas = Math.round(promedio);
+        StringBuilder estrellas = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            estrellas.append(i < estrellasLlenas ? "★" : "☆");
+        }
+        return estrellas.toString();
+    }
+
+
 
     private void cargarAdapter(List<CarouselItemModel> itemList) {
         if (!isAdded() || binding == null) return;
