@@ -84,6 +84,8 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
                 ivFoto.setImageResource(R.drawable.ic_generic_user);
             }
 
+
+
             btnEditar.setOnClickListener(view -> {
                 dialog.dismiss();
                 FragmentPerfilUsuariosSuperadmin fragment = FragmentPerfilUsuariosSuperadmin.newInstance(usuario);
@@ -118,6 +120,16 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
                         .show();
             });
 
+
+            // Al preparar el BottomSheet:
+            if (usuario.isEstadoCuenta()) {
+                btnActivar.setText("Desactivar");
+                btnActivar.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_desactivo, 0, 0, 0);
+            } else {
+                btnActivar.setText("Activar");
+                btnActivar.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_activar, 0, 0, 0);
+            }
+
             btnActivar.setOnClickListener(view -> {
                 dialog.dismiss();
                 boolean nuevoEstado = !usuario.isEstadoCuenta();
@@ -125,13 +137,17 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
                         .document(usuario.getId())
                         .update("estadoCuenta", nuevoEstado)
                         .addOnSuccessListener(aVoid -> {
-                            String msg = nuevoEstado ? "Usuario activado." : "Usuario desactivado.";
+                            String msg = nuevoEstado ? "Usuario activado." : "Usuario suspendido.";
+
                             Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
+                            usuario.setEstadoCuenta(nuevoEstado);
+                            notifyDataSetChanged();
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(v.getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
             });
+
 
             dialog.setContentView(sheetView);
             dialog.show();

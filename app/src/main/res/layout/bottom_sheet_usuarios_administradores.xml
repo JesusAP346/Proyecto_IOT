@@ -63,17 +63,7 @@
         android:textSize="16sp"
         android:background="?attr/selectableItemBackground" />
 
-    <TextView
-        android:id="@+id/btnEliminar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Eliminar"
-        android:fontFamily="@font/nunito_semibold"
-        android:drawableStart="@drawable/icon_deleteadmin"
-        android:drawablePadding="8dp"
-        android:padding="12dp"
-        android:textSize="16sp"
-        android:background="?attr/selectableItemBackground" />
+
     <TextView
         android:id="@+id/btnActivar"
         android:layout_width="match_parent"
@@ -81,6 +71,17 @@
         android:text="Activar"
         android:fontFamily="@font/nunito_semibold"
         android:drawableStart="@drawable/ic_activar"
+        android:drawablePadding="8dp"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:background="?attr/selectableItemBackground" />
+    <TextView
+        android:id="@+id/btnEliminar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Eliminar"
+        android:fontFamily="@font/nunito_semibold"
+        android:drawableStart="@drawable/icon_deleteadmin"
         android:drawablePadding="8dp"
         android:padding="12dp"
         android:textSize="16sp"
