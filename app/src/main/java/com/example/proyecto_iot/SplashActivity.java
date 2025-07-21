@@ -3,10 +3,14 @@ package com.example.proyecto_iot;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.proyecto_iot.SuperAdmin.PagPrincipalSuperAdmin;
+import com.example.proyecto_iot.administradorHotel.CambiarContraAdminActivity;
 import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
+import com.example.proyecto_iot.administradorHotel.RegistroPrimeraVez;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
 import com.example.proyecto_iot.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,39 +66,67 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void redirectToRoleActivity(String rol, String idUsuario) {
-        Intent intent;
+        if ("administrador".equalsIgnoreCase(rol)) {
+            db.collection("usuarios").document(idUsuario).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        Boolean contraCambiada = documentSnapshot.getBoolean("contraCambiada");
+                        String idHotel = documentSnapshot.getString("idHotel");
 
-        switch (rol.toLowerCase()) {
-            case "cliente":
-                intent = new Intent(SplashActivity.this, ClienteBusquedaActivity.class);
-                intent.putExtra("idUsuario", idUsuario);
-                break;
-
-            case "superadmin":
-                intent = new Intent(SplashActivity.this, PagPrincipalSuperAdmin.class);
-                intent.putExtra("idUsuario", idUsuario);
-                break;
-
-            case "taxista":
-                intent = new Intent(SplashActivity.this, MainActivity.class);
-                intent.putExtra("idUsuario", idUsuario);
-                break;
-
-            case "administrador":
-                intent = new Intent(SplashActivity.this, PagPrincipalAdmin.class);
-                intent.putExtra("idUsuario", idUsuario);
-                break;
-
-            default:
-                // Rol no reconocido, cerrar sesión y ir al login
-                auth.signOut();
-                redirectToLogin();
-                return;
+                        if (contraCambiada == null || !contraCambiada) {
+                            // Si no cambió la contra
+                            Intent intent = new Intent(SplashActivity.this, CambiarContraAdminActivity.class);
+                            intent.putExtra("idUsuario", idUsuario);
+                            startActivity(intent);
+                        } else if (idHotel == null || idHotel.trim().isEmpty()) {
+                            // Ya cambió su contra pero aún no ha registrado su hotel
+                            Intent intent = new Intent(SplashActivity.this, RegistroPrimeraVez.class);
+                            intent.putExtra("idUsuario", idUsuario);
+                            startActivity(intent);
+                        } else {
+                            // Todo ok, va a la pantalla principal
+                            Intent intent = new Intent(SplashActivity.this, PagPrincipalAdmin.class);
+                            intent.putExtra("idUsuario", idUsuario);
+                            intent.putExtra("idHotel", idHotel);
+                            startActivity(intent);
+                        }
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Error al verificar datos del administrador", Toast.LENGTH_SHORT).show();
+                        auth.signOut();
+                        redirectToLogin();
+                    });
         }
+        else {
+            Intent intent;
 
-        startActivity(intent);
-        finish();
+            switch (rol.toLowerCase()) {
+                case "cliente":
+                    intent = new Intent(SplashActivity.this, ClienteBusquedaActivity.class);
+                    intent.putExtra("idUsuario", idUsuario);
+                    break;
+
+                case "superadmin":
+                    intent = new Intent(SplashActivity.this, PagPrincipalSuperAdmin.class);
+                    intent.putExtra("idUsuario", idUsuario);
+                    break;
+
+                case "taxista":
+                    intent = new Intent(SplashActivity.this, MainActivity.class);
+                    intent.putExtra("idUsuario", idUsuario);
+                    break;
+
+                default:
+                    auth.signOut();
+                    redirectToLogin();
+                    return;
+            }
+
+            startActivity(intent);
+            finish();
+        }
     }
+
 
     private void redirectToLogin() {
         Intent intent = new Intent(SplashActivity.this, LoginActivity.class);

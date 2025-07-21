@@ -21,6 +21,7 @@ import com.example.proyecto_iot.MainActivity;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.SuperAdmin.PagPrincipalSuperAdmin;
 import com.example.proyecto_iot.SuperAdmin.SuspensionActivity;
+import com.example.proyecto_iot.administradorHotel.CambiarContraAdminActivity;
 import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
 import com.example.proyecto_iot.administradorHotel.RegistroPrimeraVez;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
@@ -260,23 +261,31 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         } else if ("Administrador".equals(rol)) {
             String idUsuario = documentSnapshot.getId();
-            Object idHotelObj = documentSnapshot.get("idHotel");
+            String idHotel = documentSnapshot.getString("idHotel");
+            Boolean contraCambiada = documentSnapshot.getBoolean("contraCambiada");
 
-            if (idHotelObj == null || String.valueOf(idHotelObj).trim().isEmpty()) {
-                // No tiene hotel -> ir al registro
+            if (contraCambiada == null || !contraCambiada) {
+                // Si NO ha cambiado su contraseña aún
+                Intent intent = new Intent(LoginActivity.this, CambiarContraAdminActivity.class);
+                intent.putExtra("idUsuario", idUsuario);
+                startActivity(intent);
+            } else if (idHotel == null || idHotel.trim().isEmpty()) {
+                // Si ya cambió su contraseña pero aún no tiene hotel
                 Intent intent = new Intent(LoginActivity.this, RegistroPrimeraVez.class);
                 intent.putExtra("idUsuario", idUsuario);
                 startActivity(intent);
             } else {
-                // Tiene hotel -> flujo normal
+                // Si ya cambió su contra y ya registró hotel
                 Intent intent = new Intent(LoginActivity.this, PagPrincipalAdmin.class);
                 intent.putExtra("idUsuario", idUsuario);
-                intent.putExtra("idHotel", String.valueOf(idHotelObj));
+                intent.putExtra("idHotel", idHotel);
                 startActivity(intent);
             }
 
             finish();
-        } else if ("Taxista".equals(rol)) {
+        }
+
+        else if ("Taxista".equals(rol)) {
             String idUsuario = documentSnapshot.getId();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra("idUsuario", idUsuario);

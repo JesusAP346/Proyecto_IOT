@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gradient">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="24dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/icono_perfil2"
+                    android:background="@drawable/circle_orange_gradient"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¡Bienvenido!"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Antes de continuar, cambie su contraseña"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="2dp" />
+            </LinearLayout>
+
+            <!-- Card cambio contraseña -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:orientation="vertical">
+
+                    <!-- Nueva contraseña -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nueva contraseña"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/inputPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/customedittext"
+                            android:hint="Ingrese nueva contraseña"
+                            android:inputType="textPassword"
+                            android:padding="8dp"
+                            android:textSize="17sp"
+                            android:paddingEnd="40dp" />
+
+                        <ImageView
+                            android:id="@+id/eyePassword"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/ic_eye_off"
+                            android:contentDescription="Mostrar contraseña" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/errorPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginStart="8dp"
+                        android:drawableStart="@drawable/ic_warning_admin"
+                        android:drawablePadding="8dp"
+                        android:textColor="#D32F2F"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+
+                    <!-- Confirmar contraseña -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Confirmar contraseña"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="4dp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/inputConfirmarPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/customedittext"
+                            android:hint="Confirme su contraseña"
+                            android:inputType="textPassword"
+                            android:padding="8dp"
+                            android:textSize="17sp"
+                            android:paddingEnd="40dp" />
+
+                        <ImageView
+                            android:id="@+id/eyeConfirmarPassword"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/ic_eye_off"
+                            android:contentDescription="Mostrar contraseña" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/errorConfirmarPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginStart="8dp"
+                        android:drawableStart="@drawable/ic_warning_admin"
+                        android:drawablePadding="8dp"
+                        android:textColor="#D32F2F"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+
+                    <!-- Botón cambiar -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="4dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_cambiar_contrasena"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cambiar contraseña"
+                            android:textColor="@android:color/black"
+                            android:backgroundTint="#EEEEEE"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
+                            app:cornerRadius="10dp"
+                            app:icon="@drawable/ic_lock"
+                            app:iconTint="@android:color/black"
+                            app:iconGravity="textStart"
+                            app:iconPadding="12dp"
+                            app:strokeWidth="0dp"
+                            style="@style/Widget.MaterialComponents.Button" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

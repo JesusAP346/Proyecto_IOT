@@ -34,7 +34,7 @@
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/icono_perfil2"
+                    android:src="@drawable/icono_hotel"
                     android:background="@drawable/circle_orange_gradient"
                     android:padding="12dp"
                     android:layout_marginBottom="12dp"
@@ -44,7 +44,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="¡Bienvenido!"
+                    android:text="¡Importante!"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -227,6 +227,7 @@
                                 android:textSize="12sp"
                                 android:visibility="gone" />
 
+
                         </LinearLayout>
 
                     </androidx.cardview.widget.CardView>
@@ -288,6 +289,37 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginTop="8dp" />
+                    <!-- Campo para monto mínimo taxi -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Monto mínimo para servicio de taxi"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="0dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Este es el monto mínimo requerido para ofrecer servicio de taxi gratuito al aeropuerto."
+                        android:textSize="12sp"
+                        android:textColor="#999999"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp" />
+                    <EditText
+                        android:id="@+id/inputMontoMinimoTaxi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:background="@drawable/customedittext"
+                        android:hint="Ingrese monto mínimo (S/.)"
+                        android:padding="8dp"
+                        android:textSize="17sp" />
+
+
 
                     <TextView
                         android:layout_width="match_parent"
