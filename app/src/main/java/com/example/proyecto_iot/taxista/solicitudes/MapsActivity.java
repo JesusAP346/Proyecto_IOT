@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -115,7 +114,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LatLngBounds bounds = builder.build();
                     mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150));
 
-                    trazarRuta(miUbicacion, destino);
+                    trazarRuta(miUbicacion, destino); // 🔁 Aquí también calculamos tiempo/distancia
                 } else {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(miUbicacion, 15));
                     Log.w("MapsActivity", "Destino no válido: lat/lng = 0.0");
@@ -126,7 +125,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void configurarActualizacionUbicacion() {
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval(10000); // cada 10s
+        locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -193,12 +192,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             JSONObject overviewPolyline = route.getJSONObject("overview_polyline");
                             String points = overviewPolyline.getString("points");
 
-                            List<LatLng> decodedPath = decodePolyline(points);
+                            JSONObject leg = route.getJSONArray("legs").getJSONObject(0);
+                            String duracionTexto = leg.getJSONObject("duration").getString("text");
+                            String distanciaTexto = leg.getJSONObject("distance").getString("text");
+
                             runOnUiThread(() -> {
                                 mMap.addPolyline(new PolylineOptions()
-                                        .addAll(decodedPath)
+                                        .addAll(decodePolyline(points))
                                         .width(10)
                                         .color(Color.parseColor("#FF5722")));
+
+                                // ✅ ACTUALIZA LOS TEXTVIEWS
+                                binding.tvDistancia.setText(distanciaTexto);
+                                binding.tvTiempo.setText(duracionTexto);
                             });
                         }
                     } catch (JSONException e) {

@@ -12,12 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.proyecto_iot.BuildConfig;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.taxista.perfil.Notificacion;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -28,7 +30,6 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
 
     private final List<Solicitud> lista;
     private final OnSolicitudClickListener listener;
-    private static final String CANAL_ID = "canal_viajes";
     private static final String FILE_NOTIFICACIONES = "notificaciones.json";
 
     public interface OnSolicitudClickListener {
@@ -56,7 +57,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         holder.nombre.setText(solicitud.nombre);
         holder.telefono.setText(solicitud.telefono);
         holder.viajes.setText(solicitud.viajes + " viajes");
-        holder.tiempoDistancia.setText(solicitud.tiempoDistancia);
+        holder.tiempoDistancia.setText("Calculando...");
         holder.origen.setText(solicitud.origen);
         holder.distrito.setText(solicitud.distrito);
         holder.destino.setText(solicitud.destino);
@@ -81,13 +82,56 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
             holder.btnAceptar.setText("Ver");
         }
 
-        holder.btnAceptar.setOnClickListener(v -> {
-            listener.onSolicitudAceptada(solicitud);
-        });
+        holder.btnAceptar.setOnClickListener(v -> listener.onSolicitudAceptada(solicitud));
 
-        holder.btnRechazar.setOnClickListener(v -> {
-            // Acción personalizada si deseas manejar el rechazo
-        });
+        obtenerTiempoDistancia(
+                context,
+                solicitud.latTaxista,
+                solicitud.lngTaxista,
+                solicitud.latDestino,
+                solicitud.lngDestino,
+                holder.tiempoDistancia
+        );
+    }
+
+    private void obtenerTiempoDistancia(Context context, double lat1, double lng1,
+                                        double lat2, double lng2, TextView tvTiempoDistancia) {
+        String apiKey = BuildConfig.MAPS_API_KEY;
+        String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
+                lat1 + "," + lng1 + "&destination=" + lat2 + "," + lng2 + "&key=" + apiKey;
+
+        new Thread(() -> {
+            try {
+                java.net.URL direccionUrl = new java.net.URL(url);
+                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) direccionUrl.openConnection();
+                conn.setRequestMethod("GET");
+
+                java.io.InputStream in = new java.io.BufferedInputStream(conn.getInputStream());
+                java.util.Scanner scanner = new java.util.Scanner(in).useDelimiter("\\A");
+                final String response = scanner.hasNext() ? scanner.next() : "";
+
+                ((android.app.Activity) context).runOnUiThread(() -> {
+                    try {
+                        JSONObject json = new JSONObject(response);
+                        JSONArray routes = json.getJSONArray("routes");
+                        if (routes.length() > 0) {
+                            JSONObject leg = routes.getJSONObject(0).getJSONArray("legs").getJSONObject(0);
+                            String duracionTexto = leg.getJSONObject("duration").getString("text");
+                            String distanciaTexto = leg.getJSONObject("distance").getString("text");
+                            tvTiempoDistancia.setText(duracionTexto + "\n" + distanciaTexto);
+                        } else {
+                            tvTiempoDistancia.setText("No encontrado");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        tvTiempoDistancia.setText("Error");
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                tvTiempoDistancia.setText("Error");
+            }
+        }).start();
     }
 
     @Override
@@ -114,44 +158,5 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
             btnAceptar = itemView.findViewById(R.id.btnAceptar);
             btnRechazar = itemView.findViewById(R.id.btnRechazar);
         }
-    }
-
-    // Métodos para guardar notificaciones (sin cambios)
-    private void guardarNotificacionEnStorage(Context context, Notificacion notificacion) {
-        List<Notificacion> lista = leerNotificacionesDesdeStorage(context);
-        lista.add(notificacion);
-
-        Gson gson = new Gson();
-        String json = gson.toJson(lista);
-
-        try (FileOutputStream fos = context.openFileOutput(FILE_NOTIFICACIONES, Context.MODE_PRIVATE);
-             FileWriter writer = new FileWriter(fos.getFD())) {
-            writer.write(json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private List<Notificacion> leerNotificacionesDesdeStorage(Context context) {
-        List<Notificacion> lista = new ArrayList<>();
-        try (FileInputStream fis = context.openFileInput(FILE_NOTIFICACIONES);
-             InputStreamReader isr = new InputStreamReader(fis);
-             BufferedReader br = new BufferedReader(isr)) {
-            StringBuilder sb = new StringBuilder();
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                sb.append(linea);
-            }
-            Type listType = new TypeToken<List<Notificacion>>() {}.getType();
-            lista = new Gson().fromJson(sb.toString(), listType);
-        } catch (Exception e) {
-            // Ignorar si el archivo no existe
-        }
-        return lista;
-    }
-
-    private String obtenerHoraActual() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-        return sdf.format(new Date());
     }
 }

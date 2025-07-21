@@ -20,13 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.proyecto_iot.databinding.FragmentSolicitudesHotelBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.*;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,9 +57,7 @@ public class SolicitudesHotelFragment extends Fragment {
         binding = FragmentSolicitudesHotelBinding.inflate(inflater, container, false);
         binding.nombreHotel.setText("Hotel: " + nombreHotel);
         binding.recyclerSolicitudes.setLayoutManager(new LinearLayoutManager(getContext()));
-
         cargarSolicitudes();
-
         return binding.getRoot();
     }
 
@@ -75,8 +69,14 @@ public class SolicitudesHotelFragment extends Fragment {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Solicitud> solicitudes = new ArrayList<>();
+                    List<DocumentSnapshot> docs = new ArrayList<>(queryDocumentSnapshots.getDocuments());
 
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    if (docs.isEmpty()) {
+                        binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(new ArrayList<>(), s -> {}));
+                        return;
+                    }
+
+                    for (DocumentSnapshot doc : docs) {
                         String estado = doc.getString("estado");
                         if (!"pendiente".equals(estado) && !"aceptado".equals(estado)) continue;
 
@@ -88,6 +88,8 @@ public class SolicitudesHotelFragment extends Fragment {
                         String direccionHotel = doc.getString("direccionHotel");
                         double lat = doc.getDouble("latitudHotel") != null ? doc.getDouble("latitudHotel") : 0.0;
                         double lng = doc.getDouble("longitudHotel") != null ? doc.getDouble("longitudHotel") : 0.0;
+                        double latTaxista = doc.getDouble("latTaxista") != null ? doc.getDouble("latTaxista") : 0.0;
+                        double lngTaxista = doc.getDouble("longTaxista") != null ? doc.getDouble("longTaxista") : 0.0;
 
                         db.collection("usuarios")
                                 .document(idCliente)
@@ -99,36 +101,40 @@ public class SolicitudesHotelFragment extends Fragment {
                                     }
 
                                     Solicitud item = new Solicitud(
-                                            nombre, telefono, 0, "3 min.\n1.2 km",
+                                            nombre, telefono, 0, "Cargando...",
                                             hotel, direccionHotel, destino, urlFoto,
-                                            lat, lng, doc.getId(), estado
+                                            lat, lng, latTaxista, lngTaxista,
+                                            doc.getId(), estado
                                     );
 
                                     solicitudes.add(item);
-                                    binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(solicitudes, selected -> {
-                                        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                                                != PackageManager.PERMISSION_GRANTED) {
-                                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-                                            Toast.makeText(getContext(), "Debes aceptar el permiso de ubicación para abrir el mapa", Toast.LENGTH_LONG).show();
-                                            return;
-                                        }
 
-                                        if ("pendiente".equals(selected.estado)) {
-                                            db.collection("servicios_taxi")
-                                                    .document(selected.idDocumento)
-                                                    .update(
-                                                            "estado", "aceptado",
-                                                            "idTaxista", FirebaseAuth.getInstance().getCurrentUser().getUid()
-                                                    )
-                                                    .addOnSuccessListener(aVoid -> abrirMapa(selected))
-                                                    .addOnFailureListener(e -> {
-                                                        e.printStackTrace();
-                                                        Toast.makeText(getContext(), "Error al aceptar solicitud", Toast.LENGTH_SHORT).show();
-                                                    });
-                                        } else {
-                                            abrirMapa(selected);
-                                        }
-                                    }));
+                                    if (solicitudes.size() == docs.size()) {
+                                        binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(solicitudes, selected -> {
+                                            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                                                    != PackageManager.PERMISSION_GRANTED) {
+                                                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+                                                Toast.makeText(getContext(), "Debes aceptar el permiso de ubicación para abrir el mapa", Toast.LENGTH_LONG).show();
+                                                return;
+                                            }
+
+                                            if ("pendiente".equals(selected.estado)) {
+                                                db.collection("servicios_taxi")
+                                                        .document(selected.idDocumento)
+                                                        .update(
+                                                                "estado", "aceptado",
+                                                                "idTaxista", FirebaseAuth.getInstance().getCurrentUser().getUid()
+                                                        )
+                                                        .addOnSuccessListener(aVoid -> abrirMapa(selected))
+                                                        .addOnFailureListener(e -> {
+                                                            e.printStackTrace();
+                                                            Toast.makeText(getContext(), "Error al aceptar solicitud", Toast.LENGTH_SHORT).show();
+                                                        });
+                                            } else {
+                                                abrirMapa(selected);
+                                            }
+                                        }));
+                                    }
                                 });
                     }
                 })
@@ -157,47 +163,5 @@ public class SolicitudesHotelFragment extends Fragment {
                 requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
-    }
-
-    private String getFileName() {
-        return "solicitudes_" + nombreHotel.replace(" ", "_").toLowerCase() + ".json";
-    }
-
-    private void guardarListaSolicitudes(List<Solicitud> lista) {
-        Gson gson = new Gson();
-        String json = gson.toJson(lista);
-        String fileName = getFileName();
-
-        try (FileOutputStream fos = requireContext().openFileOutput(fileName, Context.MODE_PRIVATE);
-             FileWriter writer = new FileWriter(fos.getFD())) {
-            writer.write(json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private List<Solicitud> leerListaSolicitudes() {
-        List<Solicitud> lista = new ArrayList<>();
-        String fileName = getFileName();
-
-        try (FileInputStream fis = requireContext().openFileInput(fileName);
-             InputStreamReader isr = new InputStreamReader(fis);
-             BufferedReader reader = new BufferedReader(isr)) {
-
-            StringBuilder sb = new StringBuilder();
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                sb.append(linea);
-            }
-
-            String json = sb.toString();
-            Type tipoLista = new TypeToken<List<Solicitud>>() {}.getType();
-            lista = new Gson().fromJson(json, tipoLista);
-
-        } catch (Exception e) {
-            Log.e("Storage", "Error al leer archivo: " + fileName);
-        }
-
-        return lista;
     }
 }
