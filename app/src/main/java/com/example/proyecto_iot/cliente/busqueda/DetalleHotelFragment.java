@@ -23,6 +23,7 @@ import com.example.proyecto_iot.cliente.chat.ChatBottomSheet;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,6 +43,10 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
     // Nuevas variables para los indicadores
     private LinearLayout layoutIndicadores;
     private TextView textContadorImagenes;
+
+    // Variables para las estrellas y valoración
+    private ImageView[] estrellas = new ImageView[5];
+    private TextView textValoracionHotel;
 
     private Hotel hotel;
     private TextView textTituloHotel;
@@ -76,8 +81,6 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         View view = inflater.inflate(R.layout.fragment_detalle_hotel, container, false);
         db = FirebaseFirestore.getInstance();
 
-
-
         // Inicializar las nuevas vistas
         initViews(view);
 
@@ -92,6 +95,9 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
             Log.d("DETALLE_HOTEL", "Fechas recibidas en el fragmento: " + fechaInicioGlobal + " - " + fechaFinGlobal);
             cargarHabitaciones(hotelId);
             cargarDatosHotel(hotelId);
+
+            // Cargar valoraciones del hotel
+            cargarValoracionesHotel(hotelId);
         }
 
         List<Habitacion> lista = new ArrayList<>();
@@ -103,14 +109,10 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
         textTituloHotel = view.findViewById(R.id.textTituloHotel);
 
-
-
         ImageButton btnBack = view.findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().popBackStack();
         });
-
-
 
         FloatingActionButton fabChat = view.findViewById(R.id.fabChat);
         fabChat.setOnClickListener(v -> {
@@ -133,11 +135,87 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         return view;
     }
 
-    // Método para inicializar las vistas de indicadores
+    // Método para inicializar las vistas de indicadores y estrellas
     private void initViews(View view) {
         viewPagerImagenesHotel = view.findViewById(R.id.viewPagerImagenesHotel);
         layoutIndicadores = view.findViewById(R.id.layoutIndicadores);
         textContadorImagenes = view.findViewById(R.id.textContadorImagenes);
+
+        // Inicializar las estrellas (necesitas agregar IDs en el XML)
+        estrellas[0] = view.findViewById(R.id.star1Hotel);
+        estrellas[1] = view.findViewById(R.id.star2Hotel);
+        estrellas[2] = view.findViewById(R.id.star3Hotel);
+        estrellas[3] = view.findViewById(R.id.star4Hotel);
+        estrellas[4] = view.findViewById(R.id.star5Hotel);
+
+        textValoracionHotel = view.findViewById(R.id.textValoracionHotel);
+    }
+
+    // Nuevo método para cargar valoraciones del hotel
+    private void cargarValoracionesHotel(String hotelId) {
+        db.collection("hoteles")
+                .document(hotelId)
+                .collection("valoraciones")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            // No hay valoraciones
+                            mostrarSinValoraciones();
+                        } else {
+                            // Calcular promedio
+                            double sumaEstrellas = 0;
+                            int cantidadValoraciones = 0;
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Double estrellas = document.getDouble("estrellas");
+                                if (estrellas != null) {
+                                    sumaEstrellas += estrellas;
+                                    cantidadValoraciones++;
+                                }
+                            }
+
+                            if (cantidadValoraciones > 0) {
+                                double promedio = sumaEstrellas / cantidadValoraciones;
+                                int estrellasRedondeadas = (int) Math.ceil(promedio);
+                                mostrarEstrellas(estrellasRedondeadas, promedio);
+                            } else {
+                                mostrarSinValoraciones();
+                            }
+                        }
+                    } else {
+                        // Error al cargar, mostrar estado por defecto
+                        mostrarSinValoraciones();
+                    }
+                });
+    }
+
+    private void mostrarEstrellas(int cantidadEstrellas, double promedioExacto) {
+        // Actualizar las estrellas visuales
+        for (int i = 0; i < 5; i++) {
+            estrellas[i].setImageResource(
+                    i < cantidadEstrellas ? R.drawable.ic_star : R.drawable.ic_star_border
+            );
+        }
+
+        // Mostrar el texto con el promedio
+        if (textValoracionHotel != null) {
+            textValoracionHotel.setText(String.format("%.1f estrellas", promedioExacto));
+            textValoracionHotel.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void mostrarSinValoraciones() {
+        // Mostrar todas las estrellas vacías
+        for (int i = 0; i < 5; i++) {
+            estrellas[i].setImageResource(R.drawable.ic_star_border);
+        }
+
+        // Mostrar texto "Sin valoraciones"
+        if (textValoracionHotel != null) {
+            textValoracionHotel.setText("Sin valoraciones");
+            textValoracionHotel.setVisibility(View.VISIBLE);
+        }
     }
 
     // Método para configurar los tabs (extraído para organizar el código)
@@ -248,7 +326,6 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         });
     }
 
-
     private void updateIndicadores(int position) {
         for (int i = 0; i < layoutIndicadores.getChildCount(); i++) {
             ImageView dot = (ImageView) layoutIndicadores.getChildAt(i);
@@ -256,12 +333,10 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         }
     }
 
-
     private void updateContador(int position, int total) {
         String contador = (position + 1) + "/" + total;
         textContadorImagenes.setText(contador);
     }
-
 
     public void onHabitacionClick(Habitacion2 habitacion){
         habitacion.setFechaFin(fechaFinGlobal);

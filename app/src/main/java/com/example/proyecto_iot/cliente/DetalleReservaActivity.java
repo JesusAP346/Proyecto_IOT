@@ -128,6 +128,8 @@ public class DetalleReservaActivity extends AppCompatActivity {
                                     tvEstado.setText("Estado: CHECKOUT");
                                     Intent intent2 = new Intent(DetalleReservaActivity.this, FormularioCheckoutActivity.class);
                                     intent2.putExtra("nombreHotel", nombre);
+                                    intent2.putExtra("idHotel", idHotel);
+
                                     startActivity(intent2);
                                 })
                                 .addOnFailureListener(e -> e.printStackTrace());
