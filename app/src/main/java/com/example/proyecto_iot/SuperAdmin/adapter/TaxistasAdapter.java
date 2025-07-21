@@ -50,10 +50,12 @@ public class TaxistasAdapter extends RecyclerView.Adapter<TaxistasAdapter.ViewHo
         // --- ADAPTACIÓN DE ATRIBUTOS DEL DTO USUARIO ---
         holder.nombre.setText(taxista.getNombres() + " " + taxista.getApellidos());
         holder.numero.setText("Teléfono: " + taxista.getNumCelular());
+        holder.rol.setText("Modelo del auto: " + taxista.getModeloAuto());
         // Mapeo los campos del DTO Usuario a los TextViews existentes
-        holder.modelo.setText("Placa: " + taxista.getPlacaAuto()); // Antes era Modelo, ahora muestra Placa
-        holder.placa.setText("Estado: " + taxista.getEstadoSolicitudTaxista()); // Antes era Placa, ahora muestra Estado Solicitud
-        holder.rol.setText("Rol: Taxista"); // Esto puede ser estático o venir de taxista.getIdRol()
+        holder.modelo.setText("Placa del auto: " + taxista.getPlacaAuto()); // Antes era Modelo, ahora muestra Placa
+
+        holder.placa.setText("Estado cuenta: " + (taxista.isEstadoCuenta() ? "Activo" : "Inactivo"));
+        // Esto puede ser estático o venir de taxista.getIdRol()
 
         // Cargar imagen de perfil con Picasso
         // Asegúrate de que urlFotoPerfil es el atributo correcto en tu DTO Usuario
@@ -75,6 +77,7 @@ public class TaxistasAdapter extends RecyclerView.Adapter<TaxistasAdapter.ViewHo
             TextView tvNumero = sheetView.findViewById(R.id.tvNumeroAdmin);
             TextView btnEditar = sheetView.findViewById(R.id.btnEditar);
             TextView btnEliminar = sheetView.findViewById(R.id.btnEliminar);
+            TextView btnActivar = sheetView.findViewById(R.id.btnActivar);
 
             // Rellenar vistas del BottomSheet con datos del Usuario
             tvNombre.setText(taxista.getNombres() + " " + taxista.getApellidos());
@@ -95,6 +98,33 @@ public class TaxistasAdapter extends RecyclerView.Adapter<TaxistasAdapter.ViewHo
                         .replace(R.id.frame_layout, fragment)
                         .addToBackStack(null)
                         .commit();
+            });
+
+            // Al preparar el BottomSheet:
+            if (taxista.isEstadoCuenta()) {
+                btnActivar.setText("Desactivar");
+                btnActivar.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_desactivo, 0, 0, 0);
+            } else {
+                btnActivar.setText("Activar");
+                btnActivar.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_activar, 0, 0, 0);
+            }
+
+            btnActivar.setOnClickListener(view -> {
+                dialog.dismiss();
+                boolean nuevoEstado = !taxista.isEstadoCuenta();
+                FirebaseFirestore.getInstance().collection("usuarios")
+                        .document(taxista.getId())
+                        .update("estadoCuenta", nuevoEstado)
+                        .addOnSuccessListener(aVoid -> {
+                            String msg = nuevoEstado ? "Usuario activado." : "Usuario suspendido.";
+
+                            Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
+                            taxista.setEstadoCuenta(nuevoEstado);
+                            notifyDataSetChanged();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(v.getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
             });
 
             btnEliminar.setOnClickListener(view -> {
@@ -169,4 +199,11 @@ public class TaxistasAdapter extends RecyclerView.Adapter<TaxistasAdapter.ViewHo
             btnOpciones = itemView.findViewById(R.id.btnOpciones);
         }
     }
+    public void updateList(List<Usuario> lista) {
+        taxistasList.clear();
+        taxistasList.addAll(lista);
+        notifyDataSetChanged();
+    }
+
+
 }

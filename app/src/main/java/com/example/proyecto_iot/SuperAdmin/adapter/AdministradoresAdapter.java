@@ -20,6 +20,7 @@ import com.example.proyecto_iot.SuperAdmin.fragmentos.FragmentGestionAdministrad
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,12 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
 
         // --- CAMBIOS AQUÍ: Usar los métodos getter de la clase Usuario ---
         holder.nombreAdmin.setText(admin.getNombres()+" "+admin.getApellidos()); // Usa getNombres()
-        holder.numeroAdmin.setText(admin.getNumCelular()); // Usa getNumCelular()
+        holder.numeroAdmin.setText("Teléfono: " + admin.getNumCelular()); // Usa getNumCelular()
+        holder.correoAdmin.setText("Correo: " +admin.getEmail());
+        String estado = admin.estadoCuenta ? "Activo" : "Suspendido";
+        holder.estadoAdmin.setText("Estado cuenta: " + estado);
+
+
 
         // Asumiendo que 'urlFotoPerfil' es el campo de la URL de la imagen en tu clase Usuario
         if (admin.getUrlFotoPerfil() != null && !admin.getUrlFotoPerfil().isEmpty()) {
@@ -84,6 +90,7 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
             TextView tvNumero = sheetView.findViewById(R.id.tvNumeroAdmin);
             TextView btnEditar = sheetView.findViewById(R.id.btnEditar);
             TextView btnEliminar = sheetView.findViewById(R.id.btnEliminar);
+            TextView btnActivar = sheetView.findViewById(R.id.btnActivar);
 
             // --- CAMBIOS AQUÍ: Usar los métodos getter de la clase Usuario ---
             tvNombre.setText(admin.getNombres()+ " " + admin.getApellidos());
@@ -104,6 +111,32 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
                         .replace(R.id.frame_layout, fragment)
                         .addToBackStack(null)
                         .commit();
+            });
+            // Al preparar el BottomSheet:
+            if (admin.isEstadoCuenta()) {
+                btnActivar.setText("Desactivar");
+                btnActivar.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_desactivo, 0, 0, 0);
+            } else {
+                btnActivar.setText("Activar");
+                btnActivar.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_activar, 0, 0, 0);
+            }
+
+            btnActivar.setOnClickListener(view -> {
+                dialog.dismiss();
+                boolean nuevoEstado = !admin.isEstadoCuenta();
+                FirebaseFirestore.getInstance().collection("usuarios")
+                        .document(admin.getId())
+                        .update("estadoCuenta", nuevoEstado)
+                        .addOnSuccessListener(aVoid -> {
+                            String msg = nuevoEstado ? "Usuario activado." : "Usuario suspendido.";
+
+                            Toast.makeText(v.getContext(), msg, Toast.LENGTH_SHORT).show();
+                            admin.setEstadoCuenta(nuevoEstado);
+                            notifyDataSetChanged();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(v.getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
             });
 
             btnEliminar.setOnClickListener(view -> {
@@ -142,7 +175,8 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
                                                                         "Super Admin",
                                                                         uidEditor,
                                                                         nombreEliminado,
-                                                                        new Date()
+                                                                        new Date(),
+                                                                        "cuentaEliminada"
                                                                 );
 
                                                                 db.collection("logs").add(log);
@@ -182,6 +216,8 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
         ImageView imagenAdmin;
         TextView nombreAdmin;
         TextView numeroAdmin;
+        TextView estadoAdmin;
+        TextView correoAdmin;
         ImageButton btnOpciones;
 
         public ViewHolder(@NonNull View itemView) {
@@ -189,7 +225,14 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
             imagenAdmin= itemView.findViewById(R.id.imagen_list_adminitradores);
             nombreAdmin= itemView.findViewById(R.id.nameAdministradores);
             numeroAdmin= itemView.findViewById(R.id.numberAdministradores);
+            estadoAdmin = itemView.findViewById(R.id.estadoAdministrador);
+            correoAdmin = itemView.findViewById(R.id.correoAdministrador);
             btnOpciones = itemView.findViewById(R.id.btnOpciones);
         }
     }
+    public void updateList(List<Usuario> lista) {
+        this.items = lista;
+        notifyDataSetChanged();
+    }
+
 }

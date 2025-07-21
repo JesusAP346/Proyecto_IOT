@@ -275,7 +275,9 @@ public class RegistroTaxistaActivity extends AppCompatActivity {
                                     "Super Admin",
                                     userId,
                                     usuario.getNombres() + " " + usuario.getApellidos(),
-                                    new Date()
+                                    new Date(),
+                                    "SolicitudTaxista"
+
                             );
 
                             FirebaseFirestore.getInstance().collection("logs").add(log);

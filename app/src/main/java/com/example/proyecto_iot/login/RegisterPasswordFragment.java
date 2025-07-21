@@ -271,7 +271,8 @@ public class RegisterPasswordFragment extends Fragment {
                                         "Usuario",
                                         uid,
                                         usuario.getNombres() + " " + usuario.getApellidos(),
-                                        new Date()
+                                        new Date(),
+                                        "NuevoUsuario"
                                 );
 
                                 auth.signOut();

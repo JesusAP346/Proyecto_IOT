@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
-import android.widget.SearchView; // Importar SearchView
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.SuperAdmin.RegistroActivitySuperAdmin;
@@ -28,91 +28,64 @@ import com.google.firebase.firestore.EventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale; // Para manejar mayúsculas/minúsculas en la búsqueda
+import java.util.Locale;
 
 public class fragment_administradores_superadmin extends Fragment {
 
-    private List<Usuario> adminsList; // La lista que se muestra en el RecyclerView (puede estar filtrada)
-    private List<Usuario> allAdminsLoaded; // La lista completa de todos los administradores cargados de Firestore
-
     private RecyclerView recyclerView;
     private AdministradoresAdapter administradoresAdapter;
-    private CollectionReference usersCollectionRef;
+    private List<Usuario> allAdminsLoaded = new ArrayList<>();
+    private List<Usuario> adminsFiltrados = new ArrayList<>();
+    private String filtroActual = "todos";
+    private SearchView searchView;
 
-    private SearchView etBuscarAdmin;
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
-
-    public fragment_administradores_superadmin() {
-    }
-
-    public static fragment_administradores_superadmin newInstance(String param1, String param2) {
-        fragment_administradores_superadmin fragment = new fragment_administradores_superadmin();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private final CollectionReference usuariosRef = FirebaseFirestore.getInstance().collection("usuarios");
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-        adminsList = new ArrayList<>();
-        allAdminsLoaded = new ArrayList<>(); // Inicializar la lista para todos los administradores
-        usersCollectionRef = FirebaseFirestore.getInstance().collection("usuarios");
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_administradores_superadmin, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerLogs);
-        administradoresAdapter = new AdministradoresAdapter(adminsList);
+        searchView = view.findViewById(R.id.buscarAdmin);
+        Button btnActivos = view.findViewById(R.id.FiltroActivos);
+        Button btnDesactivos = view.findViewById(R.id.FiltroDesactivos);
+        Button btnTodos = view.findViewById(R.id.FiltroTodos);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        administradoresAdapter = new AdministradoresAdapter(adminsFiltrados);
         recyclerView.setAdapter(administradoresAdapter);
 
-        etBuscarAdmin = view.findViewById(R.id.buscarAdmin);
-
-        etBuscarAdmin.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Cuando el usuario envía la búsqueda (presiona Enter)
-                filterAdmins(query); // Llama al método de filtrado en cliente
-                etBuscarAdmin.clearFocus(); // Oculta el teclado
-                return true;
-            }
+            public boolean onQueryTextSubmit(String query) { return false; }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Se llama cada vez que el texto cambia
-                filterAdmins(newText); // Llama al método de filtrado en cliente
+                aplicarFiltro(filtroActual, newText);
                 return true;
             }
         });
 
-        // Carga inicial: Ahora, siempre escuchamos a TODOS los administradores
-        // y el filtrado se hará en el cliente.
-        // La consulta de Firestore no incluye el searchText aquí.
-        loadAllAdminsFromFirestore();
+        btnActivos.setOnClickListener(v -> {
+            filtroActual = "activos";
+            aplicarFiltro(filtroActual, searchView.getQuery().toString());
+        });
+
+        btnDesactivos.setOnClickListener(v -> {
+            filtroActual = "desactivos";
+            aplicarFiltro(filtroActual, searchView.getQuery().toString());
+        });
+
+        btnTodos.setOnClickListener(v -> {
+            filtroActual = "todos";
+            aplicarFiltro(filtroActual, searchView.getQuery().toString());
+        });
 
         Button btnAgregar = view.findViewById(R.id.button2);
-
         btnAgregar.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), RegistroActivitySuperAdmin.class);
             startActivity(intent);
         });
-
 
         return view;
     }
@@ -120,70 +93,70 @@ public class fragment_administradores_superadmin extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Recargar todos los administradores de Firestore para asegurar la lista más reciente.
-        // Después de cargar, el filtro actual del SearchView se aplicará automáticamente.
-        loadAllAdminsFromFirestore();
+        cargarAdminsDesdeFirestore();
     }
 
-    // --- NUEVO MÉTODO: Carga todos los administradores desde Firestore ---
-    private void loadAllAdminsFromFirestore() {
-        // Consulta Firestore para obtener todos los usuarios con rol "Administrador"
-        usersCollectionRef.whereEqualTo("idRol", "Administrador")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Toast.makeText(getContext(), "Error al cargar administradores: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+    private void cargarAdminsDesdeFirestore() {
+        usuariosRef.whereEqualTo("idRol", "Administrador")
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) {
+                        Toast.makeText(getContext(), "Error al cargar administradores: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                        if (queryDocumentSnapshots != null) {
-                            allAdminsLoaded.clear(); // Limpiar la lista de todos los administradores
-                            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                                Usuario usuario = document.toObject(Usuario.class);
-                                if (usuario != null) {
-                                    usuario.setId(document.getId());
-                                    allAdminsLoaded.add(usuario); // Añadir a la lista de todos los administradores
-                                }
+                    allAdminsLoaded.clear();
+
+                    if (snapshots != null) {
+                        for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                            Usuario admin = doc.toObject(Usuario.class);
+                            if (admin != null) {
+                                admin.setId(doc.getId());
+                                allAdminsLoaded.add(admin);
                             }
-                            // Después de cargar todos, aplicar el filtro actual del SearchView
-                            filterAdmins(etBuscarAdmin.getQuery().toString());
                         }
                     }
+
+                    aplicarFiltro(filtroActual, searchView.getQuery().toString());
                 });
     }
 
-    // --- NUEVO MÉTODO: Filtrar la lista en el cliente ---
-    private void filterAdmins(String searchText) {
-        adminsList.clear(); // Limpiar la lista que se muestra actualmente
+    private void aplicarFiltro(String tipo, String textoBusqueda) {
+        adminsFiltrados.clear();
 
-        if (searchText == null || searchText.isEmpty()) {
-            // Si el texto de búsqueda está vacío, mostrar todos los administradores cargados
-            adminsList.addAll(allAdminsLoaded);
-        } else {
-            String lowerCaseSearchText = searchText.toLowerCase(Locale.getDefault()); // Convertir a minúsculas una vez
+        for (Usuario admin : allAdminsLoaded) {
+            boolean cumpleFiltroEstado = false;
 
-            // Recorrer la lista completa de administradores y aplicar el filtro
-            for (Usuario admin : allAdminsLoaded) {
-                // Comprobación de nulos para evitar NullPointerException si un campo está vacío
-                boolean matchesNombres = admin.getNombres() != null &&
-                        admin.getNombres().toLowerCase(Locale.getDefault()).contains(lowerCaseSearchText);
+            switch (tipo) {
+                case "todos":
+                    cumpleFiltroEstado = true;
+                    break;
+                case "activos":
+                    cumpleFiltroEstado = admin.isEstadoCuenta();
+                    break;
+                case "desactivos":
+                    cumpleFiltroEstado = !admin.isEstadoCuenta();
+                    break;
+            }
 
-                boolean matchesApellidos = admin.getApellidos() != null &&
-                        admin.getApellidos().toLowerCase(Locale.getDefault()).contains(lowerCaseSearchText);
-
-
-
-                // Puedes añadir más campos aquí, por ejemplo:
-                // boolean matchesNumCelular = admin.getNumCelular() != null &&
-                //                             admin.getNumCelular().contains(searchText); // Para números, "contains" puede ser directo
-
-                if (matchesNombres || matchesApellidos /* || matchesNumCelular */) {
-                    adminsList.add(admin);
-                }
+            if (cumpleFiltroEstado) {
+                adminsFiltrados.add(admin);
             }
         }
-        administradoresAdapter.notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
+
+        if (!textoBusqueda.isEmpty()) {
+            String queryLower = textoBusqueda.toLowerCase(Locale.getDefault());
+            List<Usuario> filtradosPorTexto = new ArrayList<>();
+
+            for (Usuario admin : adminsFiltrados) {
+                String nombreCompleto = (admin.getNombres() + " " + admin.getApellidos()).toLowerCase(Locale.getDefault());
+                if (nombreCompleto.contains(queryLower)) {
+                    filtradosPorTexto.add(admin);
+                }
+            }
+
+            administradoresAdapter.updateList(filtradosPorTexto);
+        } else {
+            administradoresAdapter.updateList(new ArrayList<>(adminsFiltrados));
+        }
     }
 }

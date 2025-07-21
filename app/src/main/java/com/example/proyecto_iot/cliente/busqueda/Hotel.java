@@ -116,4 +116,11 @@ public class Hotel implements Serializable {
     public void setFavorito(boolean favorito) {
         this.favorito = favorito;
     }
+
+    public String getPrimeraFoto() {
+        if (fotosHotelUrls != null && !fotosHotelUrls.isEmpty()) {
+            return fotosHotelUrls.get(0);
+        }
+        return null;
+    }
 }

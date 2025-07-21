@@ -66,7 +66,7 @@
         android:id="@+id/btnPagar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Pagar"
+        android:text="Reservar"
         android:textStyle="bold"
         android:backgroundTint="#6A170F"
         android:textColor="@android:color/white"

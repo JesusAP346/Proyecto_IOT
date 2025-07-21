@@ -34,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="200dp">
@@ -75,7 +74,6 @@
 
                 </RelativeLayout>
 
-
                 <TextView
                     android:id="@+id/textTituloHotel"
                     android:layout_width="match_parent"
@@ -99,17 +97,63 @@
                         android:text="Valoración"
                         android:textColor="#000000" />
 
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginStart="8dp">
-                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_star_border" />
-                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_star_border" />
-                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_star_border" />
-                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_star_border" />
-                        <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_star_border" />
+                        <ImageView
+                            android:id="@+id/star1Hotel"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star_border" />
+
+                        <ImageView
+                            android:id="@+id/star2Hotel"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star_border" />
+
+                        <ImageView
+                            android:id="@+id/star3Hotel"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star_border" />
+
+                        <ImageView
+                            android:id="@+id/star4Hotel"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star_border" />
+
+                        <ImageView
+                            android:id="@+id/star5Hotel"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star_border" />
+                        <TextView
+                            android:id="@+id/textValoracionHotel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="Sin valoraciones"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray"
+                            android:visibility="visible"
+                            android:layout_gravity="center_vertical" />
+                        <Button
+                            android:id="@+id/btnVerOpiniones"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="12dp"
+                            android:text="Ver opiniones"
+                            android:textSize="11sp"
+                            android:textColor="#FFFFFF"
+                            android:background="@drawable/bg_button_rounded"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:layout_gravity="center_vertical"
+                            style="?android:attr/borderlessButtonStyle" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -175,33 +219,14 @@
                     android:textSize="16sp"
                     android:layout_marginBottom="8dp" />
 
-                <LinearLayout
-                    android:id="@+id/layoutServicios"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerServicios"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:layout_marginBottom="16dp"
+                    android:nestedScrollingEnabled="false" />
 
-                <!-- Contacto -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="CONTACTO"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="8dp" />
 
-                <TextView
-                    android:id="@+id/textTelefono"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Teléfono: +51(1)2131001" />
-
-                <TextView
-                    android:id="@+id/textEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Correo: lospinoshotel@gmail.com" />
             </LinearLayout>
         </ScrollView>
 

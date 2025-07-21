@@ -289,7 +289,8 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                                                             "Super Admin",
                                                             uidEditor,
                                                             nombreEditado,
-                                                            new Date()
+                                                            new Date(),
+                                                            "AdminEditado"
                                                     );
 
                                                     FirebaseFirestore.getInstance().collection("logs").add(log);
@@ -612,7 +613,8 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                                                         "Super Admin",
                                                         uidEditor,
                                                         nombreNuevo,
-                                                        new Date()
+                                                        new Date(),
+                                                        "AdminRegistro"
                                                 );
 
                                                 db.collection("logs").add(log);

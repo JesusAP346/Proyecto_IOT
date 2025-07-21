@@ -127,6 +127,14 @@
                 android:text="2 min."
                 android:textSize="14sp"
                 android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tvDistancia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.2 km"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
 
 
         </LinearLayout>

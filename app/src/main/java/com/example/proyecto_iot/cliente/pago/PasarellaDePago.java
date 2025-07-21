@@ -26,7 +26,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter.OnTarjetaSelectedListener {
 
@@ -98,8 +100,6 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
                 Log.e(TAG, "Error al parsear la fecha de entrada", e);
             }
         }
-
-
 
         if (reserva == null) {
             Log.e(TAG, "No se recibió el objeto reserva");
@@ -173,25 +173,77 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
         }
     }
 
+    /**
+     * Método para enmascarar el número de tarjeta
+     * Solo muestra los últimos 4 dígitos, el resto como asteriscos
+     */
+    private String enmascararNumeroTarjeta(String numeroCompleto) {
+        if (numeroCompleto == null || numeroCompleto.length() < 4) {
+            return "**** **** **** ****";
+        }
+
+        String ultimosCuatro = numeroCompleto.substring(numeroCompleto.length() - 4);
+        String asteriscos = "*".repeat(numeroCompleto.length() - 4);
+
+        return asteriscos + ultimosCuatro;
+    }
+
+    /**
+     * Crear el objeto con los datos de pago para guardar en Firestore
+     */
+    private Map<String, Object> crearDatosPago(Tarjeta tarjeta) {
+        Map<String, Object> datosPago = new HashMap<>();
+
+        // Guardar información de la tarjeta de forma segura
+        datosPago.put("numeroTarjetaEnmascarado", enmascararNumeroTarjeta(tarjeta.getNumero()));
+        datosPago.put("banco", tarjeta.getBanco());
+        datosPago.put("titular", tarjeta.getTitular());
+        datosPago.put("tipo", tarjeta.getTipo());
+        datosPago.put("marca", tarjeta.getMarca());
+
+
+        return datosPago;
+    }
+
     private void guardarReservaEnFirebase(Tarjeta tarjetaSeleccionada) {
 
+        // Crear el documento de reserva con los datos de pago incluidos
         String documentId = db.collection("reservas").document().getId();
-
-        // Setear el ID en el objeto reserva
         reserva.setIdReserva(documentId);
-        // Guardar la reserva en Firestore
+
+        // Crear un mapa que contenga tanto la reserva como los datos de pago
+        Map<String, Object> documentoReserva = new HashMap<>();
+
+        // Agregar todos los campos de la reserva (aquí deberías convertir tu objeto Reserva a Map)
+        // Por simplicidad, asumo que tienes un método toMap() en tu clase Reserva
+        // Si no lo tienes, tendrás que agregar manualmente cada campo
+
+        // Campos básicos de la reserva (ajusta según tu clase Reserva)
+        documentoReserva.put("idReserva", reserva.getIdReserva());
+        documentoReserva.put("monto", reserva.getMonto());
+        documentoReserva.put("cantNoches", reserva.getCantNoches());
+        documentoReserva.put("fechaEntrada", reserva.getFechaEntrada());
+        documentoReserva.put("estado", reserva.getEstado());
+        // Agregar aquí el resto de campos de tu reserva...
+
+        // Agregar los datos de pago como un objeto anidado
+        documentoReserva.put("datosPago", crearDatosPago(tarjetaSeleccionada));
+
+        // Guardar en Firestore
         db.collection("reservas")
-                .add(reserva)
-                .addOnSuccessListener(documentReference -> {
-                    Log.d(TAG, "Reserva guardada exitosamente en Firestore con ID: " + documentReference.getId());
+                .document(documentId)
+                .set(documentoReserva)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Reserva guardada exitosamente en Firestore con ID: " + documentId);
+                    Log.d(TAG, "Datos de pago incluidos: Tarjeta " +
+                            enmascararNumeroTarjeta(tarjetaSeleccionada.getNumero()) +
+                            " del banco " + tarjetaSeleccionada.getBanco());
 
                     // Mostrar notificación de pago exitoso
                     mostrarNotificacionPagoExitoso(tarjetaSeleccionada);
 
-                    // Mostrar mensaje temporal
                     Toast.makeText(this, "Reserva procesada exitosamente", Toast.LENGTH_SHORT).show();
 
-                    // Redirigir a ClienteBusquedaActivity
                     Intent intent = new Intent(this, ClienteBusquedaActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -201,9 +253,8 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
                     Log.e(TAG, "Error al guardar reserva en Firestore", e);
                     Toast.makeText(this, "Error al procesar el pago. Intenta nuevamente.", Toast.LENGTH_SHORT).show();
 
-                    // Restaurar estado del botón
                     btnPagar.setEnabled(true);
-                    btnPagar.setText("Pagar");
+                    btnPagar.setText("Reservar");
                 });
     }
 

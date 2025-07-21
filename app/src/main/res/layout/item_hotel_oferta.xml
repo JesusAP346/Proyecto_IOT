@@ -9,7 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="364dp">
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp">
 
         <!-- Imagen del hotel -->
         <ImageView
@@ -72,25 +73,25 @@
                 android:id="@+id/star1"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_star" />
+                android:src="@drawable/ic_star_border" />
 
             <ImageView
                 android:id="@+id/star2"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_star" />
+                android:src="@drawable/ic_star_border" />
 
             <ImageView
                 android:id="@+id/star3"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_star" />
+                android:src="@drawable/ic_star_border" />
 
             <ImageView
                 android:id="@+id/star4"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_star" />
+                android:src="@drawable/ic_star_border" />
 
             <ImageView
                 android:id="@+id/star5"
@@ -98,6 +99,20 @@
                 android:layout_height="16dp"
                 android:src="@drawable/ic_star_border" />
         </LinearLayout>
+
+        <!-- Texto de valoración -->
+        <TextView
+            android:id="@+id/textValoracion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Sin valoraciones"
+            android:textSize="12sp"
+            android:textColor="@color/gray"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@id/layoutStars"
+            app:layout_constraintTop_toTopOf="@id/layoutStars"
+            app:layout_constraintBottom_toBottomOf="@id/layoutStars" />
 
         <!-- Precio -->
         <TextView
@@ -120,7 +135,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="12dp"
             android:backgroundTint="#FFC107"
             android:text="Ver hotel"
             android:textColor="@color/black"

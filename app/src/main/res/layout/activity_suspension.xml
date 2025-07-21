@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+
+    android:padding="16dp">
+
+    <!-- Flecha back + título -->
+    <ImageView
+        android:id="@+id/btnBackSuspension"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_arrow_back"
+        android:contentDescription="Volver"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTituloSuspension"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Regresar"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btnBackSuspension"
+        app:layout_constraintStart_toEndOf="@id/btnBackSuspension"
+        app:layout_constraintTop_toTopOf="@id/btnBackSuspension" />
+
+    <!-- Imagen -->
+    <ImageView
+        android:id="@+id/imgSuspension"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="48dp"
+        android:src="@drawable/hotelvgo__2_"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBackSuspension" />
+
+    <!-- Mensaje explicativo -->
+    <TextView
+        android:id="@+id/tvSuspenmdida"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/nunito_black"
+        android:text="Tu cuenta ha sido suspendida temporalmente"
+        android:textAlignment="center"
+        android:textColor="#000"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgSuspension" />
+
+    <TextView
+        android:id="@+id/tvMsgSuspension"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/nunito_semibold"
+        android:text="Contacta al administrador al correo a20216256@pucp.edu.pe para más información."
+        android:textAlignment="center"
+        android:textColor="#000"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSuspenmdida" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

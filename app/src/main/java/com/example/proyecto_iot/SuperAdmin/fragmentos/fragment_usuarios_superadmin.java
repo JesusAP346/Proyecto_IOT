@@ -66,19 +66,16 @@ public class fragment_usuarios_superadmin extends Fragment {
         btnActivos.setOnClickListener(v -> {
             filtroActual = "activos";
             aplicarFiltro(filtroActual, searchView.getQuery().toString());
-            Toast.makeText(requireContext(), "Mostrando usuarios activos", Toast.LENGTH_SHORT).show();
         });
 
         btnDesactivos.setOnClickListener(v -> {
             filtroActual = "desactivos";
             aplicarFiltro(filtroActual, searchView.getQuery().toString());
-            Toast.makeText(requireContext(), "Mostrando usuarios desactivos", Toast.LENGTH_SHORT).show();
         });
 
         btnTodos.setOnClickListener(v -> {
             filtroActual = "todos";
             aplicarFiltro(filtroActual, searchView.getQuery().toString());
-            Toast.makeText(requireContext(), "Mostrando todos los usuarios", Toast.LENGTH_SHORT).show();
         });
 
         return view;

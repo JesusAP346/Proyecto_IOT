@@ -1,5 +1,3 @@
-// 1. Primero, modificamos el HotelAdapter para incluir una interfaz de listener
-
 package com.example.proyecto_iot.cliente.busqueda;
 
 import android.content.Context;
@@ -15,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.R;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.List;
 
@@ -40,7 +40,6 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         this.listener = listener;
         this.favListener = favListener;
     }
-
 
     @NonNull
     @Override
@@ -68,19 +67,78 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
             holder.imagen.setImageResource(R.drawable.placeholder_hotel);
         }
 
-
-        for (int i = 0; i < 5; i++) {
-            holder.estrellas[i].setImageResource(i < hotel.getEstrellas() ? R.drawable.ic_star : R.drawable.ic_star_border);
-        }
+        // Cargar valoraciones desde Firebase
+        cargarValoraciones(hotel.getId(), holder);
 
         holder.btnVerHotel.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onHotelClick(hotel, position);
             }
         });
+    }
 
+    private void cargarValoraciones(String hotelId, HotelViewHolder holder) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        db.collection("hoteles")
+                .document(hotelId)
+                .collection("valoraciones")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            // No hay valoraciones
+                            mostrarSinValoraciones(holder);
+                        } else {
+                            // Calcular promedio
+                            double sumaEstrellas = 0;
+                            int cantidadValoraciones = 0;
 
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Double estrellas = document.getDouble("estrellas");
+                                if (estrellas != null) {
+                                    sumaEstrellas += estrellas;
+                                    cantidadValoraciones++;
+                                }
+                            }
+
+                            if (cantidadValoraciones > 0) {
+                                double promedio = sumaEstrellas / cantidadValoraciones;
+                                int estrellasRedondeadas = (int) Math.ceil(promedio);
+                                mostrarEstrellas(holder, estrellasRedondeadas, promedio);
+                            } else {
+                                mostrarSinValoraciones(holder);
+                            }
+                        }
+                    } else {
+                        // Error al cargar, mostrar estado por defecto
+                        mostrarSinValoraciones(holder);
+                    }
+                });
+    }
+
+    private void mostrarEstrellas(HotelViewHolder holder, int estrellas, double promedioExacto) {
+        // Actualizar las estrellas visuales
+        for (int i = 0; i < 5; i++) {
+            holder.estrellas[i].setImageResource(
+                    i < estrellas ? R.drawable.ic_star : R.drawable.ic_star_border
+            );
+        }
+
+        // Mostrar el texto con el promedio
+        holder.textValoracion.setText(String.format("%.1f estrellas", promedioExacto));
+        holder.textValoracion.setVisibility(View.VISIBLE);
+    }
+
+    private void mostrarSinValoraciones(HotelViewHolder holder) {
+        // Mostrar todas las estrellas vacías
+        for (int i = 0; i < 5; i++) {
+            holder.estrellas[i].setImageResource(R.drawable.ic_star_border);
+        }
+
+        // Mostrar texto "Sin valoraciones"
+        holder.textValoracion.setText("Sin valoraciones");
+        holder.textValoracion.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -90,11 +148,9 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
 
     public static class HotelViewHolder extends RecyclerView.ViewHolder {
         ImageView imagen;
-        TextView nombre, ubicacion, precio;
+        TextView nombre, ubicacion, precio, textValoracion;
         ImageView[] estrellas = new ImageView[5];
         Button btnVerHotel;
-
-
 
         public HotelViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -103,6 +159,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
             ubicacion = itemView.findViewById(R.id.textUbicacion);
             precio = itemView.findViewById(R.id.textPrecio);
             btnVerHotel = itemView.findViewById(R.id.btnVerHotel);
+            textValoracion = itemView.findViewById(R.id.textValoracion);
 
             estrellas[0] = itemView.findViewById(R.id.star1);
             estrellas[1] = itemView.findViewById(R.id.star2);
@@ -111,9 +168,9 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
             estrellas[4] = itemView.findViewById(R.id.star5);
         }
     }
+
     public void actualizarLista(List<Hotel> nuevaLista) {
         this.listaHoteles = nuevaLista;
         notifyDataSetChanged();
     }
-
 }
