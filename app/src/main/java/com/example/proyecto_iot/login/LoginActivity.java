@@ -243,6 +243,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (estadoCuenta != null && !estadoCuenta) {
             // Redirige a la pantalla de cuenta suspendida
+            auth.signOut();
             Intent intent = new Intent(LoginActivity.this, SuspensionActivity.class);
             startActivity(intent);
             finish();
