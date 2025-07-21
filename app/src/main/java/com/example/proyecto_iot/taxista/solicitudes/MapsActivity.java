@@ -1,10 +1,13 @@
 package com.example.proyecto_iot.taxista.solicitudes;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -13,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.BuildConfig;
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.ActivityMapsBinding;
+import com.example.proyecto_iot.taxista.qr.QrFragment;
 import com.google.android.gms.location.*;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
@@ -32,13 +36,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ActivityMapsBinding binding;
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
-
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
-
     private double latDestino = 0.0;
     private double lngDestino = 0.0;
+    private final double LAT_AEROPUERTO = -12.02189;
+    private final double LNG_AEROPUERTO = -77.11432;
     private String idServicioActual;
     private FirebaseFirestore db;
 
@@ -52,11 +56,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         db = FirebaseFirestore.getInstance();
 
         binding.btnBack.setOnClickListener(v -> {
-            setResult(RESULT_OK); // ✅ Notificamos al fragment que se actualice
+            setResult(RESULT_OK);
             finish();
         });
 
-        // Datos recibidos
         String nombre = getIntent().getStringExtra("nombre");
         String telefono = getIntent().getStringExtra("telefono");
         String viajes = getIntent().getStringExtra("viajes");
@@ -66,61 +69,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         lngDestino = getIntent().getDoubleExtra("lngDestino", 0.0);
         idServicioActual = getIntent().getStringExtra("idServicio");
 
-        // UI
         binding.tvNombre.setText(nombre != null ? nombre : "Sin nombre");
-        binding.tvTelefono.setText(telefono != null ? telefono : "Sin teléfono");
-        binding.tvViajes.setText(viajes != null ? viajes : "0 viajes");
+        binding.tvTelefono.setText(telefono != null ? telefono : "Sin tel");
+        if (binding.tvViajes != null && viajes != null) {
+            binding.tvViajes.setText(viajes);
+        }
         binding.subtitulo.setText(hotel != null ? hotel : "Destino no especificado");
 
-        Glide.with(this)
-                .load(imagenPerfilUrl)
+        Glide.with(this).load(imagenPerfilUrl)
                 .placeholder(R.drawable.usuario_10)
                 .error(R.drawable.usuario_10)
                 .into(binding.imgConductor);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
-        }
+        if (mapFragment != null) mapFragment.getMapAsync(this);
 
         configurarActualizacionUbicacion();
+
+        binding.btnFinalizarViaje.setOnClickListener(v -> {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main, new QrFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-            return;
-        }
-
-        mMap.setMyLocationEnabled(true);
-
-        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-            if (location != null) {
-                LatLng miUbicacion = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(miUbicacion).title("Tú estás aquí"));
-
-                if (!(latDestino == 0.0 && lngDestino == 0.0)) {
+        if (tienePermisoUbicacion()) {
+            mMap.setMyLocationEnabled(true);
+            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null) {
+                    LatLng miUbicacion = new LatLng(location.getLatitude(), location.getLongitude());
                     LatLng destino = new LatLng(latDestino, lngDestino);
-                    mMap.addMarker(new MarkerOptions().position(destino).title("Destino del pasajero"));
-
-                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                    builder.include(miUbicacion);
-                    builder.include(destino);
-                    LatLngBounds bounds = builder.build();
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150));
-
-                    trazarRuta(miUbicacion, destino); // 🔁 Aquí también calculamos tiempo/distancia
-                } else {
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(miUbicacion, 15));
-                    Log.w("MapsActivity", "Destino no válido: lat/lng = 0.0");
+                    trazarRuta(miUbicacion, destino);
                 }
-            }
-        });
+            });
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+        }
     }
 
     private void configurarActualizacionUbicacion() {
@@ -142,28 +131,56 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     db.collection("servicios_taxi")
                             .document(idServicioActual)
                             .update("latTaxista", lat, "longTaxista", lng)
-                            .addOnSuccessListener(aVoid ->
-                                    Log.d("Ubicacion", "Ubicación actualizada: " + lat + ", " + lng))
-                            .addOnFailureListener(e ->
-                                    Log.e("Ubicacion", "Error al actualizar ubicación", e));
+                            .addOnSuccessListener(aVoid -> Log.d("Ubicacion", "Ubicación actualizada"))
+                            .addOnFailureListener(e -> Log.e("Ubicacion", "Error actualizando", e));
+
+                    double distancia = calcularDistancia(lat, lng, latDestino, lngDestino);
+                    LatLng origenActual = new LatLng(lat, lng);
+                    LatLng destinoActual = new LatLng(latDestino, lngDestino);
+                    trazarRuta(origenActual, destinoActual);
+
+                    runOnUiThread(() -> {
+                        if (distancia < 1.0) {
+                            if (esDestinoAeropuerto()) {
+                                binding.btnIrAeropuerto.setVisibility(View.GONE);
+                                binding.btnFinalizarViaje.setVisibility(View.VISIBLE);
+                            } else {
+                                binding.btnIrAeropuerto.setVisibility(View.VISIBLE);
+                                binding.btnFinalizarViaje.setVisibility(View.GONE);
+                            }
+                        } else {
+                            binding.btnIrAeropuerto.setVisibility(View.GONE);
+                            binding.btnFinalizarViaje.setVisibility(View.GONE);
+                        }
+                    });
                 }
             }
         };
+
+        binding.btnIrAeropuerto.setOnClickListener(v -> mostrarDialogoConfirmacion());
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
-        }
+    private void mostrarDialogoConfirmacion() {
+        new AlertDialog.Builder(this)
+                .setTitle("¿Cambiar destino?")
+                .setMessage("¿Deseas dirigirte ahora al Aeropuerto Jorge Chávez?")
+                .setPositiveButton("Sí", (dialog, which) -> redirigirAlAeropuerto())
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        fusedLocationClient.removeLocationUpdates(locationCallback);
+    private void redirigirAlAeropuerto() {
+        latDestino = LAT_AEROPUERTO;
+        lngDestino = LNG_AEROPUERTO;
+
+        db.collection("servicios_taxi")
+                .document(idServicioActual)
+                .update("latitudHotel", LAT_AEROPUERTO, "longitudHotel", LNG_AEROPUERTO)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Destino actualizado a aeropuerto"))
+                .addOnFailureListener(e -> Log.e("Firestore", "Error al actualizar destino", e));
+
+        binding.subtitulo.setText("Aeropuerto Jorge Chávez");
+        binding.btnIrAeropuerto.setVisibility(View.GONE);
     }
 
     private void trazarRuta(LatLng origen, LatLng destino) {
@@ -197,14 +214,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             String distanciaTexto = leg.getJSONObject("distance").getString("text");
 
                             runOnUiThread(() -> {
-                                mMap.addPolyline(new PolylineOptions()
-                                        .addAll(decodePolyline(points))
-                                        .width(10)
-                                        .color(Color.parseColor("#FF5722")));
+                                mMap.clear();
+                                mMap.addPolyline(new PolylineOptions().addAll(decodePolyline(points)).width(10).color(Color.parseColor("#FF5722")));
+                                mMap.addMarker(new MarkerOptions().position(destino).title("Destino"));
+                                mMap.addMarker(new MarkerOptions().position(origen).title("Tú estás aquí"));
 
-                                // ✅ ACTUALIZA LOS TEXTVIEWS
                                 binding.tvDistancia.setText(distanciaTexto);
                                 binding.tvTiempo.setText(duracionTexto);
+
+                                LatLngBounds bounds = new LatLngBounds.Builder()
+                                        .include(origen)
+                                        .include(destino)
+                                        .build();
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150));
                             });
                         }
                     } catch (JSONException e) {
@@ -240,20 +262,49 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lng += dlng;
 
-            LatLng p = new LatLng((lat / 1E5), (lng / 1E5));
-            poly.add(p);
+            poly.add(new LatLng((lat / 1E5), (lng / 1E5)));
         }
 
         return poly;
     }
 
+    private boolean tienePermisoUbicacion() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean esDestinoAeropuerto() {
+        return calcularDistancia(latDestino, lngDestino, LAT_AEROPUERTO, LNG_AEROPUERTO) < 0.1;
+    }
+
+    private double calcularDistancia(double lat1, double lon1, double lat2, double lon2) {
+        double R = 6371;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    protected void onStart() {
+        super.onStart();
+        if (tienePermisoUbicacion()) {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 100 && grantResults.length > 0 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == 100 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             configurarActualizacionUbicacion();
         }
     }
