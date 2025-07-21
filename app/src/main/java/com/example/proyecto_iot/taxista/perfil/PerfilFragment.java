@@ -147,11 +147,11 @@ public class PerfilFragment extends Fragment {
                 Uri uri = Uri.fromFile(file);
                 binding.ivFotoPerfil.setImageURI(uri);
             } else {
-                binding.ivFotoPerfil.setImageResource(R.drawable.roberto);
+                binding.ivFotoPerfil.setImageResource(R.drawable.ic_perfil_circulo);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            binding.ivFotoPerfil.setImageResource(R.drawable.roberto);
+            binding.ivFotoPerfil.setImageResource(R.drawable.ic_perfil_circulo);
         }
     }
 

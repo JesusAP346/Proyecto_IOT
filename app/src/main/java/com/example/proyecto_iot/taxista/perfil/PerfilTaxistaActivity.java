@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import com.example.proyecto_iot.administradorHotel.entity.UploadResponse;
 
 public class PerfilTaxistaActivity extends AppCompatActivity {
 
@@ -34,6 +35,7 @@ public class PerfilTaxistaActivity extends AppCompatActivity {
     private Uri cameraImageUri;
     private FirebaseAuth auth;
     private FirebaseFirestore db;
+
 
     private ActivityResultLauncher<Intent> pickImageLauncher;
     private ActivityResultLauncher<Intent> takePhotoLauncher;
@@ -183,11 +185,11 @@ public class PerfilTaxistaActivity extends AppCompatActivity {
                 Uri uri = Uri.fromFile(file);
                 binding.ivFotoPerfil.setImageURI(uri);
             } else {
-                binding.ivFotoPerfil.setImageResource(R.drawable.roberto);
+                binding.ivFotoPerfil.setImageResource(R.drawable.ic_perfil_circulo);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            binding.ivFotoPerfil.setImageResource(R.drawable.roberto);
+            binding.ivFotoPerfil.setImageResource(R.drawable.ic_perfil_circulo);
         }
     }
 }
