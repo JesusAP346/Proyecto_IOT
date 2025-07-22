@@ -25,8 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PROYECTO_IOT"
         tools:targetApi="31">
-
-
+        <activity
+            android:name=".SuperAdmin.HistorialActivity"
+            android:exported="false" />
         <activity
             android:name=".cliente.busqueda.ValoracionesActivity"
             android:exported="false" />
@@ -187,11 +188,9 @@
         <activity
             android:name=".administradorHotel.RegistroInfoHotel"
             android:exported="false" />
-
         <activity
             android:name=".administradorHotel.CambiarContraAdminActivity"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="false">

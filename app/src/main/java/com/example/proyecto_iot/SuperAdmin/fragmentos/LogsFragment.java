@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.SuperAdmin.fragmentos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.SuperAdmin.HistorialActivity;
 import com.example.proyecto_iot.SuperAdmin.adapter.LogAdapter;
 import com.example.proyecto_iot.dtos.LogSA;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -40,7 +42,7 @@ public class LogsFragment extends Fragment {
     private List<LogSA> listaLogs = new ArrayList<>();
     private FirebaseFirestore db;
     private ListenerRegistration listenerLogs;
-    private MaterialButton btnTipoLog, btnRolLog, btnFechaLog, btnLimpiarFiltros;
+    private MaterialButton btnTipoLog, btnRolLog, btnFechaLog, btnLimpiarFiltros, btnImprimir;
     public LogsFragment() {}
     private String filtroTipo = null;
     private String filtroRol = null;
@@ -67,7 +69,7 @@ public class LogsFragment extends Fragment {
         btnRolLog = view.findViewById(R.id.btnRolLog);
         btnFechaLog = view.findViewById(R.id.btnFechaLog);
         btnLimpiarFiltros = view.findViewById(R.id.btnLimpiarFiltros);
-
+        btnImprimir= view.findViewById(R.id.btnImprimirHistorial);
         searchView = view.findViewById(R.id.buscarSolicitud);
 
         configurarFiltros();
@@ -98,6 +100,12 @@ public class LogsFragment extends Fragment {
     }
 
     private void configurarFiltros() {
+
+        btnImprimir.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), HistorialActivity.class);
+            startActivity(intent);
+        });
+
         btnTipoLog.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(getContext(), v);
 
