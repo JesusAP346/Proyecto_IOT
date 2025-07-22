@@ -22,6 +22,12 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.chat.ChatBottomSheet;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -65,6 +71,11 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
     private double ubicacionLat;
 
     private int habitaciones = 0;
+
+    private MapView mapViewPreview;
+    private GoogleMap miniMap;
+
+
 
     public DetalleHotelFragment() {
         // Constructor vacío requerido
@@ -116,6 +127,15 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         // Inicializar las nuevas vistas
         initViews(view);
 
+        mapViewPreview = view.findViewById(R.id.map_view_preview);
+        mapViewPreview.onCreate(savedInstanceState);
+        mapViewPreview.onResume();
+
+        mapViewPreview.getMapAsync(googleMap -> {
+            miniMap = googleMap;
+            configurarMiniMapa();
+        });
+
         recyclerHabitaciones = view.findViewById(R.id.recyclerHabitaciones);
         recyclerHabitaciones.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -166,6 +186,24 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
         return view;
     }
+
+    private void configurarMiniMapa() {
+        if (miniMap != null && ubicacionLat != 0.0 && ubicacionLng != 0.0) {
+            LatLng ubicacionHotel = new LatLng(ubicacionLat, ubicacionLng);
+
+            miniMap.getUiSettings().setAllGesturesEnabled(false);
+            miniMap.getUiSettings().setMapToolbarEnabled(false);
+
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(ubicacionHotel)
+                    .title(hotel != null ? hotel.getNombre() : "Hotel")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+            miniMap.addMarker(markerOptions);
+            miniMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionHotel, 15f));
+        }
+    }
+
 
     // Método para inicializar las vistas de indicadores y estrellas
     private void initViews(View view) {
@@ -581,4 +619,29 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         intent.putExtra("nombreHotel", hotel != null ? hotel.getNombre() : "Hotel");
         startActivity(intent);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mapViewPreview != null) mapViewPreview.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mapViewPreview != null) mapViewPreview.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mapViewPreview != null) mapViewPreview.onDestroy();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (mapViewPreview != null) mapViewPreview.onLowMemory();
+    }
+
 }

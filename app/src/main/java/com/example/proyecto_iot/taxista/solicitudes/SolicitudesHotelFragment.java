@@ -119,34 +119,31 @@ public class SolicitudesHotelFragment extends Fragment {
                                             doc.getId(), estado
                                     );
 
-                                    if (latTaxista == 0.0 || lngTaxista == 0.0) {
-                                        if (!isAdded()) return;
+                                    if (!isAdded()) return;
 
-                                        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                                                != PackageManager.PERMISSION_GRANTED) {
-                                            Log.e("PERMISOS", "Permiso de ubicación NO concedido aún.");
-                                            Toast.makeText(getContext(), "Permiso de ubicación requerido", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-
-                                        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-                                        fusedLocationClient.getLastLocation()
-                                                .addOnSuccessListener(location -> {
-                                                    if (!isAdded()) return;
-                                                    if (location != null) {
-                                                        item.latTaxista = location.getLatitude();
-                                                        item.lngTaxista = location.getLongitude();
-                                                    }
-                                                    procesarSolicitud(item, solicitudes, totalValidas, db);
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    if (!isAdded()) return;
-                                                    Log.e("UBICACION", "Error al obtener ubicación", e);
-                                                    procesarSolicitud(item, solicitudes, totalValidas, db);
-                                                });
-                                    } else {
+                                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                                            != PackageManager.PERMISSION_GRANTED) {
+                                        Log.e("PERMISOS", "Permiso de ubicación NO concedido aún.");
+                                        Toast.makeText(getContext(), "Permiso de ubicación requerido", Toast.LENGTH_SHORT).show();
                                         procesarSolicitud(item, solicitudes, totalValidas, db);
+                                        return;
                                     }
+
+                                    FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+                                    fusedLocationClient.getLastLocation()
+                                            .addOnSuccessListener(location -> {
+                                                if (!isAdded()) return;
+                                                if (location != null) {
+                                                    item.latTaxista = location.getLatitude();
+                                                    item.lngTaxista = location.getLongitude();
+                                                }
+                                                procesarSolicitud(item, solicitudes, totalValidas, db);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                if (!isAdded()) return;
+                                                Log.e("UBICACION", "Error al obtener ubicación", e);
+                                                procesarSolicitud(item, solicitudes, totalValidas, db);
+                                            });
                                 });
                     }
                 })
