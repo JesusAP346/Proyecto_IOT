@@ -24,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.firestore.DocumentReference;
 import java.util.Date;
-import com.example.proyecto_iot.dtos.LogSA;  // Si `LogSA` está en ese paquete
+import com.example.proyecto_iot.dtos.LogSA;
 
 import java.util.HashMap;
 import java.util.Map;

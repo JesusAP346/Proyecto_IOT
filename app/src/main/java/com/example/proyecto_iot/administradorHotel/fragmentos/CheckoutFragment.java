@@ -28,6 +28,7 @@ import com.example.proyecto_iot.databinding.FragmentCheckoutBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -376,6 +377,7 @@ public class CheckoutFragment extends Fragment {
 
     // Agrega este metodo al final de tu clase CheckoutFragment
     private void guardarCheckoutEnFirestore() {
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (reservaCompleta == null) return;
@@ -445,7 +447,7 @@ public class CheckoutFragment extends Fragment {
         datos.put("total", subtotal);
         datos.put("timestamp", new Date());
         String idReserva = reservaCompleta.getReserva().getIdReserva();
-
+        final double montoFinal = subtotal;
         db.collection("reservas")
                 .document(idReserva)
                 .update("datosCheckout", datos)
@@ -455,6 +457,53 @@ public class CheckoutFragment extends Fragment {
                             .document(idReserva)
                             .update("estado", "FINALIZADO")
                             .addOnSuccessListener(unused -> {
+
+
+
+                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                if (currentUser != null) {
+                                    String uidEditor = currentUser.getUid();
+                                    db.collection("usuarios").document(uidEditor)
+                                            .get()
+                                            .addOnSuccessListener(adminSnapshot -> {
+                                                if (adminSnapshot.exists()) {
+                                                    String nombreAdmin = adminSnapshot.getString("nombres") + " " + adminSnapshot.getString("apellidos");
+
+
+                                                    String idCliente = reservaCompleta.getReserva().getIdCliente();
+                                                    db.collection("usuarios").document(idCliente)
+                                                            .get()
+                                                            .addOnSuccessListener(clienteSnapshot -> {
+                                                                if (clienteSnapshot.exists()) {
+                                                                    String nombreCliente = clienteSnapshot.getString("nombres") + " " + clienteSnapshot.getString("apellidos");
+
+                                                                    com.example.proyecto_iot.dtos.LogSA log = new com.example.proyecto_iot.dtos.LogSA(
+                                                                            null,
+                                                                            "Pago de reserva",
+                                                                             "Se procesó correctamente el pago de la reserva del cliente " + nombreCliente +
+                                                                            " por el monto de " + String.format("%.2f", montoFinal) + " soles",                                                                            nombreAdmin,  // 🔔 Editor = admin actual
+                                                                            "Administrador",  // Rol editor = admin actual
+                                                                            "Cliente",  // Rol editado = cliente
+                                                                            uidEditor,  // UID editor
+                                                                            nombreCliente,  // Nombre editado = cliente
+                                                                            new Date(),
+                                                                            "Pago de reserva"
+                                                                    );
+
+                                                                    DocumentReference logRef = db.collection("logs").document();
+                                                                    String idLogGenerado = logRef.getId();
+                                                                    log.setIdLog(idLogGenerado);
+
+                                                                    logRef.set(log);
+                                                                }
+                                                            });
+                                                }
+                                            });
+                                }
+
+
+
+
 
                                 // Luego de guardar todo, volver a obtener los datos actualizados
                                 db.collection("reservas")
@@ -470,6 +519,7 @@ public class CheckoutFragment extends Fragment {
                                                 Bundle bundle = new Bundle();
                                                 bundle.putSerializable("reservaCompleta", reservaCompleta);
                                                 fragment.setArguments(bundle);
+
 
                                                 requireActivity().getSupportFragmentManager()
                                                         .beginTransaction()
