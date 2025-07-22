@@ -17,8 +17,7 @@ public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ReservaV
     public interface OnItemClickListener {
         void onVerDetallesClick(ReservaCompletaHotel reservaCompleta);
     }
-
-    private final List<ReservaCompletaHotel> listaReservasCompletas;
+    private List<ReservaCompletaHotel> listaReservasCompletas;
     private final Context context;
     private final OnItemClickListener listener;
 
@@ -36,6 +35,10 @@ public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ReservaV
         return new ReservaViewHolder(binding);
     }
 
+    public void actualizarLista(List<ReservaCompletaHotel> nuevasReservas) {
+        this.listaReservasCompletas = nuevasReservas;
+        notifyDataSetChanged();
+    }
     @Override
     public void onBindViewHolder(@NonNull ReservaViewHolder holder, int position) {
         ReservaCompletaHotel reservaCompleta = listaReservasCompletas.get(position);
