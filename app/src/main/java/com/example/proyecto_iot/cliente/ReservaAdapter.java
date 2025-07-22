@@ -56,8 +56,11 @@ public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ReservaV
             Intent intent = new Intent(holder.itemView.getContext(), DetalleReservaActivity.class);
             intent.putExtra("nombre", reserva.getNombreHotel());
             intent.putExtra("estado", reserva.getEstado());
-            intent.putExtra("entrada", reserva.getFechaEntrada());
-            intent.putExtra("salida", reserva.getFechaSalida());
+           // intent.putExtra("entrada", reserva.getFechaEntrada());
+            //intent.putExtra("salida", reserva.getFechaSalida());
+            intent.putExtra("entrada", reserva.getFechaEntrada().replace("-", "/"));
+            intent.putExtra("salida", reserva.getFechaSalida().replace("-", "/"));
+
             intent.putExtra("monto", reserva.getMonto());
             intent.putExtra("imagen", reserva.getImagen());
             intent.putExtra("idReserva", reserva.getId());
