@@ -22,6 +22,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.firebase.firestore.DocumentReference;
+import java.util.Date;
+import com.example.proyecto_iot.dtos.LogSA;  // Si `LogSA` está en ese paquete
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -154,6 +158,40 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
                                 db.collection("notificaciones").add(notiAdmin)
                                         .addOnSuccessListener(doc -> {
                                             Log.d("FormularioCheckout", "Notificación para administrador creada");
+                                            //  AGREGAR LOG AQUÍ
+                                            String uidEditor = FirebaseAuth.getInstance().getCurrentUser() != null
+                                                    ? FirebaseAuth.getInstance().getCurrentUser().getUid()
+                                                    : null;
+
+                                            if (uidEditor != null) {
+                                                db.collection("usuarios").document(uidEditor)
+                                                        .get()
+                                                        .addOnSuccessListener(adminSnapshot -> {
+                                                            if (adminSnapshot.exists()) {
+                                                                String nombreAdmin = adminSnapshot.getString("nombres") + " " + adminSnapshot.getString("apellidos");
+
+                                                                LogSA log = new LogSA(
+                                                                        null,
+                                                                        "Registro de checkout",
+                                                                        "El cliente " + nombreCompleto.trim() + " realizó check-out en " + nombreHotel,
+                                                                        nombreAdmin,
+                                                                        "Cliente",
+                                                                        "Cliente",
+                                                                        uidEditor,
+                                                                        nombreCompleto.trim(),
+                                                                        new Date(),
+                                                                        "Registro de checkout"
+                                                                );
+
+                                                                DocumentReference logRef = db.collection("logs").document();
+                                                                String idLogGenerado = logRef.getId();
+                                                                log.setIdLog(idLogGenerado);
+
+                                                                logRef.set(log);
+                                                            }
+                                                        });
+                                            }
+                                            //  FIN LOG
                                         })
                                         .addOnFailureListener(e -> {
                                             Log.w("FormularioCheckout", "Error al crear notificación para administrador", e);
