@@ -45,6 +45,20 @@
                 android:visibility="invisible" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/errorTipoCheckout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="16dp"
+            android:drawableStart="@drawable/ic_warning_admin"
+            android:drawablePadding="8dp"
+            android:text="Este es un mensaje de advertencia"
+            android:textColor="#D32F2F"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
         <!-- 🧾 CARD GENERAL -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -553,12 +567,6 @@
 
                 </LinearLayout>
 
-                <!-- Línea divisoria -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#E0E0E0"
-                    android:layout_marginTop="8dp" />
 
             </LinearLayout>
 
@@ -585,16 +593,16 @@
                     android:id="@+id/tituloProcesarPago"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Realizar Pago"
+                    android:text="Realizar Cobro"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:layout_marginBottom="0dp" />
+                    android:layout_marginBottom="4dp" />
+
+                <!-- Botón de pago -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="4dp">
+                    android:gravity="center">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_procesar_pago"
@@ -614,12 +622,11 @@
                         app:iconPadding="12dp"
                         app:strokeWidth="0dp"
                         style="@style/Widget.MaterialComponents.Button" />
-
-
                 </LinearLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
 
 
 

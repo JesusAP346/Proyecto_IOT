@@ -1,22 +1,7 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
-import static android.Manifest.permission.POST_NOTIFICATIONS;
-
-import android.Manifest;
-import android.content.Intent;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +9,15 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
+import com.example.proyecto_iot.administradorHotel.entity.CircleTransform;
 import com.example.proyecto_iot.administradorHotel.entity.HabitacionHotel;
 import com.example.proyecto_iot.administradorHotel.entity.ReservaCompletaHotel;
-import com.example.proyecto_iot.administradorHotel.entity.CircleTransform;
 import com.example.proyecto_iot.databinding.FragmentDetalleHuespedBinding;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
@@ -59,15 +46,13 @@ public class DetalleHuespedFragment extends Fragment {
         reservaCompleta = (ReservaCompletaHotel) getArguments().getSerializable("reservaCompleta");
         if (reservaCompleta == null) return;
 
-        idReserva = reservaCompleta.getReserva().getIdReserva(); // Asegúrate que tienes este campo
+        idReserva = reservaCompleta.getReserva().getIdReserva();
 
         mostrarDatosHuesped();
         mostrarDatosHabitacion();
         mostrarFechas();
-        escucharCambiosEstado(idReserva); // 🔁 Escucha en tiempo real
         configurarBotones();
     }
-
 
     private void mostrarDatosHuesped() {
         String nombreCompleto = reservaCompleta.getUsuario().getNombres().split(" ")[0] + " " +
@@ -115,9 +100,9 @@ public class DetalleHuespedFragment extends Fragment {
             binding.iconExpand.setRotation(visibility == View.VISIBLE ? 0 : 180);
         });
 
-        // Desactivado por defecto
-        binding.btnCheckout.setEnabled(false);
-        binding.btnCheckout.setAlpha(0.5f);
+        // Siempre habilitado
+        binding.btnCheckout.setEnabled(true);
+        binding.btnCheckout.setAlpha(1f);
 
         binding.btnCheckout.setOnClickListener(v -> {
             CheckoutFragment fragment = new CheckoutFragment();
@@ -132,67 +117,7 @@ public class DetalleHuespedFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
-
     }
-
-    private void escucharCambiosEstado(String idReserva) {
-        final String[] estadoAnterior = {""}; // lo usamos como mutable
-
-        FirebaseFirestore.getInstance()
-                .collection("reservas")
-                .document(idReserva)
-                .addSnapshotListener((snapshot, error) -> {
-                    if (error != null || snapshot == null || !snapshot.exists()) return;
-
-                    String nuevoEstado = snapshot.getString("estado");
-
-                    if (nuevoEstado == null) return;
-
-                    if (!"CHECKOUT".equalsIgnoreCase(estadoAnterior[0]) &&
-                            "CHECKOUT".equalsIgnoreCase(nuevoEstado)) {
-
-                        binding.btnCheckout.setEnabled(true);
-                        binding.btnCheckout.setAlpha(1f);
-
-                        enviarNotificacionCheckout(requireContext(), reservaCompleta);
-
-                    }
-
-                    // Actualiza el estado anterior
-                    estadoAnterior[0] = nuevoEstado;
-                });
-    }
-
-
-
-    private void enviarNotificacionCheckout(Context context, ReservaCompletaHotel reservaCompleta) {
-        Intent intent = new Intent(context, PagPrincipalAdmin.class);
-        intent.putExtra("reservaCompleta", reservaCompleta);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                context,
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "importanteDefault")
-                .setSmallIcon(R.drawable.icono_checkout)
-                .setContentTitle("Solicitud de Check-out")
-                .setContentText("El huésped " + reservaCompleta.getUsuario().getNombres() + " ha solicitado su check-out.")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            notificationManager.notify((int) System.currentTimeMillis(), builder.build());
-        }
-    }
-
 
     private void mostrarEquipamiento(GridLayout contenedor, List<String> items) {
         contenedor.removeAllViews();

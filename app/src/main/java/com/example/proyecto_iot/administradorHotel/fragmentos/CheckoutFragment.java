@@ -52,7 +52,6 @@ public class CheckoutFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         if (reservaCompleta != null) {
             HabitacionHotel habitacion = reservaCompleta.getHabitacion();
             binding.textNombreHabitacion.setText(habitacion.getTipo());
@@ -67,6 +66,39 @@ public class CheckoutFragment extends Fragment {
             binding.textCheckout.setText(reservaCompleta.getReserva().getFechaSalida() + " )");
 
             actualizarResumen();
+
+            String estado = reservaCompleta.getReserva().getEstado();
+            if (estado != null && estado.equalsIgnoreCase("ACTIVO")) {
+                binding.errorTipoCheckout.setVisibility(View.VISIBLE);
+                binding.errorTipoCheckout.setText("El huésped no ha realizado su checkout, no podrá continuar con el cobro.");
+
+                binding.btnProcesarPago.setEnabled(false);
+                binding.btnProcesarPago.setAlpha(0.4f);
+
+                binding.btnAgregarConsumo.setEnabled(false);
+                binding.btnAgregarConsumo.setAlpha(0.4f);
+
+                binding.btnAgregarCargos.setEnabled(false);
+                binding.btnAgregarCargos.setAlpha(0.4f);
+
+                binding.editNochesExtras.setEnabled(false);
+                binding.editNochesExtras.setAlpha(0.4f);
+
+            } else {
+                binding.errorTipoCheckout.setVisibility(View.GONE);
+
+                binding.btnProcesarPago.setEnabled(true);
+                binding.btnProcesarPago.setAlpha(1f);
+
+                binding.btnAgregarConsumo.setEnabled(true);
+                binding.btnAgregarConsumo.setAlpha(1f);
+
+                binding.btnAgregarCargos.setEnabled(true);
+                binding.btnAgregarCargos.setAlpha(1f);
+
+                binding.editNochesExtras.setEnabled(true);
+                binding.editNochesExtras.setAlpha(1f);
+            }
         }
 
         binding.btnAgregarConsumo.setOnClickListener(v -> showDialog("Agregar Consumo", consumoList));
@@ -87,13 +119,10 @@ public class CheckoutFragment extends Fragment {
         });
 
         mostrarServiciosAdicionalesDesdeReserva();
-
-        // Datos de tarjeta (metodo de pago)
         mostrarDatosTarjeta();
         binding.btnProcesarPago.setOnClickListener(v -> mostrarDialogoConfirmacionPago());
 
         binding.backdetallecheckout.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
-
     }
 
     private void mostrarDatosTarjeta() {
@@ -111,19 +140,16 @@ public class CheckoutFragment extends Fragment {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
     private void mostrarServiciosAdicionalesDesdeReserva() {
         binding.layoutServiciosDinamicos.removeAllViews();
-
         List<ServicioAdicionalNombrePrecio> servicios = reservaCompleta.getServiciosAdicionalesInfo();
-
         if (servicios == null || servicios.isEmpty()) {
             binding.textSinServicios.setText("Sin servicios extra agregados");
             binding.textSinServicios.setVisibility(View.VISIBLE);
             return;
         }
-
         binding.textSinServicios.setVisibility(View.GONE);
-
         for (ServicioAdicionalNombrePrecio s : servicios) {
             agregarFilaServicio(s.getNombre(), s.getPrecio());
         }
@@ -134,9 +160,7 @@ public class CheckoutFragment extends Fragment {
         fila.setOrientation(LinearLayout.HORIZONTAL);
         fila.setGravity(Gravity.CENTER_VERTICAL);
         LinearLayout.LayoutParams filaParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         filaParams.setMargins(16, 8, 16, 8);
         fila.setLayoutParams(filaParams);
 
