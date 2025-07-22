@@ -66,6 +66,7 @@
                 android:gravity="center_vertical">
 
                 <ImageView
+                    android:id="@+id/imageFotoTaxista"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:scaleType="centerCrop"
@@ -81,6 +82,7 @@
                     android:layout_marginStart="12dp">
 
                     <TextView
+                        android:id="@+id/textNombreTaxista"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Sergio Muñoz"
@@ -89,6 +91,7 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/textModeloAuto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Negro Nissan Versa"
@@ -96,6 +99,7 @@
                         android:textSize="13sp" />
 
                     <TextView
+                        android:id="@+id/textPlacaAuto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="BNY616"
@@ -112,6 +116,7 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/imageUbicacion"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_locationn"
@@ -146,6 +151,7 @@
 
                 <!-- Paso 1 -->
                 <LinearLayout
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -153,6 +159,7 @@
                     android:paddingVertical="4dp">
 
                     <FrameLayout
+                        android:id="@+id/puntoPaso1"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:background="@drawable/circle_green"
@@ -178,13 +185,15 @@
 
                 <!-- Línea 1 -->
                 <View
-                    android:layout_width="2dp"
+                    android:id="@+id/lineaPaso1"
+                    android:layout_width="3dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="17dp"
                     android:background="#4CAF50" />
 
                 <!-- Paso 2 -->
                 <LinearLayout
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -192,6 +201,7 @@
                     android:paddingVertical="4dp">
 
                     <FrameLayout
+                        android:id="@+id/puntoPaso2"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:background="@drawable/circle_green"
@@ -217,6 +227,7 @@
 
                 <!-- Línea 2 -->
                 <View
+                    android:id="@+id/lineaPaso2"
                     android:layout_width="2dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="17dp"
@@ -231,6 +242,7 @@
                     android:paddingVertical="4dp">
 
                     <FrameLayout
+                        android:id="@+id/puntoPaso3"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:background="@drawable/circle_gray"

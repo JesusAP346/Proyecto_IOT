@@ -55,7 +55,6 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
         rbNo = findViewById(R.id.rbNo);
         //etAeropuerto = findViewById(R.id.etAeropuerto);
         btnEnviar = findViewById(R.id.btnEnviarTaxi);
-
         TextView tvDestinoFijo;
 
         // Mostrar o esconder campo según opción

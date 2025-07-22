@@ -13,7 +13,8 @@
     <color name="rojizoProyect">#772f1a</color>
     <color name="cuadro">#C7C6C6</color>
     <color name="gray">#CCCCCC</color>
-
+    <color name="verde_linea">#4CAF50</color>
+    <color name="gris_linea">#BDBDBD</color>
     <color name="gray_dark">#666666</color>
     <color name="gray_light">#F5F5F5</color>
 
