@@ -21,7 +21,6 @@ import com.example.proyecto_iot.administradorHotel.entity.ReservaHotel;
 import com.example.proyecto_iot.administradorHotel.entity.ServicioAdicionalNombrePrecio;
 import com.example.proyecto_iot.cliente.busqueda.ServicioAdicionalReserva;
 import com.example.proyecto_iot.databinding.FragmentReservasHistorialBinding;
-import com.example.proyecto_iot.databinding.FragmentReservasTodasBinding;
 import com.example.proyecto_iot.dtos.Usuario;
 import com.example.proyecto_iot.administradorHotel.entity.EstadoReservaUI;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,12 +28,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
-
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ReservasHistorialFragment extends Fragment {
@@ -46,6 +43,8 @@ public class ReservasHistorialFragment extends Fragment {
     private final List<ReservaCompletaHotel> listaReservasCompletas = new ArrayList<>();
     private static final String TAG = "CARGA_RESERVAS";
 
+    private String fechaDesde = null;
+    private String fechaHasta = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,32 +56,62 @@ public class ReservasHistorialFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Listener para mostrar el calendario cuando se toca el EditText
+
         View.OnClickListener datePickerListener = v -> {
+            boolean esDesde = (v.getId() == R.id.etSelectDate);
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
             DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
                     (DatePicker view1, int selectedYear, int selectedMonth, int selectedDay) -> {
                         selectedMonth += 1;
-                        String selectedDate = selectedDay + "/" + selectedMonth + "/" + selectedYear;
-                        binding.etSelectDate.setText(selectedDate);
-                    },
-                    year, month, day);
+                        String selectedDate = String.format("%02d/%02d/%04d", selectedDay, selectedMonth, selectedYear);
+
+                        if (esDesde) {
+                            binding.etSelectDate.setText(selectedDate);
+                            fechaDesde = selectedDate;
+                        } else {
+                            binding.etSelectDate2.setText(selectedDate);
+                            fechaHasta = selectedDate;
+                        }
+
+                        // Validar si ambas fechas están seleccionadas
+                        if (fechaDesde != null && fechaHasta != null) {
+                            try {
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                                Date desde = sdf.parse(fechaDesde);
+                                Date hasta = sdf.parse(fechaHasta);
+
+                                if (hasta.before(desde)) {
+                                    binding.errorTipoFecha.setVisibility(View.VISIBLE);
+                                    binding.errorTipoFecha.setText("La fecha hasta no puede ser menor que la fecha inicial.");
+                                } else {
+                                    binding.errorTipoFecha.setVisibility(View.GONE);
+                                    aplicarFiltroFechas();
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }, year, month, day);
+
             datePickerDialog.show();
         };
 
-        binding.etSelectDate.setOnClickListener(datePickerListener);
 
+        binding.etSelectDate.setOnClickListener(datePickerListener);
+        binding.etSelectDate2.setOnClickListener(datePickerListener);
 
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         binding.recyclerReservasTodas.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new ReservaAdapter(listaReservasCompletas, requireContext(), reservaCompleta -> {
-
             DetalleReservaHistorialFragment fragment = new DetalleReservaHistorialFragment();
             Bundle bundle = new Bundle();
             bundle.putSerializable("reservaCompleta", reservaCompleta);
@@ -97,9 +126,65 @@ public class ReservasHistorialFragment extends Fragment {
         binding.recyclerReservasTodas.setAdapter(adapter);
 
         cargarReservasFinalizadasDelHotel();
-
     }
 
+    private void aplicarFiltroFechas() {
+        if (fechaDesde == null || fechaHasta == null) return;
+
+        List<ReservaCompletaHotel> filtradas = new ArrayList<>();
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date desde = sdf.parse(fechaDesde);
+            Date hasta = sdf.parse(fechaHasta);
+
+            for (ReservaCompletaHotel reserva : listaReservasCompletas) {
+                String fechaEntradaStr = reserva.getReserva().getFechaEntrada();
+                String fechaSalidaStr = reserva.getReserva().getFechaSalida();
+
+                if (fechaEntradaStr == null || fechaSalidaStr == null) continue;
+
+                // Normalizamos el formato por si viene con "-" o espacios
+                fechaEntradaStr = fechaEntradaStr.replace("-", "/").trim();
+                fechaSalidaStr = fechaSalidaStr.replace("-", "/").trim();
+
+                Date fechaEntrada = sdf.parse(fechaEntradaStr);
+                Date fechaSalida = sdf.parse(fechaSalidaStr);
+
+                // Mostrar solo si ambas fechas están dentro del rango
+                if (!fechaEntrada.before(desde) && !fechaEntrada.after(hasta) &&
+                        !fechaSalida.before(desde) && !fechaSalida.after(hasta)) {
+                    filtradas.add(reserva);
+                }
+            }
+
+            adapter.actualizarLista(filtradas);
+            if (filtradas.isEmpty()) {
+                mostrarMensajeSinReservas();
+            } else {
+                mostrarReservas();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Error al aplicar el filtro de fechas", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    private boolean estaDentroDelRango(String fecha) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(fecha.replace("-", "/"));
+            Date desde = sdf.parse(fechaDesde);
+            Date hasta = sdf.parse(fechaHasta);
+            return !date.before(desde) && !date.after(hasta);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     private void cargarReservasFinalizadasDelHotel() {
         if (currentUser == null) {
@@ -158,7 +243,6 @@ public class ReservasHistorialFragment extends Fragment {
                                                             if (habitacion == null) return;
 
                                                             ReservaCompletaHotel reservaCompleta = new ReservaCompletaHotel(reserva, usuario, habitacion);
-
                                                             List<ServicioAdicionalNombrePrecio> serviciosAdicionalesInfo = new ArrayList<>();
                                                             List<ServicioAdicionalReserva> serviciosAdicionales = reserva.getServiciosAdicionales();
 
@@ -167,28 +251,7 @@ public class ReservasHistorialFragment extends Fragment {
                                                                 listaReservasCompletas.add(reservaCompleta);
                                                                 adapter.notifyDataSetChanged();
                                                                 mostrarReservas();
-
-                                                                // Verifica si es la reserva finalizada
-                                                                if (!detalleAbierto[0] &&
-                                                                        EstadoReservaUI.reservaFinalizadaId != null &&
-                                                                        reserva.getIdReserva().equals(EstadoReservaUI.reservaFinalizadaId)) {
-
-                                                                    detalleAbierto[0] = true; // Marcar que ya abrimos
-                                                                    EstadoReservaUI.reservaFinalizadaId = null;
-
-                                                                    DetalleReservaHistorialFragment fragment = new DetalleReservaHistorialFragment();
-                                                                    Bundle bundle = new Bundle();
-                                                                    bundle.putSerializable("reservaCompleta", reservaCompleta);
-                                                                    fragment.setArguments(bundle);
-
-                                                                    requireActivity().getSupportFragmentManager()
-                                                                            .beginTransaction()
-                                                                            .replace(R.id.frame_layout, fragment)
-                                                                            .addToBackStack(null)
-                                                                            .commit();
-                                                                }
-
-
+                                                                abrirDetalleSiCorresponde(reserva, reservaCompleta, detalleAbierto);
                                                             } else {
                                                                 for (ServicioAdicionalReserva s : serviciosAdicionales) {
                                                                     db.collection("hoteles").document(idHotel)
@@ -203,38 +266,16 @@ public class ReservasHistorialFragment extends Fragment {
                                                                                         serviciosAdicionalesInfo.add(new ServicioAdicionalNombrePrecio(nombre, total));
                                                                                     }
                                                                                 }
-
                                                                                 if (serviciosAdicionalesInfo.size() == serviciosAdicionales.size()) {
                                                                                     reservaCompleta.setServiciosAdicionalesInfo(serviciosAdicionalesInfo);
                                                                                     listaReservasCompletas.add(reservaCompleta);
                                                                                     adapter.notifyDataSetChanged();
                                                                                     mostrarReservas();
-
-                                                                                    // Verifica si es la reserva finalizada
-                                                                                    if (!detalleAbierto[0] &&
-                                                                                            EstadoReservaUI.reservaFinalizadaId != null &&
-                                                                                            reserva.getIdReserva().equals(EstadoReservaUI.reservaFinalizadaId)) {
-
-                                                                                        detalleAbierto[0] = true; // Marcar que ya abrimos
-                                                                                        EstadoReservaUI.reservaFinalizadaId = null;
-
-                                                                                        DetalleReservaHistorialFragment fragment = new DetalleReservaHistorialFragment();
-                                                                                        Bundle bundle = new Bundle();
-                                                                                        bundle.putSerializable("reservaCompleta", reservaCompleta);
-                                                                                        fragment.setArguments(bundle);
-
-                                                                                        requireActivity().getSupportFragmentManager()
-                                                                                                .beginTransaction()
-                                                                                                .replace(R.id.frame_layout, fragment)
-                                                                                                .addToBackStack(null)
-                                                                                                .commit();
-                                                                                    }
-
+                                                                                    abrirDetalleSiCorresponde(reserva, reservaCompleta, detalleAbierto);
                                                                                 }
                                                                             });
                                                                 }
                                                             }
-
                                                         });
                                             });
                                 }
@@ -252,6 +293,23 @@ public class ReservasHistorialFragment extends Fragment {
                     Toast.makeText(requireContext(), "Error al obtener hotel", Toast.LENGTH_SHORT).show();
                     mostrarMensajeSinReservas();
                 });
+    }
+
+    private void abrirDetalleSiCorresponde(ReservaHotel reserva, ReservaCompletaHotel reservaCompleta, boolean[] detalleAbierto) {
+        if (!detalleAbierto[0] && EstadoReservaUI.reservaFinalizadaId != null && reserva.getIdReserva().equals(EstadoReservaUI.reservaFinalizadaId)) {
+            detalleAbierto[0] = true;
+            EstadoReservaUI.reservaFinalizadaId = null;
+            DetalleReservaHistorialFragment fragment = new DetalleReservaHistorialFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("reservaCompleta", reservaCompleta);
+            fragment.setArguments(bundle);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     private void mostrarReservas() {
