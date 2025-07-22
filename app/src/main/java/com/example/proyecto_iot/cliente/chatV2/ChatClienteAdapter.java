@@ -103,6 +103,33 @@ public class ChatClienteAdapter extends RecyclerView.Adapter<ChatClienteAdapter.
         private void buscarYMostrarNombreAdmin(String adminId) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+            // Primero buscar el hotel que tiene este administrador
+            db.collection("hoteles")
+                    .whereEqualTo("idAdministrador", adminId)
+                    .limit(1)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            // Se encontró el hotel
+                            String nombreHotel = queryDocumentSnapshots.getDocuments().get(0).getString("nombre");
+                            if (nombreHotel == null) nombreHotel = "Hotel desconocido";
+
+                            // Ahora buscar los datos del administrador
+                            buscarDatosAdministrador(adminId, nombreHotel);
+                        } else {
+                            // No se encontró hotel con este administrador
+                            tvAdminName.setText("Hotel no encontrado");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("ChatClienteAdapter", "Error al buscar hotel", e);
+                        tvAdminName.setText("Error al cargar información");
+                    });
+        }
+
+        private void buscarDatosAdministrador(String adminId, String nombreHotel) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
             // Buscar primero en la colección de administradores
             db.collection("administradores").document(adminId).get()
                     .addOnSuccessListener(documentSnapshot -> {
@@ -110,22 +137,22 @@ public class ChatClienteAdapter extends RecyclerView.Adapter<ChatClienteAdapter.
                             Usuario admin = documentSnapshot.toObject(Usuario.class);
                             if (admin != null) {
                                 String nombreCompleto = admin.getNombres() + " " + admin.getApellidos();
-                                tvAdminName.setText("Admin: " + nombreCompleto);
+                                tvAdminName.setText("Administrador de " + nombreHotel + ": " + nombreCompleto);
                             } else {
-                                tvAdminName.setText("Administrador desconocido");
+                                tvAdminName.setText("Administrador de " + nombreHotel + ": Administrador desconocido");
                             }
                         } else {
                             // Si no se encuentra en administradores, buscar en usuarios
-                            buscarEnUsuarios(adminId);
+                            buscarEnUsuarios(adminId, nombreHotel);
                         }
                     })
                     .addOnFailureListener(e -> {
                         Log.e("ChatClienteAdapter", "Error al obtener administrador", e);
-                        buscarEnUsuarios(adminId);
+                        buscarEnUsuarios(adminId, nombreHotel);
                     });
         }
 
-        private void buscarEnUsuarios(String adminId) {
+        private void buscarEnUsuarios(String adminId, String nombreHotel) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("usuarios").document(adminId).get()
                     .addOnSuccessListener(documentSnapshot -> {
@@ -133,17 +160,17 @@ public class ChatClienteAdapter extends RecyclerView.Adapter<ChatClienteAdapter.
                             Usuario admin = documentSnapshot.toObject(Usuario.class);
                             if (admin != null) {
                                 String nombreCompleto = admin.getNombres() + " " + admin.getApellidos();
-                                tvAdminName.setText("Admin: " + nombreCompleto);
+                                tvAdminName.setText("Administrador de " + nombreHotel + ": " + nombreCompleto);
                             } else {
-                                tvAdminName.setText("Administrador desconocido");
+                                tvAdminName.setText("Administrador de " + nombreHotel + ": Administrador desconocido");
                             }
                         } else {
-                            tvAdminName.setText("Administrador no encontrado");
+                            tvAdminName.setText("Administrador de " + nombreHotel + ": Administrador no encontrado");
                         }
                     })
                     .addOnFailureListener(e -> {
                         Log.e("ChatClienteAdapter", "Error al obtener administrador de usuarios", e);
-                        tvAdminName.setText("Error al cargar administrador");
+                        tvAdminName.setText("Administrador de " + nombreHotel + ": Error al cargar administrador");
                     });
         }
     }
