@@ -211,20 +211,19 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
         String documentId = db.collection("reservas").document().getId();
         reserva.setIdReserva(documentId);
 
-        // Crear un mapa que contenga tanto la reserva como los datos de pago
         Map<String, Object> documentoReserva = new HashMap<>();
 
-        // Agregar todos los campos de la reserva (aquí deberías convertir tu objeto Reserva a Map)
-        // Por simplicidad, asumo que tienes un método toMap() en tu clase Reserva
-        // Si no lo tienes, tendrás que agregar manualmente cada campo
 
-        // Campos básicos de la reserva (ajusta según tu clase Reserva)
         documentoReserva.put("idReserva", reserva.getIdReserva());
         documentoReserva.put("monto", reserva.getMonto());
         documentoReserva.put("cantNoches", reserva.getCantNoches());
         documentoReserva.put("fechaEntrada", reserva.getFechaEntrada());
         documentoReserva.put("estado", reserva.getEstado());
-        // Agregar aquí el resto de campos de tu reserva...
+        documentoReserva.put("idCliente", reserva.getIdCliente());
+        documentoReserva.put("fechaSalida", reserva.getFechaSalida());
+        documentoReserva.put("idHabitacion", reserva.getIdHabitacion());
+        documentoReserva.put("idHotel", reserva.getIdHotel());
+        documentoReserva.put("serviciosAdicionales", reserva.getServiciosAdicionales());
 
         // Agregar los datos de pago como un objeto anidado
         documentoReserva.put("datosPago", crearDatosPago(tarjetaSeleccionada));
