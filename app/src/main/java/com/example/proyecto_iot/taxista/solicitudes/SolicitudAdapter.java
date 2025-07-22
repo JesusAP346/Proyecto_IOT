@@ -22,7 +22,8 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
     private final OnSolicitudClickListener listener;
 
     public interface OnSolicitudClickListener {
-        void onSolicitudAceptada(Solicitud solicitud);
+        void onAceptar(Solicitud solicitud);
+        void onRechazar(Solicitud solicitud);
     }
 
     public SolicitudAdapter(List<Solicitud> lista, OnSolicitudClickListener listener) {
@@ -50,7 +51,6 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         holder.distrito.setText(solicitud.direccionHotel);
         holder.destino.setText(solicitud.destino);
 
-        // Mostrar tiempo estimado si está disponible
         if (solicitud.tiempoEstimado != null && !solicitud.tiempoEstimado.isEmpty()) {
             holder.tiempoDistancia.setText(solicitud.tiempoEstimado);
         } else {
@@ -77,7 +77,8 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
             holder.btnAceptar.setText("Ver");
         }
 
-        holder.btnAceptar.setOnClickListener(v -> listener.onSolicitudAceptada(solicitud));
+        holder.btnAceptar.setOnClickListener(v -> listener.onAceptar(solicitud));
+        holder.btnRechazar.setOnClickListener(v -> listener.onRechazar(solicitud));
     }
 
     @Override

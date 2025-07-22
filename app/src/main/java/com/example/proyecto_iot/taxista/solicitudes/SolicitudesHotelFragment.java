@@ -1,9 +1,12 @@
 package com.example.proyecto_iot.taxista.solicitudes;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +17,8 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,7 +28,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyecto_iot.BuildConfig;
+import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.databinding.FragmentSolicitudesHotelBinding;
+import com.example.proyecto_iot.taxista.perfil.NotificacionUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
@@ -81,7 +88,18 @@ public class SolicitudesHotelFragment extends Fragment {
                     List<DocumentSnapshot> docs = new ArrayList<>(queryDocumentSnapshots.getDocuments());
 
                     if (docs.isEmpty()) {
-                        binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(new ArrayList<>(), s -> {}));
+                        binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(new ArrayList<>(), new SolicitudAdapter.OnSolicitudClickListener() {
+                            @Override
+                            public void onAceptar(Solicitud solicitud) {
+                                // No hacer nada
+                            }
+
+                            @Override
+                            public void onRechazar(Solicitud solicitud) {
+                                // No hacer nada
+                            }
+                        }));
+
                         return;
                     }
 
@@ -159,33 +177,98 @@ public class SolicitudesHotelFragment extends Fragment {
             solicitudes.add(item);
 
             if (solicitudes.size() == totalValidas) {
-                binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(solicitudes, selected -> {
-                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-                        Toast.makeText(getContext(), "Debes aceptar el permiso de ubicación para abrir el mapa", Toast.LENGTH_LONG).show();
-                        return;
+                binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(solicitudes, new SolicitudAdapter.OnSolicitudClickListener() {
+                    @Override
+                    public void onAceptar(Solicitud selected) {
+                        if ("pendiente".equals(selected.estado)) {
+                            db.collection("servicios_taxi")
+                                    .document(selected.idDocumento)
+                                    .update(
+                                            "estado", "aceptado",
+                                            "idTaxista", FirebaseAuth.getInstance().getCurrentUser().getUid()
+                                    )
+                                    .addOnSuccessListener(aVoid -> {
+                                        String horaActual = java.time.LocalTime.now().toString().substring(0,5);
+
+                                        NotificacionUtils.agregarNotificacion(
+                                                requireContext(),
+                                                "Has aceptado una solicitud de " + selected.nombre,
+                                                "Hoy, " + horaActual,
+                                                R.drawable.ic_hotel_solid
+                                        );
+
+                                        lanzarNotificacionLocal("Solicitud aceptada",
+                                                "Servicio a " + selected.destino + " desde " + selected.origen);
+
+                                        abrirMapa(selected);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        e.printStackTrace();
+                                        Toast.makeText(getContext(), "Error al aceptar solicitud", Toast.LENGTH_SHORT).show();
+                                    });
+                        } else {
+                            abrirMapa(selected);
+                        }
                     }
 
-                    if ("pendiente".equals(selected.estado)) {
+                    @Override
+                    public void onRechazar(Solicitud selected) {
                         db.collection("servicios_taxi")
                                 .document(selected.idDocumento)
-                                .update(
-                                        "estado", "aceptado",
-                                        "idTaxista", FirebaseAuth.getInstance().getCurrentUser().getUid()
-                                )
-                                .addOnSuccessListener(aVoid -> abrirMapa(selected))
+                                .update("estado", "rechazado")
+                                .addOnSuccessListener(aVoid -> {
+                                    solicitudes.remove(selected);
+                                    binding.recyclerSolicitudes.getAdapter().notifyDataSetChanged();
+
+                                    String horaActual = java.time.LocalTime.now().toString().substring(0,5);
+
+                                    NotificacionUtils.agregarNotificacion(
+                                            requireContext(),
+                                            "Has rechazado una solicitud de " + selected.nombre,
+                                            "Hoy, " + horaActual,
+                                            R.drawable.ic_delete
+                                    );
+
+                                    lanzarNotificacionLocal("Solicitud rechazada",
+                                            "Solicitud de " + selected.nombre + " ha sido rechazada.");
+                                })
                                 .addOnFailureListener(e -> {
                                     e.printStackTrace();
-                                    Toast.makeText(getContext(), "Error al aceptar solicitud", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Error al rechazar solicitud", Toast.LENGTH_SHORT).show();
                                 });
-                    } else {
-                        abrirMapa(selected);
                     }
                 }));
+
             }
         });
     }
+
+    private void lanzarNotificacionLocal(String titulo, String mensaje) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "canal_general",
+                    "Notificaciones generales",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = requireContext().getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), "canal_general")
+                .setSmallIcon(R.drawable.ic_hotel_solid)
+                .setContentTitle(titulo)
+                .setContentText(mensaje)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireContext());
+
+        if (Build.VERSION.SDK_INT < 33 || ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        }
+    }
+
 
     private void obtenerDistanciaYTiempo(Solicitud solicitud, OnDatosRutaListener listener) {
         if (!isAdded()) {
