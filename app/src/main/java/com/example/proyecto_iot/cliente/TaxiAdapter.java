@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
@@ -63,7 +66,38 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.ViewHolder> {
         holder.tvPlaca.setText(item.getPlaca());
         holder.tvConductor.setText(item.getNombreConductor());
         holder.tvDestino.setText("Destino: " + item.getDestino());
-        holder.imgFoto.setImageResource(item.getFotoResId());
+        //holder.imgFoto.setImageResource(item.getFotoResId());
+
+        FirebaseFirestore.getInstance()
+                .collection("usuarios")
+                .document(item.getIdTaxista())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String urlFoto = documentSnapshot.getString("urlFotoPerfil");
+                        if (urlFoto != null && !urlFoto.isEmpty()) {
+                            Glide.with(context)
+                                    .load(urlFoto)
+                                    .placeholder(R.drawable.baseline_account_circle_24)
+                                    .error(R.drawable.baseline_account_circle_24)
+                                    .centerCrop()
+                                    .into(holder.imgFoto);
+                        } else {
+                            holder.imgFoto.setImageResource(R.drawable.baseline_account_circle_24);
+                        }
+                    } else {
+                        holder.imgFoto.setImageResource(R.drawable.baseline_account_circle_24);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    holder.imgFoto.setImageResource(R.drawable.baseline_account_circle_24);
+                });
+
+
+
+
+
+
         holder.imgQR1.setImageResource(R.drawable.qrcode_solid);
        // holder.imgQR2.setImageResource(R.drawable.qrcode_solid);
         String contenidoQR = "serviciotaxi:#" + item.getIdServicio();

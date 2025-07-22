@@ -85,7 +85,8 @@ public class TaxiFragment extends Fragment {
                                     false,
                                     doc.getId(),
                                     0.0, 0.0,
-                                    0.0, 0.0
+                                    0.0, 0.0,
+                                    ""
                             ));
                             adapter.notifyDataSetChanged();
                             continue;
@@ -120,7 +121,8 @@ public class TaxiFragment extends Fragment {
                                                             lat != null ? lat : 0,
                                                             lng != null ? lng : 0,
                                                             latHotel != null ? latHotel : 0,
-                                                            lngHotel != null ? lngHotel : 0
+                                                            lngHotel != null ? lngHotel : 0,
+                                                            idTaxista // NUEVO campo
                                                     ));
                                                     adapter.notifyDataSetChanged();
                                                 }

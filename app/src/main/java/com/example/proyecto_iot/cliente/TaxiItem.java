@@ -12,6 +12,8 @@ public class TaxiItem {
     private double latCliente;
     private double lonCliente;
 
+    private String idTaxista; // NUEVO CAMPO
+
     public double getLatCliente() { return latCliente; }
     public double getLonCliente() { return lonCliente; }
 
@@ -19,21 +21,26 @@ public class TaxiItem {
         return latitud; }
     public double getLongitud() {
         return longitud; }
-/*
-    public TaxiItem(String placa, String nombreConductor, String destino, int fotoResId, boolean activa, String idServicio, double latitud, double longitud) {
-        this.placa = placa;
-        this.nombreConductor = nombreConductor;
-        this.destino = destino;
-        this.fotoResId = fotoResId;
-        this.activa = activa;
-        this.idServicio = idServicio;
-        this.latitud = latitud;
-        this.longitud = longitud;
+
+    public String getIdTaxista() {
+        return idTaxista;
     }
-*/
+
+    /*
+        public TaxiItem(String placa, String nombreConductor, String destino, int fotoResId, boolean activa, String idServicio, double latitud, double longitud) {
+            this.placa = placa;
+            this.nombreConductor = nombreConductor;
+            this.destino = destino;
+            this.fotoResId = fotoResId;
+            this.activa = activa;
+            this.idServicio = idServicio;
+            this.latitud = latitud;
+            this.longitud = longitud;
+        }
+    */
     public TaxiItem(String placa, String nombreConductor, String destino, int fotoResId,
                     boolean activa, String idServicio, double latitud, double longitud,
-                    double latCliente, double lonCliente) {
+                    double latCliente, double lonCliente, String idTaxista) {
         this.placa = placa;
         this.nombreConductor = nombreConductor;
         this.destino = destino;
@@ -44,6 +51,7 @@ public class TaxiItem {
         this.longitud = longitud;
         this.latCliente = latCliente;
         this.lonCliente = lonCliente;
+        this.idTaxista = idTaxista;
     }
 
     public String getPlaca() { return placa; }
