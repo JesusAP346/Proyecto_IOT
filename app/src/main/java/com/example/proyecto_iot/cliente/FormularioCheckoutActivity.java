@@ -32,6 +32,7 @@ import java.util.Map;
 public class FormularioCheckoutActivity extends AppCompatActivity {
 
     private String idHotel;
+    private String idReserva;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +42,9 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
 
         TextView tvNombreHotel = findViewById(R.id.tvNombreHotel);
         String nombreHotel = getIntent().getStringExtra("nombreHotel");
-
         idHotel = getIntent().getStringExtra("idHotel");
+        idReserva = getIntent().getStringExtra("idReserva");
+
         Log.d("FormularioCheckout", "ID del hotel recibido: " + idHotel);
 
         if (nombreHotel != null) {
@@ -211,6 +213,7 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
                     Intent intent = new Intent(FormularioCheckoutActivity.this, SolicitudTaxiActivity.class);
                     intent.putExtra("nombreHotel", nombreHotel);
                     intent.putExtra("idHotel", idHotel);
+                    intent.putExtra("idReserva", idReserva);
                     startActivity(intent);
                 })
                 .addOnFailureListener(e -> {

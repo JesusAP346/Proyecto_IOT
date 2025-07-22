@@ -129,7 +129,7 @@ public class DetalleReservaActivity extends AppCompatActivity {
                                     Intent intent2 = new Intent(DetalleReservaActivity.this, FormularioCheckoutActivity.class);
                                     intent2.putExtra("nombreHotel", nombre);
                                     intent2.putExtra("idHotel", idHotel);
-
+                                    intent2.putExtra("idReserva", idReserva);
                                     startActivity(intent2);
                                 })
                                 .addOnFailureListener(e -> e.printStackTrace());

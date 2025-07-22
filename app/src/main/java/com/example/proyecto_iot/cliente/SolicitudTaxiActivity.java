@@ -40,12 +40,14 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
     RadioButton rbSi, rbNo;
     EditText etAeropuerto;
     Button btnEnviar;
-
+    private String idReserva;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solicitud_taxi);
         String nombreHotel = getIntent().getStringExtra("nombreHotel");
+
+        idReserva = getIntent().getStringExtra("idReserva");
 
         crearCanalNotificacion();
 
@@ -166,7 +168,7 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
                                             servicio.put("idCliente", uidCliente);
                                             servicio.put("nombreCliente", nombreCliente);
                                             servicio.put("celularCliente", celularCliente);
-
+                                            servicio.put("idReserva", idReserva);
                                             db.collection("servicios_taxi")
                                                     .add(servicio)
                                                     .addOnSuccessListener(documentReference -> {
