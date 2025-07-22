@@ -1,6 +1,8 @@
 package com.example.proyecto_iot.SuperAdmin;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 import androidx.appcompat.widget.SearchView;
@@ -8,12 +10,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.SuperAdmin.adapter.LogAdapter;
 import com.example.proyecto_iot.SuperAdmin.adapter.UsuarioHistorialAdapter;
+import com.example.proyecto_iot.dtos.LogSA;
 import com.example.proyecto_iot.dtos.Usuario;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +48,12 @@ public class HistorialActivity extends AppCompatActivity {
         btnLimpiarFiltros = findViewById(R.id.btnLimpiarFiltros);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        usuariosAdapter = new UsuarioHistorialAdapter(usuariosFiltrados, usuario ->
-                Toast.makeText(this, "Seleccionaste a " + usuario.getNombres(), Toast.LENGTH_SHORT).show()
-        );
+        usuariosAdapter = new UsuarioHistorialAdapter(usuariosFiltrados, usuario -> {
+            Toast.makeText(this, "Buscando logs para UID: " + usuario.getId(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Seleccionaste a " + usuario.getNombres(), Toast.LENGTH_SHORT).show();
+            mostrarHistorialLogsEnDialog(usuario.getId());
+        });
+
         recyclerView.setAdapter(usuariosAdapter);
 
         btnFiltroRol.setOnClickListener(v -> mostrarPopupFiltroRol());
@@ -141,4 +149,34 @@ public class HistorialActivity extends AppCompatActivity {
             usuariosAdapter.updateList(new ArrayList<>(usuariosFiltrados));
         }
     }
+
+    private void mostrarHistorialLogsEnDialog(String uidUsuario) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_historial_logs, null);
+        RecyclerView recyclerHistorial = dialogView.findViewById(R.id.recyclerHistorialLogs);
+        recyclerHistorial.setLayoutManager(new LinearLayoutManager(this));
+        LogAdapter logAdapter = new LogAdapter(new ArrayList<>());
+        recyclerHistorial.setAdapter(logAdapter);
+
+        com.google.android.material.bottomsheet.BottomSheetDialog dialog = new com.google.android.material.bottomsheet.BottomSheetDialog(this);
+        dialog.setContentView(dialogView);
+        dialog.show();
+
+        // 🔥 NUEVO: traer todos los logs y filtrar manualmente por uidUsuario
+        FirebaseFirestore.getInstance()
+                .collection("logs")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<LogSA> logsUsuario = new ArrayList<>();
+                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        LogSA log = doc.toObject(LogSA.class);
+                        if (log != null && uidUsuario.equals(log.getUidUsuario())) {
+                            logsUsuario.add(log);
+                        }
+                    }
+                    logAdapter.updateList(logsUsuario);
+                });
+    }
+
+
 }
