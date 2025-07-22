@@ -115,10 +115,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void configurarActualizacionUbicacion() {
-        locationRequest = LocationRequest.create();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
+                .setMinUpdateIntervalMillis(5000)
+                .build();
 
         locationCallback = new LocationCallback() {
             @Override
@@ -130,11 +129,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     double lat = location.getLatitude();
                     double lng = location.getLongitude();
 
+                    Log.d("UBICACION_TAXISTA", "Lat: " + lat + " | Lng: " + lng); // ✅ log de depuración
+
                     db.collection("servicios_taxi")
                             .document(idServicioActual)
                             .update("latTaxista", lat, "longTaxista", lng)
-                            .addOnSuccessListener(aVoid -> Log.d("Ubicacion", "Ubicación actualizada"))
-                            .addOnFailureListener(e -> Log.e("Ubicacion", "Error actualizando", e));
+                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Ubicación actualizada"))
+                            .addOnFailureListener(e -> Log.e("Firestore", "Error al actualizar ubicación", e));
 
                     double distancia = calcularDistancia(lat, lng, latDestino, lngDestino);
                     LatLng origenActual = new LatLng(lat, lng);
@@ -155,12 +156,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             binding.btnFinalizarViaje.setVisibility(View.GONE);
                         }
                     });
+                } else {
+                    Log.e("UBICACION_TAXISTA", "No se obtuvo ubicación");
                 }
             }
         };
 
         binding.btnIrAeropuerto.setOnClickListener(v -> mostrarDialogoConfirmacion());
     }
+
 
     private void mostrarDialogoConfirmacion() {
         new AlertDialog.Builder(this)
@@ -293,9 +297,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onStart() {
         super.onStart();
         if (tienePermisoUbicacion()) {
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
+            LocationServices.getFusedLocationProviderClient(this)
+                    .requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
+            Log.d("UBICACION_TAXISTA", "✅ Se inició requestLocationUpdates");
+        } else {
+            Log.w("UBICACION_TAXISTA", "❌ No tiene permisos de ubicación");
         }
     }
+
 
     @Override
     protected void onStop() {
