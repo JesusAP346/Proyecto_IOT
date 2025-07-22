@@ -148,7 +148,7 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.ViewHolder> {
                 intent.putExtra("lonCliente", item.getLonCliente());
                 intent.putExtra("fotoUrl", item.getUrlFotoTaxista());
                 intent.putExtra("telefono", item.getTelefonoTaxista());
-
+                intent.putExtra("idServicio", item.getIdServicio());
 
                 context.startActivity(intent);
             });

@@ -1,6 +1,7 @@
 package com.example.proyecto_iot.cliente;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -93,6 +94,8 @@ public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.mapa = googleMap;
+        Log.d("MAPA_TAXI", "🗺️ Mapa listo");
+
 
         if (idServicio != null) {
             escucharUbicacionTaxistaTiempoReal();
@@ -110,12 +113,16 @@ public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void escucharUbicacionTaxistaTiempoReal() {
+        Log.d("MAPA_TAXI", "📡 Se activó escucharUbicacionTaxistaTiempoReal()");
+
         DocumentReference docRef = db.collection("servicios_taxi").document(idServicio);
         listenerRegistro = docRef.addSnapshotListener((snapshot, e) -> {
             if (e != null || snapshot == null || !snapshot.exists()) return;
 
             Double lat = snapshot.getDouble("latTaxista");
             Double lon = snapshot.getDouble("longTaxista");
+            Log.d("MAPA_TAXI", "Ubicación recibida: " + lat + ", " + lon); // 👈 Agrega esto
+
 
             if (lat != null && lon != null && mapa != null) {
                 LatLng nuevaUbicacion = new LatLng(lat, lon);
