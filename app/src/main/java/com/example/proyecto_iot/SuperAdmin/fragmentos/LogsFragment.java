@@ -39,6 +39,8 @@ public class LogsFragment extends Fragment {
     private String filtroTipo = null;
     private String filtroRol = null;
     private String filtroFecha = null;
+    private Calendar fechaInicio = null;
+    private Calendar fechaFin = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -118,18 +120,36 @@ public class LogsFragment extends Fragment {
 
         btnFechaLog.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
-            DatePickerDialog datePicker = new DatePickerDialog(requireContext(),
-                    (view, year, month, dayOfMonth) -> {
-                        filtroFecha = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year);
-                        btnFechaLog.setText(filtroFecha);
-                        aplicarFiltros();
-                    },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-            );
-            datePicker.show();
+
+            DatePickerDialog datePickerInicio = new DatePickerDialog(requireContext(),
+                    (view1, year1, month1, dayOfMonth1) -> {
+                        fechaInicio = Calendar.getInstance();
+                        fechaInicio.set(year1, month1, dayOfMonth1, 0, 0, 0);
+
+                        // Segundo picker para fecha fin
+                        DatePickerDialog datePickerFin = new DatePickerDialog(requireContext(),
+                                (view2, year2, month2, dayOfMonth2) -> {
+                                    fechaFin = Calendar.getInstance();
+                                    fechaFin.set(year2, month2, dayOfMonth2, 23, 59, 59);
+
+                                    // Mostrar texto en botón
+                                    String texto = String.format("%02d/%02d/%04d - %02d/%02d/%04d",
+                                            dayOfMonth1, month1 + 1, year1,
+                                            dayOfMonth2, month2 + 1, year2);
+                                    btnFechaLog.setText(texto);
+
+                                    aplicarFiltros();
+
+                                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                        datePickerFin.setTitle("Seleccione fecha de fin");
+                        datePickerFin.show();
+
+                    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            datePickerInicio.setTitle("Seleccione fecha de inicio");
+            datePickerInicio.show();
         });
+
+
 
         btnLimpiarFiltros.setOnClickListener(v -> {
             filtroTipo = null;
@@ -159,7 +179,10 @@ public class LogsFragment extends Fragment {
             query = query.whereEqualTo("rolUsuario", filtroRol);
         }
 
-        // Aquí puedes implementar filtrado por fecha si `timestamp` es tipo Timestamp en Firestore.
+        if (fechaInicio != null && fechaFin != null) {
+            query = query.whereGreaterThanOrEqualTo("timestamp", fechaInicio.getTime())
+                    .whereLessThanOrEqualTo("timestamp", fechaFin.getTime());
+        }
 
         query = query.orderBy("timestamp", Query.Direction.DESCENDING).limit(50);
 
@@ -178,6 +201,7 @@ public class LogsFragment extends Fragment {
             logAdapter.notifyDataSetChanged();
         });
     }
+
 
 
     @Override

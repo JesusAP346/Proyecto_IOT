@@ -415,7 +415,8 @@ public class RegisterFotoFragmentSuperAdmin extends Fragment {
                                                         "Super Admin",
                                                         uidEditor,
                                                         nombreNuevo,
-                                                        new Date()
+                                                        new Date(),
+                                                        "AdminRegistro"
                                                 );
 
                                                 db.collection("logs").add(log);

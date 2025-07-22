@@ -175,7 +175,8 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
                                                                         "Super Admin",
                                                                         uidEditor,
                                                                         nombreEliminado,
-                                                                        new Date()
+                                                                        new Date(),
+                                                                        "cuentaEliminada"
                                                                 );
 
                                                                 db.collection("logs").add(log);

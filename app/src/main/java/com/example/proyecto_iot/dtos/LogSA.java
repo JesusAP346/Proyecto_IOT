@@ -14,10 +14,10 @@ public class LogSA {
     private String uidUsuario;
     private String nombreUsuario;
     private Date timestamp;
-
+    private String tipoLog;
     public LogSA() {} // Necesario para Firestore
 
-    public LogSA(String IdLog, String titulo, String mensaje, String nombreEditor, String rolEditor, String uidUsuario, String nombreUsuario, Date timestamp) {
+    public LogSA(String IdLog, String titulo, String mensaje, String nombreEditor, String rolEditor, String uidUsuario, String nombreUsuario, Date timestamp, String tipoLog) {
         this.titulo = titulo;
         this.IdLog = IdLog;
         this.nombreEditor = nombreEditor;
@@ -26,6 +26,7 @@ public class LogSA {
         this.nombreUsuario = nombreUsuario;
         this.timestamp = timestamp;
         this.rolEditor = rolEditor;
+        this.tipoLog = tipoLog;
     }
 
     public String getRolEditor() {
