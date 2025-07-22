@@ -47,7 +47,56 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
 
         // Usuario + fecha
         holder.tvUsuarioFecha.setText("Por el " + log.getRolEditor() + " " + log.getNombreEditor() + " • " + fecha);
+        //  Aquí agregamos la lógica para cambiar el icono según el tipo de log:
+        String tipoLog = log.getTipoLog() != null ? log.getTipoLog().toLowerCase() : "";
 
+        switch (tipoLog) {
+            case "solicitudes":
+                holder.ivIcono.setImageResource(R.drawable.ic_request);  // ← debes tener este ícono en drawable
+                break;
+            case "registro de usuario":
+                holder.ivIcono.setImageResource(R.drawable.ic_new_user);
+                break;
+            case "eliminación de usuario":
+                holder.ivIcono.setImageResource(R.drawable.icon_deleteadmin);
+                break;
+            case "reserva de hotel":
+                holder.ivIcono.setImageResource(R.drawable.ic_reserva);
+                break;
+            case "registro de checkout":
+                holder.ivIcono.setImageResource(R.drawable.ic_checkout);
+                break;
+            case "pago de reserva":
+                holder.ivIcono.setImageResource(R.drawable.ic_payment);
+                break;
+            default:
+                holder.ivIcono.setImageResource(R.drawable.ic_generic_user);  // icono por defecto
+                break;
+        }
+
+        // Click normal para mostrar JSON puro en popup
+        holder.itemView.setOnClickListener(view -> {
+            // Convertir objeto LogSA a JSON (simple)
+            StringBuilder json = new StringBuilder("{\n");
+            json.append("  \"idLog\": \"").append(log.getIdLog()).append("\",\n");
+            json.append("  \"titulo\": \"").append(log.getTitulo()).append("\",\n");
+            json.append("  \"mensaje\": \"").append(log.getMensaje()).append("\",\n");
+            json.append("  \"nombreEditor\": \"").append(log.getNombreEditor()).append("\",\n");
+            //json.append("  \"nombreEditado\": \"").append(log.getNombreEditado()).append("\",\n");
+            json.append("  \"rolEditor\": \"").append(log.getRolEditor()).append("\",\n");
+            json.append("  \"rolEditado\": \"").append(log.getRolEditado()).append("\",\n");
+            //json.append("  \"idEditor\": \"").append(log.getIdEditor()).append("\",\n");
+            //json.append("  \"idEditado\": \"").append(log.getIdEditado()).append("\",\n");
+            json.append("  \"tipoLog\": \"").append(log.getTipoLog()).append("\",\n");
+            json.append("  \"timestamp\": \"").append(sdf.format(log.getTimestamp())).append("\"\n");
+            json.append("}");
+
+            new androidx.appcompat.app.AlertDialog.Builder(view.getContext())
+                    .setTitle("Detalle JSON del Log")
+                    .setMessage(json.toString())
+                    .setPositiveButton("Cerrar", (dialog, which) -> dialog.dismiss())
+                    .show();
+        });
         // Lógica de eliminación
         holder.btnEliminar.setOnClickListener(view -> {
             new androidx.appcompat.app.AlertDialog.Builder(view.getContext())
