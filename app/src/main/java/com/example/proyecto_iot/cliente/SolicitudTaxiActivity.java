@@ -45,7 +45,12 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solicitud_taxi);
+
         String nombreHotel = getIntent().getStringExtra("nombreHotel");
+
+        //AGREGUE ESTO
+        TextView tvHotel = findViewById(R.id.tvHotelTaxi);
+        tvHotel.setText(nombreHotel != null ? nombreHotel : "Hotel no identificado");
 
         idReserva = getIntent().getStringExtra("idReserva");
 
