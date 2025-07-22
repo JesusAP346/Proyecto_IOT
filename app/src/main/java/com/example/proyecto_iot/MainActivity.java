@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String CANAL_ID = "canal_viajes";
     private static final int CODIGO_PERMISOS_INICIALES = 200;
+    private static final int CODIGO_NOTIFICACIONES = 999;
     public ActivityMainBinding binding;
 
     @Override
@@ -35,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         crearCanalNotificacion();
-        pedirPermisosNotificacion();
-        pedirPermisosUnaSolaVez();
+        pedirPermisosNotificacionPrimeroYLuegoOtros();
 
         // Logs para ver el estado actual de los permisos
         Log.d("PERMISOS", "CAMERA: " +
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                             "Debes aceptar el permiso de cámara para usar el lector QR",
                             Toast.LENGTH_LONG).show();
 
-                    return false; // evita abrir el fragmento sin permiso
+                    return false;
                 }
 
                 replaceFragment(new QrFragment());
@@ -95,14 +96,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void pedirPermisosNotificacion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+    private void pedirPermisosNotificacionPrimeroYLuegoOtros() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
+
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        CODIGO_NOTIFICACIONES);
+                return; // Muy importante: esperar que el usuario responda antes de pedir otros permisos
             }
         }
+
+        pedirPermisosUnaSolaVez(); // Si ya tiene permiso o es Android <13
     }
 
     private void pedirPermisosIniciales() {
@@ -131,6 +137,24 @@ public class MainActivity extends AppCompatActivity {
         if (!yaPidio) {
             pedirPermisosIniciales();
             prefs.edit().putBoolean("permisos_solicitados", true).apply();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == CODIGO_NOTIFICACIONES) {
+            Log.d("PERMISOS", "Permiso de notificación procesado. Ahora se piden los demás.");
+            pedirPermisosUnaSolaVez();
+        }
+
+        if (requestCode == CODIGO_PERMISOS_INICIALES) {
+            for (int i = 0; i < permissions.length; i++) {
+                Log.d("PERMISOS", permissions[i] + ": " + (grantResults[i] == PackageManager.PERMISSION_GRANTED));
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package com.example.proyecto_iot.taxista.solicitudes;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +18,20 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.proyecto_iot.BuildConfig;
 import com.example.proyecto_iot.databinding.FragmentSolicitudesHotelBinding;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +51,6 @@ public class SolicitudesHotelFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         launcherMaps = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -95,9 +105,7 @@ public class SolicitudesHotelFragment extends Fragment {
                         double latTaxista = doc.getDouble("latTaxista") != null ? doc.getDouble("latTaxista") : 0.0;
                         double lngTaxista = doc.getDouble("longTaxista") != null ? doc.getDouble("longTaxista") : 0.0;
 
-                        db.collection("usuarios")
-                                .document(idCliente)
-                                .get()
+                        db.collection("usuarios").document(idCliente).get()
                                 .addOnSuccessListener(userDoc -> {
                                     String urlFoto = userDoc.getString("urlFotoPerfil");
                                     if (urlFoto == null || urlFoto.isEmpty()) {
@@ -111,38 +119,127 @@ public class SolicitudesHotelFragment extends Fragment {
                                             doc.getId(), estado
                                     );
 
-                                    solicitudes.add(item);
+                                    if (latTaxista == 0.0 || lngTaxista == 0.0) {
+                                        if (!isAdded()) return;
 
-                                    if (solicitudes.size() == totalValidas) {
-                                        binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(solicitudes, selected -> {
-                                            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                                                    != PackageManager.PERMISSION_GRANTED) {
-                                                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-                                                Toast.makeText(getContext(), "Debes aceptar el permiso de ubicación para abrir el mapa", Toast.LENGTH_LONG).show();
-                                                return;
-                                            }
+                                        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                                                != PackageManager.PERMISSION_GRANTED) {
+                                            Log.e("PERMISOS", "Permiso de ubicación NO concedido aún.");
+                                            Toast.makeText(getContext(), "Permiso de ubicación requerido", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
 
-                                            if ("pendiente".equals(selected.estado)) {
-                                                db.collection("servicios_taxi")
-                                                        .document(selected.idDocumento)
-                                                        .update(
-                                                                "estado", "aceptado",
-                                                                "idTaxista", FirebaseAuth.getInstance().getCurrentUser().getUid()
-                                                        )
-                                                        .addOnSuccessListener(aVoid -> abrirMapa(selected))
-                                                        .addOnFailureListener(e -> {
-                                                            e.printStackTrace();
-                                                            Toast.makeText(getContext(), "Error al aceptar solicitud", Toast.LENGTH_SHORT).show();
-                                                        });
-                                            } else {
-                                                abrirMapa(selected);
-                                            }
-                                        }));
+                                        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+                                        fusedLocationClient.getLastLocation()
+                                                .addOnSuccessListener(location -> {
+                                                    if (!isAdded()) return;
+                                                    if (location != null) {
+                                                        item.latTaxista = location.getLatitude();
+                                                        item.lngTaxista = location.getLongitude();
+                                                    }
+                                                    procesarSolicitud(item, solicitudes, totalValidas, db);
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    if (!isAdded()) return;
+                                                    Log.e("UBICACION", "Error al obtener ubicación", e);
+                                                    procesarSolicitud(item, solicitudes, totalValidas, db);
+                                                });
+                                    } else {
+                                        procesarSolicitud(item, solicitudes, totalValidas, db);
                                     }
                                 });
                     }
                 })
                 .addOnFailureListener(e -> Log.e("Firestore", "Error al obtener solicitudes", e));
+    }
+
+    private void procesarSolicitud(Solicitud item, List<Solicitud> solicitudes, long totalValidas, FirebaseFirestore db) {
+        Log.d("DEBUG_COORDENADAS", "latTaxista=" + item.latTaxista + ", lngTaxista=" + item.lngTaxista +
+                " | latDestino=" + item.latDestino + ", lngDestino=" + item.lngDestino);
+
+        obtenerDistanciaYTiempo(item, resultado -> {
+            item.tiempoEstimado = resultado;
+            solicitudes.add(item);
+
+            if (solicitudes.size() == totalValidas) {
+                binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(solicitudes, selected -> {
+                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+                        Toast.makeText(getContext(), "Debes aceptar el permiso de ubicación para abrir el mapa", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    if ("pendiente".equals(selected.estado)) {
+                        db.collection("servicios_taxi")
+                                .document(selected.idDocumento)
+                                .update(
+                                        "estado", "aceptado",
+                                        "idTaxista", FirebaseAuth.getInstance().getCurrentUser().getUid()
+                                )
+                                .addOnSuccessListener(aVoid -> abrirMapa(selected))
+                                .addOnFailureListener(e -> {
+                                    e.printStackTrace();
+                                    Toast.makeText(getContext(), "Error al aceptar solicitud", Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        abrirMapa(selected);
+                    }
+                }));
+            }
+        });
+    }
+
+    private void obtenerDistanciaYTiempo(Solicitud solicitud, OnDatosRutaListener listener) {
+        if (!isAdded()) {
+            listener.onDatosObtenidos("No encontrado");
+            return;
+        }
+
+        if (solicitud.latTaxista == 0.0 || solicitud.lngTaxista == 0.0) {
+            Log.e("DEBUG_DISTANCIA", "Ubicación no disponible: coordenadas del taxista en 0.0");
+            listener.onDatosObtenidos("Ubicación no disponible");
+            return;
+        }
+
+        Log.d("DEBUG_DISTANCIA", "latTaxista=" + solicitud.latTaxista + ", lngTaxista=" + solicitud.lngTaxista);
+        Log.d("DEBUG_DISTANCIA", "latDestino=" + solicitud.latDestino + ", lngDestino=" + solicitud.lngDestino);
+
+        String apiKey = BuildConfig.MAPS_API_KEY;
+        String origen = solicitud.latTaxista + "," + solicitud.lngTaxista;
+        String destino = solicitud.latDestino + "," + solicitud.lngDestino;
+
+        String url = "https://maps.googleapis.com/maps/api/directions/json?" +
+                "origin=" + origen +
+                "&destination=" + destino +
+                "&key=" + apiKey;
+
+        RequestQueue queue = Volley.newRequestQueue(requireContext());
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        JSONArray routes = response.getJSONArray("routes");
+                        if (routes.length() > 0) {
+                            JSONObject leg = routes.getJSONObject(0).getJSONArray("legs").getJSONObject(0);
+                            String duration = leg.getJSONObject("duration").getString("text");
+                            String distance = leg.getJSONObject("distance").getString("text");
+                            listener.onDatosObtenidos(duration + "\n" + distance);
+                        } else {
+                            listener.onDatosObtenidos("No encontrado");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        listener.onDatosObtenidos("Error");
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    listener.onDatosObtenidos("Error");
+                }
+        );
+
+        queue.add(request);
     }
 
     private void abrirMapa(Solicitud solicitud) {
@@ -167,5 +264,9 @@ public class SolicitudesHotelFragment extends Fragment {
                 requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
+    }
+
+    public interface OnDatosRutaListener {
+        void onDatosObtenidos(String texto);
     }
 }

@@ -12,25 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.proyecto_iot.BuildConfig;
 import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.taxista.perfil.Notificacion;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.*;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
 
 public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.ViewHolder> {
 
     private final List<Solicitud> lista;
     private final OnSolicitudClickListener listener;
-    private static final String FILE_NOTIFICACIONES = "notificaciones.json";
 
     public interface OnSolicitudClickListener {
         void onSolicitudAceptada(Solicitud solicitud);
@@ -57,10 +46,16 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         holder.nombre.setText(solicitud.nombre);
         holder.telefono.setText(solicitud.telefono);
         holder.viajes.setText(solicitud.viajes + " viajes");
-        holder.tiempoDistancia.setText("Calculando...");
         holder.origen.setText(solicitud.origen);
-        holder.distrito.setText(solicitud.distrito);
+        holder.distrito.setText(solicitud.direccionHotel);
         holder.destino.setText(solicitud.destino);
+
+        // Mostrar tiempo estimado si está disponible
+        if (solicitud.tiempoEstimado != null && !solicitud.tiempoEstimado.isEmpty()) {
+            holder.tiempoDistancia.setText(solicitud.tiempoEstimado);
+        } else {
+            holder.tiempoDistancia.setText("No encontrado");
+        }
 
         if (solicitud.urlFotoPerfil != null && !solicitud.urlFotoPerfil.isEmpty()) {
             Glide.with(context)
@@ -83,55 +78,6 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.View
         }
 
         holder.btnAceptar.setOnClickListener(v -> listener.onSolicitudAceptada(solicitud));
-
-        obtenerTiempoDistancia(
-                context,
-                solicitud.latTaxista,
-                solicitud.lngTaxista,
-                solicitud.latDestino,
-                solicitud.lngDestino,
-                holder.tiempoDistancia
-        );
-    }
-
-    private void obtenerTiempoDistancia(Context context, double lat1, double lng1,
-                                        double lat2, double lng2, TextView tvTiempoDistancia) {
-        String apiKey = BuildConfig.MAPS_API_KEY;
-        String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
-                lat1 + "," + lng1 + "&destination=" + lat2 + "," + lng2 + "&key=" + apiKey;
-
-        new Thread(() -> {
-            try {
-                java.net.URL direccionUrl = new java.net.URL(url);
-                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) direccionUrl.openConnection();
-                conn.setRequestMethod("GET");
-
-                java.io.InputStream in = new java.io.BufferedInputStream(conn.getInputStream());
-                java.util.Scanner scanner = new java.util.Scanner(in).useDelimiter("\\A");
-                final String response = scanner.hasNext() ? scanner.next() : "";
-
-                ((android.app.Activity) context).runOnUiThread(() -> {
-                    try {
-                        JSONObject json = new JSONObject(response);
-                        JSONArray routes = json.getJSONArray("routes");
-                        if (routes.length() > 0) {
-                            JSONObject leg = routes.getJSONObject(0).getJSONArray("legs").getJSONObject(0);
-                            String duracionTexto = leg.getJSONObject("duration").getString("text");
-                            String distanciaTexto = leg.getJSONObject("distance").getString("text");
-                            tvTiempoDistancia.setText(duracionTexto + "\n" + distanciaTexto);
-                        } else {
-                            tvTiempoDistancia.setText("No encontrado");
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        tvTiempoDistancia.setText("Error");
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-                tvTiempoDistancia.setText("Error");
-            }
-        }).start();
     }
 
     @Override
