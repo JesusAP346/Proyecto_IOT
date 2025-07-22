@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -29,22 +30,16 @@ import com.example.proyecto_iot.taxista.perfil.Notificacion;
 import com.example.proyecto_iot.taxista.perfil.NotificacionDTO;
 import com.example.proyecto_iot.taxista.perfil.NotificacionUtils;
 import com.example.proyecto_iot.taxista.solicitudes.SolicitudesFragment;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class QrFragment extends Fragment {
 
@@ -52,13 +47,8 @@ public class QrFragment extends Fragment {
     private static final String CANAL_ID = "canal_viajes";
     private static final String FILE_NOTIFICACIONES = "notificaciones.json";
 
-    public QrFragment() {
-        // Constructor vacío requerido
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_qr, container, false);
     }
 
@@ -66,70 +56,58 @@ public class QrFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Manejo del botón Atrás
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // Volver manualmente al fragmento de solicitudes
-                Fragment solicitudesFragment = new SolicitudesFragment();
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_layout, solicitudesFragment)
-                        .commit();
-
-
-                // Actualizar el menú inferior
-                if (requireActivity() instanceof MainActivity) {
-                    ((MainActivity) requireActivity()).binding.bottomNavigationView.setSelectedItemId(R.id.solicitudes);
-                }
+                regresarASolicitudes();
             }
         });
 
         qrLauncher = registerForActivityResult(new ScanContract(), result -> {
-            if (!isAdded()) return; // Evita errores si el fragmento ya fue destruido
+            if (!isAdded()) return;
 
             if (result.getContents() != null) {
                 String contenido = result.getContents();
+                Log.d("QrFragment", "Contenido escaneado: " + contenido);
 
                 if (contenido.startsWith("http://") || contenido.startsWith("https://")) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contenido));
-                    startActivity(intent);
-                }
-                else if (contenido.startsWith("serviciotaxi:")) {
-                    String idServicio = contenido.substring("serviciotaxi:".length()).trim();
-                    String mensaje = "QR escaneado correctamente. Servicio #" + idServicio + " finalizado con éxito.";
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(contenido)));
+                } else if (contenido.startsWith("serviciotaxi:")) {
+                    final String idServicio = contenido
+                            .substring("serviciotaxi:".length())
+                            .trim()
+                            .replaceAll("[^a-zA-Z0-9]", ""); // ← declarado como final directamente
 
-                    Context context = requireContext();
+                    if (idServicio.isEmpty()) {
+                        Toast.makeText(requireContext(), "ID de servicio vacío o inválido", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                    lanzarNotificacion(context, mensaje);
+                    Log.d("QrFragment", "Intentando finalizar servicio con ID: " + idServicio);
 
-                    Notificacion notificacion = new Notificacion(
-                            mensaje,
-                            obtenerHoraActual(),
-                            R.drawable.ic_qr
-                    );
-                    guardarNotificacionEnStorage(context, notificacion);
+                    FirebaseFirestore.getInstance().collection("servicios_taxi")
+                            .document(idServicio)
+                            .update("estado", "finalizado")
+                            .addOnSuccessListener(aVoid -> {
+                                String mensaje = "Servicio #" + idServicio + " finalizado con éxito.";
+                                Context context = requireContext();
+                                lanzarNotificacion(context, mensaje);
+                                guardarNotificacionEnStorage(context, new Notificacion(mensaje, obtenerHoraActual(), R.drawable.ic_qr));
+                                Toast.makeText(context, mensaje, Toast.LENGTH_LONG).show();
+                                regresarASolicitudes();
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("QrFragment", "Error al finalizar el servicio", e);
+                                Toast.makeText(requireContext(), "Error al finalizar el servicio: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            });
 
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame_layout, new SolicitudesFragment())
-                            .commit();
-
-                    ((MainActivity) requireActivity()).binding.bottomNavigationView.setSelectedItemId(R.id.solicitudes);
-                }
-                else {
-                    Toast.makeText(getContext(), "Contenido: " + contenido, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), "Código QR no válido: " + contenido, Toast.LENGTH_LONG).show();
                 }
 
             } else {
                 Toast.makeText(getContext(), "Escaneo cancelado", Toast.LENGTH_SHORT).show();
-
-                if (isAdded()) {
-                    requireActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.frame_layout, new SolicitudesFragment())
-                            .commit();
-
-                    ((MainActivity) requireActivity()).binding.bottomNavigationView.setSelectedItemId(R.id.solicitudes);
-                }
+                regresarASolicitudes();
             }
         });
 
@@ -141,10 +119,20 @@ public class QrFragment extends Fragment {
         qrLauncher.launch(options);
     }
 
+    private void regresarASolicitudes() {
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame_layout, new SolicitudesFragment())
+                .commit();
+
+        if (requireActivity() instanceof MainActivity) {
+            ((MainActivity) requireActivity()).binding.bottomNavigationView.setSelectedItemId(R.id.solicitudes);
+        }
+    }
+
     private void lanzarNotificacion(Context context, String mensaje) {
         crearCanalNotificacion(context);
 
-        Intent intent = new Intent(context, SolicitudesFragment.class);
+        Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CANAL_ID)
@@ -156,8 +144,8 @@ public class QrFragment extends Fragment {
                 .setAutoCancel(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS)
+                == android.content.pm.PackageManager.PERMISSION_GRANTED) {
             notificationManager.notify(1002, builder.build());
         }
     }
@@ -167,9 +155,7 @@ public class QrFragment extends Fragment {
             NotificationManager manager = context.getSystemService(NotificationManager.class);
             if (manager != null && manager.getNotificationChannel(CANAL_ID) == null) {
                 NotificationChannel canal = new NotificationChannel(
-                        CANAL_ID,
-                        "Notificaciones de Viajes",
-                        NotificationManager.IMPORTANCE_DEFAULT);
+                        CANAL_ID, "Notificaciones de Viajes", NotificationManager.IMPORTANCE_DEFAULT);
                 canal.setDescription("Notificaciones de escaneo QR");
                 manager.createNotificationChannel(canal);
             }
@@ -178,28 +164,23 @@ public class QrFragment extends Fragment {
 
     private void guardarNotificacionEnStorage(Context context, Notificacion notificacion) {
         List<Notificacion> lista = new ArrayList<>();
-        try {
-            FileInputStream fis = context.openFileInput(FILE_NOTIFICACIONES);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
+        try (FileInputStream fis = context.openFileInput(FILE_NOTIFICACIONES);
+             InputStreamReader isr = new InputStreamReader(fis);
+             BufferedReader br = new BufferedReader(isr)) {
 
             StringBuilder sb = new StringBuilder();
             String linea;
             while ((linea = br.readLine()) != null) {
                 sb.append(linea);
             }
-            br.close();
 
-            Type listType = new TypeToken<List<NotificacionDTO>>(){}.getType();
+            Type listType = new TypeToken<List<NotificacionDTO>>() {}.getType();
             List<NotificacionDTO> dtoList = new Gson().fromJson(sb.toString(), listType);
-
             lista = NotificacionUtils.fromDTOList(dtoList);
-        } catch (Exception e) {
-            // Puede que no exista el archivo la primera vez, lo ignoramos
-        }
+
+        } catch (Exception ignored) {}
 
         lista.add(notificacion);
-
         List<NotificacionDTO> dtoList = new ArrayList<>();
         for (Notificacion n : lista) {
             dtoList.add(new NotificacionDTO(n.getMensaje(), n.getHora(), n.getIconoResId()));
@@ -216,7 +197,6 @@ public class QrFragment extends Fragment {
     }
 
     private String obtenerHoraActual() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-        return sdf.format(new Date());
+        return new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
     }
 }

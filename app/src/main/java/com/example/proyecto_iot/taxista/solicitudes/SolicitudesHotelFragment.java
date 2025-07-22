@@ -1,7 +1,6 @@
 package com.example.proyecto_iot.taxista.solicitudes;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -76,6 +75,11 @@ public class SolicitudesHotelFragment extends Fragment {
                         return;
                     }
 
+                    long totalValidas = docs.stream().filter(d -> {
+                        String estado = d.getString("estado");
+                        return "pendiente".equals(estado) || "aceptado".equals(estado);
+                    }).count();
+
                     for (DocumentSnapshot doc : docs) {
                         String estado = doc.getString("estado");
                         if (!"pendiente".equals(estado) && !"aceptado".equals(estado)) continue;
@@ -109,7 +113,7 @@ public class SolicitudesHotelFragment extends Fragment {
 
                                     solicitudes.add(item);
 
-                                    if (solicitudes.size() == docs.size()) {
+                                    if (solicitudes.size() == totalValidas) {
                                         binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(solicitudes, selected -> {
                                             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                                                     != PackageManager.PERMISSION_GRANTED) {
