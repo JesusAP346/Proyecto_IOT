@@ -197,8 +197,10 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
         return R * c; // Distancia en kilómetros
     }
 
+    // Método modificado para filtrar por ubicación y capacidad de habitaciones
     private void filtrarHotelesPorUbicacion(double destinoLat, double destinoLng, double radioKm) {
-        Log.d("FILTRO_HOTELES", "Buscando hoteles en radio de " + radioKm + " km...");
+        Log.d("FILTRO_HOTELES", "Buscando hoteles en radio de " + radioKm + " km con capacidad para "
+                + adultos + " adultos y " + ninos + " niños...");
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -208,7 +210,7 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
                     if (task.isSuccessful()) {
                         List<Hotel> hotelesEncontrados = new ArrayList<>();
                         int totalHoteles = task.getResult().size();
-                        int[] hotelesProcessed = {0}; // Contador para trackear hoteles procesados
+                        int[] hotelesProcessed = {0};
 
                         if (totalHoteles == 0) {
                             actualizarListaHoteles(hotelesEncontrados);
@@ -235,12 +237,19 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
                                         String distrito = obtenerDistritoDesdeLatLng(hotelLat, hotelLng);
                                         hotel.setUbicacion(distrito);
 
-                                        // Obtener el precio mínimo de las habitaciones
-                                        obtenerPrecioMinimoHotel(hotel, precioMinimo -> {
-                                            hotel.setPrecio(String.valueOf(precioMinimo)); // Asume que tienes este setter
-                                            hotelesEncontrados.add(hotel);
-
+                                        // Validar que el hotel tenga habitaciones con capacidad adecuada
+                                        validarCapacidadHabitaciones(hotel, (tieneCapacidad, precioMinimo) -> {
                                             hotelesProcessed[0]++;
+
+                                            if (tieneCapacidad) {
+                                                hotel.setPrecio(String.valueOf(precioMinimo));
+                                                hotelesEncontrados.add(hotel);
+                                                Log.d("FILTRO_HOTELES", "Hotel añadido: " + hotel.getId() +
+                                                        " con precio mínimo: " + precioMinimo);
+                                            } else {
+                                                Log.d("FILTRO_HOTELES", "Hotel descartado por capacidad: " + hotel.getId());
+                                            }
+
                                             // Cuando todos los hoteles han sido procesados, actualizar la UI
                                             if (hotelesProcessed[0] == totalHoteles) {
                                                 actualizarListaHoteles(hotelesEncontrados);
@@ -269,13 +278,81 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
                             }
                         }
 
-                        Log.d("FILTRO_HOTELES", "Hoteles encontrados: " + hotelesEncontrados.size());
+                        Log.d("FILTRO_HOTELES", "Hoteles que cumplen criterios: " + hotelesEncontrados.size());
 
                     } else {
                         Log.e("FILTRO_HOTELES", "Error obteniendo hoteles: ", task.getException());
                         mostrarMensajeError("Error al buscar hoteles");
                     }
                 });
+    }
+
+    private void validarCapacidadHabitaciones(Hotel hotel, OnValidacionCapacidadCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("hoteles")
+                .document(hotel.getId())
+                .collection("habitaciones")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        double precioMinimo = Double.MAX_VALUE;
+                        boolean tieneHabitacionesValidas = false;
+
+                        for (QueryDocumentSnapshot habitacionDoc : task.getResult()) {
+                            try {
+                                // Obtener capacidades de la habitación
+                                Long capacidadAdultosLong = habitacionDoc.getLong("capacidadAdultos");
+                                Long capacidadNinosLong = habitacionDoc.getLong("capacidadNinos");
+                                Double precio = habitacionDoc.getDouble("precioPorNoche");
+
+                                if (capacidadAdultosLong != null && capacidadNinosLong != null && precio != null) {
+                                    int capacidadAdultosHab = capacidadAdultosLong.intValue();
+                                    int capacidadNinosHab = capacidadNinosLong.intValue();
+
+                                    Log.d("VALIDACION_CAPACIDAD", "Hotel: " + hotel.getId() +
+                                            ", Habitación: " + habitacionDoc.getId() +
+                                            ", Capacidad adultos: " + capacidadAdultosHab +
+                                            ", Capacidad niños: " + capacidadNinosHab +
+                                            ", Precio: " + precio);
+
+                                    // Verificar si esta habitación cumple con los requisitos
+                                    if (capacidadAdultosHab >= adultos && capacidadNinosHab >= ninos && precio > 0) {
+                                        tieneHabitacionesValidas = true;
+                                        if (precio < precioMinimo) {
+                                            precioMinimo = precio;
+                                        }
+                                        Log.d("VALIDACION_CAPACIDAD", "Habitación válida encontrada en hotel: " + hotel.getId());
+                                    }
+                                }
+                            } catch (Exception e) {
+                                Log.e("VALIDACION_CAPACIDAD", "Error procesando habitación: " + e.getMessage());
+                            }
+                        }
+
+                        // Si no hay habitaciones válidas o no se encontraron precios válidos
+                        if (!tieneHabitacionesValidas || precioMinimo == Double.MAX_VALUE) {
+                            precioMinimo = 0.0;
+                            tieneHabitacionesValidas = false;
+                        }
+
+                        Log.d("VALIDACION_CAPACIDAD", "Hotel: " + hotel.getId() +
+                                ", Tiene habitaciones válidas: " + tieneHabitacionesValidas +
+                                ", Precio mínimo: " + precioMinimo);
+
+                        callback.onValidacionCompleta(tieneHabitacionesValidas, precioMinimo);
+
+                    } else {
+                        Log.e("VALIDACION_CAPACIDAD", "Error obteniendo habitaciones del hotel " +
+                                hotel.getId() + ": ", task.getException());
+                        // En caso de error, considerar que no tiene capacidad
+                        callback.onValidacionCompleta(false, 0.0);
+                    }
+                });
+    }
+
+    public interface OnValidacionCapacidadCallback {
+        void onValidacionCompleta(boolean tieneCapacidad, double precioMinimo);
     }
 
     private String obtenerDistritoDesdeLatLng(double lat, double lng) {
@@ -298,6 +375,8 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
 
 
     private void cargarTodosLosHoteles() {
+        Log.d("CARGAR_HOTELES", "Cargando hoteles con capacidad para " + adultos + " adultos y " + ninos + " niños...");
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("hoteles")
@@ -318,15 +397,18 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
                                 Hotel hotel = document.toObject(Hotel.class);
                                 hotel.setId(document.getId());
 
-                                // Obtener el precio mínimo de las habitaciones
-                                obtenerPrecioMinimoHotel(hotel, precioMinimo -> {
-                                    hotel.setPrecio(String.valueOf(precioMinimo));
-                                    todosLosHoteles.add(hotel);
-
+                                // Validar capacidad y obtener precio mínimo
+                                validarCapacidadHabitaciones(hotel, (tieneCapacidad, precioMinimo) -> {
                                     hotelesProcessed[0]++;
+
+                                    if (tieneCapacidad) {
+                                        hotel.setPrecio(String.valueOf(precioMinimo));
+                                        todosLosHoteles.add(hotel);
+                                    }
+
                                     if (hotelesProcessed[0] == totalHoteles) {
                                         actualizarListaHoteles(todosLosHoteles);
-                                        Log.d("CARGAR_HOTELES", "Total hoteles cargados: " + todosLosHoteles.size());
+                                        Log.d("CARGAR_HOTELES", "Total hoteles válidos cargados: " + todosLosHoteles.size());
                                     }
                                 });
 
