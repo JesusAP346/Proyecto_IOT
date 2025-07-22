@@ -1,5 +1,6 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.administradorHotel.VerTaxistaAdminActivity;
 import com.example.proyecto_iot.administradorHotel.entity.DatosTaxi;
 import com.example.proyecto_iot.administradorHotel.entity.ReservaCompletaHotel;
 import com.example.proyecto_iot.databinding.FragmentServicioTaxiBinding;
@@ -46,6 +48,7 @@ public class ServicioTaxiFragment extends Fragment {
         }
 
         return binding.getRoot();
+
     }
 
     private void cargarDatosTaxi(String idReserva) {
@@ -137,6 +140,9 @@ public class ServicioTaxiFragment extends Fragment {
 
         binding.imageUbicacion.setEnabled(true);
 
+
+
+
         switch (datos.getEstado()) {
             case "aceptado":
                 pintarPaso(binding.puntoPaso1, true);
@@ -157,6 +163,16 @@ public class ServicioTaxiFragment extends Fragment {
 
         Log.d("COORDENADAS", "Taxi: (" + datos.getLatitudTaxista() + ", " + datos.getLongitudTaxista() + ")");
         Log.d("COORDENADAS", "Hotel: (" + datos.getLatitudHotel() + ", " + datos.getLongitudHotel() + ")");
+
+        binding.imageUbicacion.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), VerTaxistaAdminActivity.class);
+            intent.putExtra("latTaxista", datos.getLatitudTaxista());
+            intent.putExtra("longTaxista", datos.getLongitudTaxista());
+            intent.putExtra("latHotel", datos.getLatitudHotel());
+            intent.putExtra("longHotel", datos.getLongitudHotel());
+            startActivity(intent);
+        });
+
     }
 
     private void pintarPaso(View view, boolean activo) {
