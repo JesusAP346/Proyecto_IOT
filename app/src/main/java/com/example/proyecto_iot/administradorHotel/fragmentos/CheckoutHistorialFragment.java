@@ -75,7 +75,7 @@ public class CheckoutHistorialFragment extends Fragment {
         mostrarConsumosDesdeReserva();
         mostrarCargosDesdeReserva();
 
-        // Datos de tarjeta (metodo de pago)
+        // Datos de tarjeta
         mostrarDatosTarjeta();
 
         // Servicio de taxi habilitado
@@ -100,15 +100,22 @@ public class CheckoutHistorialFragment extends Fragment {
                     .commit();
         });
 
-        // Botón taxi
+        // Botón taxi con reservaCompleta enviada
         binding.btnIrServicioTaxi.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("reservaCompleta", reservaCompleta);
+
             Fragment f = new ServicioTaxiFragment();
-            requireActivity().getSupportFragmentManager().beginTransaction()
+            f.setArguments(bundle);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
                     .replace(R.id.frame_layout, f)
                     .addToBackStack(null)
                     .commit();
         });
     }
+
 
 
     private void mostrarServiciosAdicionalesDesdeReserva() {
