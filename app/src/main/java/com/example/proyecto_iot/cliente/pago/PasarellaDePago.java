@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -51,6 +53,17 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_pasarella_de_pago);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getWindow().setDecorFitsSystemWindows(false);
+            findViewById(R.id.pasarelaRoot).setOnApplyWindowInsetsListener((v, insets) -> {
+                int bottomInset = insets.getInsets(WindowInsets.Type.systemBars()).bottom;
+                Button btnPagar = findViewById(R.id.btnPagar);
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) btnPagar.getLayoutParams();
+                params.bottomMargin = bottomInset + 16; // 16dp original + altura de la barra
+                btnPagar.setLayoutParams(params);
+                return insets;
+            });
+        }
 
         // Inicializar Firestore
         db = FirebaseFirestore.getInstance();
