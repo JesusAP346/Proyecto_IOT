@@ -87,6 +87,8 @@ public class CheckoutHistorialFragment extends Fragment {
             binding.textSinServicioTaxi.setVisibility(View.VISIBLE);
         }
 
+
+
         // Botón back
         binding.backdetallecheckout.setOnClickListener(v -> {
             // Restaurar pestaña "finalizadas"
