@@ -84,7 +84,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Imprimir historial"
+                android:fontFamily="@font/nunito_black"
+                android:text="Revisar el historial"
+                android:textColor="#0D0D0D"
+                app:backgroundTint="#EB9A0A"
                 app:cornerRadius="50dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -119,6 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Tipo Log"
+                app:backgroundTint="#543E19"
                 app:cornerRadius="50dp" />
 
             <!-- Filtro por rol -->
@@ -128,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Rol"
+                app:backgroundTint="#543E19"
                 app:cornerRadius="50dp" />
 
             <!-- Filtro por fecha -->
@@ -137,6 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="Fecha"
+                app:backgroundTint="#543E19"
                 app:cornerRadius="50dp" />
 
             <!-- Limpiar filtros -->
@@ -145,6 +151,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Limpiar"
+                app:backgroundTint="#543E19"
                 app:cornerRadius="50dp" />
 
         </LinearLayout>

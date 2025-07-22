@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/nav_home"
-        android:title="Home"
+        android:title="Principal"
         android:icon="@drawable/ic_house_solid" />
 
     <item
@@ -18,11 +18,11 @@
 
     <item
         android:id="@+id/nav_users"
-        android:title="Usuarios"
-        android:icon="@drawable/ic_users" />
+        android:icon="@drawable/ic_users"
+        android:title="Clientes" />
 
     <item
         android:id="@+id/nav_reservas"
             android:title="Logs"
-        android:icon="@drawable/icono_reportes" />
+        android:icon="@drawable/icono_calendario" />
 </menu>

@@ -49,7 +49,6 @@ public class HistorialActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         usuariosAdapter = new UsuarioHistorialAdapter(usuariosFiltrados, usuario -> {
-            Toast.makeText(this, "Buscando logs para UID: " + usuario.getId(), Toast.LENGTH_LONG).show();
             //Toast.makeText(this, "Seleccionaste a " + usuario.getNombres(), Toast.LENGTH_SHORT).show();
             mostrarHistorialLogsEnDialog(usuario.getId());
         });

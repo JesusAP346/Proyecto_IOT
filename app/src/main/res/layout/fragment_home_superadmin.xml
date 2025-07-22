@@ -4,18 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FBFBFB"
+    android:background="#F0EBE8"
     tools:context=".SuperAdmin.fragmentos.fragment_home_superadmin">
 
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:id="@+id/scrollViewSuperAdmin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FBFBFB"
         android:fillViewport="true"
+        tools:background="#F0EBE8"
         tools:context=".SuperAdmin.fragmentos.fragment_home_superadmin">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,12 +27,10 @@
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 app:cardCornerRadius="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.495"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.426" >
+                app:layout_constraintTop_toBottomOf="@+id/textView11">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layaoutcarrusel"
@@ -93,7 +89,6 @@
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
                 android:fontFamily="@font/nunito_semibold"
                 android:text="Bienvenido Super Admin"
                 android:textSize="30sp"
@@ -125,7 +120,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="#F0EBE8">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="180dp"
@@ -135,7 +131,7 @@
                         app:layout_constraintHorizontal_bias="0.927"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.861" >
+                        app:layout_constraintVertical_bias="0.861">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
@@ -185,35 +181,35 @@
                         app:layout_constraintHorizontal_bias="0.927"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.123" >
+                        app:layout_constraintVertical_bias="0.123">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_width="177dp"
+                            android:layout_height="96dp">
 
                             <!-- Título -->
                             <TextView
                                 android:id="@+id/textViewReservas"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
                                 android:fontFamily="@font/nunito_black"
                                 android:text="Reservas mensuales"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                android:layout_marginTop="8dp"/>
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
                             <!-- Valor -->
                             <TextView
                                 android:id="@+id/textViewReservasValor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
                                 android:fontFamily="@font/nunito_semibold"
                                 android:text="112"
-                                android:layout_marginTop="4dp"
-                                app:layout_constraintTop_toBottomOf="@id/textViewReservas"
+                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"/>
+                                app:layout_constraintTop_toBottomOf="@id/textViewReservas" />
 
                             <!-- Sparkline -->
                             <com.github.mikephil.charting.charts.LineChart
@@ -222,9 +218,9 @@
                                 android:layout_height="40dp"
                                 android:layout_marginTop="8dp"
                                 android:background="@android:color/transparent"
-                                app:layout_constraintTop_toBottomOf="@id/textViewReservasValor"
+                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"/>
+                                app:layout_constraintTop_toBottomOf="@id/textViewReservasValor" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -236,7 +232,7 @@
                         app:layout_constraintHorizontal_bias="0.095"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.123" >
+                        app:layout_constraintVertical_bias="0.123">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
@@ -247,24 +243,24 @@
                                 android:id="@+id/textViewRating"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
                                 android:fontFamily="@font/nunito_black"
                                 android:text="Calificación promedio"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                android:layout_marginTop="8dp"/>
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
                             <!-- Valor -->
                             <TextView
                                 android:id="@+id/textViewRatingValor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
                                 android:fontFamily="@font/nunito_semibold"
                                 android:text="4.6"
-                                android:layout_marginTop="4dp"
-                                app:layout_constraintTop_toBottomOf="@id/textViewRating"
+                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"/>
+                                app:layout_constraintTop_toBottomOf="@id/textViewRating" />
 
                             <!-- Sparkline -->
                             <com.github.mikephil.charting.charts.LineChart
@@ -273,9 +269,9 @@
                                 android:layout_height="40dp"
                                 android:layout_marginTop="8dp"
                                 android:background="@android:color/transparent"
-                                app:layout_constraintTop_toBottomOf="@id/textViewRatingValor"
+                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"/>
+                                app:layout_constraintTop_toBottomOf="@id/textViewRatingValor" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -334,33 +330,8 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="300dp"
-                android:layout_height="50dp"
-                app:cardCornerRadius="40dp"
-                app:layout_constraintBottom_toTopOf="@+id/textView4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" >
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <SearchView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

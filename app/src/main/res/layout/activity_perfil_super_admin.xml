@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="#F0EBE8">
 
     <!-- Flechita y título -->
     <ImageView
@@ -22,11 +22,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Perfil"
+        android:textColor="#000"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#000"
-        app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintTop_toTopOf="@id/btnBack" />
 
     <!-- ScrollView debajo del encabezado -->
@@ -34,10 +34,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,8 +49,8 @@
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="32dp">
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/ivFotoPerfil"
@@ -67,17 +67,17 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
                 android:text="Datos personales"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:textColor="#000"
-                android:paddingVertical="8dp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingVertical="12dp">
 
                 <ImageView
@@ -109,24 +109,27 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0" />
 
             <!-- SECCIÓN: Identidad -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
                 android:text="Identidad"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:textColor="#000"
-                android:paddingVertical="8dp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <!-- Tipo de documento -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingVertical="12dp">
 
                 <ImageView
@@ -158,14 +161,17 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0" />
 
             <!-- Número de documento -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingVertical="12dp">
 
                 <ImageView
@@ -201,17 +207,17 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
                 android:text="Nacimiento"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:textColor="#000"
-                android:paddingVertical="8dp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingVertical="12dp">
 
                 <ImageView
@@ -243,24 +249,27 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0" />
 
             <!-- SECCIÓN: Lugar de origen -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
                 android:text="Lugar de origen"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:textColor="#000"
-                android:paddingVertical="8dp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <!-- Departamento -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingVertical="12dp">
 
                 <ImageView
@@ -292,14 +301,17 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0" />
 
             <!-- Provincia -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingVertical="12dp">
 
                 <ImageView
@@ -331,14 +343,17 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0" />
 
             <!-- Distrito -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingVertical="12dp">
 
                 <ImageView
@@ -370,23 +385,26 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0" />
 
             <!-- SECCIÓN: Dirección -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
                 android:text="Dirección"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:textColor="#000"
-                android:paddingVertical="8dp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingVertical="12dp">
 
                 <ImageView
@@ -418,24 +436,27 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0" />
 
             <!-- SECCIÓN: Contacto -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
                 android:text="Contacto"
-                android:textStyle="bold"
-                android:textSize="16sp"
                 android:textColor="#000"
-                android:paddingVertical="8dp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <!-- Teléfono -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingVertical="12dp">
 
                 <ImageView
@@ -467,14 +488,17 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0" />
 
             <!-- Correo electrónico -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingVertical="12dp">
 
                 <ImageView
