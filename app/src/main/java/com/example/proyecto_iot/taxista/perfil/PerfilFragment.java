@@ -1,13 +1,13 @@
 package com.example.proyecto_iot.taxista.perfil;
 
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,7 +25,6 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -46,7 +45,10 @@ public class PerfilFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Launcher para recibir resultado desde PerfilTaxistaActivity
+        // Mostrar datos cacheados inmediatamente
+        mostrarDatosDesdeCache();
+
+        // Launcher para editar perfil
         editarPerfilLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -55,6 +57,7 @@ public class PerfilFragment extends Fragment {
                     }
                 });
 
+        // Siempre actualizar en segundo plano
         recargarDatosDesdeFirestore();
 
         binding.btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
@@ -83,6 +86,25 @@ public class PerfilFragment extends Fragment {
         return view;
     }
 
+    private void mostrarDatosDesdeCache() {
+        SharedPreferences prefs = requireContext().getSharedPreferences("perfil", Context.MODE_PRIVATE);
+        String nombreCompleto = prefs.getString("nombreCompleto", "Cargando...");
+        String urlFotoPerfil = prefs.getString("urlFotoPerfil", "");
+
+        TextView nombreTextView = binding.cardPerfil.findViewById(R.id.tituloNombre);
+        nombreTextView.setText(nombreCompleto);
+
+        if (!urlFotoPerfil.isEmpty()) {
+            Picasso.get()
+                    .load(urlFotoPerfil)
+                    .placeholder(R.drawable.ic_perfil_circulo)
+                    .error(R.drawable.ic_perfil_circulo)
+                    .into(binding.ivFotoPerfil);
+        } else {
+            binding.ivFotoPerfil.setImageResource(R.drawable.ic_perfil_circulo);
+        }
+    }
+
     private void recargarDatosDesdeFirestore() {
         String uid = auth.getCurrentUser().getUid();
         db.collection("usuarios").document(uid).get().addOnSuccessListener(documentSnapshot -> {
@@ -94,19 +116,28 @@ public class PerfilFragment extends Fragment {
 
                 Log.d("PERFIL_FRAGMENT", "URL recibida de Firestore: " + urlFotoPerfil);
 
+                // Actualizar UI
                 TextView nombreTextView = binding.cardPerfil.findViewById(R.id.tituloNombre);
                 nombreTextView.setText(nombreCompleto);
 
                 if (urlFotoPerfil != null && !urlFotoPerfil.isEmpty()) {
                     Picasso.get()
                             .load(urlFotoPerfil)
-                            .memoryPolicy(com.squareup.picasso.MemoryPolicy.NO_CACHE, com.squareup.picasso.MemoryPolicy.NO_STORE)
+                            .placeholder(R.drawable.ic_perfil_circulo)
+                            .error(R.drawable.ic_perfil_circulo)
                             .into(binding.ivFotoPerfil);
                 }
+
+                // Guardar en cache
+                SharedPreferences.Editor editor = requireContext()
+                        .getSharedPreferences("perfil", Context.MODE_PRIVATE)
+                        .edit();
+                editor.putString("nombreCompleto", nombreCompleto);
+                editor.putString("urlFotoPerfil", urlFotoPerfil);
+                editor.apply();
             }
         }).addOnFailureListener(Throwable::printStackTrace);
     }
-
 
     private void cerrarSesion() {
         auth.signOut();

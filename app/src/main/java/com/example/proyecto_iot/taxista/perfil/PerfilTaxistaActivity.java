@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -64,17 +65,39 @@ public class PerfilTaxistaActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        mostrarDatosDesdeCache();
         cargarImagenInterna();
         initLaunchers();
 
         binding.btnBack.setOnClickListener(v -> {
-            setResult(RESULT_OK);  // ✅ Notificamos al fragment que hubo cambios
+            setResult(RESULT_OK);
             finish();
         });
 
         binding.btnEditar.setOnClickListener(v -> mostrarBottomSheetEditarFoto());
 
         cargarDatosDesdeFirestore();
+    }
+
+    private void mostrarDatosDesdeCache() {
+        SharedPreferences prefs = getSharedPreferences("perfil", MODE_PRIVATE);
+        String nombreCompleto = prefs.getString("nombreCompleto", "Cargando...");
+        String datosAuto = prefs.getString("datosAuto", "");
+        String urlFoto = prefs.getString("urlFotoPerfil", "");
+
+        binding.tvNombreTaxista.setText(nombreCompleto);
+        binding.tvDatosAuto.setText(datosAuto);
+        binding.nombreeTaxista.setText("Confirmamos a : " + nombreCompleto.split(" ")[0]);
+
+        if (!urlFoto.isEmpty()) {
+            Picasso.get()
+                    .load(urlFoto)
+                    .placeholder(R.drawable.ic_perfil_circulo)
+                    .error(R.drawable.ic_perfil_circulo)
+                    .into(binding.ivFotoPerfil);
+        } else {
+            binding.ivFotoPerfil.setImageResource(R.drawable.ic_perfil_circulo);
+        }
     }
 
     private void cargarDatosDesdeFirestore() {
@@ -90,13 +113,26 @@ public class PerfilTaxistaActivity extends AppCompatActivity {
                     String placa = documentSnapshot.getString("placaAuto");
                     String urlFoto = documentSnapshot.getString("urlFotoPerfil");
 
-                    binding.tvNombreTaxista.setText(nombres + " " + apellidos);
-                    binding.tvDatosAuto.setText("Color: " + color + "\nModelo: " + modelo + "\nPlaca: " + placa);
+                    String nombreCompleto = nombres + " " + apellidos;
+                    String datosAuto = "Color: " + color + "\nModelo: " + modelo + "\nPlaca: " + placa;
+
+                    binding.tvNombreTaxista.setText(nombreCompleto);
+                    binding.tvDatosAuto.setText(datosAuto);
                     binding.nombreeTaxista.setText("Confirmamos a : " + nombres);
 
                     if (urlFoto != null && !urlFoto.isEmpty()) {
-                        Picasso.get().load(urlFoto).into(binding.ivFotoPerfil);
+                        Picasso.get()
+                                .load(urlFoto)
+                                .placeholder(R.drawable.ic_perfil_circulo)
+                                .into(binding.ivFotoPerfil);
                     }
+
+                    // Guardar en SharedPreferences
+                    SharedPreferences.Editor editor = getSharedPreferences("perfil", MODE_PRIVATE).edit();
+                    editor.putString("nombreCompleto", nombreCompleto);
+                    editor.putString("datosAuto", datosAuto);
+                    editor.putString("urlFotoPerfil", urlFoto);
+                    editor.apply();
                 }
             }).addOnFailureListener(e -> {
                 e.printStackTrace();
@@ -225,8 +261,8 @@ public class PerfilTaxistaActivity extends AppCompatActivity {
                                 .update("urlFotoPerfil", imageUrl)
                                 .addOnSuccessListener(unused -> {
                                     Toast.makeText(PerfilTaxistaActivity.this, "Foto actualizada correctamente", Toast.LENGTH_SHORT).show();
-                                    setResult(RESULT_OK); // ✅ Notificamos al fragmento que hubo cambios confirmados
-                                    finish();             // ✅ Cerramos activity una vez actualizado Firestore
+                                    setResult(RESULT_OK);
+                                    finish();
                                 })
                                 .addOnFailureListener(e -> {
                                     e.printStackTrace();
