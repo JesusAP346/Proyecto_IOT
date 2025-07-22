@@ -14,12 +14,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.dtos.LogSA;
 import com.example.proyecto_iot.dtos.Usuario;
 import com.example.proyecto_iot.SuperAdmin.fragmentos.FragmentPerfilUsuariosSuperadmin;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 
 public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHolder> {
@@ -104,10 +108,49 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
                         .setMessage("¿Estás seguro de eliminar a " + usuario.getNombres() + " " + usuario.getApellidos() + "?")
                         .setPositiveButton("Sí, eliminar", (dialogInterface, i) -> {
                             if (usuario.getId() != null && !usuario.getId().isEmpty()) {
-                                FirebaseFirestore.getInstance().collection("usuarios").document(usuario.getId())
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                                db.collection("usuarios").document(usuario.getId())
                                         .delete()
                                         .addOnSuccessListener(aVoid -> {
-                                            Toast.makeText(v.getContext(), "Usuario eliminado correctamente.", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(v.getContext(), "Cliente eliminado correctamente.", Toast.LENGTH_SHORT).show();
+
+                                            // --- Inicio: registro de Log ---
+                                            FirebaseAuth auth = FirebaseAuth.getInstance();
+                                            String uidEditor = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+
+                                            if (uidEditor != null) {
+                                                db.collection("usuarios").document(uidEditor)
+                                                        .get()
+                                                        .addOnSuccessListener(documentSnapshot -> {
+                                                            if (documentSnapshot.exists()) {
+                                                                Usuario editor = documentSnapshot.toObject(Usuario.class);
+                                                                String nombreEditor = editor.getNombres() + " " + editor.getApellidos();
+                                                                String nombreEliminado = usuario.getNombres() + " " + usuario.getApellidos();
+
+                                                                LogSA log = new LogSA(
+                                                                        null,
+                                                                        "Eliminación de Usuario",
+                                                                        "Se eliminó al usuario " + nombreEliminado,
+                                                                        nombreEditor,
+                                                                        "Super Admin",
+                                                                        "Cliente",  // Aquí opcionalmente puedes guardar el rol del usuario eliminado
+                                                                        uidEditor,
+                                                                        nombreEliminado,
+                                                                        new Date(),
+                                                                        "Eliminación de usuario"
+                                                                );
+
+                                                                DocumentReference logRef = db.collection("logs").document();
+                                                                String idLogGenerado = logRef.getId();
+                                                                log.setIdLog(idLogGenerado);
+
+                                                                logRef.set(log);
+                                                            }
+                                                        });
+                                            }
+                                            // --- Fin: registro de Log ---
+
                                         })
                                         .addOnFailureListener(e -> {
                                             Toast.makeText(v.getContext(), "Error al eliminar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -119,6 +162,7 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.ViewHo
                         .setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.dismiss())
                         .show();
             });
+
 
 
             // Al preparar el BottomSheet:

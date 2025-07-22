@@ -38,6 +38,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
@@ -388,7 +389,7 @@ public class RegisterFotoFragmentSuperAdmin extends Fragment {
                 .addOnSuccessListener(authResult -> {
                     String uid = authResult.getUser().getUid();
                     finalNuevoAdmin.setId(uid);
-
+                    finalNuevoAdmin.setEstadoCuenta(true);
                     db.collection("usuarios").document(uid).set(finalNuevoAdmin)
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(getContext(), "Administrador agregado exitosamente.", Toast.LENGTH_SHORT).show();
@@ -413,13 +414,18 @@ public class RegisterFotoFragmentSuperAdmin extends Fragment {
                                                         "Se registró al Administrador " + nombreNuevo,
                                                         nombreEditor,
                                                         "Super Admin",
+                                                        "Administrador",
                                                         uidEditor,
                                                         nombreNuevo,
                                                         new Date(),
-                                                        "AdminRegistro"
+                                                        "Registro de usuario"
                                                 );
 
-                                                db.collection("logs").add(log);
+                                                DocumentReference logRef = db.collection("logs").document();
+                                                String idLogGenerado = logRef.getId();
+                                                log.setIdLog(idLogGenerado);
+
+                                                logRef.set(log);
                                             }
                                         });
 

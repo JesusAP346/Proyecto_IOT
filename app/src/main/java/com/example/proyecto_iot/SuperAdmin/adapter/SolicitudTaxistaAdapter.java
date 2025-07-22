@@ -15,10 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.dtos.LogSA;
 import com.example.proyecto_iot.dtos.Usuario; // Importa tu DTO de Usuario
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,7 +79,7 @@ public class SolicitudTaxistaAdapter extends RecyclerView.Adapter<SolicitudTaxis
                     .update(updates)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(context, "Solicitud de " + usuario.getNombres() + " aceptada. Ahora es taxista.", Toast.LENGTH_SHORT).show();
-
+                        agregarLog(usuario,"Solicitud aceptada", "Se aprobó la solicitud de " + usuario.getNombres() + " " + usuario.getApellidos(), "Solicitudes");
                         // 2. Simular envío de correo abriendo la app de correo
                         sendAcceptanceEmailIntent(usuario.getEmail(), usuario.getNombres() + " " + usuario.getApellidos());
 
@@ -103,6 +107,7 @@ public class SolicitudTaxistaAdapter extends RecyclerView.Adapter<SolicitudTaxis
                     .update(updates)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(context, "Solicitud de " + usuario.getNombres() + " rechazada.", Toast.LENGTH_SHORT).show();
+                        agregarLog(usuario, "Solicitud rechazada", "Se rechazó la solicitud de " + usuario.getNombres() + " " + usuario.getApellidos(), "Solicitudes");
                         // Eliminar visualmente de la lista si la actualización fue exitosa
                         int pos = holder.getAdapterPosition();
                         if (pos != RecyclerView.NO_POSITION) {
@@ -178,4 +183,41 @@ public class SolicitudTaxistaAdapter extends RecyclerView.Adapter<SolicitudTaxis
             e.printStackTrace();
         }
     }
+
+    private void agregarLog(Usuario usuario, String titulo, String mensaje, String tipoLog) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uidEditor = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+
+        if (uidEditor != null) {
+            db.collection("usuarios").document(uidEditor)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            Usuario editor = documentSnapshot.toObject(Usuario.class);
+                            String nombreEditor = editor.getNombres() + " " + editor.getApellidos();
+
+                            LogSA log = new LogSA(
+                                    null,  // idLog se asignará al guardar
+                                    titulo,
+                                    mensaje,
+                                    nombreEditor,
+                                    "Super Admin",
+                                    "Cliente",  // Rol editado: Cliente (porque es quien solicitó)
+                                    uidEditor,
+                                    usuario.getNombres() + " " + usuario.getApellidos(),  // Nombre del cliente/taxista
+                                    new Date(),
+                                    tipoLog
+                            );
+
+                            // Guardar con ID generado
+                            DocumentReference logRef = db.collection("logs").document();
+                            String idLogGenerado = logRef.getId();
+                            log.setIdLog(idLogGenerado);
+
+                            logRef.set(log);
+                        }
+                    });
+        }
+    }
+
 }

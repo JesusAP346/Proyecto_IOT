@@ -20,6 +20,7 @@ import com.example.proyecto_iot.SuperAdmin.fragmentos.FragmentGestionAdministrad
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import java.util.Date;
@@ -173,13 +174,18 @@ public class AdministradoresAdapter extends RecyclerView.Adapter<Administradores
                                                                         "Se eliminó al Administrador " + nombreEliminado,
                                                                         nombreEditor,
                                                                         "Super Admin",
+                                                                        "Administrador",
                                                                         uidEditor,
                                                                         nombreEliminado,
                                                                         new Date(),
-                                                                        "cuentaEliminada"
+                                                                        "Eliminación de usuario"
                                                                 );
 
-                                                                db.collection("logs").add(log);
+                                                                DocumentReference logRef = db.collection("logs").document();
+                                                                String idLogGenerado = logRef.getId();
+                                                                log.setIdLog(idLogGenerado);
+
+                                                                logRef.set(log);
                                                             }
                                                         });
                                             }

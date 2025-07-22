@@ -287,10 +287,11 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                                                             "Se modificó al Administrador " + nombreEditado,
                                                             nombreEditor,
                                                             "Super Admin",
+                                                            "Administrador",
                                                             uidEditor,
                                                             nombreEditado,
                                                             new Date(),
-                                                            "AdminEditado"
+                                                            "Edición de usuario"
                                                     );
 
                                                     FirebaseFirestore.getInstance().collection("logs").add(log);
@@ -611,10 +612,11 @@ public class FragmentGestionAdministradorSuperadmin extends Fragment {
                                                         "Se registró al Administrador " + nombreNuevo,
                                                         nombreEditor,
                                                         "Super Admin",
+                                                        "Administrador",
                                                         uidEditor,
                                                         nombreNuevo,
                                                         new Date(),
-                                                        "AdminRegistro"
+                                                        "Registro de usuario"
                                                 );
 
                                                 db.collection("logs").add(log);

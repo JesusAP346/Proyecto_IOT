@@ -14,14 +14,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
+import com.example.proyecto_iot.dtos.LogSA;
 import com.example.proyecto_iot.dtos.Usuario; // ¡Importante: Usar tu DTO Usuario!
 // import com.example.proyecto_iot.SuperAdmin.TaxistasDataStore; // Ya no se usará, la eliminación va a Firebase
 // import com.example.proyecto_iot.SuperAdmin.domain.TaxistaDomain; // ¡Remover esta importación!
 import com.example.proyecto_iot.SuperAdmin.fragmentos.FragmentPerfilTaxistasSuperadmin;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore; // Importar FirebaseFirestore
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 
 public class TaxistasAdapter extends RecyclerView.Adapter<TaxistasAdapter.ViewHolder> {
@@ -130,35 +134,70 @@ public class TaxistasAdapter extends RecyclerView.Adapter<TaxistasAdapter.ViewHo
             btnEliminar.setOnClickListener(view -> {
                 dialog.dismiss(); // Cierra el BottomSheetDialog
 
-                // --- INICIO: AlertDialog de confirmación ---
                 new AlertDialog.Builder(v.getContext())
                         .setTitle("Confirmar eliminación")
                         .setMessage("¿Estás seguro de que quieres eliminar al taxista " + taxista.getNombres() + " " + taxista.getApellidos() + "? Esta acción no se puede deshacer.")
                         .setPositiveButton("Sí, eliminar", (dialogInterface, i) -> {
-                            // Lógica de eliminación de Firebase Firestore (igual que en AdministradoresAdapter)
+
                             if (taxista.getId() != null && !taxista.getId().isEmpty()) {
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
+
                                 db.collection("usuarios").document(taxista.getId())
                                         .delete()
                                         .addOnSuccessListener(aVoid -> {
-                                            Toast.makeText(v.getContext(), "Taxista " + taxista.getNombres() + " " + taxista.getApellidos() + " eliminado de Firestore.", Toast.LENGTH_LONG).show();
-                                            // NO necesitas modificar 'taxistasList' o llamar a notifyItemRemoved().
-                                            // El SnapshotListener en tu fragment_taxistas_superadmin se encargará de esto automáticamente.
+                                            Toast.makeText(v.getContext(), "Taxista " + taxista.getNombres() + " " + taxista.getApellidos() + " eliminado", Toast.LENGTH_LONG).show();
+
+                                            // --- Agregar el log ---
+                                            FirebaseAuth auth = FirebaseAuth.getInstance();
+                                            String uidEditor = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+
+                                            if (uidEditor != null) {
+                                                db.collection("usuarios").document(uidEditor)
+                                                        .get()
+                                                        .addOnSuccessListener(documentSnapshot -> {
+                                                            if (documentSnapshot.exists()) {
+                                                                Usuario editor = documentSnapshot.toObject(Usuario.class);
+                                                                String nombreEditor = editor.getNombres() + " " + editor.getApellidos();
+                                                                String nombreEliminado = taxista.getNombres() + " " + taxista.getApellidos();
+
+                                                                LogSA log = new LogSA(
+                                                                        null, // idLog, lo asignaremos más abajo
+                                                                        "Eliminación de Taxista",
+                                                                        "Se eliminó al taxista " + nombreEliminado,
+                                                                        nombreEditor,
+                                                                        "Super Admin",
+                                                                        "Taxista",
+                                                                        uidEditor,
+                                                                        nombreEliminado,
+                                                                        new Date(),
+                                                                        "Eliminación de usuario"
+                                                                );
+
+                                                                DocumentReference logRef = db.collection("logs").document();
+                                                                String idLogGenerado = logRef.getId();
+                                                                log.setIdLog(idLogGenerado);
+
+                                                                logRef.set(log);
+                                                            }
+                                                        });
+                                            }
+                                            // --- Fin log ---
+                                            // Nota: NO se toca la lista local, el listener se encargará de actualizar el RecyclerView.
                                         })
                                         .addOnFailureListener(e -> {
                                             Toast.makeText(v.getContext(), "Error al eliminar taxista: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         });
+
                             } else {
                                 Toast.makeText(v.getContext(), "ID del taxista no encontrado para eliminar.", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton("Cancelar", (dialogInterface, i) -> {
-                            // No hace nada, simplemente cierra el diálogo
                             dialogInterface.dismiss();
                         })
                         .show();
-                // --- FIN: AlertDialog de confirmación ---
             });
+
 
             dialog.setContentView(sheetView);
             dialog.show();

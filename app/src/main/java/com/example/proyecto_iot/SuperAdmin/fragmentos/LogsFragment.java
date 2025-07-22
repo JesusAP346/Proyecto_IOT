@@ -21,11 +21,17 @@ import com.google.firebase.firestore.ListenerRegistration;
 import android.widget.PopupMenu;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
+import androidx.appcompat.widget.SearchView;
+
 import com.google.android.material.button.MaterialButton;
 import java.util.Calendar;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public class LogsFragment extends Fragment {
 
@@ -41,6 +47,7 @@ public class LogsFragment extends Fragment {
     private String filtroFecha = null;
     private Calendar fechaInicio = null;
     private Calendar fechaFin = null;
+    private SearchView searchView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -60,6 +67,8 @@ public class LogsFragment extends Fragment {
         btnRolLog = view.findViewById(R.id.btnRolLog);
         btnFechaLog = view.findViewById(R.id.btnFechaLog);
         btnLimpiarFiltros = view.findViewById(R.id.btnLimpiarFiltros);
+
+        searchView = view.findViewById(R.id.buscarSolicitud);
 
         configurarFiltros();
 
@@ -84,39 +93,67 @@ public class LogsFragment extends Fragment {
                             listaLogs.add(log);
                         }
                     }
-                    logAdapter.notifyDataSetChanged();
+                    aplicarFiltros();
                 });
     }
 
     private void configurarFiltros() {
         btnTipoLog.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(getContext(), v);
-            popup.getMenu().add("Registro");
-            popup.getMenu().add("Eliminación");
-            popup.getMenu().add("Modificación");
+
+            // Opciones fijas:
+            popup.getMenu().add("Todos");
+            popup.getMenu().add("Solicitudes");
+            popup.getMenu().add("Registro de usuario");
+            popup.getMenu().add("Eliminación de usuario");
+            popup.getMenu().add("Reserva de hotel");
+            popup.getMenu().add("Registro de checkout");
+            popup.getMenu().add("Pago de reserva");
+
             popup.setOnMenuItemClickListener(item -> {
-                filtroTipo = item.getTitle().toString();
-                btnTipoLog.setText(filtroTipo);
+                String tipoSeleccionado = item.getTitle().toString();
+                if (tipoSeleccionado.equals("Todos")) {
+                    filtroTipo = null;
+                    btnTipoLog.setText("Tipo Log");
+                } else {
+                    filtroTipo = tipoSeleccionado;
+                    btnTipoLog.setText(filtroTipo);
+                }
                 aplicarFiltros();
                 return true;
             });
+
             popup.show();
         });
 
+
         btnRolLog.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(getContext(), v);
+
+            popup.getMenu().add("Todos");  // Para limpiar el filtro de rol
             popup.getMenu().add("Cliente");
             popup.getMenu().add("Administrador");
             popup.getMenu().add("Taxista");
             popup.getMenu().add("Super Admin");
+
             popup.setOnMenuItemClickListener(item -> {
-                filtroRol = item.getTitle().toString();
-                btnRolLog.setText(filtroRol);
+                String rolSeleccionado = item.getTitle().toString();
+                if (rolSeleccionado.equals("Todos")) {
+                    filtroRol = null;
+                    btnRolLog.setText("Rol");  // Texto por defecto si limpias filtro
+                } else {
+                    filtroRol = rolSeleccionado;
+                    btnRolLog.setText(filtroRol);  // Mostrar rol seleccionado
+                }
+
                 aplicarFiltros();
                 return true;
             });
+
             popup.show();
         });
+
+
 
         btnFechaLog.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
@@ -149,58 +186,82 @@ public class LogsFragment extends Fragment {
             datePickerInicio.show();
         });
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                aplicarFiltros();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                aplicarFiltros();
+                return true;
+            }
+        });
+
 
 
         btnLimpiarFiltros.setOnClickListener(v -> {
             filtroTipo = null;
             filtroRol = null;
             filtroFecha = null;
+            fechaInicio = null;
+            fechaFin = null;
 
             btnTipoLog.setText("Tipo Log");
             btnRolLog.setText("Rol");
             btnFechaLog.setText("Fecha");
 
-            escucharCambiosLogs();  // Recarga sin filtros
+            aplicarFiltros();   // Recarga sin filtros
         });
     }
 
     private void aplicarFiltros() {
-        if (listenerLogs != null) {
-            listenerLogs.remove();
-        }
+        String textoBusqueda = searchView.getQuery().toString().toLowerCase(Locale.getDefault());
+        List<LogSA> listaFiltrada = new ArrayList<>();
 
-        Query query = db.collection("logs");
+        for (LogSA log : listaLogs) {
 
-        if (filtroTipo != null) {
-            query = query.whereEqualTo("tipo", filtroTipo);
-        }
 
-        if (filtroRol != null) {
-            query = query.whereEqualTo("rolUsuario", filtroRol);
-        }
+            boolean cumpleTipo = (filtroTipo == null ||
+                    (log.getTipoLog() != null && log.getTipoLog().equalsIgnoreCase(filtroTipo)));
 
-        if (fechaInicio != null && fechaFin != null) {
-            query = query.whereGreaterThanOrEqualTo("timestamp", fechaInicio.getTime())
-                    .whereLessThanOrEqualTo("timestamp", fechaFin.getTime());
-        }
+            boolean cumpleRol = (filtroRol == null ||
+                    (log.getRolEditado() != null && log.getRolEditado().equalsIgnoreCase(filtroRol)));
 
-        query = query.orderBy("timestamp", Query.Direction.DESCENDING).limit(50);
-
-        listenerLogs = query.addSnapshotListener((querySnapshot, error) -> {
-            if (error != null || querySnapshot == null) {
-                return;
+            boolean cumpleFecha = true;
+            if (fechaInicio != null && fechaFin != null) {
+                Date fechaLog = log.getTimestamp();
+                cumpleFecha = (fechaLog != null &&
+                        !fechaLog.before(fechaInicio.getTime()) &&
+                        !fechaLog.after(fechaFin.getTime()));
             }
 
-            listaLogs.clear();
-            for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
-                LogSA log = doc.toObject(LogSA.class);
-                if (log != null) {
-                    listaLogs.add(log);
-                }
+            if (fechaInicio != null && fechaFin != null) {
+                Date fechaLog = log.getTimestamp();
+                cumpleFecha = (fechaLog != null &&
+                        !fechaLog.before(fechaInicio.getTime()) &&
+                        !fechaLog.after(fechaFin.getTime()));
             }
-            logAdapter.notifyDataSetChanged();
-        });
+
+            boolean cumpleTexto = true;
+            if (!textoBusqueda.isEmpty()) {
+                String titulo = log.getTitulo() != null ? log.getTitulo().toLowerCase(Locale.getDefault()) : "";
+                String mensaje = log.getMensaje() != null ? log.getMensaje().toLowerCase(Locale.getDefault()) : "";
+                String editor = log.getNombreEditor() != null ? log.getNombreEditor().toLowerCase(Locale.getDefault()) : "";
+
+                cumpleTexto = titulo.contains(textoBusqueda) || mensaje.contains(textoBusqueda) || editor.contains(textoBusqueda);
+            }
+
+            if (cumpleTipo && cumpleRol && cumpleFecha && cumpleTexto) {
+                listaFiltrada.add(log);
+            }
+        }
+
+        logAdapter.updateList(listaFiltrada);
     }
+
 
 
 

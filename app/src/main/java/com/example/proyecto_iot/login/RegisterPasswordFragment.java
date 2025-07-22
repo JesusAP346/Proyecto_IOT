@@ -21,6 +21,7 @@ import com.example.proyecto_iot.administradorHotel.entity.UploadResponse;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
@@ -253,7 +254,7 @@ public class RegisterPasswordFragment extends Fragment {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         usuario.setIdRol("Cliente");
-
+        usuario.setEstadoCuenta(true);
         auth.createUserWithEmailAndPassword(usuario.getEmail(), password)
                 .addOnSuccessListener(authResult -> {
                     String uid = authResult.getUser().getUid();
@@ -265,18 +266,25 @@ public class RegisterPasswordFragment extends Fragment {
 
                                 LogSA log = new LogSA(
                                         "NuevoUsuario",
-                                        "Nuevo Usuario",
-                                        "El usuario " + usuario.getNombres() + " se registró en la App",
-                                        usuario.getNombres() + usuario.getApellidos(),
-                                        "Usuario",
+                                        "Registro de Cliente",
+                                        "El cliente " + usuario.getNombres() + " se registró en la App",
+                                        usuario.getNombres() + " " + usuario.getApellidos(),
+                                        "Cliente",
+                                        "Cliente",
                                         uid,
                                         usuario.getNombres() + " " + usuario.getApellidos(),
                                         new Date(),
-                                        "NuevoUsuario"
+                                        "Registro de usuario"
                                 );
 
                                 auth.signOut();
-                                db.collection("logs").add(log);
+                                // Obtener referencia del nuevo documento para usar su ID
+                                DocumentReference logRef = db.collection("logs").document();
+                                String idLogGenerado = logRef.getId();
+                                log.setIdLog(idLogGenerado);
+
+                                logRef.set(log);
+
 
                                 requireActivity().finish();
                             })

@@ -24,6 +24,7 @@ import com.example.proyecto_iot.SuperAdmin.entity.AwsService;
 import com.example.proyecto_iot.SuperAdmin.entity.UploadResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
@@ -269,20 +270,23 @@ public class RegistroTaxistaActivity extends AppCompatActivity {
 
                             LogSA log = new LogSA(
                                     null,
-                                    "Postulación a taxista",
+                                    "Solicitud a taxista",
                                     "El usuario " + usuario.getNombres() + " envió una solicitud para ser taxista",
                                     usuario.getNombres() + " " + usuario.getApellidos() ,
-                                    "Super Admin",
+                                    "Cliente",
+                                    "Cliente",
                                     userId,
                                     usuario.getNombres() + " " + usuario.getApellidos(),
                                     new Date(),
-                                    "SolicitudTaxista"
+                                    "Solicitudes"
 
                             );
 
-                            FirebaseFirestore.getInstance().collection("logs").add(log);
+                            DocumentReference logRef = db.collection("logs").document();
+                            String idLogGenerado = logRef.getId();
+                            log.setIdLog(idLogGenerado);
 
-
+                            logRef.set(log);
 
 
                             Toast.makeText(this, "Postulación enviada con éxito", Toast.LENGTH_LONG).show();
