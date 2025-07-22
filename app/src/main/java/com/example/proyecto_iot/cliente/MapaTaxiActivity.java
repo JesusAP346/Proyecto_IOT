@@ -4,12 +4,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.BuildConfig;
@@ -18,26 +14,31 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-//import com.google.type.LatLng;
-import com.google.android.gms.maps.model.LatLng; // ✅ ESTA ES LA CORRECTA
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
 
-
 public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private double latitud, longitud;
     private double latCliente, lonCliente;
+    private String idServicio;
+
+    private FirebaseFirestore db;
+    private ListenerRegistration listenerRegistro;
+    private GoogleMap mapa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mapa_taxi);
 
         // Recibir coordenadas
@@ -45,7 +46,9 @@ public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCal
         longitud = getIntent().getDoubleExtra("longitud", 0.0);
         latCliente = getIntent().getDoubleExtra("latCliente", 0.0);
         lonCliente = getIntent().getDoubleExtra("lonCliente", 0.0);
+        idServicio = getIntent().getStringExtra("idServicio");
 
+        db = FirebaseFirestore.getInstance();
 
         // Iniciar el mapa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -69,15 +72,12 @@ public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCal
         tvTelefono.setText(telefono != null && !telefono.isEmpty() ? "Teléfono: " + telefono : "Teléfono: -");
 
         ImageView imageView = findViewById(R.id.imgConductor);
-
         if (fotoUrl != null && !fotoUrl.isEmpty()) {
             Glide.with(this)
                     .load(fotoUrl)
                     .placeholder(R.drawable.baseline_account_circle_24)
                     .into(imageView);
         }
-
-
 
         TextView tvNombre = findViewById(R.id.tvNombre);
         TextView tvPlaca = findViewById(R.id.tvPlaca);
@@ -92,19 +92,45 @@ public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        LatLng ubicacionTaxista = new LatLng(latitud, longitud);
-        LatLng ubicacionCliente = new LatLng(latCliente, lonCliente);
+        this.mapa = googleMap;
 
-        // Marcadores
-        googleMap.addMarker(new MarkerOptions().position(ubicacionTaxista).title("Ubicación del taxista"));
-        googleMap.addMarker(new MarkerOptions().position(ubicacionCliente).title("Ubicación del hotel"));
+        if (idServicio != null) {
+            escucharUbicacionTaxistaTiempoReal();
+        } else {
+            // Carga inicial sin seguimiento en tiempo real
+            LatLng ubicacionTaxista = new LatLng(latitud, longitud);
+            LatLng ubicacionCliente = new LatLng(latCliente, lonCliente);
 
-        // Centrar vista
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionCliente, 14));
+            mapa.addMarker(new MarkerOptions().position(ubicacionTaxista).title("Ubicación del taxista"));
+            mapa.addMarker(new MarkerOptions().position(ubicacionCliente).title("Ubicación del hotel"));
+            mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionCliente, 14));
 
-        // Trazar ruta
-        trazarRutaEntre(googleMap, ubicacionTaxista, ubicacionCliente);
+            trazarRutaEntre(mapa, ubicacionTaxista, ubicacionCliente);
+        }
     }
+
+    private void escucharUbicacionTaxistaTiempoReal() {
+        DocumentReference docRef = db.collection("servicios_taxi").document(idServicio);
+        listenerRegistro = docRef.addSnapshotListener((snapshot, e) -> {
+            if (e != null || snapshot == null || !snapshot.exists()) return;
+
+            Double lat = snapshot.getDouble("latTaxista");
+            Double lon = snapshot.getDouble("longTaxista");
+
+            if (lat != null && lon != null && mapa != null) {
+                LatLng nuevaUbicacion = new LatLng(lat, lon);
+                LatLng ubicacionCliente = new LatLng(latCliente, lonCliente);
+
+                mapa.clear();
+                mapa.addMarker(new MarkerOptions().position(nuevaUbicacion).title("Taxista"));
+                mapa.addMarker(new MarkerOptions().position(ubicacionCliente).title("Cliente"));
+                mapa.animateCamera(CameraUpdateFactory.newLatLngZoom(nuevaUbicacion, 15));
+
+                trazarRutaEntre(mapa, nuevaUbicacion, ubicacionCliente);
+            }
+        });
+    }
+
     private void trazarRutaEntre(GoogleMap map, LatLng origen, LatLng destino) {
         String apiKey = BuildConfig.MAPS_API_KEY;
 
@@ -123,7 +149,6 @@ public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCal
                 java.util.Scanner scanner = new java.util.Scanner(in).useDelimiter("\\A");
                 final String response = scanner.hasNext() ? scanner.next() : "";
 
-                // Procesamos todo el JSON en el hilo principal (UI)
                 runOnUiThread(() -> {
                     try {
                         JSONObject json = new JSONObject(response);
@@ -137,17 +162,15 @@ public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCal
                             String duracionTexto = leg.getJSONObject("duration").getString("text");
                             String distanciaTexto = leg.getJSONObject("distance").getString("text");
 
-                            // Actualiza UI
                             TextView tvTiempo = findViewById(R.id.tvTiempo);
                             TextView tvDistancia = findViewById(R.id.tvDistancia);
                             tvTiempo.setText(duracionTexto);
                             tvDistancia.setText(distanciaTexto);
                         }
 
-                        // Dibujar la ruta en el mapa
                         String points = route.getJSONObject("overview_polyline").getString("points");
                         List<LatLng> decodedPath = com.google.maps.android.PolyUtil.decode(points);
-                        map.addPolyline(new com.google.android.gms.maps.model.PolylineOptions()
+                        map.addPolyline(new PolylineOptions()
                                 .addAll(decodedPath)
                                 .width(10f)
                                 .color(android.graphics.Color.BLUE));
@@ -163,6 +186,11 @@ public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCal
         }).start();
     }
 
-
-
+    @Override
+    protected void onDestroy() {
+        if (listenerRegistro != null) {
+            listenerRegistro.remove();
+        }
+        super.onDestroy();
+    }
 }

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.proyecto_iot.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,28 +26,8 @@ public class TaxiFragment extends Fragment {
     public TaxiFragment() {
         // Constructor vacío requerido
     }
-
+//ajajajajaajajajaj
     @Nullable
-
-    /*
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_taxi, container, false);
-
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerSolicitudesTaxi);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Simular datos de prueba
-        List<TaxiItem> lista = new ArrayList<>();
-        lista.add(new TaxiItem("ABC-123", "Juancito Pérez", "Aeropuerto Internacional Jorge Chavez", R.drawable.roberto, true));
-        lista.add(new TaxiItem("DEF-132", "Ppeito Pepin", "Aeropuerto Internacional De Chile", R.drawable.roberto, false));
-
-        TaxiAdapter adapter = new TaxiAdapter(lista, getContext());
-        recyclerView.setAdapter(adapter);
-
-        return view;
-    }*/
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -67,9 +48,14 @@ public class TaxiFragment extends Fragment {
 
         db.collection("servicios_taxi")
                 .whereEqualTo("idCliente", idClienteActual)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addSnapshotListener((queryDocumentSnapshots, error) -> {
+                    if (error != null) {
+                        Toast.makeText(getContext(), "Error en tiempo real", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     lista.clear();
+
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         String nombreHotel = doc.getString("nombreHotel");
                         String destino = doc.getString("destino");
@@ -93,7 +79,6 @@ public class TaxiFragment extends Fragment {
                             continue;
                         }
 
-                        // Obtener datos del taxista
                         db.collection("usuarios").document(idTaxista).get()
                                 .addOnSuccessListener(taxistaDoc -> {
                                     String nombre = taxistaDoc.getString("nombres");
@@ -103,7 +88,6 @@ public class TaxiFragment extends Fragment {
                                     Double lng = doc.getDouble("longTaxista");
                                     String idServicio = doc.getId();
 
-                                    // Obtener ubicación del hotel (cliente)
                                     db.collection("hoteles")
                                             .whereEqualTo("nombre", nombreHotel)
                                             .get()
@@ -124,7 +108,7 @@ public class TaxiFragment extends Fragment {
                                                             lng != null ? lng : 0,
                                                             latHotel != null ? latHotel : 0,
                                                             lngHotel != null ? lngHotel : 0,
-                                                            idTaxista, // NUEVO campo
+                                                            idTaxista,
                                                             urlFoto != null ? urlFoto : ""
                                                     ));
                                                     adapter.notifyDataSetChanged();
@@ -135,16 +119,8 @@ public class TaxiFragment extends Fragment {
                                             });
                                 });
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Error al cargar servicios", Toast.LENGTH_SHORT).show();
                 });
 
         return view;
     }
-
-
-
-
-
 }
