@@ -105,12 +105,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="945 854 123" />
-
             <TextView
                 android:id="@+id/tvViajes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5 viajes" />
+                android:text="0 viajes"
+                android:textSize="14sp"/>
+
+
+
         </LinearLayout>
 
         <!-- Tiempo y distancia -->
@@ -139,5 +142,29 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnIrAeropuerto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ir al Aeropuerto"
+        android:visibility="gone"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@id/tarjetaConductor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <Button
+        android:id="@+id/btnFinalizarViaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Finalizar viaje"
+        android:visibility="gone"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@id/tarjetaConductor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
