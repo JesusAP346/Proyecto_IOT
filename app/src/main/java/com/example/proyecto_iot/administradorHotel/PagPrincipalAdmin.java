@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,6 +25,9 @@ import com.example.proyecto_iot.administradorHotel.fragmentos.HotelFragment;
 import com.example.proyecto_iot.administradorHotel.fragmentos.PerfilAdminFragment;
 import com.example.proyecto_iot.administradorHotel.fragmentos.ReservasFragment;
 import com.example.proyecto_iot.databinding.ActivityPagPrincipalAdminBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 
@@ -81,8 +86,54 @@ public class PagPrincipalAdmin extends AppCompatActivity {
             replaceFragment(new HomeFragment());
         }
 
+        escucharNotificaciones();
     }
 
+    private void escucharNotificaciones() {
+        String uidAdmin = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore.getInstance()
+                .collection("usuarios")
+                .document(uidAdmin)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()) {
+                        String idHotel = snapshot.getString("idHotel");
+
+                        if (idHotel != null) {
+                            FirebaseFirestore.getInstance()
+                                    .collection("notificaciones")
+                                    .whereEqualTo("idHotel", idHotel)
+                                    .whereEqualTo("rol", "administrador")
+                                    .addSnapshotListener((snapshots, error) -> {
+                                        if (error != null || snapshots == null) return;
+
+                                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                                            if (dc.getType() == DocumentChange.Type.ADDED) {
+                                                String mensaje = dc.getDocument().getString("mensaje");
+                                                mostrarNotificacion(mensaje);
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
+    }
+
+
+    private void mostrarNotificacion(String mensaje) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, canalAdmin)
+                .setSmallIcon(R.drawable.ic_boleta)  // tu ícono aquí
+                .setContentTitle("Notificación de Checkout")
+                .setContentText(mensaje)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        }
+    }
 
 
     private void replaceFragment(Fragment fragment) {
@@ -119,34 +170,6 @@ public class PagPrincipalAdmin extends AppCompatActivity {
             ActivityCompat.requestPermissions(PagPrincipalAdmin.this, new String[]{POST_NOTIFICATIONS}, 101);
         }
     }
-    private Reserva buscarReservaPorNombre(String nombre) {
-        // Mismo mock que usas en ReservasTodasFragment
-        return Arrays.asList(
-                new Reserva("Jesús Romero", "7654433", "jesus.gonzales@gmail.com", "94787842",
-                        "Deluxe", "2 adultos", 30,
-                        Arrays.asList("TV", "Toallas", "Wifi", "2 camas", "Escritorio"),
-                        "24/04/2025", "26/04/2025",
-                        Arrays.asList("Gimnasio", "Desayuno"), 240.00),
-
-                new Reserva("María López", "8745521", "maria.lopez@mail.com", "936582741",
-                        "Suite Ejecutiva", "1 adulto", 45,
-                        Arrays.asList("Mini bar", "Caja fuerte", "Aire acondicionado", "Frigobar"),
-                        "01/05/2025", "05/05/2025",
-                        Arrays.asList("Spa", "Room Service"), 360.00),
-
-                new Reserva("Carlos Fernández", "6523412", "carlosf@gmail.com", "921547836",
-                        "Familiar", "2 adultos, 2 niños", 60,
-                        Arrays.asList("Cocina", "TV", "Balcón", "Wi-Fi"),
-                        "10/06/2025", "15/06/2025",
-                        Arrays.asList("Piscina", "Parqueo"), 480.00),
-
-                new Reserva("Lucía Gómez", "7921345", "lucia.gomez@hotmail.com", "978452130",
-                        "Suite Presidencial", "2 adultos", 80,
-                        Arrays.asList("Jacuzzi", "Escritorio", "Sofá cama", "Frigobar"),
-                        "20/07/2025", "25/07/2025",
-                        Arrays.asList("Desayuno", "Servicio de taxi"), 600.00)
-        ).stream().filter(r -> r.getNombreCompleto().equalsIgnoreCase(nombre)).findFirst().orElse(null);
-    }
     public void seleccionarTab(int itemId) {
         binding.bottomNavigationView.setSelectedItemId(itemId);
     }
@@ -166,5 +189,11 @@ public class PagPrincipalAdmin extends AppCompatActivity {
             }
         }
     }
+
+
+
+
+
+
 
 }

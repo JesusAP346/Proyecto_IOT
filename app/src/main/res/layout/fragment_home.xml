@@ -58,7 +58,7 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:background="@drawable/btn_circle_background"
-                    android:text="3"
+                    android:text=""
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:textColor="#FFFFFF"

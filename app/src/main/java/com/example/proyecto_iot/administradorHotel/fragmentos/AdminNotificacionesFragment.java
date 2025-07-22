@@ -1,64 +1,34 @@
 package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.proyecto_iot.R;
-import com.example.proyecto_iot.databinding.FragmentAdminNotificacionesBinding;
-import com.example.proyecto_iot.databinding.FragmentCheckoutBinding;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AdminNotificacionesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.proyecto_iot.administradorHotel.adapter.NotificacionAdapter;
+import com.example.proyecto_iot.administradorHotel.entity.NotificacionAdmin;
+import com.example.proyecto_iot.databinding.FragmentAdminNotificacionesBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class AdminNotificacionesFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public AdminNotificacionesFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AdminNotificacionesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AdminNotificacionesFragment newInstance(String param1, String param2) {
-        AdminNotificacionesFragment fragment = new AdminNotificacionesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
     private FragmentAdminNotificacionesBinding binding;
+    private NotificacionAdapter adapter;
+    private final List<NotificacionAdmin> notificaciones = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +39,61 @@ public class AdminNotificacionesFragment extends Fragment {
                 requireActivity().getSupportFragmentManager().popBackStack()
         );
 
-        return binding.getRoot();
+        binding.recyclerNotificaciones.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new NotificacionAdapter(notificaciones);
+        binding.recyclerNotificaciones.setAdapter(adapter);
 
+        cargarNotificaciones();
+
+        return binding.getRoot();
+    }
+
+    private void cargarNotificaciones() {
+        String uidAdmin = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore.getInstance()
+                .collection("usuarios")
+                .document(uidAdmin)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()) {
+                        String idHotel = snapshot.getString("idHotel");
+
+                        if (idHotel != null) {
+                            FirebaseFirestore.getInstance()
+                                    .collection("notificaciones")
+                                    .whereEqualTo("idHotel", idHotel)
+                                    .whereEqualTo("rol", "administrador")
+                                    .get()
+                                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                                        notificaciones.clear();
+
+                                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                            String mensaje = doc.getString("mensaje");
+                                            Long timestamp = doc.getLong("timestamp");
+
+                                            String horaFormateada = "Hora desconocida";
+                                            if (timestamp != null) {
+                                                Date fecha = new Date(timestamp);
+                                                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+                                                formato.setTimeZone(TimeZone.getTimeZone("America/Lima"));  // Forzar zona horaria Perú
+                                                horaFormateada = formato.format(fecha);
+                                            }
+
+                                            notificaciones.add(new NotificacionAdmin(mensaje, horaFormateada));
+                                        }
+
+                                        adapter.notifyDataSetChanged();
+                                    });
+                        }
+                    }
+                });
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

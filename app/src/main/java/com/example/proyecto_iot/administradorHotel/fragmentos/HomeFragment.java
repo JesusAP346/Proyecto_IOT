@@ -2,85 +2,50 @@ package com.example.proyecto_iot.administradorHotel.fragmentos;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.PagPrincipalAdmin;
 import com.example.proyecto_iot.administradorHotel.chat.ListaChatAdminActivity;
-import com.example.proyecto_iot.cliente.NotificacionesFragment;
-import com.example.proyecto_iot.cliente.chat.ListaChatsActivity;
 import com.example.proyecto_iot.databinding.FragmentHomeBinding;
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-
+    private int cantidadNotificacionesNuevas = 0;
     FragmentHomeBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate con ViewBinding
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
-
-        return view;
+        return binding.getRoot();
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        verificarNotificacionesNuevas();
+
         binding.iconoCampana.setOnClickListener(v -> {
-            // ✅ Reemplazar el fragmento padre en MainActivity
+            // Marcar notificaciones como vistas
+            requireActivity().getSharedPreferences("prefs_admin", 0)
+                    .edit()
+                    .putBoolean("notificaciones_vistas", true)
+                    .apply();
+
+            // Ocultar badge inmediatamente
+            binding.notificacionBadge.setVisibility(View.GONE);
+
+            // Abrir fragmento de notificaciones
             Fragment adminNotificacionesFragment = new AdminNotificacionesFragment();
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frame_layout, adminNotificacionesFragment)
@@ -94,23 +59,18 @@ public class HomeFragment extends Fragment {
         });
 
         binding.btnHabitaciones.setOnClickListener(v -> {
-            // Cambia visualmente la pestaña seleccionada en el BottomNavigationView
             PagPrincipalAdmin activity = (PagPrincipalAdmin) requireActivity();
             activity.seleccionarTab(R.id.hotel);
-
-            // Reemplaza manualmente el fragmento con la sección de habitaciones
             Fragment hotelFragment = HotelFragment.newInstance("habitaciones");
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frame_layout, hotelFragment)
                     .addToBackStack(null)
                     .commit();
         });
+
         binding.btnServiciosExtras.setOnClickListener(v -> {
-            // Cambia visualmente la pestaña a "Hotel"
             PagPrincipalAdmin activity = (PagPrincipalAdmin) requireActivity();
             activity.seleccionarTab(R.id.hotel);
-
-            // Reemplaza con la sección de servicios cargada
             Fragment hotelFragment = HotelFragment.newInstance("servicios");
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -120,11 +80,8 @@ public class HomeFragment extends Fragment {
         });
 
         binding.btnReportes.setOnClickListener(v -> {
-            // Cambia visualmente la pestaña a "Hotel"
             PagPrincipalAdmin activity = (PagPrincipalAdmin) requireActivity();
             activity.seleccionarTab(R.id.hotel);
-
-            // Reemplaza con la sección de servicios cargada
             Fragment hotelFragment = HotelFragment.newInstance("reportes");
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -134,11 +91,51 @@ public class HomeFragment extends Fragment {
         });
 
         binding.btnReservas.setOnClickListener(v -> {
-            // Cambia visualmente la pestaña a "Hotel"
             PagPrincipalAdmin activity = (PagPrincipalAdmin) requireActivity();
             activity.seleccionarTab(R.id.reservas);
-
         });
+    }
+
+    private void verificarNotificacionesNuevas() {
+        String uidAdmin = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore.getInstance()
+                .collection("usuarios")
+                .document(uidAdmin)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()) {
+                        String idHotel = snapshot.getString("idHotel");
+
+                        if (idHotel != null) {
+                            FirebaseFirestore.getInstance()
+                                    .collection("notificaciones")
+                                    .whereEqualTo("idHotel", idHotel)
+                                    .whereEqualTo("rol", "administrador")
+                                    .get()
+                                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                                        cantidadNotificacionesNuevas = queryDocumentSnapshots.size();
+
+                                        boolean yaSeVieron = requireActivity()
+                                                .getSharedPreferences("prefs_admin", 0)
+                                                .getBoolean("notificaciones_vistas", false);
+
+                                        if (!yaSeVieron && cantidadNotificacionesNuevas > 0) {
+                                            binding.notificacionBadge.setVisibility(View.VISIBLE);
+                                            binding.notificacionBadge.setText(String.valueOf(cantidadNotificacionesNuevas));
+                                        } else {
+                                            binding.notificacionBadge.setVisibility(View.GONE);
+                                        }
+                                    });
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        verificarNotificacionesNuevas(); // se vuelve a chequear al regresar
     }
 
     @Override
