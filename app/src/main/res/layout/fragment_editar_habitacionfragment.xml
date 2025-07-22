@@ -11,9 +11,10 @@
         android:id="@+id/scroll_view_contenido"
         android:layout_width="348dp"
         android:layout_height="808dp"
-        android:background="@android:color/white"
+        android:background="@color/background_gradient"
         android:padding="16dp"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        >
 
         <LinearLayout
             android:id="@+id/mainLayout"
@@ -263,9 +264,9 @@
                     android:text="+ AGREGAR"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    app:backgroundTint="#FDF9ED"
+                    app:backgroundTint="#EEEEEE"
                     app:cornerRadius="10dp"
-                    app:strokeColor="#E9D79E"
+                    app:strokeColor="#D1D1D1"
                     app:strokeWidth="1dp" />
 
             </LinearLayout>
@@ -431,7 +432,6 @@
                 android:textSize="12sp"
                 android:visibility="gone" />
 
-            <!-- Botones: Actualizar y Eliminar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -441,12 +441,29 @@
                 android:layout_marginBottom="16dp">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEliminar"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="0.6"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Eliminar"
+                    android:textColor="@android:color/black"
+                    android:backgroundTint="#FACEC6"
+                    android:textSize="14sp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    app:cornerRadius="10dp" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnActualizar"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="0dp"
                     android:layout_height="46dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
+                    android:layout_weight="0.6"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="16dp"
                     android:text="Actualizar"
                     android:textColor="@android:color/black"
                     android:backgroundTint="#EEEEEE"
@@ -455,21 +472,8 @@
                     android:paddingEnd="0dp"
                     app:cornerRadius="10dp" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnEliminar"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="0dp"
-                    android:layout_height="46dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Eliminar"
-                    android:textColor="@android:color/black"
-                    android:backgroundTint="#FACEC6"
-                    android:textSize="14sp"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
-                    app:cornerRadius="10dp" />
             </LinearLayout>
+
 
 
 

@@ -19,7 +19,7 @@
             android:id="@+id/recyclerHabitaciones"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="68dp"
+            android:layout_marginBottom="0dp"
             android:clipToPadding="false"
             android:scrollbars="none" />
 
@@ -49,6 +49,7 @@
                 android:scaleType="centerInside"
                 android:layout_marginTop="24dp" />
         </LinearLayout>
+
         <!-- FAB flotante abajo a la derecha -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_registrar_informacion"

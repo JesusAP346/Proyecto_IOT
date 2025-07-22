@@ -202,22 +202,33 @@
                     android:textSize="12sp"
                     android:visibility="gone" />
                 <!-- Botón Final -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRegistrarServicio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center_horizontal"
+                <!-- Botón Registrar Servicio (con estilo uniforme) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:layout_marginTop="24dp"
-                    android:minHeight="60dp"
-                    android:paddingHorizontal="24dp"
-                    android:paddingVertical="8dp"
-                    android:text="Registrar servicio"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    app:backgroundTint="#FACEC6"
-                    app:cornerRadius="12dp"
-                    app:strokeColor="#772f1a"
-                    app:strokeWidth="1dp" />
+                    android:layout_marginBottom="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRegistrarServicio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Registrar servicio"
+                        android:textColor="@android:color/black"
+                        android:backgroundTint="#EEEEEE"
+                        android:paddingStart="32dp"
+                        android:paddingEnd="32dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        app:cornerRadius="10dp"
+                        app:iconPadding="0dp"
+                        app:strokeWidth="0dp"
+                        style="@style/Widget.MaterialComponents.Button" />
+                </LinearLayout>
+
+
+
             </LinearLayout>
 
         </ScrollView>

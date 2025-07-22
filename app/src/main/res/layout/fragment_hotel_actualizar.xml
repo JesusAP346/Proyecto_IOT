@@ -5,7 +5,7 @@
     android:id="@+id/hotelActualizar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/background_gradient">
 
     <ScrollView
         android:id="@+id/scroll_view_contenido"
@@ -187,16 +187,16 @@
                     android:id="@+id/btnAgregarReferencia"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:minHeight="0dp"
+                    android:minHeight="34dp"
                     android:paddingHorizontal="16dp"
                     android:text="+ Agregar"
                     android:textSize="14sp"
                     android:textColor="@android:color/black"
-                    android:layout_marginStart="8dp"
-                    app:cornerRadius="7dp"
-                    app:strokeColor="#772f1a"
+                    app:cornerRadius="10dp"
+                    app:backgroundTint="#F4F4F4"
+                    app:strokeColor="#D1D1D1"
                     app:strokeWidth="1dp"
-                    app:backgroundTint="#FACEC6" />
+                    android:layout_marginStart="8dp" />
             </LinearLayout>
 
             <!-- Texto vacío -->
@@ -316,29 +316,29 @@
                     android:layout_height="46dp"
                     android:layout_marginEnd="16dp"
                     android:text="Cancelar"
-                    android:textColor="@color/gray_600"
-                    android:textSize="18sp"
-                    app:backgroundTint="@android:color/transparent"
-                    app:cornerRadius="12dp"
-                    app:rippleColor="?attr/colorControlHighlight"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    app:cornerRadius="10dp"
+                    app:backgroundTint="#FAD4D4"
+                    app:strokeColor="#772f1a"
+                    app:strokeWidth="1dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnActualizar"
                     android:layout_width="wrap_content"
                     android:layout_height="46dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="0dp"
-                    android:minHeight="60dp"
+                    android:minHeight="34dp"
                     android:paddingHorizontal="24dp"
-                    android:paddingVertical="8dp"
+                    android:paddingVertical="2dp"
                     android:text="Actualizar"
+                    android:textSize="14sp"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp"
-                    app:backgroundTint="#FACEC6"
-                    app:cornerRadius="12dp"
-                    app:strokeColor="#772f1a"
+                    app:cornerRadius="10dp"
+                    app:backgroundTint="#F4F4F4"
+                    app:strokeColor="#D1D1D1"
                     app:strokeWidth="1dp" />
+
 
             </LinearLayout>
 
