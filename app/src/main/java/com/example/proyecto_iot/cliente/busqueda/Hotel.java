@@ -17,7 +17,15 @@ public class Hotel implements Serializable {
 
     private double ubicacionLat;
     private double ubicacionLng;
+    private double montoMinimoTaxi;
 
+    public double getMontoMinimoTaxi() {
+        return montoMinimoTaxi;
+    }
+
+    public void setMontoMinimoTaxi(double montoMinimoTaxi) {
+        this.montoMinimoTaxi = montoMinimoTaxi;
+    }
 
     private String fechaInicio;
     private int capacidadNinos;

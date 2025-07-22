@@ -37,6 +37,10 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
     private List<ServicioAdicional> serviciosAdicionales = new ArrayList<>();
     private List<ServicioAdicional> serviciosSeleccionados = new ArrayList<>();
 
+    private FirebaseFirestore db;
+
+    private Hotel hotel;
+
     public interface OnHabitacionClickListener{
         void onHabitacionClick(Habitacion2 habitacion);
     }
@@ -126,7 +130,6 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
             }
 
             String idCliente = user.getUid();
-
             int numeroDeNoches = calcularNumeroDeNoches(fechaInicioGlobal, fechaFinGlobal);
             double precioTotal = getPrecioTotal(habitacion2);
 
@@ -135,37 +138,9 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
                 serviciosParaReserva.add(new ServicioAdicionalReserva(servicio.getId(), numeroDeNoches));
             }
 
-            String idReserva = "xd";
-
-            Reserva reserva = new Reserva();
-            reserva.setIdReserva(idReserva);
-            reserva.setIdHotel(hotelId);
-            reserva.setIdCliente(idCliente);
-            reserva.setIdHabitacion(habitacion2.getId());
-            reserva.setEstado("Activo");
-            reserva.setFechaEntrada(fechaInicioGlobal);
-            reserva.setFechaSalida(fechaFinGlobal);
-            reserva.setCantNoches(numeroDeNoches);
-            String precioTotalStr = Double.toString(precioTotal);
-            reserva.setMonto(precioTotalStr);
-            reserva.setServiciosAdicionales(serviciosParaReserva);
-
-            Log.d("RESERVA", "Reserva creada:");
-            Log.d("RESERVA", "ID: " + reserva.getIdReserva());
-            Log.d("RESERVA", "Hotel ID: " + reserva.getIdHotel());
-            Log.d("RESERVA", "Cliente ID: " + reserva.getIdCliente());
-            Log.d("RESERVA", "Habitación ID: " + reserva.getIdHabitacion());
-            Log.d("RESERVA", "Estado: " + reserva.getEstado());
-            Log.d("RESERVA", "Fecha entrada: " + reserva.getFechaEntrada());
-            Log.d("RESERVA", "Fecha salida: " + reserva.getFechaSalida());
-            Log.d("RESERVA", "Cantidad de noches: " + reserva.getCantNoches());
-            Log.d("RESERVA", "Monto total: S/. " + reserva.getMonto());
-            Log.d("RESERVA", "Servicios adicionales seleccionados: " + serviciosParaReserva.size());
-
-            Context context = v.getContext();
-            Intent intent = new Intent(context, PasarellaDePago.class);
-            intent.putExtra("reserva", reserva);
-            context.startActivity(intent);
+            // CARGAR DATOS DEL HOTEL Y PROCESAR LA RESERVA EN EL CALLBACK
+            cargarDatosHotelYProcesarReserva(hotelId, habitacion2, idCliente, numeroDeNoches,
+                    precioTotal, serviciosParaReserva, v.getContext());
         });
 
         holder.btnVerDetalle.setOnClickListener(v -> {
@@ -173,6 +148,81 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
                 listener.onHabitacionClick(habitacion2);
             }
         });
+    }
+
+    private void cargarDatosHotelYProcesarReserva(String hotelId, Habitacion2 habitacion2,
+                                                  String idCliente, int numeroDeNoches,
+                                                  double precioTotal,
+                                                  List<ServicioAdicionalReserva> serviciosParaReserva,
+                                                  Context context) {
+        db = FirebaseFirestore.getInstance();
+        db.collection("hoteles").document(hotelId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Hotel hotel = documentSnapshot.toObject(Hotel.class);
+                        if (hotel != null) {
+                            Log.d("DETALLE_HOTEL", "Hotel encontrado: " + hotel.getNombre());
+
+                            // AQUÍ YA TENEMOS EL OBJETO HOTEL, PODEMOS CONTINUAR CON LA RESERVA
+                            procesarReserva(hotel, habitacion2, idCliente, numeroDeNoches,
+                                    precioTotal, serviciosParaReserva, context);
+                        } else {
+                            Log.e("RESERVA", "Error: no se pudo convertir el documento a Hotel");
+                            // Opcional: mostrar mensaje de error al usuario
+                        }
+                    } else {
+                        Log.w("DETALLE_HOTEL", "No se encontró el hotel con ID: " + hotelId);
+                        // Opcional: mostrar mensaje de error al usuario
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("DETALLE_HOTEL", "Error al obtener hotel", e);
+                    // Opcional: mostrar mensaje de error al usuario
+                });
+    }
+
+    private void procesarReserva(Hotel hotel, Habitacion2 habitacion2, String idCliente,
+                                 int numeroDeNoches, double precioTotal,
+                                 List<ServicioAdicionalReserva> serviciosParaReserva,
+                                 Context context) {
+
+        String idReserva = "xd"; // Considera generar un ID único aquí
+
+        Reserva reserva = new Reserva();
+        reserva.setIdReserva(idReserva);
+        reserva.setIdHotel(hotelId);
+        reserva.setIdCliente(idCliente);
+        reserva.setIdHabitacion(habitacion2.getId());
+        reserva.setEstado("Activo");
+        reserva.setFechaEntrada(fechaInicioGlobal);
+        reserva.setFechaSalida(fechaFinGlobal);
+        reserva.setCantNoches(numeroDeNoches);
+
+        Log.d("TAXI", "Monto mínimo de taxi: "+hotel.getMontoMinimoTaxi());
+
+        // AHORA SÍ PODEMOS USAR hotel.getMontoMinimoTaxi() PORQUE YA NO ES NULL
+        reserva.setServicioTaxiHabilitado(!(hotel.getMontoMinimoTaxi() > precioTotal));
+
+        String precioTotalStr = Double.toString(precioTotal);
+        reserva.setMonto(precioTotalStr);
+        reserva.setServiciosAdicionales(serviciosParaReserva);
+
+        Log.d("RESERVA", "Reserva creada:");
+        Log.d("RESERVA", "ID: " + reserva.getIdReserva());
+        Log.d("RESERVA", "Hotel ID: " + reserva.getIdHotel());
+        Log.d("RESERVA", "Servicio de taxi: " + reserva.isServicioTaxiHabilitado());
+        Log.d("RESERVA", "Cliente ID: " + reserva.getIdCliente());
+        Log.d("RESERVA", "Habitación ID: " + reserva.getIdHabitacion());
+        Log.d("RESERVA", "Estado: " + reserva.getEstado());
+        Log.d("RESERVA", "Fecha entrada: " + reserva.getFechaEntrada());
+        Log.d("RESERVA", "Fecha salida: " + reserva.getFechaSalida());
+        Log.d("RESERVA", "Cantidad de noches: " + reserva.getCantNoches());
+        Log.d("RESERVA", "Monto total: S/. " + reserva.getMonto());
+        Log.d("RESERVA", "Servicios adicionales seleccionados: " + serviciosParaReserva.size());
+
+        Intent intent = new Intent(context, PasarellaDePago.class);
+        intent.putExtra("reserva", reserva);
+        context.startActivity(intent);
     }
 
     @Override
@@ -243,5 +293,22 @@ public class HabitacionAdapter extends RecyclerView.Adapter<HabitacionAdapter.Vi
         }
 
         return 1; // Valor por defecto: 1 noche
+    }
+    private void cargarDatosHotel(String hotelId) {
+        db = FirebaseFirestore.getInstance();
+        db.collection("hoteles").document(hotelId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        hotel = documentSnapshot.toObject(Hotel.class);
+                        assert hotel != null;
+                        Log.d("DETALLE_HOTEL", "Hotel encontrado: " + hotel.getNombre());
+
+                    } else {
+                        Log.w("DETALLE_HOTEL", "No se encontró el hotel con ID: " + hotelId);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("DETALLE_HOTEL", "Error al obtener hotel", e);
+                });
     }
 }

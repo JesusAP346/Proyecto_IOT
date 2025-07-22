@@ -13,6 +13,17 @@ public class Reserva implements Serializable {
     private String fechaSalida;
     private int cantNoches;
     private String monto;
+
+    private boolean servicioTaxiHabilitado;
+
+    public boolean isServicioTaxiHabilitado() {
+        return servicioTaxiHabilitado;
+    }
+
+    public void setServicioTaxiHabilitado(boolean servicioTaxiHabilitado) {
+        this.servicioTaxiHabilitado = servicioTaxiHabilitado;
+    }
+
     public Reserva() {}
     private List<ServicioAdicionalReserva> serviciosAdicionales;
 

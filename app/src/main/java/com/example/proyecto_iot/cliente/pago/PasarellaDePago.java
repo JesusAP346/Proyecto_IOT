@@ -240,6 +240,7 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
         documentoReserva.put("fechaSalida", reserva.getFechaSalida());
         documentoReserva.put("idHabitacion", reserva.getIdHabitacion());
         documentoReserva.put("idHotel", reserva.getIdHotel());
+        documentoReserva.put("servicioTaxiHabilitado", reserva.isServicioTaxiHabilitado());
         documentoReserva.put("serviciosAdicionales", reserva.getServiciosAdicionales());
 
         // Agregar los datos de pago como un objeto anidado

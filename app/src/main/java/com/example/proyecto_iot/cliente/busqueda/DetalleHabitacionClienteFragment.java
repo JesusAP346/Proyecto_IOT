@@ -575,6 +575,8 @@ public class DetalleHabitacionClienteFragment extends Fragment implements Servic
         reserva.setFechaEntrada(fechaInicioGlobal);
         reserva.setFechaSalida(fechaFinGlobal);
         reserva.setCantNoches(numeroDeNoches);
+        Log.d("TAXI", "Monto mínimo de taxi: "+hotel.getMontoMinimoTaxi());
+        reserva.setServicioTaxiHabilitado(!(hotel.getMontoMinimoTaxi() > precioTotal));
         String precioTotalStr = Double.toString(precioTotal);
         reserva.setMonto(precioTotalStr);
         reserva.setServiciosAdicionales(serviciosParaReserva);
