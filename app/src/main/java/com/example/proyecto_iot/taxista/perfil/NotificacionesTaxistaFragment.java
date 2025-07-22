@@ -51,26 +51,8 @@ public class NotificacionesTaxistaFragment extends Fragment {
 
         listaNotificaciones = leerNotificacionesDesdeStorage();
 
-        if (listaNotificaciones.isEmpty()) {
-            listaNotificaciones = crearListaHardcodeada();
-            guardarNotificacionesEnStorage(listaNotificaciones);
-        }
-
-// Ahora sí invertimos la lista para mostrar las más recientes primero
+        // Invertimos la lista para mostrar las más recientes primero
         Collections.reverse(listaNotificaciones);
-
-
-
-        if (listaNotificaciones.isEmpty()) {
-            listaNotificaciones = crearListaHardcodeada(); // metodo con las notificaciones de ejemplo
-            guardarNotificacionesEnStorage(listaNotificaciones); // guardarlas para futuras cargas
-        }
-
-
-        if (listaNotificaciones.isEmpty()) {
-            // Opcional: iniciar con lista vacía o con datos hardcodeados
-            // listaNotificaciones = datosHardcodeados();
-        }
 
         adapter = new NotificacionesAdapter(listaNotificaciones);
         binding.recyclerNotificaciones.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -107,47 +89,11 @@ public class NotificacionesTaxistaFragment extends Fragment {
         return lista;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    private List<Notificacion> crearListaHardcodeada() {
-        List<Notificacion> lista = new ArrayList<>();
-
-        for (int i = 1; i <= 15; i++) {
-            lista.add(new Notificacion(
-                    "Nuevo pedido asignado: Recoge al huésped en Hotel Libertador",
-                    "Hoy, 08:" + (10 + i) + " AM",
-                    R.drawable.ic_hotel_solid));
-        }
-
-        for (int i = 1; i <= 10; i++) {
-            lista.add(new Notificacion(
-                    "El huésped canceló el servicio asignado desde el Hotel Meliá",
-                    "Hoy, 09:" + (10 + i) + " AM",
-                    R.drawable.ic_delete));
-        }
-
-        for (int i = 1; i <= 15; i++) {
-            lista.add(new Notificacion(
-                    "QR escaneado correctamente. Servicio #" + i + " finalizado con éxito.",
-                    "Hoy, 10:" + (5 + i) + " AM",
-                    R.drawable.ic_qr));
-        }
-
-
-
-        return lista;
-    }
-
-
-    private void guardarNotificacionesEnStorage(List<Notificacion> lista) {
+    public static void guardarNotificacionesEnStorage(Context context, List<Notificacion> lista) {
         Gson gson = new Gson();
         String json = gson.toJson(lista);
 
-        try (FileOutputStream fos = requireContext().openFileOutput("notificaciones.json", Context.MODE_PRIVATE);
+        try (FileOutputStream fos = context.openFileOutput(FILE_NOTIFICACIONES, Context.MODE_PRIVATE);
              FileWriter writer = new FileWriter(fos.getFD())) {
             writer.write(json);
         } catch (Exception e) {
@@ -155,4 +101,9 @@ public class NotificacionesTaxistaFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }
