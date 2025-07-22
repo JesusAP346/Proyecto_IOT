@@ -21,8 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.cliente.busqueda.ClienteBusquedaActivity;
+import com.example.proyecto_iot.dtos.LogSA;
+import com.example.proyecto_iot.dtos.Usuario;
 import com.example.proyecto_iot.cliente.busqueda.Reserva;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -253,6 +257,50 @@ public class PasarellaDePago extends AppCompatActivity implements TarjetaAdapter
 
                     // Mostrar notificación de pago exitoso
                     mostrarNotificacionPagoExitoso(tarjetaSeleccionada);
+
+                    //  Agregar LOG usando idCliente como uidEditor
+                    String uidEditor = reserva.getIdCliente();
+
+                    db.collection("usuarios").document(uidEditor)
+                            .get()
+                            .addOnSuccessListener(userSnapshot -> {
+                                if (userSnapshot.exists()) {
+                                    Usuario editor = userSnapshot.toObject(Usuario.class);
+                                    String nombreEditor = editor.getNombres() + " " + editor.getApellidos();
+
+                                    db.collection("hoteles").document(reserva.getIdHotel())
+                                            .get()
+                                            .addOnSuccessListener(hotelSnapshot -> {
+                                                String nombreHotel = "Hotel desconocido";
+                                                if (hotelSnapshot.exists() && hotelSnapshot.contains("nombre")) {
+                                                    nombreHotel = hotelSnapshot.getString("nombre");
+                                                }
+
+                                                String mensajeLog = "El cliente " + nombreEditor +
+                                                        " realizó una reserva en " + nombreHotel +
+                                                        " por " + reserva.getCantNoches() + " noches a " + reserva.getMonto() +  " soles";
+
+                                                LogSA log = new LogSA(
+                                                        null,
+                                                        "Reserva de hotel",
+                                                        mensajeLog,
+                                                        nombreEditor,
+                                                        "Cliente",
+                                                        "Cliente",
+                                                        uidEditor,
+                                                        nombreEditor,
+                                                        new Date(),
+                                                        "Reserva de hotel"
+                                                );
+
+                                                DocumentReference logRef = db.collection("logs").document();
+                                                String idLogGenerado = logRef.getId();
+                                                log.setIdLog(idLogGenerado);
+
+                                                logRef.set(log);
+                                            });
+                                }
+                            });
 
                     Toast.makeText(this, "Reserva procesada exitosamente", Toast.LENGTH_SHORT).show();
 
