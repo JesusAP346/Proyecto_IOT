@@ -216,6 +216,9 @@ public class SolicitudTaxiActivity extends AppCompatActivity {
                         " \uD83D\uDE95 Se generó QR para el servicio de taxi. Puede verlo en la sección Taxi" :
                         "Checkout confirmado sin servicio de taxi");
                 noti.put("timestamp", System.currentTimeMillis());
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String idCliente = currentUser.getUid();
+                noti.put("idCliente", idCliente);
 
                 db.collection("notificaciones")
                         .add(noti)
