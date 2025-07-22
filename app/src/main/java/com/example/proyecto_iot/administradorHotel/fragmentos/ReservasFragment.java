@@ -86,6 +86,7 @@ public class ReservasFragment extends Fragment {
 
         if (binding == null) return;
 
+        // Siempre actualiza el botón sombreado según la sección
         String seccion = EstadoReservaUI.seccionSeleccionada != null
                 ? EstadoReservaUI.seccionSeleccionada
                 : "todas";
@@ -100,7 +101,7 @@ public class ReservasFragment extends Fragment {
                     bundle.putSerializable("reservaCompleta", EstadoReservaUI.reservaFinalizadaCompleta);
                     fragment.setArguments(bundle);
 
-                    getParentFragmentManager()  // Usamos el fragment manager del padre (no el hijo)
+                    getParentFragmentManager()
                             .beginTransaction()
                             .replace(R.id.frame_layout, fragment)
                             .addToBackStack(null)
@@ -108,7 +109,7 @@ public class ReservasFragment extends Fragment {
 
                     EstadoReservaUI.reservaFinalizadaId = null;
                     EstadoReservaUI.reservaFinalizadaCompleta = null;
-                } else {
+                } else if (getChildFragmentManager().getFragments().isEmpty()) {
                     loadChildFragment(new ReservasHistorialFragment());
                 }
 
@@ -116,15 +117,21 @@ public class ReservasFragment extends Fragment {
 
             case "futuras":
                 updateSelectedButton(binding.btnFuturas);
-                loadChildFragment(new ReservasPendientesFragment());
+                if (getChildFragmentManager().getFragments().isEmpty()) {
+                    loadChildFragment(new ReservasPendientesFragment());
+                }
                 break;
+
             case "todas":
             default:
                 updateSelectedButton(binding.btnEnCurso);
-                loadChildFragment(new ReservasTodasFragment());
+                if (getChildFragmentManager().getFragments().isEmpty()) {
+                    loadChildFragment(new ReservasTodasFragment());
+                }
                 break;
         }
     }
+
 
 
 

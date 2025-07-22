@@ -18,8 +18,8 @@ import com.example.proyecto_iot.R;
 import com.example.proyecto_iot.administradorHotel.entity.CircleTransform;
 import com.example.proyecto_iot.administradorHotel.entity.HabitacionHotel;
 import com.example.proyecto_iot.administradorHotel.entity.ReservaCompletaHotel;
-import com.example.proyecto_iot.databinding.FragmentDetalleHuespedBinding;
 import com.example.proyecto_iot.databinding.FragmentDetalleReservaHistorialBinding;
+import com.example.proyecto_iot.databinding.FragmentDetalleReservaPendienteBinding;
 import com.squareup.picasso.Picasso;
 
 import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
@@ -29,15 +29,14 @@ import org.imaginativeworld.whynotimagecarousel.model.CarouselType;
 import java.util.ArrayList;
 import java.util.List;
 
+public class DetalleReservaPendienteFragment extends Fragment {
 
-public class DetalleReservaHistorialFragment extends Fragment {
-
-    FragmentDetalleReservaHistorialBinding binding;
+    FragmentDetalleReservaPendienteBinding binding;
     private ReservaCompletaHotel reservaCompleta;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentDetalleReservaHistorialBinding.inflate(inflater, container, false);
+        binding = FragmentDetalleReservaPendienteBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -74,7 +73,6 @@ public class DetalleReservaHistorialFragment extends Fragment {
         }
     }
 
-
     private void mostrarDatosHabitacion() {
         HabitacionHotel habitacion = reservaCompleta.getHabitacion();
         binding.textTipoHabitacion.setText(habitacion.getTipo());
@@ -92,6 +90,7 @@ public class DetalleReservaHistorialFragment extends Fragment {
         binding.checkoutText.setText(reservaCompleta.getReserva().getFechaSalida());
     }
 
+
     private void configurarBotones() {
         binding.backdetallehuesped.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
@@ -103,7 +102,7 @@ public class DetalleReservaHistorialFragment extends Fragment {
         });
 
         binding.btnCheckout.setOnClickListener(v -> {
-            CheckoutHistorialFragment fragment = new CheckoutHistorialFragment();
+            CheckoutPendienteFragment fragment = new CheckoutPendienteFragment();
 
             Bundle bundle = new Bundle();
             bundle.putSerializable("reservaCompleta", reservaCompleta);
@@ -115,8 +114,8 @@ public class DetalleReservaHistorialFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
-
     }
+
 
 
     private void mostrarEquipamiento(GridLayout contenedor, List<String> items) {
@@ -165,10 +164,11 @@ public class DetalleReservaHistorialFragment extends Fragment {
         }
     }
 
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
-
 }

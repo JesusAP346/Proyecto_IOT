@@ -68,6 +68,7 @@ public class DetalleHuespedFragment extends Fragment {
         configurarBotones();
     }
 
+
     private void mostrarDatosHuesped() {
         String nombreCompleto = reservaCompleta.getUsuario().getNombres().split(" ")[0] + " " +
                 reservaCompleta.getUsuario().getApellidos().split(" ")[0];
