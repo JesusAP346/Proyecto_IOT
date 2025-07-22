@@ -124,6 +124,7 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
                     noti.put("timestamp", System.currentTimeMillis());
                     noti.put("idHotel", idHotel);
                     noti.put("idCliente", idCliente);
+                   // noti.put("rol", "cliente"); //
 
                     db.collection("notificaciones").add(noti)
                             .addOnSuccessListener(notificationDoc -> {
@@ -132,6 +133,39 @@ public class FormularioCheckoutActivity extends AppCompatActivity {
                             .addOnFailureListener(e -> {
                                 Log.w("FormularioCheckout", "Error al crear notificación", e);
                             });
+
+
+                    // Obtener nombre del cliente y crear notificación para admin
+                    db.collection("usuarios")
+                            .document(idCliente)
+                            .get()
+                            .addOnSuccessListener(documentSnapshot -> {
+                                String nombre = documentSnapshot.getString("nombres");
+                                String apellido = documentSnapshot.getString("apellidos");
+                                String nombreCompleto = (nombre != null ? nombre : "") + " " + (apellido != null ? apellido : "");
+
+                                Map<String, Object> notiAdmin = new HashMap<>();
+                                notiAdmin.put("mensaje", "El cliente " + nombreCompleto.trim() + " ha realizado Check-out en " + nombreHotel);
+                                notiAdmin.put("timestamp", System.currentTimeMillis());
+                                notiAdmin.put("idHotel", idHotel);
+                                notiAdmin.put("idCliente", idCliente);
+                                notiAdmin.put("rol", "administrador");
+
+                                db.collection("notificaciones").add(notiAdmin)
+                                        .addOnSuccessListener(doc -> {
+                                            Log.d("FormularioCheckout", "Notificación para administrador creada");
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.w("FormularioCheckout", "Error al crear notificación para administrador", e);
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.w("FormularioCheckout", "Error al obtener datos del cliente", e);
+                            });
+
+
+
+
 
                     Toast.makeText(FormularioCheckoutActivity.this, "Valoración enviada exitosamente", Toast.LENGTH_SHORT).show();
 
