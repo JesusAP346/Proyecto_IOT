@@ -36,7 +36,7 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvPlaca, tvConductor, tvDestino;
+        TextView tvPlaca, tvConductor, tvDestino, tvTelefono;
         ImageView imgFoto, imgQR1, imgQR2;
         Button btnVerUbicacion;
 
@@ -47,6 +47,8 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.ViewHolder> {
             tvDestino = itemView.findViewById(R.id.tvDestino);
             imgFoto = itemView.findViewById(R.id.imgFoto);
             imgQR1 = itemView.findViewById(R.id.imgQR1);
+           // tvTelefono = itemView.findViewById(R.id.tvTelefono);
+
             //imgQR2 = itemView.findViewById(R.id.imgQR2);
             btnVerUbicacion = itemView.findViewById(R.id.btnVerUbicacion);
         }
@@ -68,30 +70,41 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.ViewHolder> {
         holder.tvDestino.setText("Destino: " + item.getDestino());
         //holder.imgFoto.setImageResource(item.getFotoResId());
 
-        FirebaseFirestore.getInstance()
-                .collection("usuarios")
-                .document(item.getIdTaxista())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String urlFoto = documentSnapshot.getString("urlFotoPerfil");
-                        if (urlFoto != null && !urlFoto.isEmpty()) {
-                            Glide.with(context)
-                                    .load(urlFoto)
-                                    .placeholder(R.drawable.baseline_account_circle_24)
-                                    .error(R.drawable.baseline_account_circle_24)
-                                    .centerCrop()
-                                    .into(holder.imgFoto);
+        String idTaxista = item.getIdTaxista();
+        if (idTaxista != null && !idTaxista.isEmpty()) {
+            FirebaseFirestore.getInstance()
+                    .collection("usuarios")
+                    .document(idTaxista)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String urlFoto = documentSnapshot.getString("urlFotoPerfil");
+                            String telefono = documentSnapshot.getString("numCelular");
+                            if (urlFoto != null && !urlFoto.isEmpty()) {
+                                Glide.with(context)
+                                        .load(urlFoto)
+                                        .placeholder(R.drawable.baseline_account_circle_24)
+                                        .error(R.drawable.baseline_account_circle_24)
+                                        .centerCrop()
+                                        .into(holder.imgFoto);
+                            } else {
+                                holder.imgFoto.setImageResource(R.drawable.baseline_account_circle_24);
+                            }
+                            item.setTelefonoTaxista(telefono); // Guarda para pasar por intent
+
                         } else {
                             holder.imgFoto.setImageResource(R.drawable.baseline_account_circle_24);
                         }
-                    } else {
+
+
+                    })
+                    .addOnFailureListener(e -> {
                         holder.imgFoto.setImageResource(R.drawable.baseline_account_circle_24);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    holder.imgFoto.setImageResource(R.drawable.baseline_account_circle_24);
-                });
+                    });
+        } else {
+            // ID inválido → carga imagen por defecto
+            holder.imgFoto.setImageResource(R.drawable.baseline_account_circle_24);
+        }
 
 
 
@@ -133,6 +146,9 @@ public class TaxiAdapter extends RecyclerView.Adapter<TaxiAdapter.ViewHolder> {
                 intent.putExtra("longitud", item.getLongitud());
                 intent.putExtra("latCliente", item.getLatCliente()); // ubicación del hotel
                 intent.putExtra("lonCliente", item.getLonCliente());
+                intent.putExtra("fotoUrl", item.getUrlFotoTaxista());
+                intent.putExtra("telefono", item.getTelefonoTaxista());
+
 
                 context.startActivity(intent);
             });

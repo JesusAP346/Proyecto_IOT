@@ -13,7 +13,20 @@ public class TaxiItem {
     private double lonCliente;
 
     private String idTaxista; // NUEVO CAMPO
+    private String urlFotoTaxista;
+    private String telefonoTaxista;
 
+    public String getTelefonoTaxista() {
+        return telefonoTaxista;
+    }
+
+    public void setTelefonoTaxista(String telefonoTaxista) {
+        this.telefonoTaxista = telefonoTaxista;
+    }
+
+    public String getUrlFotoTaxista() {
+        return urlFotoTaxista;
+    }
     public double getLatCliente() { return latCliente; }
     public double getLonCliente() { return lonCliente; }
 
@@ -40,7 +53,7 @@ public class TaxiItem {
     */
     public TaxiItem(String placa, String nombreConductor, String destino, int fotoResId,
                     boolean activa, String idServicio, double latitud, double longitud,
-                    double latCliente, double lonCliente, String idTaxista) {
+                    double latCliente, double lonCliente, String idTaxista, String urlFotoTaxista) {
         this.placa = placa;
         this.nombreConductor = nombreConductor;
         this.destino = destino;
@@ -52,6 +65,7 @@ public class TaxiItem {
         this.latCliente = latCliente;
         this.lonCliente = lonCliente;
         this.idTaxista = idTaxista;
+        this.urlFotoTaxista = urlFotoTaxista;
     }
 
     public String getPlaca() { return placa; }

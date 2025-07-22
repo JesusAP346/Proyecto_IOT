@@ -15,6 +15,11 @@
         android:paddingBottom="16dp">
 
         <!-- Título -->
+
+        <!-- Botón de regreso -->
+
+        <!-- Mapa -->
+
         <TextView
             android:layout_width="82dp"
             android:layout_height="54dp"
@@ -25,9 +30,6 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <!-- Botón de regreso -->
-
-        <!-- Mapa -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,7 +55,7 @@
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="436dp"
             android:layout_weight="1" />
 
         <!-- Información del conductor -->
@@ -74,7 +76,7 @@
                 android:src="@drawable/roberto" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="157dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -92,12 +94,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="945 854 123" />
-
+                <!--
                 <TextView
                     android:id="@+id/tvViajes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5 viajes" />
+                    android:text="5 viajes" /> -->
             </LinearLayout>
 
             <LinearLayout

@@ -86,6 +86,7 @@ public class TaxiFragment extends Fragment {
                                     doc.getId(),
                                     0.0, 0.0,
                                     0.0, 0.0,
+                                    "",
                                     ""
                             ));
                             adapter.notifyDataSetChanged();
@@ -97,6 +98,7 @@ public class TaxiFragment extends Fragment {
                                 .addOnSuccessListener(taxistaDoc -> {
                                     String nombre = taxistaDoc.getString("nombres");
                                     String placa = taxistaDoc.getString("placaAuto");
+                                    String urlFoto = taxistaDoc.getString("urlFotoPerfil");
                                     Double lat = doc.getDouble("latTaxista");
                                     Double lng = doc.getDouble("longTaxista");
                                     String idServicio = doc.getId();
@@ -122,7 +124,8 @@ public class TaxiFragment extends Fragment {
                                                             lng != null ? lng : 0,
                                                             latHotel != null ? latHotel : 0,
                                                             lngHotel != null ? lngHotel : 0,
-                                                            idTaxista // NUEVO campo
+                                                            idTaxista, // NUEVO campo
+                                                            urlFoto != null ? urlFoto : ""
                                                     ));
                                                     adapter.notifyDataSetChanged();
                                                 }

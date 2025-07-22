@@ -11,6 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.proyecto_iot.BuildConfig;
 import com.example.proyecto_iot.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -61,6 +62,22 @@ public class MapaTaxiActivity extends AppCompatActivity implements OnMapReadyCal
         String placa = getIntent().getStringExtra("placa");
         String tiempo = getIntent().getStringExtra("tiempo");
         String distancia = getIntent().getStringExtra("distancia");
+
+        String fotoUrl = getIntent().getStringExtra("fotoUrl");
+        String telefono = getIntent().getStringExtra("telefono");
+        TextView tvTelefono = findViewById(R.id.tvTelefono);
+        tvTelefono.setText(telefono != null && !telefono.isEmpty() ? "Teléfono: " + telefono : "Teléfono: -");
+
+        ImageView imageView = findViewById(R.id.imgConductor);
+
+        if (fotoUrl != null && !fotoUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(fotoUrl)
+                    .placeholder(R.drawable.baseline_account_circle_24)
+                    .into(imageView);
+        }
+
+
 
         TextView tvNombre = findViewById(R.id.tvNombre);
         TextView tvPlaca = findViewById(R.id.tvPlaca);
