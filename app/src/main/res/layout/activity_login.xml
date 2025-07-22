@@ -10,10 +10,10 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_marginTop="60dp"
-        android:src="@drawable/hotel_solid"
+        android:layout_width="188dp"
+        android:layout_height="206dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/hotelevago_foreground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
         android:id="@+id/roundedContainer"
         android:layout_width="330dp"
         android:layout_height="500dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/rounded_background"
         android:padding="24dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
