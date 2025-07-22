@@ -15,8 +15,46 @@ public class Hotel implements Serializable {
     private List<String> servicios;
     private List<String> fotosHotelUrls;
 
+    private double ubicacionLat;
+    private double ubicacionLng;
+
+
     private String fechaInicio;
+    private int capacidadNinos;
+    private int capacidadAdultos;
     private String fechaFin;
+
+    public double getUbicacionLat() {
+        return ubicacionLat;
+    }
+
+    public void setUbicacionLat(double ubicacionLat) {
+        this.ubicacionLat = ubicacionLat;
+    }
+
+    public double getUbicacionLng() {
+        return ubicacionLng;
+    }
+
+    public void setUbicacionLng(double ubicacionLng) {
+        this.ubicacionLng = ubicacionLng;
+    }
+
+    public int getCapacidadNinos() {
+        return capacidadNinos;
+    }
+
+    public void setCapacidadNinos(int capacidadNinos) {
+        this.capacidadNinos = capacidadNinos;
+    }
+
+    public int getCapacidadAdultos() {
+        return capacidadAdultos;
+    }
+
+    public void setCapacidadAdultos(int capacidadAdultos) {
+        this.capacidadAdultos = capacidadAdultos;
+    }
 
     public String getFechaInicio() {
         return fechaInicio;

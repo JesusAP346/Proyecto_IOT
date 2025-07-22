@@ -42,6 +42,10 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
     private String mParam1;
     private String mParam2;
 
+    private int adultos = 0;
+    private int ninos = 0;
+    private int habitaciones = 0;
+
     private String fechaInicioGlobal;
     private String fechaFinGlobal;
 
@@ -79,6 +83,12 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
             String destinoBusqueda = getArguments().getString("destino", "");
             String fechasBusqueda = getArguments().getString("fechas", "");
             String huespedesBusqueda = getArguments().getString("huespedes", "");
+
+            adultos = getArguments().getInt("adultos", 0);
+            ninos = getArguments().getInt("ninos", 0);
+            habitaciones = getArguments().getInt("habitaciones", 0);
+
+            Log.d("DEBUG ZZZZZ", "Adultos: " + adultos + ", Niños: " + ninos + ", Habitaciones: " + habitaciones);
 
             // Recibir coordenadas si están disponibles
             double destinoLat = getArguments().getDouble("destinoLat", 0.0);
@@ -420,9 +430,21 @@ public class ResultadosDeBusquedaFragment extends Fragment implements HotelAdapt
 
     @Override
     public void onHotelClick(Hotel hotel, int position) {
+        adultos = getArguments().getInt("adultos", 0);
+        ninos = getArguments().getInt("ninos", 0);
+        habitaciones = getArguments().getInt("habitaciones", 0);
+
         hotel.setFechaInicio(fechaInicioGlobal);
         hotel.setFechaFin(fechaFinGlobal);
+        hotel.setCapacidadNinos(ninos);
+        hotel.setCapacidadAdultos(adultos);
         DetalleHotelFragment detalleFragment = DetalleHotelFragment.newInstance(hotel);
+
+        Log.d("DEBUG BUSQUEDAHOTEL", "Adultos: " + adultos + ", Niños: " + ninos + ", Habitaciones: " + habitaciones);
+
+
+
+
 
 
         getParentFragmentManager().beginTransaction()

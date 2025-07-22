@@ -59,6 +59,13 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
     private Button btnVerOpiniones;
 
+    private int adultos = 0;
+    private int ninos = 0;
+    private double ubicacionLng;
+    private double ubicacionLat;
+
+    private int habitaciones = 0;
+
     public DetalleHotelFragment() {
         // Constructor vacío requerido
     }
@@ -67,9 +74,15 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         DetalleHotelFragment fragment = new DetalleHotelFragment();
         Bundle args = new Bundle();
         Log.d("DETALLE_HOTEL", "Fechas Recibidas 0W0 22222: " + hotel.getFechaInicio() + hotel.getFechaFin() );
+        Log.d("CANTADULTOSYKIDS", "Cantidad de niños: " + hotel.getCapacidadNinos() + " Cantidad adult: " +hotel.getCapacidadAdultos() );
         args.putString(ARG_HOTEL_ID, hotel.getId());
         args.putString("fechaInicio", hotel.getFechaInicio());
         args.putString("fechaFin", hotel.getFechaFin());
+        args.putInt("capacidadAdultos", hotel.getCapacidadAdultos());
+        args.putInt("capacidadNinos", hotel.getCapacidadNinos());
+
+        args.putDouble("ubicacionLng", hotel.getUbicacionLng());
+        args.putDouble("ubicacionLat", hotel.getUbicacionLat());
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,6 +93,17 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
         if (getArguments() != null) {
             String hotelId = getArguments().getString(ARG_HOTEL_ID);
             Log.d("DETALLE_HOTEL", "Hotel ID XD recibido: " + hotelId);
+
+            if (getArguments() != null) {
+                adultos = getArguments().getInt("capacidadAdultos", 0);
+                ninos = getArguments().getInt("capacidadNinos", 0);
+
+                ubicacionLat = getArguments().getDouble("ubicacionLat", 0.0);
+                ubicacionLng = getArguments().getDouble("ubicacionLng", 0.0);
+            }
+
+            Log.d("DEBUG ZZZZZ2", "Adultos: " + adultos + ", Niños: " + ninos + ", Habitaciones: " + habitaciones);
+            Log.d("DEBUG LATLONG", "Lat: " + ubicacionLat + ", LONG: " + ubicacionLng);
         }
     }
 

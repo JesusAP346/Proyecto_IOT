@@ -62,6 +62,10 @@ public class BusquedaFragment extends Fragment{
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private int adultos = 0;
+    private int ninos = 0;
+    private int habitaciones = 0;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -230,6 +234,9 @@ public class BusquedaFragment extends Fragment{
 
             HuespedesBottomSheetDialogFragment dialog = new HuespedesBottomSheetDialogFragment();
             dialog.setOnHuespedesSelectedListener((adultos, ninos, habitaciones) -> {
+                this.adultos = adultos;
+                this.ninos = ninos;
+                this.habitaciones = habitaciones;
                 if (adultos > 0 || ninos > 0) { // Al menos debe haber un huésped
                     int totalHuespedes = adultos + ninos;
                     txtHuespedes.setText(totalHuespedes + " Huésp, " + habitaciones + " hab.");
@@ -251,6 +258,9 @@ public class BusquedaFragment extends Fragment{
                 bundle.putString("destino", etDestino.getText().toString().trim());
                 bundle.putString("fechas", txtFechas.getText().toString());
                 bundle.putString("huespedes", txtHuespedes.getText().toString());
+                bundle.putInt("adultos", this.adultos);
+                bundle.putInt("ninos", this.ninos);
+                bundle.putInt("habitaciones", this.habitaciones);
 
                 // Coordenadas del destino (si están disponibles)
                 if (destinoSeleccionado != null) {
