@@ -231,7 +231,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ubicación del hotelho"
+                    android:text="Ubicación del hotel"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:layout_marginBottom="8dp" />

@@ -481,28 +481,30 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
                         habitacion.setId(doc.getId());
                         StringBuilder descripcion = new StringBuilder();
 
-                        // • 1 habitación / • 2 habitaciones
-                        int cantHab = habitacion.getCantidadHabitaciones();
-                        descripcion.append("• ").append(cantHab).append(" habitación");
-                        if (cantHab != 1) descripcion.append("es");
-                        descripcion.append("\n");
 
-                        int adultos = habitacion.getCapacidadAdultos();
-                        descripcion.append("• ").append(adultos).append(" cama");
-                        if (adultos != 1) descripcion.append("s");
-                        descripcion.append(" matrimoniale");
-                        if (adultos != 1) descripcion.append("s");
-                        descripcion.append("\n");
+                        if (habitacion.getCapacidadAdultos() > 0 || habitacion.getCapacidadNinos() > 0) {
+                            descripcion.append("Capacidad: ");
 
-                        int ninos = habitacion.getCapacidadNinos();
-                        if (ninos > 0) {
-                            descripcion.append("• ").append(ninos).append(" niño");
-                            if (ninos != 1) descripcion.append("s");
-                            descripcion.append("\n");
+                            if (habitacion.getCapacidadAdultos() > 0) {
+                                descripcion.append(habitacion.getCapacidadAdultos())
+                                        .append(habitacion.getCapacidadAdultos() == 1 ? " adulto" : " adultos");
+                            }
+
+                            if (habitacion.getCapacidadNinos() > 0) {
+                                if (habitacion.getCapacidadAdultos() > 0) {
+                                    descripcion.append(" y ");
+                                }
+                                descripcion.append(habitacion.getCapacidadNinos())
+                                        .append(habitacion.getCapacidadNinos() == 1 ? " niño" : " niños");
+                            }
+
+                            descripcion.append("\n\n");
                         }
 
+// Agregar equipamiento con título
                         List<String> equipamiento = habitacion.getEquipamiento();
-                        if (equipamiento != null) {
+                        if (equipamiento != null && !equipamiento.isEmpty()) {
+                            descripcion.append("Equipamiento:\n");
                             for (String item : equipamiento) {
                                 descripcion.append("• ").append(item).append("\n");
                             }
@@ -544,8 +546,17 @@ public class DetalleHotelFragment extends Fragment implements HabitacionAdapter.
 
                     // Filtrar la lista original removiendo habitaciones reservadas
                     List<Habitacion> listaFiltrada = new ArrayList<>();
+
                     for (Habitacion habitacion : listaOriginal) {
-                        if (!habitacionesReservadas.contains(habitacion.getId())) {
+                        // Verificar que la habitación no esté reservada
+                        boolean noEstaReservada = !habitacionesReservadas.contains(habitacion.getId());
+
+                        // Verificar que la habitación tenga capacidad suficiente para adultos y niños
+                        boolean tieneCapacidadSuficiente = habitacion.getCapacidadAdultos() >= adultos &&
+                                habitacion.getCapacidadNinos() >= ninos;
+
+                        // Solo agregar si cumple ambas condiciones
+                        if (noEstaReservada && tieneCapacidadSuficiente) {
                             listaFiltrada.add(habitacion);
                         }
                     }
