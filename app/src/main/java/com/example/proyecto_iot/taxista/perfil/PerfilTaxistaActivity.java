@@ -1,6 +1,8 @@
 package com.example.proyecto_iot.taxista.perfil;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.proyecto_iot.R;
@@ -260,10 +264,39 @@ public class PerfilTaxistaActivity extends AppCompatActivity {
                         db.collection("usuarios").document(uid)
                                 .update("urlFotoPerfil", imageUrl)
                                 .addOnSuccessListener(unused -> {
+                                    // ✅ Guardar notificación local
+                                    String horaActual = java.time.LocalTime.now().toString().substring(0,5); // HH:mm
+                                    NotificacionUtils.agregarNotificacion(
+                                            PerfilTaxistaActivity.this,
+                                            "Has actualizado tu foto de perfil",
+                                            "Hoy, " + horaActual,
+                                            R.drawable.ic_perfil_circulo // Usa el ícono que prefieras
+                                    );
+
+                                    // ✅ Lanzar notificación visual
+                                    crearCanalNotificacion(); // crea canal si es necesario
+
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                                            PerfilTaxistaActivity.this, "canal_general")
+                                            .setSmallIcon(R.drawable.ic_perfil_circulo)
+                                            .setContentTitle("Perfil actualizado")
+                                            .setContentText("Has cambiado tu foto de perfil")
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                            .setAutoCancel(true);
+
+                                    NotificationManagerCompat manager = NotificationManagerCompat.from(PerfilTaxistaActivity.this);
+
+                                    if (Build.VERSION.SDK_INT < 33 || ContextCompat.checkSelfPermission(PerfilTaxistaActivity.this,
+                                            Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                                        manager.notify(1001, builder.build());
+                                    }
+
                                     Toast.makeText(PerfilTaxistaActivity.this, "Foto actualizada correctamente", Toast.LENGTH_SHORT).show();
                                     setResult(RESULT_OK);
                                     finish();
                                 })
+
+
                                 .addOnFailureListener(e -> {
                                     e.printStackTrace();
                                     Toast.makeText(PerfilTaxistaActivity.this, "Error al actualizar Firestore", Toast.LENGTH_SHORT).show();
@@ -286,6 +319,25 @@ public class PerfilTaxistaActivity extends AppCompatActivity {
             Log.e("S3UPLOAD", "Excepción", e);
         }
     }
+
+    private void crearCanalNotificacion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "canal_general";
+            String channelName = "Notificaciones generales";
+            String channelDesc = "Notificaciones como cambios de perfil, alertas, etc";
+
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    channelName,
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            channel.setDescription(channelDesc);
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+    }
+
 
     private File uriToFile(Uri uri, Context context) throws Exception {
         InputStream inputStream = context.getContentResolver().openInputStream(uri);
