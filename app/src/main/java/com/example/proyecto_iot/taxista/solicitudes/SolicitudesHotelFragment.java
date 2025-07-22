@@ -177,6 +177,11 @@ public class SolicitudesHotelFragment extends Fragment {
             solicitudes.add(item);
 
             if (solicitudes.size() == totalValidas) {
+                solicitudes.sort((s1, s2) -> {
+                    if (s1.estado.equals(s2.estado)) return 0;
+                    return s1.estado.equals("pendiente") ? -1 : 1;
+                });
+
                 binding.recyclerSolicitudes.setAdapter(new SolicitudAdapter(solicitudes, new SolicitudAdapter.OnSolicitudClickListener() {
                     @Override
                     public void onAceptar(Solicitud selected) {
