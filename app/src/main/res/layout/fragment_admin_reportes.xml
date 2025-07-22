@@ -1,267 +1,243 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#FFFFFF">
+    android:background="@color/background_gradient">
 
-    <!-- 🗓️ Filtro de fecha -->
+    <!-- Filtro fijo -->
     <LinearLayout
+        android:id="@+id/layoutFiltro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
+        android:background="@drawable/bg_filtro"
+        android:padding="8dp"
+        android:layout_margin="16dp"
+        android:layout_alignParentTop="true">
 
+        <!-- Icono calendario -->
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/ic_calendar_days_solid"
             android:tint="#000000"
-            android:contentDescription="Filtrar desde" />
+            android:contentDescription="Icono calendario"
+            android:layout_marginEnd="8dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Filtrar desde:"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp" />
-
-        <EditText
-            android:id="@+id/etSelectDate"
+        <!-- Desde -->
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Select Date"
-            android:padding="8dp"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:background="@drawable/underline_edittext"
-            android:inputType="none" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Desde"
+                android:textSize="12sp"
+                android:textColor="#555555" />
+
+            <EditText
+                android:id="@+id/etSelectDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="dd/mm/aaaa"
+                android:textSize="14sp"
+                android:background="@drawable/underline_edittext"
+                android:textColor="@android:color/black"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
+                android:paddingVertical="4dp" />
+        </LinearLayout>
+
+        <!-- Hasta -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hasta"
+                android:textSize="12sp"
+                android:textColor="#555555" />
+
+            <EditText
+                android:id="@+id/etSelectDate2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="dd/mm/aaaa"
+                android:textSize="14sp"
+                android:background="@drawable/underline_edittext"
+                android:textColor="@android:color/black"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
+                android:paddingVertical="4dp" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- 🏷️ Ventas por servicio -->
     <TextView
+        android:id="@+id/errorTipoFecha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ventas por servicio"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginTop="75dp"
+        android:drawableStart="@drawable/ic_warning_admin"
+        android:drawablePadding="8dp"
+        android:textColor="#D32F2F"
+        android:textSize="12sp"
+        android:visibility="gone" />
 
-    <!-- 🔹 Ítem 1: Gimnasio -->
-    <LinearLayout
+    <!-- Línea divisora -->
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_servicio_item"
-        android:gravity="center_vertical">
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="#BDBDBD"
+        android:layout_below="@id/layoutFiltro"
+        android:layout_marginHorizontal="16dp" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_gimnasio"
-            android:tint="#000000"
-            android:layout_marginEnd="8dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Gimnasio"
-            android:textSize="16sp"
-
-            android:textColor="#000000" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="S/ 50.00"
-            android:textSize="16sp"
-            android:textColor="#000000" />
-    </LinearLayout>
-
-    <!-- 🔹 Ítem 2: Desayuno -->
-    <LinearLayout
+    <!-- Scroll para reportes -->
+    <ScrollView
+        android:id="@+id/scrollContenido"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_servicio_item"
-        android:gravity="center_vertical">
+        android:layout_height="match_parent"
+        android:layout_below="@id/layoutFiltro"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:fillViewport="true"
+        android:scrollbars="none">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_desayuno"
-            android:tint="#000000"
-            android:layout_marginEnd="8dp" />
-
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Desayuno"
-            android:textSize="16sp"
-            android:textColor="#000000" />
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="S/ 50.00"
-            android:textSize="16sp"
-            android:textColor="#000000" />
-    </LinearLayout>
+            <!-- Sección Reporte de Ventas por Servicio -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#F5F5F5"
+                android:padding="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="16dp">
 
-    <!-- 🔹 Ítem 3: Masajes -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/bg_servicio_item"
-        android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ventas por Servicio (Menor a Mayor)"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="12dp" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_masajes"
-            android:tint="#000000"
-            android:layout_marginEnd="8dp" />
+                <!-- Header de la tabla -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="#E0E0E0"
+                    android:padding="8dp">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Masaje"
-            android:textSize="16sp"
-            android:textColor="#000000" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Servicio"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#555555" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="S/ 50.00"
-            android:textSize="16sp"
-            android:textColor="#000000" />
-    </LinearLayout>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Cantidad"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#555555"
+                        android:gravity="center" />
 
-    <!-- 🏷️ Ventas por usuario -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ventas por usuario"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        android:layout_marginBottom="12dp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Total"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#555555"
+                        android:gravity="end" />
+                </LinearLayout>
 
-    <!-- 👤 Usuario 1 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_servicio_item"
-        android:gravity="center_vertical">
+                <!-- RecyclerView para servicios -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_servicios"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp" />
+            </LinearLayout>
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/icono_perfil2"
-            android:tint="#000000"
-            android:layout_marginEnd="8dp" />
+            <!-- Sección Reporte de Ventas por Usuario -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#F5F5F5"
+                android:padding="16dp">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Juan Pérez"
-            android:textSize="16sp"
-            android:textColor="#000000" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ventas por Usuario (Mayor a Menor)"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="12dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="S/ 120.00"
-            android:textSize="16sp"
-            android:textColor="#000000" />
-    </LinearLayout>
+                <!-- Header de la tabla -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="#E0E0E0"
+                    android:padding="8dp">
 
-    <!-- 👤 Usuario 2 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_servicio_item"
-        android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Usuario"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#555555" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/icono_perfil2"
-            android:tint="#000000"
-            android:layout_marginEnd="8dp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Monto Total"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#555555"
+                        android:gravity="end" />
+                </LinearLayout>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Lucía Gómez"
-            android:textSize="16sp"
+                <!-- RecyclerView para usuarios -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_usuarios"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp" />
+            </LinearLayout>
 
-            android:textColor="#000000" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="S/ 80.00"
-            android:textSize="16sp"
-            android:textColor="#000000" />
-    </LinearLayout>
-
-    <!-- 👤 Usuario 3 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_servicio_item"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/icono_perfil2"
-            android:tint="#000000"
-            android:layout_marginEnd="8dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Carlos Ruiz"
-            android:textSize="16sp"
-
-
-            android:textColor="#000000" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="S/ 95.00"
-            android:textSize="16sp"
-            android:textColor="#000000" />
-    </LinearLayout>
-</LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

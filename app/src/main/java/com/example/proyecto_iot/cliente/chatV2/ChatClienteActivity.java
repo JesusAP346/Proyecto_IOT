@@ -1,5 +1,12 @@
 package com.example.proyecto_iot.cliente.chatV2;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +23,9 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -39,13 +49,19 @@ import java.util.Map;
 public class ChatClienteActivity extends AppCompatActivity {
 
     private static final String TAG = "ChatClienteActivity";
+    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1001;
+    private static final int NOTIFICATION_ID = 1001;
 
     private RecyclerView recyclerViewMessages;
+    private String adminName = "Soporte";
     private MessageClienteAdapter messageAdapter;
     private List<Message> messageList;
     private EditText etMessage;
     private ImageButton btnSend;
     private ProgressBar progressBar;
+    private Date lastMessageTimestamp = null;
+    private boolean isActivityVisible = false;
+
     private TextView tvEmptyChat;
     private Toolbar toolbar;
     private View messagesContainer;
@@ -75,12 +91,31 @@ public class ChatClienteActivity extends AppCompatActivity {
         getIntentData();
         initializeViews();
         initializeFirebase();
+        requestNotificationPermission();
         setupRecyclerView();
         setupToolbar();
         setupSendButton();
         setupKeyboardListener();
         initializeOrCreateChat();
+        if (!TextUtils.isEmpty(adminId)) {
+            loadAdminName();
+        }
+
         loadMessages();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isActivityVisible = true;
+        // Cancelar notificaciones cuando el usuario está viendo el chat
+        cancelChatNotifications();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isActivityVisible = false;
     }
 
     private void getIntentData() {
@@ -103,13 +138,31 @@ public class ChatClienteActivity extends AppCompatActivity {
     private void findAvailableAdmin() {
         // Buscar un administrador disponible
         db.collection("usuarios")
-                .whereEqualTo("tipoUsuario", "Administrador") // Ajusta según tu estructura
+                .whereEqualTo("idRol", "Administrador") // Ajusta según tu estructura
                 .limit(1)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot adminDoc = queryDocumentSnapshots.getDocuments().get(0);
                         adminId = adminDoc.getId();
+
+                        // Obtener el nombre del administrador encontrado
+                        String nombre = adminDoc.getString("nombre");
+                        String apellido = adminDoc.getString("apellido");
+
+                        if (!TextUtils.isEmpty(nombre)) {
+                            if (!TextUtils.isEmpty(apellido)) {
+                                adminName = nombre + " " + apellido;
+                            } else {
+                                adminName = nombre;
+                            }
+
+                            // Actualizar el título
+                            if (getSupportActionBar() != null) {
+                                getSupportActionBar().setTitle(adminName);
+                            }
+                        }
+
                         generateChatId();
                         loadMessages();
                     } else {
@@ -159,6 +212,32 @@ public class ChatClienteActivity extends AppCompatActivity {
         }
     }
 
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        NOTIFICATION_PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Permiso de notificaciones concedido");
+            } else {
+                Log.d(TAG, "Permiso de notificaciones denegado");
+                Toast.makeText(this, "Las notificaciones están deshabilitadas", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void setupRecyclerView() {
         messageList = new ArrayList<>();
         messageAdapter = new MessageClienteAdapter(messageList, currentClientId);
@@ -175,8 +254,49 @@ public class ChatClienteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Soporte");
+            getSupportActionBar().setTitle(adminName);
         }
+    }
+
+    private void loadAdminName() {
+        if (TextUtils.isEmpty(adminId)) {
+            return;
+        }
+
+        db.collection("usuarios").document(adminId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Ajusta estos nombres de campos según tu estructura de datos
+                        String nombre = documentSnapshot.getString("nombres");
+                        String apellido = documentSnapshot.getString("apellidos");
+
+                        if (!TextUtils.isEmpty(nombre)) {
+                            if (!TextUtils.isEmpty(apellido)) {
+                                adminName = nombre + " " + apellido;
+                            } else {
+                                adminName = nombre;
+                            }
+                        } else {
+                            // Si no hay nombre, usar email o ID
+                            String email = documentSnapshot.getString("email");
+                            if (!TextUtils.isEmpty(email)) {
+                                adminName = email.split("@")[0]; // Usar la parte antes del @
+                            } else {
+                                adminName = "Administrador"; // Fallback
+                            }
+                        }
+
+                        // Actualizar el título del toolbar
+                        if (getSupportActionBar() != null) {
+                            getSupportActionBar().setTitle(adminName);
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error al cargar nombre del administrador", e);
+                    // Mantener el título por defecto
+                });
     }
 
     private void setupSendButton() {
@@ -287,16 +407,21 @@ public class ChatClienteActivity extends AppCompatActivity {
                     }
 
                     if (value != null) {
-                        messageList.clear();
+                        List<Message> newMessages = new ArrayList<>();
 
                         for (DocumentSnapshot doc : value.getDocuments()) {
                             Message message = doc.toObject(Message.class);
                             if (message != null) {
                                 message.setMessageId(doc.getId());
-                                messageList.add(message);
+                                newMessages.add(message);
                             }
                         }
 
+                        // Verificar si hay mensajes nuevos del administrador
+                        checkForNewAdminMessages(newMessages);
+
+                        messageList.clear();
+                        messageList.addAll(newMessages);
                         messageAdapter.updateMessageList(messageList);
 
                         if (messageList.isEmpty()) {
@@ -313,6 +438,29 @@ public class ChatClienteActivity extends AppCompatActivity {
                         Log.d(TAG, "Mensajes cargados: " + messageList.size());
                     }
                 });
+    }
+
+    private void checkForNewAdminMessages(List<Message> newMessages) {
+        if (messageList.isEmpty()) {
+            // Primera carga, no mostrar notificaciones
+            return;
+        }
+
+        // Obtener el último mensaje conocido
+        Message lastKnownMessage = messageList.isEmpty() ? null : messageList.get(messageList.size() - 1);
+        Date lastKnownTimestamp = lastKnownMessage != null ? lastKnownMessage.getTimestamp() : null;
+
+        // Buscar mensajes nuevos del administrador
+        for (Message message : newMessages) {
+            if (!message.getSenderId().equals(currentClientId) && // No es nuestro mensaje
+                    (lastKnownTimestamp == null || message.getTimestamp().after(lastKnownTimestamp))) {
+
+                // Es un mensaje nuevo del administrador
+                String senderName = !TextUtils.isEmpty(adminName) ? adminName : "Soporte";
+                showNotification("Nuevo mensaje de " + senderName, message.getText());
+                break; // Solo mostrar notificación para el último mensaje nuevo
+            }
+        }
     }
 
     private void sendMessage() {
@@ -395,6 +543,69 @@ public class ChatClienteActivity extends AppCompatActivity {
         } else {
             progressBar.setVisibility(View.GONE);
         }
+    }
+
+    private void showNotification(String title, String messageText) {
+        // Solo mostrar notificación si la actividad no está visible
+        if (isActivityVisible) {
+            return;
+        }
+
+        // Verificar permisos para Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Sin permiso para mostrar notificaciones");
+                return;
+            }
+        }
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        String channelId = "chat_channel";
+
+        // Crear canal de notificación para Android 8.0+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "Chat Notifications",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Notificaciones del chat con soporte");
+            channel.enableLights(true);
+            channel.enableVibration(true);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        // Intent para abrir la actividad del chat cuando se toque la notificación
+        Intent intent = new Intent(this, ChatClienteActivity.class);
+        intent.putExtra("chatId", chatId);
+        intent.putExtra("adminId", adminId);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT |
+                        (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
+        );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle(title)
+                .setContentText(messageText)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(messageText));
+
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    private void cancelChatNotifications() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID);
     }
 
     @Override
