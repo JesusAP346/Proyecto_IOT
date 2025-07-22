@@ -57,7 +57,8 @@
                     android:id="@+id/tvViajes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5 viajes" />
+                    android:text="5 viajes"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <!-- Tiempo y distancia -->
