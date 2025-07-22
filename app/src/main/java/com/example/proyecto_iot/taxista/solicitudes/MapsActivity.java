@@ -74,7 +74,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (binding.tvViajes != null && viajes != null) {
             binding.tvViajes.setText(viajes);
         }
-        binding.subtitulo.setText(hotel != null ? hotel : "Destino no especificado");
+        String destinoNombre = getIntent().getStringExtra("destinoNombre");
+        binding.subtitulo.setText(destinoNombre != null ? destinoNombre : "Destino no especificado");
+
 
         Glide.with(this).load(imagenPerfilUrl)
                 .placeholder(R.drawable.usuario_10)

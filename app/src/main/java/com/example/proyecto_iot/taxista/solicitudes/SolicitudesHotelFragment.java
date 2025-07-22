@@ -337,8 +337,21 @@ public class SolicitudesHotelFragment extends Fragment {
         intent.putExtra("latDestino", solicitud.latDestino);
         intent.putExtra("lngDestino", solicitud.lngDestino);
         intent.putExtra("idServicio", solicitud.idDocumento);
+
+        // 👉 Detectar si el destino es el aeropuerto
+        String destinoNombreMostrado;
+        if (Math.abs(solicitud.latDestino + 12.02189) < 0.0005 &&
+                Math.abs(solicitud.lngDestino + 77.11432) < 0.0005) {
+            destinoNombreMostrado = "Aeropuerto Jorge Chávez";
+        } else {
+            destinoNombreMostrado = solicitud.origen;  // nombre del hotel
+        }
+
+        intent.putExtra("destinoNombre", destinoNombreMostrado); // 👈 extra clave
+
         launcherMaps.launch(intent);
     }
+
 
     @Override
     public void onResume() {
