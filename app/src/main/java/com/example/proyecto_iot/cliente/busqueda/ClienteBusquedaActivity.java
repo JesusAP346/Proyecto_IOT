@@ -71,9 +71,18 @@ public class ClienteBusquedaActivity extends AppCompatActivity {
         }
 
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.fragment_container_busqueda), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            // Solo aplicar padding superior al contenedor de fragmentos
+            v.setPadding(0, systemBars.top, 0, 0);
+            return insets;
+        });
+
+// Y para el BottomNavigationView:
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.bottom_navigation), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            // Aplicar padding inferior para que no se superponga con la barra de navegación del sistema
+            v.setPadding(0, 0, 0, systemBars.bottom);
             return insets;
         });
 /*

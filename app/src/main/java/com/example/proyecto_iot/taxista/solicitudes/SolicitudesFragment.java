@@ -20,6 +20,7 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SolicitudesFragment extends Fragment {
@@ -101,6 +102,7 @@ public class SolicitudesFragment extends Fragment {
                                                 ));
 
                                                 if (isAdded() && binding != null && itemList.size() == totalHoteles) {
+                                                    Collections.sort(itemList, (h1, h2) -> h1.title.compareToIgnoreCase(h2.title));
                                                     cargarAdapter(itemList);
                                                 }
                                             })
