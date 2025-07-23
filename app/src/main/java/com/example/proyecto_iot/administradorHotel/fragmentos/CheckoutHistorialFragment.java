@@ -23,6 +23,7 @@ import com.example.proyecto_iot.administradorHotel.entity.ReservaCompletaHotel;
 import com.example.proyecto_iot.administradorHotel.entity.ReservaHotel;
 import com.example.proyecto_iot.administradorHotel.entity.ServicioAdicionalNombrePrecio;
 import com.example.proyecto_iot.databinding.FragmentCheckoutHistorialBinding;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -78,23 +79,12 @@ public class CheckoutHistorialFragment extends Fragment {
         // Datos de tarjeta
         mostrarDatosTarjeta();
 
-        // Servicio de taxi habilitado
-        if (Boolean.TRUE.equals(reserva.getServicioTaxiHabilitado())) {
-            binding.btnIrServicioTaxi.setVisibility(View.VISIBLE);
-            binding.textSinServicioTaxi.setVisibility(View.GONE);
-        } else {
-            binding.btnIrServicioTaxi.setVisibility(View.GONE);
-            binding.textSinServicioTaxi.setVisibility(View.VISIBLE);
-        }
-
-
+        // Nueva lógica de botón servicio taxi
+        verificarEstadoServicioTaxi(reserva.getIdReserva(), reserva.getServicioTaxiHabilitado());
 
         // Botón back
         binding.backdetallecheckout.setOnClickListener(v -> {
-            // Restaurar pestaña "finalizadas"
             EstadoReservaUI.seccionSeleccionada = "finalizadas";
-
-            // Ir directamente a ReservasFragment
             Fragment fragment = new ReservasFragment();
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -118,7 +108,38 @@ public class CheckoutHistorialFragment extends Fragment {
         });
     }
 
+    private void verificarEstadoServicioTaxi(String idReserva, Boolean servicioTaxiHabilitado) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        if (Boolean.TRUE.equals(servicioTaxiHabilitado)) {
+            db.collection("servicios_taxi")
+                    .whereEqualTo("idReserva", idReserva)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            // Se encontró documento con idReserva => habilitar botón
+                            binding.btnIrServicioTaxi.setVisibility(View.VISIBLE);
+                            binding.textSinServicioTaxi.setVisibility(View.GONE);
+                        } else {
+                            // No hay documento con idReserva
+                            binding.btnIrServicioTaxi.setVisibility(View.GONE);
+                            binding.textSinServicioTaxi.setVisibility(View.VISIBLE);
+                            binding.textSinServicioTaxi.setText("El cliente no ha solicitado el servicio de taxi.");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // Por si hay error consultando Firestore
+                        binding.btnIrServicioTaxi.setVisibility(View.GONE);
+                        binding.textSinServicioTaxi.setVisibility(View.VISIBLE);
+                        binding.textSinServicioTaxi.setText("Error al verificar servicio de taxi.");
+                    });
+        } else {
+            // servicioTaxiHabilitado == false
+            binding.btnIrServicioTaxi.setVisibility(View.GONE);
+            binding.textSinServicioTaxi.setVisibility(View.VISIBLE);
+            binding.textSinServicioTaxi.setText("Servicio de taxi no incluido.");
+        }
+    }
 
     private void mostrarServiciosAdicionalesDesdeReserva() {
         List<ServicioAdicionalNombrePrecio> servicios = reservaCompleta.getServiciosAdicionalesInfo();

@@ -94,7 +94,7 @@ public class ReservasTodasFragment extends Fragment {
 
                     db.collection("reservas")
                             .whereEqualTo("idHotel", idHotel)
-                            .whereIn("estado", Arrays.asList("Activo", "CHECKOUT"))
+                            .whereIn("estado", Arrays.asList("ACTIVO", "CHECKOUT"))
                             .get()
                             .addOnSuccessListener(reservaSnapshot -> {
                                 if (!isAdded() || binding == null) return;
